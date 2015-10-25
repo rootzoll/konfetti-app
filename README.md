@@ -1,5 +1,7 @@
 # Konfetti App
 
+## concept notes
+
 just install app (hybrid, ios, android, ..) once app is released
 
 app shows mirco support requests in your neighborhood (geolocation based)
@@ -27,6 +29,10 @@ konfetti exchange goes:
 - refugee2neighbor
 
 ... you get the idea :D
+
+## Installation
+
+Make sure to have the IONIC framework installed (v1). Checkout and run 'ionic state reset'.
 
 ## Actual State
 
