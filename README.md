@@ -1,6 +1,6 @@
 # Konfetti App
 
-just install app (hybrid, ios, android, ..)
+just install app (hybrid, ios, android, ..) once app is released
 app shows mirco support requests in your neighborhood (geolocation based)
 
 everybody can get rewarded KONFETTI by
