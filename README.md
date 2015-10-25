@@ -22,8 +22,11 @@ neighborhood orga does
 konfetti supply is endless - like love.
 
 konfetti exchange goes:
+
 neighbor2refugee
+
 refugee2refugee
+
 refugee2neighbor
 
 ## Actual State
