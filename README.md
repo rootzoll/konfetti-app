@@ -30,9 +30,11 @@ konfetti exchange goes:
 
 ... you get the idea :D
 
-## Installation
+## Building App from Source
 
-Make sure to have the IONIC framework installed (v1). Checkout and run 'ionic state reset' and then 'ionic resources'.
+Make sure to have the IONIC framework installed (v1.x): http://ionicframework.com
+
+Checkout from git, run 'ionic state reset' and then 'ionic resources' with project folder.
 
 ## Actual State
 
