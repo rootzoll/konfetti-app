@@ -36,7 +36,7 @@ Make sure to have the IONIC framework installed (v1.x): http://ionicframework.co
 
 Checkout from git, run 'ionic state reset' and then 'ionic resources' with project folder.
 
-## Actual State
+## Actual State of Project
 
 After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm, first design, throwing stuff away, going circles, fresh start, getting excited, testing idea, reducing it to the max, to:
 
