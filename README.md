@@ -47,4 +47,4 @@ See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga w
 
 If you are a coder, designer or a helping hand on location - feel free to join in - #newcomersWelcome
 
-Next Meetup after the refugee hackathon will at Bitcoin Stammtisch Berlin, 5th Nov @Room77/Kreuzberg, around 8pm
+Next Meetup after the refugee hackathon will be at Bitcoin Stammtisch Berlin, 5th Nov @Room77/Kreuzberg, around 8pm
