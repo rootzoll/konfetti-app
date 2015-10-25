@@ -1,29 +1,47 @@
 # Konfetti App
 
-just install app (hybrid, ios, android).
-app shows mirco support requests in your neighborhood (geolocation based).
+just install app (hybrid, ios, android, ..)
+app shows mirco support requests in your neighborhood (geolocation based)
 
-everybody can earn KONFETTI by
-- doing tasks
+everybody can get rewarded KONFETTI by
+- doing those tasks
 - donating goods
-Konfetti is like Karma-Points.
+
+Konfetti is like Karma-Points
 
 everybody who has konfetti can
 vote-up support requests
+
 = throw your konfetti on it
 
 neighborhood orga does
 - curate task postings
 - puts more konfetti on it
 
-konfetti supply is endless.
-like love.
+konfetti supply is endless - like love.
 
-konfetti exchange is:
+konfetti exchange goes:
 neighbor2refugee
 refugee2refugee
 refugee2neighbor
 
+## Actual State
+
+After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm, first design, throwing stuff away, going circles, fresh start, getting excited, testing idea, reducing it to the max, to:
+
+- a group concept agreement
+- smiling faces explaining the idea to others
+- this first draft
+- first code commit: ionic hybrid app template
+
 ## Further Steps
 
 user layout app, building dummy, backend design, ...
+
+See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga will change later on)
+
+## Help needed
+
+If you are a coder, designer or a helping hand on location - feel free to join in - #newcomersWelcome
+
+Next Meetup after the refugee hackathon will at Bitcoin Stammtisch Berlin, 5th Nov @Room77/Kreuzberg, around 8pm
