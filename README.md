@@ -32,7 +32,7 @@ konfetti exchange goes:
 
 ## Installation
 
-Make sure to have the IONIC framework installed (v1). Checkout and run 'ionic state reset'.
+Make sure to have the IONIC framework installed (v1). Checkout and run 'ionic state reset' and then 'ionic resources'.
 
 ## Actual State
 
