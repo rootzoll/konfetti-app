@@ -53,7 +53,7 @@ user layout app, building dummy, backend design, ...
 
 See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga will change later on)
 
-## Help needed
+## Join & Meet
 
 If you are a coder, designer or a helping hand on location - feel free to join in - Newcomers welcome.
 
