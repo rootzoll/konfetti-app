@@ -4,7 +4,7 @@ its an app for neighborhood help exchange - part of of the refugeehackathon, Ber
 
 ## Concept Notes
 
-just install app (hybrid, ios, android, ..) once app is released
+just install app - no sign up (hybrid, ios, android, ..) once app is released
 
 app shows mirco support requests in your neighborhood (geolocation based)
 
