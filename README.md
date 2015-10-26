@@ -2,7 +2,7 @@
 
 its an app to 
 
-## concept notes
+## Concept Notes
 
 just install app (hybrid, ios, android, ..) once app is released
 
