@@ -1,6 +1,6 @@
 # Konfetti App
 
-its an app to 
+its an app for neighborhood help exchange - part of of the refugeehackathon, Berlin 2015
 
 ## Concept Notes
 
