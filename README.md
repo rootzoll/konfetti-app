@@ -15,7 +15,8 @@ everybody can get rewarded KONFETTI by
 Konfetti is like Karma-Points
 
 everybody who has konfetti can
-vote-up support requests
+vote-up other support requests
+to make them more valuable
 
 = throw your konfetti on it
 
