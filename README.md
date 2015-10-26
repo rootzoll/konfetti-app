@@ -1,5 +1,7 @@
 # Konfetti App
 
+its an app to 
+
 ## concept notes
 
 just install app (hybrid, ios, android, ..) once app is released
@@ -45,7 +47,7 @@ After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm
 - this first draft
 - first code commit: ionic hybrid app template
 
-## Further Steps
+## Join & Meet
 
 user layout app, building dummy, backend design, ...
 
@@ -53,6 +55,8 @@ See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga w
 
 ## Help needed
 
-If you are a coder, designer or a helping hand on location - feel free to join in - #newcomersWelcome
+If you are a coder, designer or a helping hand on location - feel free to join in - Newcomers welcome.
 
 Next Meetup after the refugee hackathon will be at Bitcoin Stammtisch Berlin, 5th Nov @Room77/Kreuzberg, around 8pm
+
+And also meet and hack at the Chaos Communication Congress 2015 between christmas and new years at Hamburg.
