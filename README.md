@@ -47,7 +47,7 @@ After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm
 - this first draft
 - first code commit: ionic hybrid app template
 
-## Join & Meet
+## Next Steps
 
 user layout app, building dummy, backend design, ...
 
