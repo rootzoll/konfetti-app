@@ -17,7 +17,6 @@ Konfetti is like Karma-Points
 everybody who has konfetti can
 vote-up other support requests
 to make them more valuable
-
 = throw your konfetti on it
 
 neighborhood orga does
