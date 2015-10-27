@@ -3,3 +3,4 @@ plugins/
 .idea/
 resources/android/
 resources/ios/
+bower_components/
