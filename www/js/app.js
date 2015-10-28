@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
 
-.run(function($ionicPlatform, $cordovaGeolocation, $log) {
+.run(function($ionicPlatform, $cordovaGeolocation, $log, $cordovaToast) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -21,7 +21,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
 
     /*
-     * TEST
+     * TEST GEOLOCATION
+     * http://ngcordova.com/docs/plugins/geolocation/
      */
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $cordovaGeolocation
@@ -34,6 +35,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
               // error
             $log.info("GPS ERROR");
           });
+    /*
+     * TEST NATIVE TOAST
+     * http://ngcordova.com/docs/plugins/toast/
+     */
+      $cordovaToast.showShortTop('APP STARTED').then(function(success) {
+          $log.info("Toast OK");
+      }, function (error) {
+          $log.info("Toast ERROR");
+      });
 
   });
 })
