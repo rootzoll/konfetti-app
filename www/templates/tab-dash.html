@@ -1,13 +1,11 @@
-<ion-view view-title="Dashboard">
+<ion-view view-title="Konfetti App">
   <ion-content class="padding">
-    <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
-      <div class="item item-body">
-        <div>
-          There is a fire in <b>sector 3</b>
-        </div>
+
+      <span style="text-align: center;font-size: 200%;">{{actualKonfettiCount}} Konfetti</span>
+      <div>
+          <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect.code)'></select>
       </div>
-    </div>
+
     <div class="list card">
       <div class="item item-divider">Health</div>
       <div class="item item-body">
