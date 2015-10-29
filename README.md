@@ -44,12 +44,12 @@ After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm
 
 - a group concept agreement
 - smiling faces explaining the idea to others
-- this first draft
+- this first draft and mockups: https://github.com/rootzoll/konfetti-app/blob/master/concept/app-mockups.pdf
 - first code commit: ionic hybrid app template
 
 ## Next Steps
 
-user layout app, building dummy, backend design, ...
+user building dummy, backend design, ...
 
 See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga will change later on)
 
