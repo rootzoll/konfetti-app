@@ -1,30 +1,30 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($scope) {
+.controller('DashCtrl', function($rootScope, $scope, $translate) {
 
         $scope.actualKonfettiCount = 1000;
 
         // available app languages
         $scope.langSet = [
-            {code:'en', display:'EN'},
-            {code:'de', display:'DE'}
+            {code:'en', display:'English', dir:'ltr'},
+            {code:'de', display:'Deutsch', dir:'ltr'},
+            {code:'ar', display:'عربي', dir:'rtl'}
         ];
-
-        // getting app lang from settings (later)
-        $scope.settingsLang = "en";
 
         // setting selected lang in view to setting
         $scope.actualLangSelect = $scope.langSet[0];
-        for (i = 0; i < langSet.length; i++) {
-            if (langSet[i].code===$scope.settingsLang) {
-                $scope.actualLangSelect = langSet[i];
+        for (i = 0; i < $scope.langSet.length; i++) {
+            if ($scope.langSet[i].code===$rootScope.lang) {
+                $scope.actualLangSelect = $scope.langSet[i];
                 break;
             }
         }
 
         // receiving changes lang settings --> with i18n
         $scope.selectedLang = function(selected) {
-            console.log("selected lang: "+selected);
+            $translate.use(selected.code);
+            $rootScope.spClass = selected.dir;
+            console.log("selected lang: "+selected.code+" with "+selected.dir);
         };
 
     })

@@ -1,16 +1,21 @@
-<ion-view view-title="Konfetti App">
+<ion-view view-title="{{ 'KONFETTI-APP' | translate }}" class="sp-{{spClass}}">
+
+    <ion-nav-buttons side="secondary">
+        <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
+    </ion-nav-buttons>
+
   <ion-content class="padding">
 
-      <span style="text-align: center;font-size: 200%;">{{actualKonfettiCount}} Konfetti</span>
+      <span style="text-align: center;font-size: 200%;">{{actualKonfettiCount}} {{ 'KONFETTI' | translate }}</span>
       <div>
-          <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect.code)'></select>
+
       </div>
 
     <div class="list card">
-      <div class="item item-divider">Health</div>
+      <div class="item item-divider">{{ 'TITLE' | translate }}</div>
       <div class="item item-body">
         <div>
-          You ate an apple today!
+            {{ 'FOO' | translate }}
         </div>
       </div>
     </div>

@@ -1,1 +1,8 @@
 /* Empty. Add your own CSS if you like */
+
+.sp-rtl {
+    direction: rtl;
+}
+.sp-ltr {
+    direction: ltr;
+}

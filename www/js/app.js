@@ -5,10 +5,11 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'pascalprecht.translate'])
 
-.run(function($ionicPlatform, $cordovaGeolocation, $log, $cordovaToast) {
+.run(function($rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -19,6 +20,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
+
+    /*
+     * i18n SETTINGS
+     */
+
+    $rootScope.spClass = "ltr";
+    $rootScope.lang = "de";
+    $translate.use($rootScope.lang);
 
     /*
      * TEST GEOLOCATION
@@ -35,6 +44,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
               // error
             $log.info("GPS ERROR");
           });
+
     /*
      * TEST NATIVE TOAST
      * http://ngcordova.com/docs/plugins/toast/
@@ -48,7 +58,34 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider) {
+.config(function($stateProvider, $urlRouterProvider, $translateProvider) {
+
+  /*
+   * i18n --> https://angular-translate.github.io/docs
+   */
+
+   $translateProvider.translations('en', {
+            'KONFETTI' : 'confetti',
+            'KONFETTI-APP' : 'Konfetti App',
+            'TITLE': 'Hello',
+            'FOO': 'This is a paragraph'
+        });
+
+   $translateProvider.translations('de', {
+            'KONFETTI' : 'Konfetti',
+            'KONFETTI-APP' : 'Konfetti App',
+            'TITLE': 'Hallo',
+            'FOO': 'Dies ist ein Absatz'
+        });
+
+   $translateProvider.translations('ar', {
+            'KONFETTI' : 'حلويات',
+            'KONFETTI-APP' : 'التطبيق حلويات',
+            'TITLE': 'مرحبا',
+            'FOO': 'هذه فقرة'
+        });
+
+  $translateProvider.preferredLanguage("en");
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
