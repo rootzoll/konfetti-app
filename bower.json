@@ -1,7 +1,11 @@
 {
-  "name": "HelloIonic",
+  "name": "konfetti-app",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.1.0"
+  },
+  "dependencies": {
+    "ngCordova": "~0.1.20-alpha",
+    "angular-translate": "~2.8.1"
   }
 }
