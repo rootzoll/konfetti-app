@@ -31,7 +31,9 @@ angular.module('starter.controllers', [])
         };
         $scope.updateSortOptions();
 
+        // the sorting of open tasks changed
         $scope.changedSorting = function(actualSorting) {
+            alert("TODO");
             if ((typeof actualSorting != "undefined") && (actualSorting!=null)) {
                 $scope.actualSorting = actualSorting;
             } else {
@@ -58,6 +60,7 @@ angular.module('starter.controllers', [])
             $scope.updateSortOptions();
         };
 
+        // the previous party from list (closer)
         $scope.buttonPartyPrev = function() {
             $scope.loadingParty = true;
             $timeout(function(){
@@ -65,6 +68,7 @@ angular.module('starter.controllers', [])
             }, 2000);
         };
 
+        // next party in list (more far away)
         $scope.buttonPartyNext = function() {
             $scope.loadingParty = true;
             $timeout(function(){
@@ -72,6 +76,17 @@ angular.module('starter.controllers', [])
             }, 2000);
         };
 
+        $scope.tapNotificationMore = function($event) {
+            alert("TODO more info");
+        };
+
+        $scope.tapNotificationDelete = function($event) {
+            console.dir(event);
+            $event.stopPropagation();
+            alert("TODO delete");
+        };
+
+        // pop jup with more info in party orga
         $scope.showPartyInfo = function() {
 
             $scope.orga = {
@@ -96,7 +111,7 @@ angular.module('starter.controllers', [])
                                 text: '<i class="icon ion-information-circled"></i>',
                                 type: 'button-positive',
                                 onTap: function(e) {
-                                    window.open($scope.orga.website, '_blank');
+                                    window.open($scope.orga.website, "_system");
                                 }
                             }
                         ]

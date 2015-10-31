@@ -14,3 +14,15 @@
 .fixed-ltr::before {
     direction: ltr;
 }
+
+.before-big::before {
+    font-size: 150%;
+}
+
+.before-bigger::before {
+    font-size: 200%;
+}
+
+.before-biggest::before {
+    font-size: 300%;
+}

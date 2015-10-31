@@ -36,23 +36,18 @@
 
       <div ng-hide="loadingParty">
 
+      <!--
+        NOTIFICATIONS - just show if available
+      -->
+
       <div class="list card">
-
-          <a href="#" class="item item-icon-left">
-              <i class="icon ion-android-alert"></i>
-              Your request got published.
-          </a>
-
-          <a href="#" class="item item-icon-left">
-              <i class="icon ion-help-circled"></i>
-              Chat request
-          </a>
-
+          <div notification></div>
+          <div notification></div>
       </div>
 
       <div class="card">
           <div class="item item-divider">
-              Your Requests:
+              {{ 'DASHHEADER_POSTED' | translate }}
           </div>
       </div>
 
@@ -65,7 +60,7 @@
 
       <div class="card">
           <div class="item item-divider">
-              Requests you commited to:
+              {{ 'DASHHEADER_ACTIVE' | translate }}
           </div>
       </div>
 
@@ -77,7 +72,7 @@
 
       <div class="card">
           <div class="item item-divider">
-              Open Requests <select ng-model="actualSorting" ng-options='sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;"></select>
+              {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
           </div>
       </div>
 

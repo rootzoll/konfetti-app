@@ -69,8 +69,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'KONFETTI-APP' : 'Konfetti App',
             'ORGAINFO_TITLE': 'Organizer',
             'ORGAINFO_SUB': 'editorial responsibility',
-            'POSTSORT_MOST': 'top',
-            'POSTSORT_NEW': 'new'
+            'POSTSORT_MOST': 'top confetti',
+            'POSTSORT_NEW': 'newest entry',
+            'DASHHEADER_POSTED': 'You Posted',
+            'DASHHEADER_ACTIVE': 'You Answered',
+            'DASHHEADER_OPEN': 'Open Requests'
         });
 
    $translateProvider.translations('de', {
@@ -78,8 +81,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'KONFETTI-APP' : 'Konfetti App',
             'ORGAINFO_TITLE': 'Veranstalter',
             'ORGAINFO_SUB': 'inhaltlich verantwortlich',
-            'POSTSORT_MOST': 'top',
-            'POSTSORT_NEW': 'neu'
+            'POSTSORT_MOST': 'top konfetti',
+            'POSTSORT_NEW': 'neuste posts',
+            'DASHHEADER_POSTED': 'Deine Anfragen',
+            'DASHHEADER_ACTIVE': 'Deine Antworten',
+            'DASHHEADER_OPEN': 'Offene Anfragen'
         });
 
    $translateProvider.translations('ar', {
@@ -88,7 +94,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ORGAINFO_TITLE': 'منظم',
             'ORGAINFO_SUB': 'المسؤولية التحريرية',
             'POSTSORT_MOST': 'شعبية',
-            'POSTSORT_NEW': 'جديد'
+            'POSTSORT_NEW': 'جديد',
+            'DASHHEADER_POSTED': 'استفساراتك',
+            'DASHHEADER_ACTIVE': 'ردكم',
+            'DASHHEADER_OPEN': 'طلبات نشطة'
         });
 
   $translateProvider.preferredLanguage("en");
