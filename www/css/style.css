@@ -6,3 +6,11 @@
 .sp-ltr {
     direction: ltr;
 }
+
+.fixed-ltr {
+    direction: ltr;
+}
+
+.fixed-ltr::before {
+    direction: ltr;
+}

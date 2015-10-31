@@ -67,22 +67,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
    $translateProvider.translations('en', {
             'KONFETTI' : 'confetti',
             'KONFETTI-APP' : 'Konfetti App',
-            'TITLE': 'Hello',
-            'FOO': 'This is a paragraph'
+            'ORGAINFO_TITLE': 'Organizer',
+            'ORGAINFO_SUB': 'editorial responsibility',
+            'POSTSORT_MOST': 'top',
+            'POSTSORT_NEW': 'new'
         });
 
    $translateProvider.translations('de', {
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
-            'TITLE': 'Hallo',
-            'FOO': 'Dies ist ein Absatz'
+            'ORGAINFO_TITLE': 'Veranstalter',
+            'ORGAINFO_SUB': 'inhaltlich verantwortlich',
+            'POSTSORT_MOST': 'top',
+            'POSTSORT_NEW': 'neu'
         });
 
    $translateProvider.translations('ar', {
             'KONFETTI' : 'حلويات',
             'KONFETTI-APP' : 'التطبيق حلويات',
-            'TITLE': 'مرحبا',
-            'FOO': 'هذه فقرة'
+            'ORGAINFO_TITLE': 'منظم',
+            'ORGAINFO_SUB': 'المسؤولية التحريرية',
+            'POSTSORT_MOST': 'شعبية',
+            'POSTSORT_NEW': 'جديد'
         });
 
   $translateProvider.preferredLanguage("en");
