@@ -3,6 +3,11 @@
 angular.module('starter')
     .directive('notification', function () {
         return {
+            scope: {
+                type: '@',
+                moreCallback: '@',
+                deleteCallback: '@'
+            },
             templateUrl: 'templates/directive-notification.html',
             replace: true,
             restrict: 'A',

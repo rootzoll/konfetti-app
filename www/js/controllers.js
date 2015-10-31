@@ -6,6 +6,14 @@ angular.module('starter.controllers', [])
         $scope.loadingParty = false;
         $scope.actualSorting = null;
 
+        $scope.notifications = [
+            {id: 12, type:1, ref:123},
+            {id: 87, type:2, ref:655},
+            {id: 87, type:3, ref:633}
+        ];
+
+        $scope.testData = {text:'TTTTEEESSSTT'};
+
         // available app languages
         $scope.langSet = [
             {code:'en', display:'English', dir:'ltr'},

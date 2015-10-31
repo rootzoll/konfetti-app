@@ -73,7 +73,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'POSTSORT_NEW': 'newest entry',
             'DASHHEADER_POSTED': 'You Posted',
             'DASHHEADER_ACTIVE': 'You Answered',
-            'DASHHEADER_OPEN': 'Open Requests'
+            'DASHHEADER_OPEN': 'Open Requests',
+            'NOTIFICATION_REVIEWOK' : 'Your request is now public.',
+            'NOTIFICATION_REVIEWFAIL' : 'Your request was rejected.',
+            'NOTIFICATION_CHATREQUEST' : 'You got a chat message.'
         });
 
    $translateProvider.translations('de', {
@@ -85,7 +88,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'POSTSORT_NEW': 'neuste posts',
             'DASHHEADER_POSTED': 'Deine Anfragen',
             'DASHHEADER_ACTIVE': 'Deine Antworten',
-            'DASHHEADER_OPEN': 'Offene Anfragen'
+            'DASHHEADER_OPEN': 'Offene Anfragen',
+            'NOTIFICATION_REVIEWOK' : 'Deine Anfrage ist jetzt öffentlich.',
+            'NOTIFICATION_REVIEWFAIL' : 'Deine Anfrage wurde abgelehnt.',
+            'NOTIFICATION_CHATREQUEST' : 'Du hast eine Nachricht.'
         });
 
    $translateProvider.translations('ar', {
@@ -97,7 +103,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'POSTSORT_NEW': 'جديد',
             'DASHHEADER_POSTED': 'استفساراتك',
             'DASHHEADER_ACTIVE': 'ردكم',
-            'DASHHEADER_OPEN': 'طلبات نشطة'
+            'DASHHEADER_OPEN': 'طلبات نشطة',
+            'NOTIFICATION_REVIEWOK' : 'طلبك الآن العام',
+            'NOTIFICATION_REVIEWFAIL' : 'وقد رفض طلبك',
+            'NOTIFICATION_CHATREQUEST' : 'كنت حصلت على رسالة دردشة'
         });
 
   $translateProvider.preferredLanguage("en");
