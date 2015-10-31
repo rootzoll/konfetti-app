@@ -2,8 +2,8 @@
     <table width="100%">
 
         <!-- Chat Mesaage -->
-        <tr ng-show="(type===1)">
-            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-alert before-big"></i></td>
+        <tr ng-show="(notification.type===1)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-chatboxes before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div style="width: 500px;">
                     {{ 'NOTIFICATION_CHATREQUEST' | translate }}
@@ -13,8 +13,8 @@
         </tr>
 
         <!-- Review OK -->
-        <tr ng-show="(type===2)">
-            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-alert before-big"></i></td>
+        <tr ng-show="(notification.type===2)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-checkmark-circled before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div style="width: 500px;">
                     {{ 'NOTIFICATION_REVIEWOK' | translate }}
@@ -24,7 +24,7 @@
         </tr>
 
         <!-- Review FAIL -->
-        <tr ng-show="(type===3)">
+        <tr ng-show="(notification.type===3)">
             <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-alert before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div style="width: 500px;">
