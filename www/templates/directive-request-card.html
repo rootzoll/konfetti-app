@@ -13,7 +13,7 @@
                         </tr>
                     </table>
                 </td>
-                <td ng-show="(request.state==='open')" width="50" style="text-align: left">
+                <td ng-show="(request.state==='open')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
                     <table class="round" style="width:50px;">
                         <tr>
                             <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
@@ -22,7 +22,7 @@
                         </tr>
                         <tr>
                             <td>
-                                <button on-tap="tapRequestKonfetti($event, request)" class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
+                                <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
                             </td>
                         </tr>
                     </table>
