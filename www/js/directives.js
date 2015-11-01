@@ -7,4 +7,11 @@ angular.module('starter')
             replace: true,
             restrict: 'A'
         };
+    })
+    .directive('requestcard', function () {
+        return {
+            templateUrl: 'templates/directive-request-card.html',
+            replace: true,
+            restrict: 'A'
+        };
     });

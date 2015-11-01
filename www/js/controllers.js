@@ -12,7 +12,29 @@ angular.module('starter.controllers', [])
             {id: 87, type:3, ref:633}
         ];
 
-        $scope.testData = {text:'TTTTEEESSSTT'};
+        $scope.requestsReview = [];
+
+        $scope.requestsPosted = [
+            {   id: 12,
+                userId: 123,
+                konfettiCount: 999,
+                title: 'Mithilfe für Hecke am Spielplatz schneiden',
+                imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
+                state: 'review'
+            }
+        ];
+
+        $scope.requestsInteraction = [
+            {   id: 13,
+                userId: 124,
+                konfettiCount: 1,
+                title: 'Aufbau Grillfest',
+                imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
+                state: 'open'
+            }
+        ];
+
+        $scope.requestsOpen = [];
 
         // available app languages
         $scope.langSet = [
@@ -84,14 +106,22 @@ angular.module('starter.controllers', [])
             }, 2000);
         };
 
-        $scope.tapNotificationMore = function($event) {
-            alert("TODO more info");
+        $scope.tapNotificationMore = function($event, noti) {
+            alert("TODO more notification id("+noti.id+")");
         };
 
-        $scope.tapNotificationDelete = function($event) {
-            console.dir(event);
+        $scope.tapNotificationDelete = function($event, noti) {
             $event.stopPropagation();
-            alert("TODO delete");
+            alert("TODO delete notification id("+noti.id+")");
+        };
+
+        $scope.tapRequestMore = function($event, request) {
+            alert("TODO more request id("+request.id+") ");
+        };
+
+        $scope.tapRequestKonfetti = function($event, request) {
+            $event.stopPropagation();
+            request.konfettiCount++;
         };
 
         // pop jup with more info in party orga

@@ -65,48 +65,63 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
    */
 
    $translateProvider.translations('en', {
+            'TAB_PARTIES' : 'Parties',
+            'TAB_REQUEST' : 'Make Request',
+            'TAB_MORE' : 'More',
             'KONFETTI' : 'confetti',
             'KONFETTI-APP' : 'Konfetti App',
             'ORGAINFO_TITLE': 'Organizer',
             'ORGAINFO_SUB': 'editorial responsibility',
             'POSTSORT_MOST': 'top confetti',
             'POSTSORT_NEW': 'newest entry',
+            'DASHHEADER_REVIEW': 'Please Review',
             'DASHHEADER_POSTED': 'You Posted',
             'DASHHEADER_ACTIVE': 'You Answered',
             'DASHHEADER_OPEN': 'Open Requests',
             'NOTIFICATION_REVIEWOK' : 'Your request is now public.',
             'NOTIFICATION_REVIEWFAIL' : 'Your request was rejected.',
-            'NOTIFICATION_CHATREQUEST' : 'You got a chat message.'
+            'NOTIFICATION_CHATREQUEST' : 'You got a chat message.',
+            'NOCONTENT' : 'no request yet'
         });
 
    $translateProvider.translations('de', {
+            'TAB_PARTIES' : 'Parties',
+            'TAB_REQUEST' : 'Anfrage einstellen',
+            'TAB_MORE' : 'Mehr',
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
             'ORGAINFO_TITLE': 'Veranstalter',
             'ORGAINFO_SUB': 'inhaltlich verantwortlich',
             'POSTSORT_MOST': 'top konfetti',
             'POSTSORT_NEW': 'neuste posts',
+            'DASHHEADER_REVIEW': 'Bitte Prüfen',
             'DASHHEADER_POSTED': 'Deine Anfragen',
             'DASHHEADER_ACTIVE': 'Deine Antworten',
             'DASHHEADER_OPEN': 'Offene Anfragen',
             'NOTIFICATION_REVIEWOK' : 'Deine Anfrage ist jetzt öffentlich.',
             'NOTIFICATION_REVIEWFAIL' : 'Deine Anfrage wurde abgelehnt.',
-            'NOTIFICATION_CHATREQUEST' : 'Du hast eine Nachricht.'
+            'NOTIFICATION_CHATREQUEST' : 'Du hast eine Nachricht.',
+            'NOCONTENT' : 'bisher keine Anfragen'
         });
 
    $translateProvider.translations('ar', {
+            'TAB_PARTIES' : 'حفلات',
+            'TAB_REQUEST' : 'جعل الطلب',
+            'TAB_MORE' : 'مهر',
             'KONFETTI' : 'حلويات',
             'KONFETTI-APP' : 'التطبيق حلويات',
             'ORGAINFO_TITLE': 'منظم',
             'ORGAINFO_SUB': 'المسؤولية التحريرية',
             'POSTSORT_MOST': 'شعبية',
             'POSTSORT_NEW': 'جديد',
+            'DASHHEADER_REVIEW': 'مراجعة',
             'DASHHEADER_POSTED': 'استفساراتك',
             'DASHHEADER_ACTIVE': 'ردكم',
             'DASHHEADER_OPEN': 'طلبات نشطة',
             'NOTIFICATION_REVIEWOK' : 'طلبك الآن العام',
             'NOTIFICATION_REVIEWFAIL' : 'وقد رفض طلبك',
-            'NOTIFICATION_CHATREQUEST' : 'كنت حصلت على رسالة دردشة'
+            'NOTIFICATION_CHATREQUEST' : 'كنت حصلت على رسالة دردشة',
+            'NOCONTENT' : 'أي طلب حتى الآن'
         });
 
   $translateProvider.preferredLanguage("en");

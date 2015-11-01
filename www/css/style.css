@@ -26,3 +26,8 @@
 .before-biggest::before {
     font-size: 300%;
 }
+
+.round thead tr:first-child th:first-child,
+.round tbody:first-child tr:first-child td:first-child {
+    border-top-left-radius: 0.6em;
+}

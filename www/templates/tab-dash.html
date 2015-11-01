@@ -44,30 +44,30 @@
           <div notification type="{{noti}}" data-ng-repeat="notification in notifications"></div>
       </div>
 
-      <div class="card">
+
+      <div class="card" ng-show="(requestsReview.length>0)">
+          <div class="item item-divider">
+              {{ 'DASHHEADER_REVIEW' | translate }}
+          </div>
+      </div>
+
+      <div requestcard data-ng-repeat="request in requestsReview"></div>
+
+      <div class="card" ng-show="(requestsPosted.length>0)">
           <div class="item item-divider">
               {{ 'DASHHEADER_POSTED' | translate }}
           </div>
       </div>
 
-      <div class="card">
-          <div class="item item-text-wrap">
-              TODO
-          </div>
-      </div>
+      <div requestcard data-ng-repeat="request in requestsPosted" showdelete="1"></div>
 
-
-      <div class="card">
+      <div class="card" ng-show="(requestsInteraction.length>0)">
           <div class="item item-divider">
               {{ 'DASHHEADER_ACTIVE' | translate }}
           </div>
       </div>
 
-      <div class="card">
-          <div class="item item-text-wrap">
-              TODO
-          </div>
-      </div>
+      <div requestcard data-ng-repeat="request in requestsInteraction"></div>
 
       <div class="card">
           <div class="item item-divider">
@@ -75,16 +75,12 @@
           </div>
       </div>
 
-      <div class="card">
-          <div class="item item-text-wrap">
-              <button class="button button-positive"><i class="icon ion-thumbsup"></i></button> TODO
-          </div>
-      </div>
+      <div requestcard data-ng-repeat="request in requestsOpen"></div>
 
       <div class="card">
-          <div class="item item-text-wrap">
-              <button class="button button-positive"><i class="icon ion-thumbsup"></i></button> TODO
-          </div>
+           <div class="item item-text-wrap">
+               {{ 'NOCONTENT' | translate }}
+           </div>
       </div>
 
       </div>

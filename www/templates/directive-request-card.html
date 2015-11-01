@@ -1,0 +1,43 @@
+<div class="card" on-tap="tapRequestMore($event, request)">
+    <div class="item item-text-wrap">
+        <table width="100%">
+            <tr>
+                <td ng-show="(request.state!='open')" width="120" style="vertical-align: middle; text-align: left">
+                    <table class="round" style="width:120px;">
+                        <tr>
+                            <td style="width:140px;">
+                                <button ng-show="(request.state==='review')" class="button button-energized" style="position:relative;left:2px;width:140px;"><i class="icon ion-clock"></i></button>
+                                <button ng-show="(request.state==='done')" class="button button-balanced" style="position:relative;left:2px;width:140px;"><i class="icon ion-checkmark-circled"></i></button>
+                                <button ng-show="(request.state==='rejected')" class="button button-assertive" style="position:relative;left:2px;width:140px;"><i class="icon ion-alert-circled"></i></button>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td ng-show="(request.state==='open')" width="120" style="vertical-align: middle; text-align: left">
+                    <table class="round" style="width:140px;">
+                        <tr>
+                            <td>
+                                <button on-tap="tapRequestKonfetti($event, request)" class="button button-positive" style="position:relative;left:4px;"><i class="icon ion-thumbsup"></i></button>
+                            </td>
+                            <td style="border-top-left-radius: 0.6em; border-width: 1px; border-style: solid;vertical-align: middle; text-align: center; font-weight: bold; padding-left: 10px; padding-right: 10px;">
+                                {{request.konfettiCount}}<br>Konfetti
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td width="*" style="vertical-align: middle; padding-left: 15px; padding-right: 15px;">
+                    <div style="padding-top: 5px; font-size: 125%; font-weight: bold">
+                        {{request.title}}
+                    </div>
+                </td>
+                <td width="50" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 10px; padding-left: 10px;">
+                    <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                </td>
+                <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 10px; padding-left: 10px;">
+                    <i class="icon ion-android-arrow-dropright-circle before-big"></i>
+                </td>
+            </tr>
+        </table>
+
+    </div>
+</div>
