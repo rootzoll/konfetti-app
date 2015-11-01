@@ -18,7 +18,7 @@ angular.module('starter.controllers', [])
             {   id: 12,
                 userId: 123,
                 konfettiCount: 999,
-                title: 'Mithilfe für Hecke am Spielplatz schneiden',
+                title: 'Hecke am Spielplatz schneiden',
                 imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
                 state: 'review'
             }
@@ -28,7 +28,7 @@ angular.module('starter.controllers', [])
             {   id: 13,
                 userId: 124,
                 konfettiCount: 1,
-                title: 'Aufbau Grillfest',
+                title: 'Aufbau Grillfest bei Jannes auf dem Acker',
                 imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
                 state: 'open'
             }

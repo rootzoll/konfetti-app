@@ -58,7 +58,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $translateProvider) {
+.config(function($stateProvider, $urlRouterProvider, $translateProvider, $ionicConfigProvider) {
+
+   $ionicConfigProvider.tabs.position('bottom');
 
   /*
    * i18n --> https://angular-translate.github.io/docs
