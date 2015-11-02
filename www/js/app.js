@@ -68,7 +68,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
    $translateProvider.translations('en', {
             'TAB_PARTIES' : 'Parties',
-            'TAB_REQUEST' : 'Make Request',
+            'TAB_REQUEST' : 'Request',
             'TAB_MORE' : 'More',
             'KONFETTI' : 'confetti',
             'KONFETTI-APP' : 'Konfetti App',
@@ -83,12 +83,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NOTIFICATION_REVIEWOK' : 'Your request is now public.',
             'NOTIFICATION_REVIEWFAIL' : 'Your request was rejected.',
             'NOTIFICATION_CHATREQUEST' : 'You got a chat message.',
-            'NOCONTENT' : 'no request yet'
+            'NOCONTENT' : 'no request yet',
+            'NEWREQUEST' : 'Publish a new Request',
+            'YOURNAME' : 'Your Name',
+            'YOURREQUEST' : 'Your Request',
+            'PUBLICINFO' : 'Public Information',
+            'PRIVATECHATS' : 'Private Chats',
+            'ADDINFO' : 'add image, text, location'
         });
 
    $translateProvider.translations('de', {
             'TAB_PARTIES' : 'Parties',
-            'TAB_REQUEST' : 'Anfrage einstellen',
+            'TAB_REQUEST' : 'Anfrage',
             'TAB_MORE' : 'Mehr',
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
@@ -103,12 +109,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NOTIFICATION_REVIEWOK' : 'Deine Anfrage ist jetzt öffentlich.',
             'NOTIFICATION_REVIEWFAIL' : 'Deine Anfrage wurde abgelehnt.',
             'NOTIFICATION_CHATREQUEST' : 'Du hast eine Nachricht.',
-            'NOCONTENT' : 'bisher keine Anfragen'
+            'NOCONTENT' : 'bisher keine Anfragen',
+            'NEWREQUEST' : 'Neue Anfrage erstellen',
+            'YOURNAME' : 'Dein Name',
+            'YOURREQUEST' : 'Deine Anfrage',
+            'PUBLICINFO' : 'Öffentliche Informationen',
+            'PRIVATECHATS' : 'Private Chats',
+            'ADDINFO' : 'Bild, Text, Ortsinformationen hinzufügen'
         });
 
    $translateProvider.translations('ar', {
             'TAB_PARTIES' : 'حفلات',
-            'TAB_REQUEST' : 'جعل الطلب',
+            'TAB_REQUEST' : 'طلب',
             'TAB_MORE' : 'مهر',
             'KONFETTI' : 'حلويات',
             'KONFETTI-APP' : 'التطبيق حلويات',
@@ -123,7 +135,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NOTIFICATION_REVIEWOK' : 'طلبك الآن العام',
             'NOTIFICATION_REVIEWFAIL' : 'وقد رفض طلبك',
             'NOTIFICATION_CHATREQUEST' : 'كنت حصلت على رسالة دردشة',
-            'NOCONTENT' : 'أي طلب حتى الآن'
+            'NOCONTENT' : 'أي طلب حتى الآن',
+            'NEWREQUEST' : 'جعل طلب جديد',
+            'YOURNAME' : 'اسم الدين',
+            'YOURREQUEST' : 'اسم الدين',
+            'PUBLICINFO' : 'معلومات عامة',
+            'PRIVATECHATS' : 'دردشات خاصة',
+            'ADDINFO' : 'الصورة والنص و إضافة معلومات الموقع'
         });
 
   $translateProvider.preferredLanguage("en");
@@ -153,15 +171,27 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.request', {
+          url: '/request',
+          views: {
+              'tab-chats': {
+                  templateUrl: 'templates/tab-request.html',
+                  controller: 'RequestCtrl'
+              }
+          }
+  })
+
+  .state('tab.request-detail', {
+      url: '/request/:id',
       views: {
         'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+          templateUrl: 'templates/tab-request.html',
+          controller: 'RequestCtrl'
         }
       }
-    })
+  })
+
+    /*
     .state('tab.chat-detail', {
       url: '/chats/:chatId',
       views: {
@@ -171,6 +201,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         }
       }
     })
+    */
 
   .state('tab.account', {
     url: '/account',

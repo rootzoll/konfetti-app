@@ -1,15 +1,15 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($rootScope, $scope, $translate, $timeout, $ionicPopup, $log) {
+.controller('DashCtrl', function($rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate) {
 
         $scope.actualKonfettiCount = 1000;
         $scope.loadingParty = false;
         $scope.actualSorting = null;
 
         $scope.notifications = [
-            {id: 12, type:1, ref:123},
-            {id: 87, type:2, ref:655},
-            {id: 87, type:3, ref:633}
+            {id: 12, type:1, ref:123}
+            //{id: 87, type:2, ref:655},
+            //{id: 87, type:3, ref:633}
         ];
 
         $scope.requestsReview = [];
@@ -17,6 +17,7 @@ angular.module('starter.controllers', [])
         $scope.requestsPosted = [
             {   id: 12,
                 userId: 123,
+                orgaId: 2,
                 konfettiCount: 999,
                 title: 'Hecke am Spielplatz schneiden',
                 imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
@@ -27,6 +28,7 @@ angular.module('starter.controllers', [])
         $scope.requestsInteraction = [
             {   id: 13,
                 userId: 124,
+                orgaId: 2,
                 konfettiCount: 1,
                 title: 'Aufbau Grillfest bei Jannes auf dem Acker',
                 imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
@@ -93,6 +95,7 @@ angular.module('starter.controllers', [])
         // the previous party from list (closer)
         $scope.buttonPartyPrev = function() {
             $scope.loadingParty = true;
+            $ionicScrollDelegate.scrollTop();
             $timeout(function(){
                 $scope.loadingParty = false;
             }, 2000);
@@ -101,6 +104,7 @@ angular.module('starter.controllers', [])
         // next party in list (more far away)
         $scope.buttonPartyNext = function() {
             $scope.loadingParty = true;
+            $ionicScrollDelegate.scrollTop();
             $timeout(function(){
                 $scope.loadingParty = false;
             }, 2000);
@@ -116,12 +120,14 @@ angular.module('starter.controllers', [])
         };
 
         $scope.tapRequestMore = function($event, request) {
-            alert("TODO more request id("+request.id+") ");
+            //alert("TODO more request id("+request.id+") ");
+            $state.go('tab.request-detail', {id: request.id});
         };
 
         $scope.tapRequestKonfetti = function($event, request) {
             $event.stopPropagation();
             request.konfettiCount++;
+            $scope.actualKonfettiCount--;
         };
 
         // pop jup with more info in party orga
@@ -165,19 +171,40 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+.controller('RequestCtrl', function($scope, $log, $stateParams, $ionicTabsDelegate, $timeout, $translate) {
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+
+  $scope.title = "";
+
+  // get request id if its a existing request
+  $scope.id = 0; if (typeof $stateParams.id!="undefined") $scope.id = $stateParams.id;
+
+  // change title based on situation
+  $scope.title = "";
+  if ($scope.id==0) {
+        $translate("NEWREQUEST").then(function (NEWREQUEST) {
+                $timeout(function() {
+                    $scope.title = NEWREQUEST;
+                },10);
+        });
+  } else {
+        $translate("TAB_REQUEST").then(function (TAB_REQUEST) {
+                $timeout(function() {
+                    $scope.title = TAB_REQUEST;
+                },10);
+
+        });
+  }
+
+  // when re-entering the view
+  $scope.$on('$ionicView.enter', function(e) {
+
+  });
+
+  $scope.editSpokenLanguage = function() {
+      alert("TODO:");
+  }
+
 })
 
 .controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
