@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function($rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate) {
+.controller('DashCtrl', function(AppContext, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate) {
 
         $scope.actualKonfettiCount = 1000;
         $scope.loadingParty = false;
@@ -79,7 +79,7 @@ angular.module('starter.controllers', [])
         // setting selected lang in view to setting
         $scope.actualLangSelect = $scope.langSet[0];
         for (i = 0; i < $scope.langSet.length; i++) {
-            if ($scope.langSet[i].code===$rootScope.lang) {
+            if ($scope.langSet[i].code===AppContext.getAppLang) {
                 $scope.actualLangSelect = $scope.langSet[i];
                 break;
             }
@@ -88,7 +88,8 @@ angular.module('starter.controllers', [])
         // receiving changes lang settings --> with i18n
         $scope.selectedLang = function(selected) {
             $translate.use(selected.code);
-            $rootScope.spClass = selected.dir;
+            AppContext.setAppLang(selected.code);
+            $rootScope.spClass = AppContext.getAppLangDirection();
             $scope.updateSortOptions();
         };
 
@@ -130,7 +131,7 @@ angular.module('starter.controllers', [])
             $scope.actualKonfettiCount--;
         };
 
-        // pop jup with more info in party orga
+        // pop up with more info in party orga
         $scope.showPartyInfo = function() {
 
             $scope.orga = {
@@ -171,28 +172,53 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('RequestCtrl', function($scope, $log, $stateParams, $ionicTabsDelegate, $timeout, $translate) {
-
+.controller('RequestCtrl', function(AppContext, $scope, $log, $stateParams, $ionicTabsDelegate, $timeout, $translate, $ionicPopup) {
 
   $scope.title = "";
+  $scope.profile = AppContext.getProfile();
+
+  // request data skeleton
+  $scope.request = {
+    id : 0,
+    author : $scope.profile.id,
+    profile_name : '',
+    profile_imageUrl : '',
+    profile_spokenLangs : [],
+    headline : {
+        'en' : '',
+        'de' : '',
+        'ar' : ''
+    },
+    confetti : 0,
+    info: [],
+    chats : []
+  };
+
+  // orga data skeleton
+  $scope.orga = {
+    name: 'Helferverein Nord e.V.',
+    town: 'Berlin-Pankow',
+    address: 'Berliner Str. 99, 13189 Berlin, GERMANY',
+    person: 'Max Mustermann',
+    website: 'http://pankowhilft.blogsport.de'
+  };
 
   // get request id if its a existing request
-  $scope.id = 0; if (typeof $stateParams.id!="undefined") $scope.id = $stateParams.id;
+  if (typeof $stateParams.id!="undefined") $scope.request.id = $stateParams.id;
 
   // change title based on situation
-  $scope.title = "";
-  if ($scope.id==0) {
+  $scope.headerTitle= "";
+  if ($scope.request==0) {
         $translate("NEWREQUEST").then(function (NEWREQUEST) {
                 $timeout(function() {
-                    $scope.title = NEWREQUEST;
+                    $scope.headerTitle = NEWREQUEST;
                 },10);
         });
   } else {
         $translate("TAB_REQUEST").then(function (TAB_REQUEST) {
                 $timeout(function() {
-                    $scope.title = TAB_REQUEST;
+                    $scope.headerTitle = TAB_REQUEST;
                 },10);
-
         });
   }
 
@@ -201,8 +227,52 @@ angular.module('starter.controllers', [])
 
   });
 
+  $scope.confettiMin = 1;
+  $scope.confettiMax = 12345;
+  $scope.confettiToSpend = $scope.confettiMin;
+
+  // pop pup to choose languages
   $scope.editSpokenLanguage = function() {
-      alert("TODO:");
+
+      $scope.addRemoveLang = function(addRemove, value) {
+          if (addRemove===0) {
+              // remove
+              var i = $scope.profile.spokenLangs.indexOf(value);
+              if(i != -1) $scope.profile.spokenLangs.splice(i, 1);
+          } else {
+              // add
+              $scope.profile.spokenLangs.push(value);
+          }
+      };
+
+    // An elaborate, custom popup
+      $translate("ISPEAK").then(function (ISPEAK) {
+
+            $scope.en = $scope.profile.spokenLangs.contains("en") ? 1 : 0;
+            $scope.de = $scope.profile.spokenLangs.contains("de") ? 1 : 0;
+            $scope.ar = $scope.profile.spokenLangs.contains("ar") ? 1 : 0;
+
+            var myPopup = $ionicPopup.show({
+                      templateUrl: 'templates/pop-languages.html',
+                      scope: $scope,
+                      title: ISPEAK,
+                      subTitle: "",
+                      buttons: [
+                          { text: '<i class="icon ion-ios-close-outline"></i>'
+                          }
+                      ]
+            });
+            myPopup.then(function(res) {
+                if ($scope.profile.spokenLangs.length===0) $scope.profile.spokenLangs.push(AppContext.getAppLang());
+                AppContext.setProfile($scope.profile);
+            });
+
+      });
+
+  };
+
+  $scope.takeSelfi = function() {
+    alert("TODO: take Selfi");
   }
 
 })

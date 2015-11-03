@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'pascalprecht.translate'])
 
-.run(function($rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
+.run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -22,12 +22,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
 
     /*
+     * App Context
+     */
+
+     AppContext.loadContext();
+
+    /*
      * i18n SETTINGS
      */
 
-    $rootScope.spClass = "ltr";
-    $rootScope.lang = "de";
-    $translate.use($rootScope.lang);
+    $translate.use(AppContext.getAppLang());
+    $rootScope.spClass = AppContext.getAppLangDirection();
 
     /*
      * TEST GEOLOCATION
@@ -89,7 +94,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'YOURREQUEST' : 'Your Request',
             'PUBLICINFO' : 'Public Information',
             'PRIVATECHATS' : 'Private Chats',
-            'ADDINFO' : 'add image, text, location'
+            'ADDINFO' : 'add image, text, location',
+            'ISPEAK' : 'I speak',
+            'SUBMIT' : 'Submit Request',
+            'REWARD' : 'reward',
+            'YOUGIVE' : 'you give'
         });
 
    $translateProvider.translations('de', {
@@ -115,7 +124,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'YOURREQUEST' : 'Deine Anfrage',
             'PUBLICINFO' : 'Öffentliche Informationen',
             'PRIVATECHATS' : 'Private Chats',
-            'ADDINFO' : 'Bild, Text, Ortsinformationen hinzufügen'
+            'ADDINFO' : 'Bild, Text, Ortsinformationen hinzufügen',
+            'ISPEAK' : 'Ich spreche',
+            'SUBMIT' : 'Anfrage abschicken',
+            'REWARD' : 'Belohnung',
+            'YOUGIVE' : 'Du gibst'
         });
 
    $translateProvider.translations('ar', {
@@ -141,7 +154,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'YOURREQUEST' : 'اسم الدين',
             'PUBLICINFO' : 'معلومات عامة',
             'PRIVATECHATS' : 'دردشات خاصة',
-            'ADDINFO' : 'الصورة والنص و إضافة معلومات الموقع'
+            'ADDINFO' : 'الصورة والنص و إضافة معلومات الموقع',
+            'ISPEAK' : 'أتكلم',
+            'SUBMIT' : 'إرسال طلب',
+            'REWARD' : 'مكافأة',
+            'YOUGIVE' : 'انت تعطى'
         });
 
   $translateProvider.preferredLanguage("en");
@@ -175,7 +192,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           url: '/request',
           views: {
               'tab-chats': {
-                  templateUrl: 'templates/tab-request.html',
+                  templateUrl:'templates/tab-request.html',
                   controller: 'RequestCtrl'
               }
           }
@@ -217,3 +234,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   $urlRouterProvider.otherwise('/tab/dash');
 
 });
+
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] == obj) {
+            return true;
+        }
+    }
+    return false;
+};

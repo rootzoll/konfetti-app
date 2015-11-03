@@ -1,4 +1,4 @@
-<ion-view view-title="{{title}}" class="sp-{{spClass}}">
+<ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}">
   <ion-content>
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
@@ -21,7 +21,7 @@
           <div style="width:100%; padding:8px;">
               <table style="width: 100%;">
                   <tr>
-                      <td width="70" style="text-align: center; vertical-align: middle;">
+                      <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
                           <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
@@ -32,9 +32,8 @@
                                   </label>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;">
-                                  I speak
-                                  <span style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;">DE</span>
-                                  <span style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;">AR</span>
+                                  {{ 'ISPEAK' | translate }}
+                                  <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
                                   <span style="border-width: 0px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;"><i class="icon ion-android-add-circle" style="color: grey; font-size: 125%;"></i></span>
                               </div>
                           </div>
@@ -51,39 +50,45 @@
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <div style="font-size: 150%; font-weight: bold; padding-top: 16px;">
-                              reward 1000 konfetti
+                          <div style="padding-top: 12px;padding-bottom: 1px;">
+                              <span style="font-size:100%">{{ 'YOUGIVE' | translate }}&nbsp;</span> <span style="font-size:150%; font-weight: bold;">{{confettiToSpend}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'REWARD' | translate }}</span>
                           </div>
                       </td>
                   </tr>
                   <tr>
                       <td colspan="2" align="center">
                           <div class="item range" style="width:95%">
-                              <span style="font-size: 75%">1</span>
-                              <input style="margin-top: 0px;" type="range" name="volume">
-                              <span style="font-size: 75%">67</span>
+                              <span style="font-size: 75%">{{confettiMin}}</span>
+                              <input ng-model="confettiToSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confettiMin}}" max="{{confettiMax}}">
+                              <span style="font-size: 75%">{{confettiMax}}</span>
                           </div>
                       </td>
                   </tr>
-
+                  <tr>
+                      <td colspan="2">
+                          <button class="button icon-left ion-android-globe button-positive" style="border-radius: 6px">
+                              {{ 'SUBMIT' | translate }}
+                          </button>
+                      </td>
+                  </tr>
               </table>
           </div>
 
       </div>
 
-      <div class="card">
+      <div class="card" ng-show="( (request.info.length>0) || (request.author===profile.id) )">
           <div class="item item-divider">
               {{ 'PUBLICINFO' | translate }}
           </div>
       </div>
 
-      <div style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-          <button class="button button-small icon-left ion-android-attach button-light">
+      <div ng-show="(request.author===profile.id)" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+          <button class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
               &nbsp; {{ 'ADDINFO' | translate }}
           </button>
       </div>
 
-      <div class="card">
+      <div class="card" ng-show="(request.chats.length>0)">
           <div class="item item-divider">
               {{ 'PRIVATECHATS' | translate }}
           </div>
