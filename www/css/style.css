@@ -31,3 +31,7 @@
 .round tbody:first-child tr:first-child td:first-child {
     border-top-left-radius: 0.6em;
 }
+
+#reloadIcon::before {
+    font-size: 23px;
+}

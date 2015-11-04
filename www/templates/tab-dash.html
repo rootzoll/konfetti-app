@@ -1,5 +1,11 @@
 <ion-view view-title="{{ 'KONFETTI-APP' | translate }}" class="sp-{{spClass}}">
 
+    <ion-nav-buttons side="first">
+        <button on-tap="reloadPartyList()" ng-show="!loadingParty" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="reloadIcon" class="icon ion-ios-loop"></i>
+        </button>
+    </ion-nav-buttons>
+
     <ion-nav-buttons side="secondary">
         <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
     </ion-nav-buttons>
@@ -16,23 +22,29 @@
             <div style="width:100%;padding:8px">
                 <table style="width: 100%;direction: ltr;">
                     <tr>
-                        <td width="30px" style="text-align: left; vertical-align:middle;">
+                        <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
                             <button on-tap="buttonPartyPrev()" class="button button-light icon ion-arrow-left-b fixed-ltr"></button>
                         </td>
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
                             <div ng-hide="loadingParty" style="min-height: 70px;">
 
-                                <div style="text-align: center; font-size: 200%;">{{actualKonfettiCount}} {{ 'KONFETTI' | translate }}</div>
-                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">Helferverein Nord e.V.</div>
-                                <div style="direction: ltr;">Berlin-Pankow (500m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
+                                <div style="text-align: center; font-size: 200%;">{{orga.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
+                                <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
 
                             </div>
                             <div ng-show="loadingParty" style="min-height: 70px;">
                                 <br>
                                 <ion-spinner icon="android"></ion-spinner>
+                                <div ng-show="(state==='')">
+                                    {{ 'INITACCOUNT' | translate }}
+                                </div>
+                                <div style="color:lightgrey;font-size: 75%">
+                                    {{ state | translate }}
+                                </div>
                             </div>
                         </td>
-                        <td width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
+                        <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
                             <button on-tap="buttonPartyPrev()" class="button button-light icon ion-arrow-right-b fixed-ltr"></button>
                         </td>
                     </tr>
@@ -52,7 +64,7 @@
         NOTIFICATIONS - just show if available
       -->
 
-      <div class="list card">
+      <div ng-show="(notifications.length>0)" class="list card">
           <div notification type="{{noti}}" data-ng-repeat="notification in notifications"></div>
       </div>
 
@@ -89,7 +101,7 @@
 
       <div requestcard data-ng-repeat="request in requestsOpen"></div>
 
-      <div class="card">
+      <div ng-show="(requestsOpen.length===0)" class="card">
            <div class="item item-text-wrap">
                {{ 'NOCONTENT' | translate }}
            </div>

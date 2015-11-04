@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ngCordova', 'pascalprecht.translate'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.api', 'ngCordova', 'pascalprecht.translate'])
 
 .run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
@@ -22,43 +22,46 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     }
 
     /*
-     * App Context
-     */
-
-     AppContext.loadContext();
-
-    /*
-     * i18n SETTINGS
-     */
-
-    $translate.use(AppContext.getAppLang());
-    $rootScope.spClass = AppContext.getAppLangDirection();
-
-    /*
-     * TEST GEOLOCATION
+     * START GEOLOCATION
      * http://ngcordova.com/docs/plugins/geolocation/
      */
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
-    $cordovaGeolocation
+    $rootScope.gps  = 'wait';
+    $rootScope.lat  = 0;
+    $rootScope.lon = 0;
+      $cordovaGeolocation
           .getCurrentPosition(posOptions)
           .then(function (position) {
-              var lat  = position.coords.latitude
-              var long = position.coords.longitude
-              $log.info("lat("+lat+") long("+long+")");
+              $rootScope.lat  = position.coords.latitude;
+              $rootScope.lon = position.coords.longitude;
+              $rootScope.gps  = 'win';
+              $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
           }, function(err) {
               // error
-            $log.info("GPS ERROR");
+              $log.info("GPS ERROR");
+              $rootScope.gps  = 'fail';
           });
 
     /*
      * TEST NATIVE TOAST
      * http://ngcordova.com/docs/plugins/toast/
-     */
       $cordovaToast.showShortTop('APP STARTED').then(function(success) {
           $log.info("Toast OK");
       }, function (error) {
           $log.info("Toast ERROR");
       });
+     */
+
+    /*
+     * App Context
+     */
+    AppContext.loadContext(function(){
+        /*
+         * i18n SETTINGS
+         */
+        $translate.use(AppContext.getAppLang());
+        $rootScope.spClass = AppContext.getAppLangDirection();
+    });
 
   });
 })
@@ -98,7 +101,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ISPEAK' : 'I speak',
             'SUBMIT' : 'Submit Request',
             'REWARD' : 'reward',
-            'YOUGIVE' : 'you give'
+            'YOUGIVE' : 'you give',
+            'IMPORTANT' : 'Important',
+            'ENTERNAME' : 'Please enter your name before submit.',
+            'THANKYOU' : 'Thank You',
+            'SUBMITINFO' : 'Your request gets now reviewed. You will get a notification once it is public.',
+            'ENTERREQUEST' : 'Please enter a short request description.',
+            'PARTYWAIT' : 'loading party',
+            'INTERNETFAIL' : 'no internet',
+            'ACCOUNTWAIT' : 'registering',
+            'GPSWAIT' : 'getting position',
+            'GPSFAIL' : 'please activate GPS',
+            'PARTYLISTWAIT' : 'loading parties'
         });
 
    $translateProvider.translations('de', {
@@ -128,7 +142,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ISPEAK' : 'Ich spreche',
             'SUBMIT' : 'Anfrage abschicken',
             'REWARD' : 'Belohnung',
-            'YOUGIVE' : 'Du gibst'
+            'YOUGIVE' : 'Du gibst',
+            'IMPORTANT' : 'Wichtig',
+            'ENTERNAME' : 'Bitte trage deinen Namen ein.',
+            'THANKYOU' : 'Danke',
+            'SUBMITINFO' : 'Ihre Anfrage wird nun überprüft. Sie erhalten eine Benachrichtigung, sobald sie veröffentlicht wird.',
+            'ENTERREQUEST' : 'Bitte geben Sie eine kurze Beschreibung der Anfrage ein.',
+            'PARTYWAIT' : 'Lade Party',
+            'INTERNETFAIL' : 'Kein Internet',
+            'ACCOUNTWAIT' : 'Anmeldung',
+            'GPSWAIT' : 'Bestimme Position',
+            'GPSFAIL' : 'Bitte GPS aktvieren',
+            'PARTYLISTWAIT' : 'Lade Parties'
         });
 
    $translateProvider.translations('ar', {
@@ -158,7 +183,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ISPEAK' : 'أتكلم',
             'SUBMIT' : 'إرسال طلب',
             'REWARD' : 'مكافأة',
-            'YOUGIVE' : 'انت تعطى'
+            'YOUGIVE' : 'انت تعطى',
+            'IMPORTANT' : 'مهم',
+            'ENTERNAME' : 'الرجاء إدخال اسمك.',
+            'THANKYOU' : 'شكرا',
+            'SUBMITINFO' : 'يحصل استعرض طلبك الآن . سوف تحصل على إخطار مرة واحدة فمن العام.',
+            'ENTERREQUEST' : 'الرجاء إدخال وصف طلب القصير.',
+            'PARTYWAIT' : 'حزب تحميل',
+            'INTERNETFAIL' : 'لا إنترنت',
+            'ACCOUNTWAIT' : 'تسجيل',
+            'GPSWAIT' : 'الحصول على موقف',
+            'GPSFAIL' : 'يرجى تفعيلها GPS',
+            'PARTYLISTWAIT' : 'الأحزاب التحميل'
         });
 
   $translateProvider.preferredLanguage("en");

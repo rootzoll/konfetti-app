@@ -18,7 +18,12 @@
 
           <hr style="width: 90%">
 
-          <div style="width:100%; padding:8px;">
+          <div ng-show="loadingRequest" style="min-height: 70px;">
+              <br>
+              <ion-spinner icon="android"></ion-spinner>
+          </div>
+
+          <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
               <table style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
@@ -28,7 +33,7 @@
                           <div>
                               <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
-                                      <input type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
+                                      <input ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;">
@@ -43,7 +48,7 @@
                       <td colspan="2">
                           <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
                               <label class="item-input-wrapper">
-                                  <input type="text" style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
+                                  <input ng-model="headline" type="text" style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
                               </label>
                           </div>
                       </td>
@@ -66,8 +71,12 @@
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <button class="button icon-left ion-android-globe button-positive" style="border-radius: 6px">
+
+                          <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive" style="border-radius: 6px">
                               {{ 'SUBMIT' | translate }}
+                          </button><br>
+                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="border-radius: 6px; margin-top: 10px">
+                              {{ 'ADDINFO' | translate }}
                           </button>
                       </td>
                   </tr>
@@ -76,14 +85,14 @@
 
       </div>
 
-      <div class="card" ng-show="( (request.info.length>0) || (request.author===profile.id) )">
+      <div class="card" ng-show="( (request.info.length>0) )">
           <div class="item item-divider">
               {{ 'PUBLICINFO' | translate }}
           </div>
       </div>
 
-      <div ng-show="(request.author===profile.id)" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-          <button class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
+      <div ng-show="((request.author===profile.id) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
               &nbsp; {{ 'ADDINFO' | translate }}
           </button>
       </div>
