@@ -8,8 +8,8 @@
                   <tr>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">Helferverein Nord e.V.</div>
-                              <div style="direction: ltr;">Berlin-Pankow (500m)</div>
+                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
+                              <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m)</div>
                           </div>
                       </td>
                   </tr>
@@ -21,6 +21,9 @@
           <div ng-show="loadingRequest" style="min-height: 70px;">
               <br>
               <ion-spinner icon="android"></ion-spinner>
+              <div style="color:lightgrey;font-size: 75%">
+                  {{ state | translate }}
+              </div>
           </div>
 
           <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
@@ -36,7 +39,7 @@
                                       <input ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
                               </div>
-                              <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;">
+                              <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                                   {{ 'ISPEAK' | translate }}
                                   <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
                                   <span style="border-width: 0px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;"><i class="icon ion-android-add-circle" style="color: grey; font-size: 125%;"></i></span>
@@ -100,6 +103,27 @@
       <div class="card" ng-show="(request.chats.length>0)">
           <div class="item item-divider">
               {{ 'PRIVATECHATS' | translate }}
+          </div>
+      </div>
+
+      <div ng-show="(request.chats.length>0)" class="list card">
+          <div data-ng-repeat="chat in request.chats">
+              <a href="#" on-tap="displayChat($event, chat)" class="item" style="padding:14px;">
+                  <table width="100%">
+                      <tr>
+                          <td width="45" style="vertical-align: middle;">
+                              <image ng-src="{{chat.imageUrl ? chat.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                          </td>
+                          <td width="*" style="vertical-align: middle;">
+                              <div style="padding-left: 10px;">
+                                  <b>{{chat.name}}</b><br>
+                                  <span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>
+                              </div>
+                          </td>
+                          <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;"><i class="icon ion-email-unread before-big"></i></td>
+                      </tr>
+                  </table>
+              </a>
           </div>
       </div>
 

@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function(AppContext, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService) {
 
         $scope.loadingParty = true;
         $scope.state = "init";
@@ -10,7 +10,6 @@ angular.module('starter.controllers', [])
         $scope.partyList = [];
         $scope.actualPartyIndex = 0;
 
-        $scope.orga = {};
         $scope.requestsReview = [];
         $scope.requestsPosted = [];
         $scope.requestsInteraction = [];
@@ -55,7 +54,7 @@ angular.module('starter.controllers', [])
             },100);
         };
 
-        $scope.sortRequests = function() {
+        $scope.sortRequests = function(changedRequestId) {
             var sortFunctionMost = function(a,b) {
                 return (b.konfettiCount+b.konfettiAdd) - (a.konfettiCount+a.konfettiAdd);
             };
@@ -64,7 +63,59 @@ angular.module('starter.controllers', [])
             };
             var sortFunction = sortFunctionMost;
             if ($scope.actualSorting.sort==='new') sortFunction = sortFunctionNew;
-            $scope.requestsOpen.sort(sortFunction);
+
+            // TODO: find out if sorting changed
+
+            if (typeof changedRequestId != "undefined") {
+
+                // get index of request in focus
+                var requestChangedIndex = 0;
+                for (i = 0; i < $scope.requestsOpen.length; i++) {
+                    if ($scope.requestsOpen[i].id===changedRequestId) {
+                        requestChangedIndex = i;
+                        break;
+                    }
+                }
+
+                // find out if array changed in sorting and when then
+                // find the top most changed in ranking
+                var topMostChangedIndex = -1;
+                var newSortedArray = $scope.requestsOpen.slice();
+                newSortedArray.sort(sortFunction);
+                for (i = 0; i < $scope.requestsOpen.length; i++) {
+                    if ($scope.requestsOpen[i].id!=newSortedArray[i].id) {
+                        topMostChangedIndex = i;
+                        break;
+                    }
+                }
+
+                // if there is a change - animate
+                if (topMostChangedIndex>=0) {
+
+                    if ((requestChangedIndex-topMostChangedIndex)>1) {
+                        // move more than one position
+                        document.getElementById('openRequestCard'+changedRequestId).classList.add("animationFadeUp");
+                        document.getElementById('openRequestCard'+$scope.requestsOpen[topMostChangedIndex].id).classList.add("animationFadeDown");
+                        $timeout(function(){
+                            document.getElementById('openRequestCard'+changedRequestId).classList.remove("animationFadeUp");
+                            document.getElementById('openRequestCard'+$scope.requestsOpen[topMostChangedIndex].id).classList.remove("animationFadeDown");
+                            $scope.requestsOpen = newSortedArray;
+                        },810);
+                    } else {
+                        // just one position
+                        document.getElementById('openRequestCard'+changedRequestId).classList.add("animationMoveUp");
+                        document.getElementById('openRequestCard'+$scope.requestsOpen[topMostChangedIndex].id).classList.add("animationMoveDown");
+                        $timeout(function(){
+                            document.getElementById('openRequestCard'+changedRequestId).classList.remove("animationMoveUp");
+                            document.getElementById('openRequestCard'+$scope.requestsOpen[topMostChangedIndex].id).classList.remove("animationMoveDown");
+                            $scope.requestsOpen = newSortedArray;
+                        },810);
+                    }
+
+                }
+            }
+
+            //$scope.requestsOpen.sort(sortFunction);
         };
 
         // setting selected lang in view to setting
@@ -123,19 +174,21 @@ angular.module('starter.controllers', [])
 
         $scope.tapRequestKonfetti = function($event, request) {
             $event.stopPropagation();
-            if ($scope.orga.konfettiCount<=0) {
+            if ($rootScope.orga.konfettiCount<=0) {
                 if (request.konfettiAdd===0) {
                     log.info("TODO: show dialog that confetti is zero and tell how to earn it");
                 }
                 return;
             }
             request.konfettiAdd++;
-            $scope.orga.konfettiCount--;
+            $rootScope.orga.konfettiCount--;
             request.lastAdd = Date.now();
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
+
                 console.log("TODO: send add konfetti to server");
-                $scope.sortRequests();
+
+                $scope.sortRequests(request.id);
             },1000);
         };
 
@@ -162,17 +215,14 @@ angular.module('starter.controllers', [])
                                 text: '<i class="icon ion-information-circled"></i>',
                                 type: 'button-positive',
                                 onTap: function(e) {
-                                    window.open($scope.orga.website, "_system");
+                                    window.open($rootScope.orga.website, "_system");
                                 }
                             }
                         ]
                     });
-                    myPopup.then(function(res) {
-                        console.log('Tapped!', res);
-                    });
+                    myPopup.then(function(res) {});
                 });
             });
-
 
         };
 
@@ -184,7 +234,7 @@ angular.module('starter.controllers', [])
 
             $scope.loadingParty = true;
 
-            $scope.orga = {};
+            $rootScope.orga = { id:0 };
             $scope.requestsReview = [];
             $scope.requestsPosted = [];
             $scope.requestsInteraction = [];
@@ -248,7 +298,7 @@ angular.module('starter.controllers', [])
 
             $scope.state = "PARTYWAIT";
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
-                $scope.orga = data.orga;
+                $rootScope.orga = data.orga;
                 $scope.requestsReview = data.requestsReview;
                 $scope.requestsPosted = data.requestsPosted;
                 $scope.requestsInteraction = data.requestsInteraction;
@@ -267,20 +317,12 @@ angular.module('starter.controllers', [])
 
     })
 
-.controller('RequestCtrl', function(AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $timeout, $translate, $ionicPopup) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $timeout, $translate, $ionicPopup, ApiService) {
 
   $scope.title = "";
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getProfile();
-
-  // orga data skeleton
-  $scope.orga = {
-    name: 'Helferverein Nord e.V.',
-    town: 'Berlin-Pankow',
-    address: 'Berliner Str. 99, 13189 Berlin, GERMANY',
-    person: 'Max Mustermann',
-    website: 'http://pankowhilft.blogsport.de'
-  };
+  $scope.state = "";
 
   // request data skeleton
   $scope.request = {id : 0};
@@ -292,9 +334,30 @@ angular.module('starter.controllers', [])
       $scope.loadingRequest = false;
   }
 
+  $scope.loadRequest = function() {
+    $scope.loadingRequest = true;
+    ApiService.loadRequest($scope.request.id,function(req){
+                // WIN
+                $scope.request = req;
+                $scope.loadingRequest = false;
+    }, function(code){
+                // FAIL
+                $scope.state = "INTERNETFAIL";
+                $timeout(function(){
+                    $scope.loadRequest();
+                },5000);
+    });
+  };
+
   // when re-entering the view
   $scope.reenter = false;
   $scope.$on('$ionicView.enter', function(e) {
+
+      // when no party is loaded
+      if ($rootScope.orga.id===0) {
+          $state.go('tab.dash');
+          return;
+      }
 
       // clean request data skeleton
       if (($scope.reenter) || ($scope.request.id===0)){
@@ -317,24 +380,7 @@ angular.module('starter.controllers', [])
 
       // load request if needed
       if ($scope.request.id!=0) {
-          $timeout(function(){
-              $scope.request = {
-                  id : 32213,
-                  author : 2424234,
-                  profile_name : 'Jannes',
-                  profile_imageUrl : 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
-                  profile_spokenLangs : ['en'],
-                  headline : {
-                      'en' : 'Title in English',
-                      'de' : 'Title in Deutsch',
-                      'ar' : 'Titke in AR'
-                  },
-                  confetti : 300,
-                  info: [],
-                  chats : []
-              };
-              $scope.loadingRequest = false;
-          },2000);
+          $scope.loadRequest();
       }
 
       // change title based on situation
@@ -410,6 +456,11 @@ angular.module('starter.controllers', [])
       alert("TODO: add info items -> popup with select type and than second popup to enter");
   };
 
+  $scope.displayChat = function($event, chat) {
+      $event.stopPropagation();
+      alert("TODO: Show Chat with id("+chat.id+")");
+  };
+
   $scope.submitRequest = function() {
 
       if ($scope.profile.name.length===0) {
@@ -452,12 +503,31 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, Chats) {
   $scope.chat = Chats.get($stateParams.chatId);
 })
 
-.controller('AccountCtrl', function($scope) {
+.controller('AccountCtrl', function($rootScope, $scope, $state) {
+
+  $scope.$on('$ionicView.enter', function(e) {
+      // when no party is loaded
+      if ($rootScope.orga.id===0) {
+          $state.go('tab.dash');
+          return;
+      }
+  });
+
   $scope.settings = {
-    enableFriends: true
+    enablePush: true,
+    pauseChat: true
   };
+
+  $scope.onButtonCoupon = function() {
+      alert("TODO: PopUp to enter number-COUPON-code (no text because different alphabet)");
+  };
+
+  $scope.onButtonCode = function() {
+      alert("TODO: PopUp to enter number-MAGICCODE-code (activate features, add privileges, ...)");
+  };
+
 });

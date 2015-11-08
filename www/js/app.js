@@ -63,6 +63,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         $rootScope.spClass = AppContext.getAppLangDirection();
     });
 
+    $rootScope.orga = {id:0};
+
   });
 })
 
@@ -112,7 +114,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ACCOUNTWAIT' : 'registering',
             'GPSWAIT' : 'getting position',
             'GPSFAIL' : 'please activate GPS',
-            'PARTYLISTWAIT' : 'loading parties'
+            'PARTYLISTWAIT' : 'loading parties',
+            'YOUCOLLECT' : 'You collected total',
+            'YOUTOP' : 'You are within the best',
+            'REDEEMCOUPON' : 'Redeem Konfetti Coupon',
+            'MAGICCODE' : 'Enter Magic Password',
+            'GLOBALSETTINGS' : 'Global Settings',
+            'ENABLEPUSH' : 'Enable Pushnotifications',
+            'PAUSECHAT' : 'Pause Chat',
+            'NEEDSGPS'  : 'turn on location',
+            'NEEDSINTERNET'  : 'needs internet connection'
         });
 
    $translateProvider.translations('de', {
@@ -153,7 +164,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ACCOUNTWAIT' : 'Anmeldung',
             'GPSWAIT' : 'Bestimme Position',
             'GPSFAIL' : 'Bitte GPS aktvieren',
-            'PARTYLISTWAIT' : 'Lade Parties'
+            'PARTYLISTWAIT' : 'Lade Parties',
+            'YOUCOLLECT' : 'Du hast bisher insgesamt gesammelt',
+            'YOUTOP' : 'Du bist unter den Besten ',
+            'REDEEMCOUPON' : 'Konfetti Gutschein einlösen',
+            'MAGICCODE' : 'Magisches Passwort eingeben',
+            'GLOBALSETTINGS' : 'Einstellungen',
+            'ENABLEPUSH' : 'Push-Meldungen einschalten',
+            'PAUSECHAT' : 'Chats pausieren',
+            'NEEDSGPS'  : 'bitte GPS aktivieren',
+            'NEEDSINTERNET'  : 'Internetverbindung benötigt'
         });
 
    $translateProvider.translations('ar', {
@@ -194,7 +214,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ACCOUNTWAIT' : 'تسجيل',
             'GPSWAIT' : 'الحصول على موقف',
             'GPSFAIL' : 'يرجى تفعيلها GPS',
-            'PARTYLISTWAIT' : 'الأحزاب التحميل'
+            'PARTYLISTWAIT' : 'الأحزاب التحميل',
+            'YOUCOLLECT' : 'كنت جمعت الكلي',
+            'YOUTOP' : 'كنت ضمن أفضل',
+            'REDEEMCOUPON' : 'استبدال القسيمة',
+            'MAGICCODE' : 'أدخل كلمة المرور ماجيك',
+            'GLOBALSETTINGS' : 'إعدادات',
+            'ENABLEPUSH' : 'تمكين إخطارات',
+            'PAUSECHAT' : 'وقفة الدردشة',
+            'NEEDSGPS'  : 'بدوره على الموقع',
+            'NEEDSINTERNET'  : 'يحتاج اتصال بالإنترنت'
         });
 
   $translateProvider.preferredLanguage("en");

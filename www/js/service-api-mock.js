@@ -16,6 +16,80 @@ angular.module('starter.api', [])
             {id: 88, clientId: 1, partyId: 2, type:3, ref:633}
         ];
 
+        var exampleChatPreview1 = {
+            id: 1,
+            name: 'Jan',
+            imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
+            lastLine: 'The task requested could ..',
+            lastActivity: 423424243,
+            lastStatus: 'new'
+        };
+
+        var exampleChatPreview2 = {
+            id: 2,
+            name: 'Jamal',
+            imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
+            lastLine: 'Do you speak english?',
+            lastActivity: 423424245,
+            lastStatus: 'send'
+        };
+
+        var request11 = {
+            id: 11,
+            userId: 123,
+            partyId: 2,
+            time: 8238483432,
+            konfettiCount: 8,
+            konfettiAdd: 0, // this is always 0 but gets delivered by server
+            title: 'Hecke am Spielplatz schneiden',
+            imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
+            state: 'open',
+            info: [],
+            chats:[]
+        };
+
+        var request12 = {
+            id: 12,
+            userId: 123,
+            partyId: 2,
+            time: 6238483432,
+            konfettiCount: 34,
+            konfettiAdd: 0, // this is always 0 but gets delivered by server
+            title: 'Hecke am Spielplatz schneiden',
+            imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
+            state: 'rejected',
+            info: [],
+            chats:[exampleChatPreview1]
+        };
+
+        var request13 = {
+            id: 13,
+            userId: 124,
+            partyId: 2,
+            time: 5238483432,
+            konfettiCount: 1,
+            konfettiAdd: 0, // this is always 0 but gets delivered by server
+            title: 'Aufbau Grillfest bei Jannes auf dem Acker',
+            imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
+            state: 'open',
+            chats:[exampleChatPreview2],
+            info: []
+        };
+
+        var request14 = {
+            id: 14,
+            userId: 123,
+            partyId: 2,
+            time: 7238483432,
+            konfettiCount: 6,
+            konfettiAdd: 0, // this is always 0 but gets delivered by server
+            title: 'Backofen reinigen',
+            imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
+            state: 'open',
+            info: [],
+            chats:[]
+        };
+
         return {
             setCredentials: function(clientId, secret) {
                 context.clientId = clientId;
@@ -35,7 +109,7 @@ angular.module('starter.api', [])
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(321);
                     }
-                },2000);
+                },1000);
                 return;
             },
             loadPartylist: function(lat, lon, win, fail) {
@@ -51,7 +125,7 @@ angular.module('starter.api', [])
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(234);
                     }
-                },2000);
+                },1000);
                 return;
             },
             loadParty: function(partyId, win, fail) {
@@ -70,29 +144,13 @@ angular.module('starter.api', [])
                                     meters: 500,                    // calculate on server based on client location
                                     person: 'Max Mustermann',
                                     website: 'http://pankowhilft.blogsport.de',
-                                    konfettiCount: 1000
+                                    konfettiCount: 1000,
+                                    konfettiTotal: 4532452,
+                                    topClass: 5 // TOP3, TOP5, TOP10, TOP20, TOP100
                                 },
                                 requestsOpen: [
-                                    {   id: 12,
-                                        userId: 123,
-                                        partyId: 2,
-                                        time: 8238483432,
-                                        konfettiCount: 8,
-                                        konfettiAdd: 0, // this is always 0 but gets delivered by server
-                                        title: 'Hecke am Spielplatz schneiden',
-                                        imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
-                                        state: 'open'
-                                    },
-                                    {   id: 14,
-                                        userId: 123,
-                                        partyId: 2,
-                                        time: 7238483432,
-                                        konfettiCount: 6,
-                                        konfettiAdd: 0, // this is always 0 but gets delivered by server
-                                        title: 'Backofen reinigen',
-                                        imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
-                                        state: 'open'
-                                    }
+                                    request11,
+                                    request14
                                 ],
                                 requestsPosted: [],
                                 requestsInteraction: [],
@@ -111,32 +169,16 @@ angular.module('starter.api', [])
                                     meters: 500000,                 // calculate on server based on client location
                                     person: 'Maxie Musterfrau',
                                     website: 'http://muenchen.blogsport.de',
-                                    konfettiCount: 10
+                                    konfettiCount: 10,
+                                    konfettiTotal: 10,
+                                    topClass: 20 // TOP3, TOP5, TOP10, TOP20, TOP100
                                 },
                                 requestsOpen: [],
                                 requestsPosted: [
-                                    {   id: 12,
-                                        userId: 123,
-                                        partyId: 2,
-                                        time: 6238483432,
-                                        konfettiCount: 34,
-                                        konfettiAdd: 0, // this is always 0 but gets delivered by server
-                                        title: 'Hecke am Spielplatz schneiden',
-                                        imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
-                                        state: 'review'
-                                    }
+                                    request12
                                 ],
                                 requestsInteraction: [
-                                    {   id: 13,
-                                        userId: 124,
-                                        partyId: 2,
-                                        time: 5238483432,
-                                        konfettiCount: 1,
-                                        konfettiAdd: 0, // this is always 0 but gets delivered by server
-                                        title: 'Aufbau Grillfest bei Jannes auf dem Acker',
-                                        imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
-                                        state: 'open'
-                                    }
+                                    request13
                                 ],
                                 requestsReview: [],
                                 notifications: notifactionsStore
@@ -149,7 +191,32 @@ angular.module('starter.api', [])
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(232);
                     }
-                },2000);
+                },1000);
+                return;
+            },
+            loadRequest: function(requestId, win, fail) {
+                $timeout(function(){
+                    if (Math.random()>errorPossibility) {
+                        if (requestId==11) {
+                            win(request11);
+                        } else
+                        if (requestId==12) {
+                            win(request12);
+                        } else
+                        if (requestId==13) {
+                            win(request13);
+                        } else
+                        if (requestId==14) {
+                            win(request14);
+                        } else {
+                            $log.warn("Request("+requestId+") not found");
+                            fail(353);
+                        }
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(232);
+                    }
+                },1000);
                 return;
             }
         };

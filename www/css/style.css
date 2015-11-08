@@ -35,3 +35,115 @@
 #reloadIcon::before {
     font-size: 23px;
 }
+
+body > ion-nav-view > ion-tabs > div {
+    background-color: rgb(233, 233, 233); !important;
+    border-top-color: grey;
+    border-top-style: solid;
+    border-top-width: 1px;
+}
+
+.tabs-striped .tabs {
+    background-color: rgb(233, 233, 233) !important;
+    border-top-color: grey !important;
+    border-top-style: solid !important;
+    border-top-width: 1px !important;
+}
+
+@media screen and (max-height: 400px) {
+
+    body > ion-nav-view > ion-tabs > div {
+        display: none !important;
+    }
+
+    .has-tabs, .bar-footer.has-tabs {
+        bottom: 0px;
+    }
+}
+
+@-webkit-keyframes keysFadeOut {
+    0% {
+        opacity: 1.0;
+    }
+    100% {
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes keysFadeUp {
+    0% {
+        top: 0;
+        opacity: 1.0;
+    }
+    75% {
+        top: -74px;
+        opacity: 0.8;
+    }
+    100% {
+        top: -99px;
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes keysFadeDown {
+    0% {
+        top: 0;
+        opacity: 1.0;
+    }
+    75% {
+        top: 74px;
+        opacity: 0.8;
+    }
+    100% {
+        top: 99px;
+        opacity: 0.0;
+    }
+}
+
+@-webkit-keyframes keysMoveUp {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: -99px;
+    }
+}
+
+@-webkit-keyframes keysMoveDown {
+    0% {
+        top: 0;
+    }
+    100% {
+        top: 99px;
+    }
+}
+
+.animationFadeOut {
+    animation: keysFadeOut ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 800ms;
+}
+
+.animationFadeUp {
+    animation: keysFadeUp ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 800ms;
+}
+
+.animationFadeDown {
+    animation: keysFadeDown ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 800ms;
+}
+
+.animationMoveUp {
+    animation: keysMoveUp ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 800ms;
+}
+
+.animationMoveDown {
+    animation: keysMoveDown ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 800ms;
+}

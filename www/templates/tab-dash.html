@@ -56,7 +56,25 @@
 
   <ion-content>
 
-      <div style="height: 93px; background-color: red"></div>
+      <div style="height: 93px;"></div>
+
+      <div ng-show="(state==='GPSFAIL')" style="width: 100%; text-align: center; padding-top: 50px">
+          <div style="font-size: 500%;color:#387ef5">
+            <i class="icon ion-ios-navigate"></i>
+          </div>
+          <div>
+              {{ 'NEEDSGPS' | translate }}
+          </div>
+      </div>
+
+      <div ng-show="(state==='INTERNETFAIL')" style="width: 100%; text-align: center; padding-top: 50px">
+          <div style="font-size: 500%;color:#387ef5">
+              <i class="icon ion-wifi"></i>
+          </div>
+          <div>
+              {{ 'NEEDSINTERNET' | translate }}
+          </div>
+      </div>
 
       <div ng-hide="loadingParty" class="padding">
 
@@ -99,7 +117,7 @@
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsOpen"></div>
+      <div requestcard data-ng-repeat="request in requestsOpen" id="openRequestCard{{request.id}}" style="position: relative;"></div>
 
       <div ng-show="(requestsOpen.length===0)" class="card">
            <div class="item item-text-wrap">

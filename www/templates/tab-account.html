@@ -1,9 +1,70 @@
-<ion-view view-title="Account">
+<ion-view view-title="{{ 'TAB_MORE' | translate }}">
   <ion-content>
-    <ion-list>
-    <ion-toggle  ng-model="settings.enableFriends">
-        Enable Friends
-    </ion-toggle>
-    </ion-list>
+
+      <div class="list card" style="text-align: center; margin-top: 8px;">
+
+          <div style="width:100%;padding:8px">
+              <table style="width: 100%;direction: ltr;">
+                  <tr>
+                      <td width="*" style="text-align: center; vertical-align: middle;">
+                          <div ng-hide="loadingParty">
+                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
+                              <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m)</div>
+                          </div>
+                      </td>
+                  </tr>
+              </table>
+          </div>
+
+          <hr style="width: 90%">
+
+          <div style="width:100%;padding:8px">
+
+              <div>{{ 'YOUCOLLECT' | translate }}</div>
+              <div style="font-size: 200%; padding-top: 10px; padding-bottom: 10px;">
+                  {{orga.konfettiTotal}} {{ 'KONFETTI' | translate }}
+              </div>
+              <div>{{ 'YOUTOP' | translate }} {{orga.topClass}}</div>
+
+              <div style="padding-top: 16px">
+                  <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px">
+                      {{ 'REDEEMCOUPON' | translate }}
+                  </button>
+              </div>
+
+              <div style="padding-top: 16px; padding-bottom: 16px">
+                  <button on-tap="onButtonCode()" class="button icon-left ion-ios-color-wand-outline button-positive" style="border-radius: 6px">
+                      {{ 'MAGICCODE' | translate }}
+                  </button>
+              </div>
+
+          </div>
+
+      </div>
+
+    <div class="card">
+        <div class="item item-divider">
+            {{ 'GLOBALSETTINGS' | translate }}
+        </div>
+    </div>
+
+      <div class="list card" style="text-align: center; margin-top: 8px;">
+
+          <div style="width:100%;padding-top:8px;padding-left: 16px;text-align: left;">
+              <ion-toggle  ng-model="settings.enablePush">
+                  {{ 'ENABLEPUSH' | translate }}
+              </ion-toggle>
+          </div>
+
+          <hr style="width: 90%">
+
+          <div style="width:100%;padding-bottom:8px;padding-left: 16px;text-align: left;">
+              <ion-toggle  ng-model="settings.pauseChats">
+                  {{ 'PAUSECHAT' | translate }}
+              </ion-toggle>
+          </div>
+
+      </div>
+
   </ion-content>
 </ion-view>
