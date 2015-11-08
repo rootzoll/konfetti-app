@@ -1,5 +1,7 @@
 /* Empty. Add your own CSS if you like */
 
+.ng-cloak { display:none; }
+
 .sp-rtl {
     direction: rtl;
 }
@@ -34,13 +36,6 @@
 
 #reloadIcon::before {
     font-size: 23px;
-}
-
-body > ion-nav-view > ion-tabs > div {
-    background-color: rgb(233, 233, 233); !important;
-    border-top-color: grey;
-    border-top-style: solid;
-    border-top-width: 1px;
 }
 
 .tabs-striped .tabs {
@@ -128,30 +123,45 @@ body > ion-nav-view > ion-tabs > div {
     animation: keysFadeOut ease-in 1;
     animation-fill-mode: forwards;
     animation-duration: 800ms;
+    -webkit-animation: keysFadeOut ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 800ms;
 }
 
 .animationFadeUp {
     animation: keysFadeUp ease-in 1;
     animation-fill-mode: forwards;
     animation-duration: 800ms;
+    -webkit-animation: keysFadeUp ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 800ms;
 }
 
 .animationFadeDown {
     animation: keysFadeDown ease-in 1;
     animation-fill-mode: forwards;
     animation-duration: 800ms;
+    -webkit-animation: keysFadeDown ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 800ms;
 }
 
 .animationMoveUp {
     animation: keysMoveUp ease-in 1;
     animation-fill-mode: forwards;
     animation-duration: 800ms;
+    -webkit-animation: keysMoveUp ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 800ms;
 }
 
 .animationMoveDown {
     animation: keysMoveDown ease-in 1;
     animation-fill-mode: forwards;
     animation-duration: 800ms;
+    -webkit-animation: keysMoveDown ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 800ms;
 }
 
 @-webkit-keyframes pulse {
@@ -172,5 +182,6 @@ body > ion-nav-view > ion-tabs > div {
     -webkit-animation-name: pulse;
     animation-name: pulse;
     animation-iteration-count:infinite;
+    -webkit-animation-iteration-count:infinite;
 }
 

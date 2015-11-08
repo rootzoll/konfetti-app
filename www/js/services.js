@@ -4,6 +4,8 @@ angular.module('starter.services', [])
 
   var isReady = false;
 
+  // put into the app context stuff that needs to be stored
+  // everything else put into rootScope
   var appContext = {
       appLang : "en",
       account : {

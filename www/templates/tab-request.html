@@ -1,4 +1,4 @@
-<ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}">
+<ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}" style="background-color: lightgrey;">
   <ion-content>
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
@@ -27,7 +27,7 @@
           </div>
 
           <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
-              <table style="width: 100%;">
+              <table ng-show="(confettiMax>=confettiMin)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
                           <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
@@ -36,7 +36,7 @@
                           <div>
                               <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
-                                      <input ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
+                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
@@ -51,7 +51,7 @@
                       <td colspan="2">
                           <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
                               <label class="item-input-wrapper">
-                                  <input ng-model="headline" type="text" style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
+                                  <input id="headline" ng-model="headline" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
                               </label>
                           </div>
                       </td>
@@ -67,7 +67,7 @@
                       <td colspan="2" align="center">
                           <div class="item range" style="width:95%">
                               <span style="font-size: 75%">{{confettiMin}}</span>
-                              <input ng-model="confettiToSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confettiMin}}" max="{{confettiMax}}">
+                              <input id="konfettiSlide" ng-model="confettiToSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confettiMin}}" max="{{confettiMax}}">
                               <span style="font-size: 75%">{{confettiMax}}</span>
                           </div>
                       </td>
@@ -84,6 +84,10 @@
                       </td>
                   </tr>
               </table>
+              <div ng-show="(confettiMax<confettiMin)" style="text-align:center;padding:10px">
+                    <div>{{ 'LOWKONFETTI' | translate }}</div>
+                    <div>{{ 'MINKONFETTI' | translate }} {{confettiMin}}</div>
+              </div>
           </div>
 
       </div>

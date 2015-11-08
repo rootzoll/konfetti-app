@@ -13,18 +13,36 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
       cordova.plugins.Keyboard.disableScroll(true);
     }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleLightContent();
+
+    try {
+        // hide native status bar
+        ionic.Platform.fullScreen();
+        if (typeof window.StatusBar != "undefined")  {
+            window.StatusBar.hide();
+            console.log("OK window.StatusBar.hide()");
+        } else {
+            console.log("FAIL no window.StatusBar");
+        }
+    } catch (e) {
+        alert("FAIL on hide native status bar: "+e);
+    }
+
+
+    // set running os info
+    try {
+        $rootScope.os = "browser";
+        if (typeof window.device != "undefined") $rootScope.os = window.device.platform;
+    } catch (e) {
+        alert("FAIL set running os info: "+e);
     }
 
     /*
      * START GEOLOCATION
      * http://ngcordova.com/docs/plugins/geolocation/
-     */
+
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $rootScope.gps  = 'wait';
     $rootScope.lat  = 0;
@@ -41,6 +59,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
               $log.info("GPS ERROR");
               $rootScope.gps  = 'fail';
           });
+     */
 
     /*
      * TEST NATIVE TOAST
@@ -55,13 +74,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     /*
      * App Context
      */
-    AppContext.loadContext(function(){
-        /*
-         * i18n SETTINGS
-         */
-        $translate.use(AppContext.getAppLang());
-        $rootScope.spClass = AppContext.getAppLangDirection();
-    });
+    try {
+        AppContext.loadContext(function(){
+            /*
+             * i18n SETTINGS
+             */
+            $translate.use(AppContext.getAppLang());
+            $rootScope.spClass = AppContext.getAppLangDirection();
+        });
+    } catch (e) {
+        alert("FAIL i18n SETTINGS: "+e);
+    }
 
     $rootScope.orga = {id:0};
 
@@ -81,7 +104,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_REQUEST' : 'Request',
             'TAB_MORE' : 'More',
             'KONFETTI' : 'confetti',
-            'KONFETTI-APP' : 'Konfetti App',
+            'KONFETTI-APP' : 'Konfetti',
             'ORGAINFO_TITLE': 'Organizer',
             'ORGAINFO_SUB': 'editorial responsibility',
             'POSTSORT_MOST': 'top confetti',
@@ -123,7 +146,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ENABLEPUSH' : 'Enable Pushnotifications',
             'PAUSECHAT' : 'Pause Chat',
             'NEEDSGPS'  : 'turn on location',
-            'NEEDSINTERNET'  : 'needs internet connection'
+            'NEEDSINTERNET'  : 'needs internet connection',
+            'LOWKONFETTI'  : 'You have too little confetti to open a request.',
+            'MINKONFETTI'  : 'Minimal amount needed'
         });
 
    $translateProvider.translations('de', {
@@ -131,7 +156,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_REQUEST' : 'Anfrage',
             'TAB_MORE' : 'Mehr',
             'KONFETTI' : 'Konfetti',
-            'KONFETTI-APP' : 'Konfetti App',
+            'KONFETTI-APP' : 'Konfetti',
             'ORGAINFO_TITLE': 'Veranstalter',
             'ORGAINFO_SUB': 'inhaltlich verantwortlich',
             'POSTSORT_MOST': 'top konfetti',
@@ -173,7 +198,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ENABLEPUSH' : 'Push-Meldungen einschalten',
             'PAUSECHAT' : 'Chats pausieren',
             'NEEDSGPS'  : 'bitte GPS aktivieren',
-            'NEEDSINTERNET'  : 'Internetverbindung benötigt'
+            'NEEDSINTERNET'  : 'Internetverbindung benötigt',
+            'LOWKONFETTI'  : 'Du hast zuwenig Konfetti, um eine Anfrage zu starten.',
+            'MINKONFETTI'  : 'Minimal nötige Menge'
         });
 
    $translateProvider.translations('ar', {
@@ -181,7 +208,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_REQUEST' : 'طلب',
             'TAB_MORE' : 'مهر',
             'KONFETTI' : 'حلويات',
-            'KONFETTI-APP' : 'التطبيق حلويات',
+            'KONFETTI-APP' : 'حلويات',
             'ORGAINFO_TITLE': 'منظم',
             'ORGAINFO_SUB': 'المسؤولية التحريرية',
             'POSTSORT_MOST': 'شعبية',
@@ -223,10 +250,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ENABLEPUSH' : 'تمكين إخطارات',
             'PAUSECHAT' : 'وقفة الدردشة',
             'NEEDSGPS'  : 'بدوره على الموقع',
-            'NEEDSINTERNET'  : 'يحتاج اتصال بالإنترنت'
+            'NEEDSINTERNET'  : 'يحتاج اتصال بالإنترنت',
+            'LOWKONFETTI'  : 'لديك حلويات صغيرة جدا لفتح الطلب.',
+            'MINKONFETTI'  : 'الحد الأدنى اللازم'
         });
 
   $translateProvider.preferredLanguage("en");
+  $translateProvider.useSanitizeValueStrategy('escape');
 
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router

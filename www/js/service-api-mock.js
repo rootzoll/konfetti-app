@@ -10,6 +10,38 @@ angular.module('starter.api', [])
             secret : ""
         };
 
+        var orga1 = {
+            name: 'Helferverein Nord e.V.',
+            town: 'Berlin-Pankow',
+            address: 'Berliner Str. 99, 13189 Berlin, GERMANY',
+            lon: 0.0,
+            lat: 0.0,
+            meters: 500,                    // calculate on server based on client location
+            person: 'Max Mustermann',
+            website: 'http://pankowhilft.blogsport.de',
+            newRequestMinKonfetti: 10,
+            newRequestReview: 1, // true = before getting public, review process
+            konfettiCount: 14,
+            konfettiTotal: 4532452, // what user collected total
+            topClass: 5 // TOP3, TOP5, TOP10, TOP20, TOP100
+        };
+
+        var orga2 = {
+            name: 'Helferverein Süd e.V.',
+            town: 'München',
+            address: 'Antonplatz 3, 89282 München, GERMANY',
+            lon: 0.0,
+            lat: 0.0,
+            meters: 500000,                 // calculate on server based on client location
+            person: 'Maxie Musterfrau',
+            website: 'http://muenchen.blogsport.de',
+            konfettiNewRequestMin: 10,
+            newRequestReview: 1,
+            konfettiCount: 15,
+            konfettiTotal: 10,
+            topClass: 20 // TOP3, TOP5, TOP10, TOP20, TOP100
+        };
+
         var notifactionsStore = [
             {id: 12, clientId: 1, partyId: 1, type:1, ref:123}, // ref can de based on type different id
             {id: 87, clientId: 1, partyId: 1, type:2, ref:655}, // like request, chat, info item
@@ -135,19 +167,7 @@ angular.module('starter.api', [])
                         // no login up front - multiple clients can be bound to one user within settings option
                         if (partyId===1) {
                             win({
-                                orga:{
-                                    name: 'Helferverein Nord e.V.',
-                                    town: 'Berlin-Pankow',
-                                    address: 'Berliner Str. 99, 13189 Berlin, GERMANY',
-                                    lon: 0.0,
-                                    lat: 0.0,
-                                    meters: 500,                    // calculate on server based on client location
-                                    person: 'Max Mustermann',
-                                    website: 'http://pankowhilft.blogsport.de',
-                                    konfettiCount: 1000,
-                                    konfettiTotal: 4532452,
-                                    topClass: 5 // TOP3, TOP5, TOP10, TOP20, TOP100
-                                },
+                                orga: orga1,
                                 requestsOpen: [
                                     request11,
                                     request14
@@ -160,19 +180,7 @@ angular.module('starter.api', [])
                         } else
                         if (partyId===2) {
                             win({
-                                orga:{
-                                    name: 'Helferverein Süd e.V.',
-                                    town: 'München',
-                                    address: 'Antonplatz 3, 89282 München, GERMANY',
-                                    lon: 0.0,
-                                    lat: 0.0,
-                                    meters: 500000,                 // calculate on server based on client location
-                                    person: 'Maxie Musterfrau',
-                                    website: 'http://muenchen.blogsport.de',
-                                    konfettiCount: 10,
-                                    konfettiTotal: 10,
-                                    topClass: 20 // TOP3, TOP5, TOP10, TOP20, TOP100
-                                },
+                                orga:orga2,
                                 requestsOpen: [],
                                 requestsPosted: [
                                     request12

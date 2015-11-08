@@ -177,11 +177,19 @@ angular.module('starter.controllers', [])
                 }
                 return;
             }
+
+            // block further tapping when reporting to server
+            if (typeof request.blockTap === "undefined") request.blockTap = false;
+            if (request.blockTap) return;
+
+            // count up confetti to add
             request.konfettiAdd++;
             $rootScope.orga.konfettiCount--;
             request.lastAdd = Date.now();
+
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
+                request.blockTap = true;
                 // Make SERVER REQUEST
                 document.getElementById('openRequestCard'+request.id).classList.add("pulse");
                 ApiService.upvoteRequest(request.id, request.konfettiAdd, function(){
@@ -189,12 +197,14 @@ angular.module('starter.controllers', [])
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
                     request.konfettiCount += request.konfettiAdd;
                     request.konfettiAdd = 0;
+                    request.blockTap = false;
                     $scope.sortRequests(request.id);
                 }, function(){
                     // FAIL -> put konfetti back
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
                     $rootScope.orga.konfettiCount -= request.konfettiAdd;
                     request.konfettiAdd = 0;
+                    request.blockTap = false;
                 });
 
             },1000);
@@ -235,6 +245,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.$on('$ionicView.enter', function(e) {
+            $scope.controllerInitDone = true;
             $scope.action();
         });
 
@@ -407,8 +418,8 @@ angular.module('starter.controllers', [])
           });
       }
 
-      $scope.confettiMin = 1;
-      $scope.confettiMax = 12345;
+      $scope.confettiMin = $rootScope.orga.newRequestMinKonfetti;
+      $scope.confettiMax = $rootScope.orga.konfettiCount;
       $scope.confettiToSpend = $scope.confettiMin;
       $scope.headline = "";
 
