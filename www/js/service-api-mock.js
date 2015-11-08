@@ -218,6 +218,17 @@ angular.module('starter.api', [])
                     }
                 },1000);
                 return;
+            },
+            upvoteRequest: function(requestId, confettiCount, win, fail) {
+                $timeout(function(){
+                    if (Math.random()>errorPossibility) {
+                        win();
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(235);
+                    }
+                },2000);
+                return;
             }
         };
 

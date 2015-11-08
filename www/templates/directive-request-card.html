@@ -2,22 +2,23 @@
     <div class="item item-text-wrap" style="padding:10px;">
         <table width="100%">
             <tr>
-                <td ng-show="(request.state!='open')" width="50" style="vertical-align: middle; text-align: left">
+                <td ng-show="(requesttype!='openRequestCard')" width="50" style="vertical-align: middle; text-align: left">
                     <table class="round" style="width:50px;">
                         <tr>
                             <td style="width:50px;">
                                 <button ng-show="(request.state==='review')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
                                 <button ng-show="(request.state==='done')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
                                 <button ng-show="(request.state==='rejected')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
+                                <button ng-show="(request.state==='open')" class="button button-small button-positive" style="width:50px;"><i class="icon ion-information-circled"></i></button>
                             </td>
                         </tr>
                     </table>
                 </td>
-                <td ng-show="(request.state==='open')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
+                <td ng-show="(requesttype==='openRequestCard')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
                     <table class="round" style="width:50px;">
                         <tr>
                             <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
-                                {{(request.konfettiCount+request.konfettiAdd)}}
+                                {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
                             </td>
                         </tr>
                         <tr>

@@ -93,7 +93,7 @@
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsReview"></div>
+      <div requestcard data-ng-repeat="request in requestsReview" requesttype="reviewRequestCard" id="reviewRequestCard{{request.id}}"></div>
 
       <div class="card" ng-show="(requestsPosted.length>0)">
           <div class="item item-divider">
@@ -101,7 +101,7 @@
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsPosted" showdelete="1"></div>
+      <div requestcard data-ng-repeat="request in requestsPosted" requesttype="postedRequestCard" id="postedRequestCard{{request.id}}"></div>
 
       <div class="card" ng-show="(requestsInteraction.length>0)">
           <div class="item item-divider">
@@ -109,15 +109,15 @@
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsInteraction"></div>
+      <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}"></div>
 
       <div class="card">
           <div class="item item-divider">
-              {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
+              {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.sort as sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsOpen" id="openRequestCard{{request.id}}" style="position: relative;"></div>
+      <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" id="openRequestCard{{request.id}}" style="position: relative;"></div>
 
       <div ng-show="(requestsOpen.length===0)" class="card">
            <div class="item item-text-wrap">

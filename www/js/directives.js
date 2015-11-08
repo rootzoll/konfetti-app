@@ -12,6 +12,9 @@ angular.module('starter')
         return {
             templateUrl: 'templates/directive-request-card.html',
             replace: true,
-            restrict: 'A'
+            restrict: 'A',
+            link: function ($scope, $element, $attributes) {
+                $scope.requesttype = $attributes.requesttype;
+            }
         };
     });

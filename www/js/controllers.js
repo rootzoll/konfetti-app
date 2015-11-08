@@ -24,18 +24,16 @@ angular.module('starter.controllers', [])
         ];
 
         // sorting options
-        $scope.sortSet = [];
+        $scope.sortSet = [
+            {sort:'most', display:'most'},
+            {sort:'new', display:'new'}
+        ];
+        $scope.actualSorting = $scope.sortSet[0].sort;
         $scope.updateSortOptions = function() {
             $translate("POSTSORT_MOST").then(function (POSTSORT_MOST) {
                 $translate("POSTSORT_NEW").then(function (POSTSORT_NEW) {
-                    $timeout(function() {
-                        console.log("RESET");
-                        $scope.sortSet = [
-                            {sort:'most', display:POSTSORT_MOST},
-                            {sort:'new', display:POSTSORT_NEW}
-                        ];
-                        $scope.actualSorting = $scope.sortSet[0];
-                    },10);
+                    $scope.sortSet[0].display = POSTSORT_MOST;
+                    $scope.sortSet[1].display = POSTSORT_NEW;
                 });
             });
         };
@@ -46,10 +44,10 @@ angular.module('starter.controllers', [])
             if ((typeof actualSorting != "undefined") && (actualSorting!=null)) {
                 $scope.actualSorting = actualSorting;
             } else {
-                $scope.actualSorting = $scope.sortSet[0];
+                $scope.actualSorting = $scope.sortSet[0].sort;
             }
             $timeout(function(){
-                console.dir($scope.actualSorting.sort);
+                console.dir("trigger sorting: "+$scope.actualSorting);
                 $scope.sortRequests();
             },100);
         };
@@ -62,11 +60,9 @@ angular.module('starter.controllers', [])
                 return (b.time) - (a.time);
             };
             var sortFunction = sortFunctionMost;
-            if ($scope.actualSorting.sort==='new') sortFunction = sortFunctionNew;
+            if ($scope.actualSorting==='new') sortFunction = sortFunctionNew;
 
-            // TODO: find out if sorting changed
-
-            if (typeof changedRequestId != "undefined") {
+            if ((typeof changedRequestId != "undefined") && ($scope.actualSorting!='new')) {
 
                 // get index of request in focus
                 var requestChangedIndex = 0;
@@ -113,9 +109,10 @@ angular.module('starter.controllers', [])
                     }
 
                 }
+            } else {
+                $scope.requestsOpen.sort(sortFunction);
             }
 
-            //$scope.requestsOpen.sort(sortFunction);
         };
 
         // setting selected lang in view to setting
@@ -185,10 +182,21 @@ angular.module('starter.controllers', [])
             request.lastAdd = Date.now();
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
+                // Make SERVER REQUEST
+                document.getElementById('openRequestCard'+request.id).classList.add("pulse");
+                ApiService.upvoteRequest(request.id, request.konfettiAdd, function(){
+                    // WIN -> update sort
+                    document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
+                    request.konfettiCount += request.konfettiAdd;
+                    request.konfettiAdd = 0;
+                    $scope.sortRequests(request.id);
+                }, function(){
+                    // FAIL -> put konfetti back
+                    document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
+                    $rootScope.orga.konfettiCount -= request.konfettiAdd;
+                    request.konfettiAdd = 0;
+                });
 
-                console.log("TODO: send add konfetti to server");
-
-                $scope.sortRequests(request.id);
             },1000);
         };
 
