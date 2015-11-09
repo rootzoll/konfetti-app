@@ -2,6 +2,7 @@ angular.module('starter.controllers', [])
 
 .controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService) {
 
+        $scope.userId = 0;
         $scope.loadingParty = true;
         $scope.state = "init";
 
@@ -245,6 +246,7 @@ angular.module('starter.controllers', [])
         };
 
         $scope.$on('$ionicView.enter', function(e) {
+            $scope.userId = AppContext.getProfile().userId;
             $scope.controllerInitDone = true;
             $scope.action();
         });
@@ -352,6 +354,7 @@ angular.module('starter.controllers', [])
   } else {
       $scope.loadingRequest = false;
   }
+  $scope.requestJSON = JSON.stringify($scope.request);
 
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
@@ -359,6 +362,7 @@ angular.module('starter.controllers', [])
                 // WIN
                 $scope.request = req;
                 $scope.loadingRequest = false;
+                $scope.requestJSON = JSON.stringify($scope.request);
     }, function(code){
                 // FAIL
                 $scope.state = "INTERNETFAIL";
@@ -366,6 +370,14 @@ angular.module('starter.controllers', [])
                     $scope.loadRequest();
                 },5000);
     });
+  };
+
+  $scope.tapRequestKonfetti = function($event, request) {
+    alert("TODO - upvote in detail view");
+  };
+
+  $scope.startChat = function() {
+    alert("TODO: Open Chat View with request author. If app user havent entered name yet - ask with popup before chat starts.");
   };
 
   // when re-entering the view

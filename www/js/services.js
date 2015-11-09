@@ -10,6 +10,7 @@ angular.module('starter.services', [])
       appLang : "en",
       account : {
           clientId : "",
+          userId : "",
           secret : ""
       },
       profile : {

@@ -148,7 +148,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NEEDSGPS'  : 'turn on location',
             'NEEDSINTERNET'  : 'needs internet connection',
             'LOWKONFETTI'  : 'You have too little confetti to open a request.',
-            'MINKONFETTI'  : 'Minimal amount needed'
+            'MINKONFETTI'  : 'Minimal amount needed',
+            'CONTACT' : 'Contact',
+            'HELPOUT' : 'help out and earn up to',
+            'GETREWARD' : 'as reward',
+            'HELPCHAT' : 'Start Chat'
         });
 
    $translateProvider.translations('de', {
@@ -200,7 +204,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NEEDSGPS'  : 'bitte GPS aktivieren',
             'NEEDSINTERNET'  : 'Internetverbindung benötigt',
             'LOWKONFETTI'  : 'Du hast zuwenig Konfetti, um eine Anfrage zu starten.',
-            'MINKONFETTI'  : 'Minimal nötige Menge'
+            'MINKONFETTI'  : 'Minimal nötige Menge',
+            'CONTACT' : 'Kontakt',
+            'HELPOUT' : 'Helfen und bis zu',
+            'GETREWARD' : 'erhalten.',
+            'HELPCHAT' : 'Starte Chat'
         });
 
    $translateProvider.translations('ar', {
@@ -252,7 +260,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'NEEDSGPS'  : 'بدوره على الموقع',
             'NEEDSINTERNET'  : 'يحتاج اتصال بالإنترنت',
             'LOWKONFETTI'  : 'لديك حلويات صغيرة جدا لفتح الطلب.',
-            'MINKONFETTI'  : 'الحد الأدنى اللازم'
+            'MINKONFETTI'  : 'الحد الأدنى اللازم',
+            'CONTACT' : 'اتصال',
+            'HELPOUT' : 'مساعدة و تكسب ما يصل الى',
+            'GETREWARD' : 'كمكافأة',
+            'HELPCHAT' : 'بدء الدردشة'
         });
 
   $translateProvider.preferredLanguage("en");

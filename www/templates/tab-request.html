@@ -9,7 +9,7 @@
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
                               <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
-                              <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m)</div>
+                              <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m) / {{orga.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                           </div>
                       </td>
                   </tr>
@@ -26,6 +26,7 @@
               </div>
           </div>
 
+          <!-- START CREATE NEW REQUEST -->
           <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
               <table ng-show="(confettiMax>=confettiMin)" style="width: 100%;">
                   <tr>
@@ -39,7 +40,7 @@
                                       <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
                               </div>
-                              <div on-tap="editSpokenLanguage()" style="border-width:0px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
+                              <div on-tap="editSpokenLanguage()" style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                                   {{ 'ISPEAK' | translate }}
                                   <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
                                   <span style="border-width: 0px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;"><i class="icon ion-android-add-circle" style="color: grey; font-size: 125%;"></i></span>
@@ -89,6 +90,76 @@
                     <div>{{ 'MINKONFETTI' | translate }} {{confettiMin}}</div>
               </div>
           </div>
+          <!-- END CREATE NEW REQUEST -->
+
+          <!-- START READ REQUEST -->
+          <div style="width:100%; padding:8px;" ng-show="(request.id!=0) && (!loadingRequest)">
+              <table style="width: 100%;">
+                  <tr>
+                      <td ng-show="(request.state!='open')" width="50" style="vertical-align: middle; text-align: center">
+
+                        <button ng-show="(request.state==='review')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
+                        <button ng-show="(request.state==='done')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
+                        <button ng-show="(request.state==='rejected')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
+
+                      </td>
+                      <td ng-show="(request.state==='open')" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
+                          <table class="round" style="width:100%;">
+                              <tr>
+                                  <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
+                                      {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
+                                  </td>
+                              </tr>
+                              <tr>
+                                  <td>
+                                      <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
+                                  </td>
+                              </tr>
+                          </table>
+                      </td>
+                      <td colspan="2" width="*" style="text-align: center; vertical-align: middle;">
+                          <div style="font-size: 125%; font-weight: bold;  padding-top: 6px;">
+                              {{request.title}}
+                          </div>
+                          <div style="font-size: 75%; color:grey">
+                              Requested on 31.10.2015
+                          </div>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                          <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                      </td>
+                      <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                          <div>
+                              <span style="font-size: 75%">{{ 'CONTACT' | translate }}</span>&nbsp;
+                              {{request.userName}}
+                          </div>
+                      </td>
+                      <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                          <div style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
+                              {{ 'ISPEAK' | translate }}
+                              <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                          </div>
+                      </td>
+                  </tr>
+              </table>
+
+              <hr style="width: 90%">
+
+              <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
+              <div ng-show="(request.userId!=userId) && (request.state==='open')" style="width:100%">
+                  <div style="width:100%">
+                    <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
+                </div>
+                <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                  <button on-tap="startChat()" class="button icon-left ion-android-contacts button-positive" style="border-radius: 6px">
+                      {{ 'HELPCHAT' | translate }}
+                  </button>
+                </div>
+              </div>
+          </div>
+          <!-- END READ REQUEST -->
 
       </div>
 
@@ -129,6 +200,10 @@
                   </table>
               </a>
           </div>
+      </div>
+
+      <div style="width:100%;text-align: center; font-size: 75%; color: lightgrey;">
+        {{request.id}} / {{requestJSON}}
       </div>
 
   </ion-content>
