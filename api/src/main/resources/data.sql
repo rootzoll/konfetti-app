@@ -1,0 +1,2 @@
+INSERT INTO party (address, konfetti_count, konfetti_total, lat, lon, meters, name, person, top_class, website) VALUES ('Berliner Str. 99, 13189 Berlin, GERMANY', 14, 4532452, 0, 0, 500, 'Helferverein Nord e.V.', 'Max Mustermann', 5, 'http://pankowhilft.blogsport.de');
+INSERT INTO party (address, konfetti_count, konfetti_total, lat, lon, meters, name, person, top_class, website) VALUES ('Antonplatz 3, 89282 München, GERMANY', 15, 10, 0, 0, 500000, 'Helferverein Süd e.V.', 'Maxie Musterfrau', 20, 'http://muenchen.blogsport.de');
