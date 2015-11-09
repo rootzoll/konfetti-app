@@ -7,6 +7,7 @@ angular.module('starter.api', [])
         var context = {
             baseUrl : "",
             clientId : "",
+            userId : "",
             secret : ""
         };
 
@@ -69,6 +70,7 @@ angular.module('starter.api', [])
         var request11 = {
             id: 11,
             userId: 123,
+            userName: "Johannes Kli",
             partyId: 2,
             time: 8238483432,
             konfettiCount: 8,
@@ -83,6 +85,7 @@ angular.module('starter.api', [])
         var request12 = {
             id: 12,
             userId: 123,
+            userName: "Christian Bäle",
             partyId: 2,
             time: 6238483432,
             konfettiCount: 34,
@@ -97,6 +100,7 @@ angular.module('starter.api', [])
         var request13 = {
             id: 13,
             userId: 124,
+            userName: "Jochen Tuck",
             partyId: 2,
             time: 5238483432,
             konfettiCount: 1,
@@ -111,6 +115,7 @@ angular.module('starter.api', [])
         var request14 = {
             id: 14,
             userId: 123,
+            userName: "Jamal Klu",
             partyId: 2,
             time: 7238483432,
             konfettiCount: 6,
@@ -123,8 +128,9 @@ angular.module('starter.api', [])
         };
 
         return {
-            setCredentials: function(clientId, secret) {
+            setCredentials: function(clientId, userId, secret) {
                 context.clientId = clientId;
+                context.userId = userId;
                 context.secret = secret;
                 return;
             },
@@ -135,7 +141,8 @@ angular.module('starter.api', [])
                         // no login up front - multiple clients can be bound to one user within settings option
                         win({
                             clientId: 1,
-                            secret: 'da8ds68a6d8a6d8as6d8a6dsasad7a98d7s'
+                            userId: 1, // the userid equals the clientid in the beginning - later on one client id can get master id for other clients
+                            secret: 'da8ds68a6d8a6d8as6d8a6dsasad7a98d7s' // secret is tied to client
                         });
                     } else {
                         // fail gets an error code (number) that is displays in user feedback for support

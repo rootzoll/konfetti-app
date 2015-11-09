@@ -96,33 +96,33 @@
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsReview" requesttype="reviewRequestCard" id="reviewRequestCard{{request.id}}"></div>
+      <div requestcard data-ng-repeat="request in requestsReview" requesttype="reviewRequestCard" id="reviewRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card" ng-show="(requestsPosted.length>0)">
+      <div class="card" ng-show="(requestsPosted.length>0)" style="margin-bottom: 10px;">
           <div class="item item-divider" style="font-weight: bold;">
               {{ 'DASHHEADER_POSTED' | translate }}
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsPosted" requesttype="postedRequestCard" id="postedRequestCard{{request.id}}"></div>
+      <div requestcard data-ng-repeat="request in requestsPosted" requesttype="postedRequestCard" id="postedRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card" ng-show="(requestsInteraction.length>0)">
+      <div class="card" ng-show="(requestsInteraction.length>0)" style="margin-bottom: 10px;">
           <div class="item item-divider" style="font-weight: bold;">
               {{ 'DASHHEADER_ACTIVE' | translate }}
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}"></div>
+      <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card">
+      <div class="card" style="margin-bottom: 10px;">
           <div class="item item-divider"  style="font-weight: bold; padding-right: 8px;">
               {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.sort as sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
           </div>
       </div>
 
-      <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" id="openRequestCard{{request.id}}" style="position: relative;"></div>
+      <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div ng-show="(requestsOpen.length===0)" class="card">
+      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;">
            <div class="item item-text-wrap" style="font-weight: bold;">
                {{ 'NOCONTENT' | translate }}
            </div>
