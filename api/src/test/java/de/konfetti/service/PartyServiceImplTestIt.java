@@ -24,11 +24,10 @@ import static org.junit.Assert.assertTrue;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = Application.class)
 @ActiveProfiles("test")
-//@TransactionConfiguration(defaultRollback=true)
-//@Transactional
 public class PartyServiceImplTestIt {
 
     private final TestHelper testHelper = new TestHelper();
+
     @Autowired
     private PartyRepository partyRepository;
 

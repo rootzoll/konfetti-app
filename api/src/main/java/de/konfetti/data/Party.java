@@ -35,7 +35,7 @@ public class Party {
 
     private int topClass;
 
-    @OneToMany(mappedBy="party")
+    @OneToMany(mappedBy="party", fetch = FetchType.EAGER)
     private Set<Request> requestSet;
 
     public Long getId() {

@@ -36,5 +36,59 @@ public class Request {
 //    private ??? info;
 
 
+    public Long getId() {
+        return id;
+    }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Party getParty() {
+        return party;
+    }
+
+    public void setParty(Party party) {
+        this.party = party;
+    }
+
+    public Date getTime() {
+        return time;
+    }
+
+    public void setTime(Date time) {
+        this.time = time;
+    }
+
+    public int getKonfettiCount() {
+        return konfettiCount;
+    }
+
+    public void setKonfettiCount(int konfettiCount) {
+        this.konfettiCount = konfettiCount;
+    }
+
+    public int getKonfettiAdd() {
+        return konfettiAdd;
+    }
+
+    public void setKonfettiAdd(int konfettiAdd) {
+        this.konfettiAdd = konfettiAdd;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }

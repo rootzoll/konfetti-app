@@ -1,7 +1,9 @@
 package de.konfetti.controller;
 
 import de.konfetti.data.Party;
+import de.konfetti.data.Request;
 import de.konfetti.service.PartyService;
+import de.konfetti.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +22,17 @@ public class PartyController {
 
     private final PartyService partyService;
 
+    private final RequestService requestService;
+
     @Autowired
-    public PartyController(final PartyService partyService) {
+    public PartyController(final PartyService partyService, RequestService requestService) {
         this.partyService = partyService;
+        this.requestService = requestService;
     }
+
+    //---------------------------------------------------
+    // PARTY Controller
+    //---------------------------------------------------
 
     @RequestMapping(method = RequestMethod.POST)
     public Party createListe(@RequestBody @Valid final Party party) throws NoSuchAlgorithmException, UnsupportedEncodingException {
@@ -50,6 +59,36 @@ public class PartyController {
     public List<Party> getAllParties() throws NoSuchAlgorithmException, UnsupportedEncodingException {
         return partyService.getAllParties();
     }
+
+    //---------------------------------------------------
+    // REQUEST Controller
+    //---------------------------------------------------
+    @RequestMapping(value = "/{partyId}/request", method = RequestMethod.POST)
+    public Request createRequest(@PathVariable long partyId, @RequestBody @Valid final Request request){
+        return requestService.create(partyId, request);
+    }
+
+    @RequestMapping(value = "/{partyId}/request", method = RequestMethod.PUT)
+    public Request updateRequest(@PathVariable long partyId, @RequestBody @Valid Request request){
+        return requestService.update(partyId, request);
+    }
+
+    @RequestMapping(value = "/{partyId}/request", method = RequestMethod.DELETE)
+    public Request deleteRequest(@PathVariable long partyId, @RequestBody @Valid Request request){
+        return requestService.delete(partyId, request.getId());
+    }
+
+    @RequestMapping(value = "/{partyId}/request/{requestId}", method = RequestMethod.GET)
+    public Request getRequest(@PathVariable long partyId, @RequestBody @Valid Request request){
+        return requestService.get(partyId, request.getId());
+    }
+
+    @RequestMapping(value = "/{partyId}/request", method = RequestMethod.GET)
+    public List<Request> getAllPartyRequests(@PathVariable long partyId){
+        return requestService.getAllPartyRequests(partyId);
+    }
+
+
 
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)

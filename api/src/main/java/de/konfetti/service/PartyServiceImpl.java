@@ -19,12 +19,9 @@ import static de.konfetti.utils.Helper.nonnull;
  */
 @Service
 @Validated
-public class PartyServiceImpl implements PartyService {
+public class PartyServiceImpl extends BaseService implements PartyService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PartyServiceImpl.class);
-
-    private PartyRepository partyRepository;
-
 
     @Autowired
     public PartyServiceImpl(PartyRepository partyRepository) {
@@ -87,12 +84,5 @@ public class PartyServiceImpl implements PartyService {
         return partyRepository.findOne(partyId);
     }
 
-
-    protected Party getPartyOrThrowError(@NotNull long partyId) {
-        Party dbParty = partyRepository.findOne(partyId);
-        if (dbParty == null)
-            throw new IllegalArgumentException("Party cannot be found with the given ID : " + partyId);
-        return dbParty;
-    }
 
 }
