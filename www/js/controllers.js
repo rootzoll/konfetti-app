@@ -340,12 +340,12 @@ angular.module('starter.controllers', [])
 
 .controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $timeout, $translate, $ionicPopup, ApiService) {
 
-  $scope.title = "";
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getProfile();
   $scope.state = "";
 
   // request data skeleton
+  $scope.headlineTemp = "";
   $scope.request = {id : 0};
 
   // get request id if its a existing request
@@ -377,8 +377,49 @@ angular.module('starter.controllers', [])
   };
 
   $scope.startChat = function() {
-    alert("TODO: Open Chat View with request author. If app user havent entered name yet - ask with popup before chat starts.");
-  };
+
+      // make sure user has entered name before first chat
+      if ($scope.profile.name.length<=0) {
+          $translate("IMPORTANT").then(function (HEADLINE) {
+              $translate("ENTERNAME").then(function (TEXT) {
+                $ionicPopup.prompt({
+                    title: HEADLINE,
+                    template: TEXT,
+                    inputType: 'text',
+                    inputPlaceholder: ''
+                }).then(function(res) {
+                    console.log('name:', res);
+                    if (typeof res != "undefined") {
+                        $scope.profile.name = res;
+                        AppContext.setProfile($scope.profile);
+                        $scope.startChat();
+                    }
+                });
+              });
+          });
+          return;
+      }
+
+      ApiService.createChat($scope.request.id, function(result) {
+        // WIN
+        $rootScope.chatPartner = { name: $scope.request.profile_name, imageUrl: $scope.request.profile_imageUrl};
+        var dataObj = {id: result.id};
+        console.dir(dataObj);
+        $state.go('tab.chat-detail', dataObj);
+      }, function(errorCode) {
+        // FAIL
+          $translate("IMPORTANT").then(function (HEADLINE) {
+              $translate("INTERNETPROBLEM").then(function (TEXT) {
+                  $ionicPopup.alert({
+                      title: HEADLINE,
+                      template: TEXT
+                  }).then(function(res) {});
+              });
+          });
+      });
+
+      // END of startChat()
+    };
 
   // when re-entering the view
   $scope.reenter = false;
@@ -534,10 +575,6 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
-
 .controller('AccountCtrl', function($rootScope, $scope, $state) {
 
   $scope.$on('$ionicView.enter', function(e) {
@@ -560,5 +597,74 @@ angular.module('starter.controllers', [])
   $scope.onButtonCode = function() {
       alert("TODO: PopUp to enter number-MAGICCODE-code (activate features, add privileges, ...)");
   };
+
+})
+
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate) {
+
+   $scope.chatMessage = "";
+   $scope.messages = [];
+
+   // check if id of chat is available
+   if (typeof $stateParams.id==="undefined") {
+       $state.go('tab.dash');
+       return;
+   }
+
+   window.addEventListener('native.keyboardshow', function($event){
+        console.log("KEYBOARD");
+        console.dir($event);
+   });
+
+   // load chat data
+   $scope.chat = { id: $stateParams.id};
+   $scope.loading = true;
+   $scope.loadingText = "";
+   ApiService.loadChat($stateParams.id, function(chatData) {
+       $scope.chat = chatData;
+       // TODO: make sure that message array is ordered
+       $scope.loading = false;
+       console.log($scope.chat);
+       console.log("MESSAGES: "+$scope.chat.messages.length);
+       if ($scope.chat.messages.length>0) $scope.loadChatsItem(0);
+   }, function(errorCode) {
+       $translate("INTERNETPROBLEM").then(function (TEXT) {
+           $ionicPopup.alert({
+               title: HEADLINE,
+               template: TEXT
+           }).then(function(res) {});
+       });
+   });
+
+   $scope.loadChatsItem = function(indexInArray) {
+
+       $scope.loading = true;
+       console.log("loadChatsItem("+indexInArray+")");
+
+       // for now load ALL items on chat FROM SERVER
+       // TODO: later cache items in perstent app context and make paging for loading from server
+       var idToLoad = $scope.chat.messages[indexInArray].itemId;
+       ApiService.loadMediaItem(idToLoad, function(loadedItem){
+            // success
+           $scope.messages.push(loadedItem);
+           if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
+           if ((indexInArray+1) < $scope.chat.messages.length) {
+               console.log("next");
+               indexInArray++;
+               $scope.loadChatsItem(indexInArray);
+           } else {
+               console.log("done");
+               $scope.loading = false;
+           }
+       }, function(errorcode){
+            // fail
+           $scope.messages.push({id:0, type:'text', data: '[FAIL LOADING '+idToLoad+']'});
+       });
+   };
+
+   $scope.sendChatMessage = function() {
+       alert("TODO: Send Messsage: "+$scope.chatMessage);
+       $scope.chatMessage = "";
+   };
 
 });

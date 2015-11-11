@@ -69,7 +69,7 @@ angular.module('starter.api', [])
 
         var request11 = {
             id: 11,
-            userId: 123,
+            userId: 125,
             userName: "Johannes Kli",
             partyId: 2,
             time: 8238483432,
@@ -114,7 +114,7 @@ angular.module('starter.api', [])
 
         var request14 = {
             id: 14,
-            userId: 123,
+            userId: 127,
             userName: "Jamal Klu",
             partyId: 2,
             time: 7238483432,
@@ -127,7 +127,19 @@ angular.module('starter.api', [])
             chats:[]
         };
 
+        var chat1 = { // a chat is metadata, participants and a time sorted list of media items (just text for the beginning)
+            id: 1,
+            requestId: 12,
+            hostId:124, // user id of user owning the request
+            members: [123], // array of user ids of people part of the chat
+            messages: [] // list of (timestamps and ids of messages said by one of the users)
+        };
+
+        var chat2 = cloneObject(chat1);
+        chat2.messages = [{time:57135713257123, userId: 123, itemId:1234},{time:93797593475493, userId: 124, itemId:1235}];
+
         return {
+            // --> gets set once called on start of app and those credentials can than be used on background API calls
             setCredentials: function(clientId, userId, secret) {
                 context.clientId = clientId;
                 context.userId = userId;
@@ -147,6 +159,30 @@ angular.module('starter.api', [])
                     } else {
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(321);
+                    }
+                },1000);
+                return;
+            },
+            // gets called once a user starts a chat
+            createChat: function(requestId, win, fail) {
+                $timeout(function(){
+                    if (Math.random()>errorPossibility) {
+                        win(chat1);
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(331);
+                    }
+                },1000);
+                return;
+            },
+            // gets called once a user starts a chat
+            loadChat: function(chatId, win, fail) {
+                $timeout(function(){
+                    if (Math.random()>errorPossibility) {
+                        win(chat2);
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(331);
                     }
                 },1000);
                 return;
@@ -230,6 +266,17 @@ angular.module('starter.api', [])
                     } else {
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(232);
+                    }
+                },1000);
+                return;
+            },
+            loadMediaItem: function(itemId, win, fail){
+                $timeout(function(){
+                    if (Math.random()>errorPossibility) {
+                        win({id:itemId, type:'text', data: '[TODO LOADING '+itemId+']'});
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(265);
                     }
                 },1000);
                 return;

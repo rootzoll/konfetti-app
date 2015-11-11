@@ -152,7 +152,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'CONTACT' : 'Contact',
             'HELPOUT' : 'help out and earn up to',
             'GETREWARD' : 'as reward',
-            'HELPCHAT' : 'Start Chat'
+            'HELPCHAT' : 'Start Chat',
+            'INTERNETPROBLEM' : 'Problem with Connection. Please try again later.',
+            'ENTERNAME' : 'Please enter your name:',
+            'SENDMESSAGE' : 'send a message'
         });
 
    $translateProvider.translations('de', {
@@ -208,7 +211,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'CONTACT' : 'Kontakt',
             'HELPOUT' : 'Helfen und bis zu',
             'GETREWARD' : 'erhalten.',
-            'HELPCHAT' : 'Starte Chat'
+            'HELPCHAT' : 'Starte Chat',
+            'INTERNETPROBLEM' : 'Problem mit der Verbindung. Bitte später nochmal probieren.',
+            'ENTERNAME' : 'Bitte gib deinen Namen ein:',
+            'SENDMESSAGE' : 'sende eine Nachricht'
         });
 
    $translateProvider.translations('ar', {
@@ -264,7 +270,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'CONTACT' : 'اتصال',
             'HELPOUT' : 'مساعدة و تكسب ما يصل الى',
             'GETREWARD' : 'كمكافأة',
-            'HELPCHAT' : 'بدء الدردشة'
+            'HELPCHAT' : 'بدء الدردشة',
+            'INTERNETPROBLEM' : 'مشكلة مع الاتصال. الرجاء معاودة المحاولة في وقت لاحق.',
+            'ENTERNAME' : 'من فضلك أدخل إسمك',
+            'SENDMESSAGE' : 'ارسل رسالة'
         });
 
   $translateProvider.preferredLanguage("en");
@@ -315,17 +324,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       }
   })
 
-    /*
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+  .state('tab.chat-detail', {
+      url: '/chats/:id',
       views: {
         'tab-chats': {
           templateUrl: 'templates/chat-detail.html',
           controller: 'ChatDetailCtrl'
         }
       }
-    })
-    */
+  })
 
   .state('tab.account', {
     url: '/account',
@@ -351,3 +358,12 @@ Array.prototype.contains = function(obj) {
     }
     return false;
 };
+
+function cloneObject(obj) {
+    if (obj === null || typeof obj !== 'object') {return obj;}
+    var temp = obj.constructor();
+    for (var key in obj) {
+        temp[key] = cloneObject(obj[key]);
+    }
+    return temp;
+}

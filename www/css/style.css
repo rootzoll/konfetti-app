@@ -45,6 +45,21 @@
     border-top-width: 1px !important;
 }
 
+body > div.popup-container.popup-showing.active > div > div.popup-body > input {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.chatInputFooter {
+    z-index: 999;
+    position: absolute;
+    background-color: lightgray;
+    height: 150px;
+    width: 100%;
+    top: 40px;
+    left:0px;
+}
+
 @media screen and (max-height: 400px) {
 
     body > ion-nav-view > ion-tabs > div {

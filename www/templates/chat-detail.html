@@ -4,11 +4,51 @@
   The FriendsCtrl pulls data from the Friends service (service.js)
   The Friends service returns an array of friend data
 -->
-<ion-view view-title="{{chat.name}}">
+<ion-view view-title="Chat">
   <ion-content class="padding">
-    <img ng-src="{{chat.face}}" style="width: 64px; height: 64px">
-    <p>
-      {{chat.lastText}}
-    </p>
+
+      <div style="width: 100%; height: 130px; background-color: green;"></div>
+
+      <div style="width: 100%">
+          <div class="list card" data-ng-repeat="message in messages">
+              {{message.data}}
+          </div>
+      </div>
+
+      <div ng-show="loading" style="min-height:70px;width:100%;text-align:center;margin-top: 10px; margin-bottom: 5px">
+          <br>
+          <ion-spinner icon="android"></ion-spinner>
+          <div style="color:lightgrey;font-size: 75%">
+              {{ loadingText | translate }}
+          </div>
+      </div>
+
   </ion-content>
+
+    <!-- TODO: relocate keyboard to footer, but not now because soft-keyboard on natives fing stuff up-->
+    <div class="chatInputFooter">
+        <div class="list card" style="text-align: center; margin-top: 10px;margin-bottom: 2px;">
+            <table style="width: 100%;">
+                <tr>
+                    <td width="70" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                        <image ng-src="{{chatPartner.imageUrl ? chatPartner.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                    </td>
+                    <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                        <div>
+                            <span style="font-size: 75%">{{ 'CONTACT' | translate }}</span>&nbsp;
+                            {{chatPartner.userName}}
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="item item-input-inset" style="height:60px;background:lightgray;">
+            <label class="item-input-wrapper">
+                <!-- <input type="text" placeholder=""> -->
+                <textarea ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" rows="2" cols="40" style="height: 40px;background-color: transparent;"></textarea>
+            </label>
+            <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive icon ion-android-send" style="height: 40px; width: 40px"></button>
+        </div>
+    </div>
+
 </ion-view>
