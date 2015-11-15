@@ -1,13 +1,12 @@
 <a href="#" on-tap="tapNotificationMore($event, notification)" class="item" style="padding:14px;">
+
     <table width="100%">
 
-        <!-- Chat Message -->
+        <!-- Media Item -->
         <tr ng-show="(notification.type===1)">
-            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-chatboxes before-big"></i></td>
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-information-circled before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
-                <div>
-                    {{ 'NOTIFICATION_CHATREQUEST' | translate }}
-                </div>
+                <div mediaitem itemid="{{notification.ref}}" id="mediaitem-{{notification.ref}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
             </td>
             <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
         </tr>
@@ -29,6 +28,17 @@
             <td width="*" style="vertical-align: middle;">
                 <div>
                     {{ 'NOTIFICATION_REVIEWFAIL' | translate }}
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+        </tr>
+
+        <!-- New Chat Message -->
+        <tr ng-show="(notification.type===4)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-chatboxes before-big"></i></td>
+            <td width="*" style="vertical-align: middle;">
+                <div>
+                    {{ 'NOTIFICATION_CHATREQUEST' | translate }}
                 </div>
             </td>
             <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>

@@ -16,7 +16,7 @@
     top: 40px;
     position: absolute;
     width: 100%;
-    height: 110px;">
+    height: 110px;" ng-hide="(state==='INTRO')">
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 8px;">
             <div style="width:100%;padding:8px">
@@ -28,9 +28,9 @@
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
                             <div ng-hide="loadingParty" style="min-height: 70px;">
 
-                                <div style="text-align: center; font-size: 200%;">{{orga.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
-                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
-                                <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
+                                <div style="text-align: center; font-size: 200%;">{{party.user.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
+                                <div style="direction: ltr;">({{party.meters}}m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
 
                             </div>
                             <div ng-show="loadingParty" style="min-height: 70px;">
@@ -55,6 +55,30 @@
     </div>
 
   <ion-content>
+
+      <div ng-show="(state==='INTRO')" class="card" style="text-align: center; margin-top: 16px;">
+          <div class="item item-divider">
+              {{ 'INTRO_WELCOME' | translate }}
+          </div>
+          <div class="item item-text-wrap">
+              <ion-list>
+                  <ion-item>
+                      {{ 'INTRO_STEP1A' | translate }}<br><strong>{{ 'INTRO_STEP1B' | translate }}</strong>
+                  </ion-item>
+                  <ion-item>
+                      <strong>{{ 'INTRO_STEP2A' | translate }}</strong> {{ 'INTRO_STEP2B' | translate }}
+                  </ion-item>
+                  <ion-item>
+                      <strong>{{ 'INTRO_STEP3A' | translate }}</strong> {{ 'INTRO_STEP3B' | translate }}
+                  </ion-item>
+              </ion-list>
+          </div>
+          <div class="item item-divider">
+              <button class="button button-positive" on-tap="buttonIntroScreenOK()">
+                  {{ 'INTRO_LETSGO' | translate }}
+              </button>
+          </div>
+      </div>
 
       <div style="height: 93px;"></div>
 
@@ -85,10 +109,9 @@
         NOTIFICATIONS - just show if available
       -->
 
-      <div ng-show="(notifications.length>0)" class="list card">
-          <div notification type="{{noti}}" data-ng-repeat="notification in notifications"></div>
+      <div ng-show="showNotifications" class="list card">
+          <div notification ng-show="notification.id>0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}"></div>
       </div>
-
 
       <div class="card" ng-show="(requestsReview.length>0)">
           <div class="item item-divider" style="font-weight: bold;">

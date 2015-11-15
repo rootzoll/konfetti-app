@@ -8,8 +8,8 @@
                   <tr>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{orga.name}}</div>
-                              <div style="direction: ltr;">{{orga.town}} ({{orga.meters}}m) / {{orga.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
+                              <div style="direction: ltr;">({{party.meters}}m) / {{party.user.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                           </div>
                       </td>
                   </tr>
@@ -169,7 +169,7 @@
           </div>
       </div>
 
-      <div ng-show="((request.author===profile.id) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+      <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
           <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
               &nbsp; {{ 'ADDINFO' | translate }}
           </button>

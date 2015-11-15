@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService, KonfettiToolbox) {
 
         $scope.userId = 0;
         $scope.loadingParty = true;
@@ -16,6 +16,7 @@ angular.module('starter.controllers', [])
         $scope.requestsInteraction = [];
         $scope.requestsOpen = [];
         $scope.notifications = [];
+        $scope.showNotifications = false;
 
         // available app languages
         $scope.langSet = [
@@ -157,22 +158,68 @@ angular.module('starter.controllers', [])
         };
 
         $scope.tapNotificationMore = function($event, noti) {
-            alert("TODO more notification id("+noti.id+")");
+
+            // media item info --> ignore tap
+            if (noti.type==1) {
+                return;
+            }
+
+            // request now public --> go to request page
+            if (noti.type==2) {
+                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                return;
+            }
+
+            // request rejected --> go to request page
+            if (noti.type==3) {
+                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                return;
+            }
+
+            // new chat message --> go to request page - scroll down to chats
+            if (noti.type==4) {
+                $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
+                return;
+            }
+
         };
 
         $scope.tapNotificationDelete = function($event, noti) {
-            $event.stopPropagation();
-            alert("TODO delete notification id("+noti.id+")");
+            if ((typeof $event != "undefined") && ($event!=null)) $event.stopPropagation();
+
+            document.getElementById('notification-'+noti.id).classList.add("animationFadeOut");
+            ApiService.markNotificationAsRead( noti.id,
+            function(){
+                // WIN
+
+                // set id = 0
+                // --> not displaying it anymore
+                noti.id = 0;
+
+                // check if there is at least one notification with id>0 to display
+                $scope.showNotifications = false;
+                for (var i = 0; i < $scope.notifications.length; i++) {
+                    if ($scope.notifications[i].id>0) {
+                        $scope.showNotifications = true;
+                        break;
+                    }
+                }
+
+            }, function(){
+                // FAIL
+                document.getElementById('notification-'+noti.id).classList.remove("animationFadeOut");
+                $log.warn("Was not able to mark notification as read.");
+            });
         };
 
         $scope.tapRequestMore = function($event, request) {
-            //alert("TODO more request id("+request.id+") ");
-            $state.go('tab.request-detail', {id: request.id});
+            $state.go('tab.request-detail', {id: request.id, area: 'top'});
         };
 
         $scope.tapRequestKonfetti = function($event, request) {
             $event.stopPropagation();
-            if ($rootScope.orga.konfettiCount<=0) {
+
+            if ($rootScope.party.user.konfettiCount<=0) {
                 if (request.konfettiAdd===0) {
                     log.info("TODO: show dialog that confetti is zero and tell how to earn it");
                 }
@@ -185,7 +232,7 @@ angular.module('starter.controllers', [])
 
             // count up confetti to add
             request.konfettiAdd++;
-            $rootScope.orga.konfettiCount--;
+            $rootScope.party.user.konfettiCount--;
             request.lastAdd = Date.now();
 
             $timeout(function() {
@@ -203,7 +250,7 @@ angular.module('starter.controllers', [])
                 }, function(){
                     // FAIL -> put konfetti back
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
-                    $rootScope.orga.konfettiCount -= request.konfettiAdd;
+                    $rootScope.party.user.konfettiCount -= request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 });
@@ -218,25 +265,33 @@ angular.module('starter.controllers', [])
             $scope.action();
         };
 
-        // pop up with more info in party orga
+        // pop up with more info in party
         $scope.showPartyInfo = function() {
-            $translate("ORGAINFO_TITLE").then(function (ORGAINFO_TITLE) {
-                $translate("ORGAINFO_SUB").then(function (ORGAINFO_SUB) {
+            $translate("PARTYINFO_TITLE").then(function (TITLE) {
+                $translate("PARTYINFO_SUB").then(function (SUB) {
                     // An elaborate, custom popup
                     var myPopup = $ionicPopup.show({
-                        template: '<h4>{{orga.name}}</h4><br>{{orga.address}}<br>{{orga.person}}',
-                        title: ORGAINFO_TITLE,
-                        subTitle: ORGAINFO_SUB,
+                        template: '<div style="text-align:center;"><h4>{{party.name}}</h4><br>{{party.detailText}}<br><br>{{party.contact}}</div>',
+                        title: TITLE,
+                        subTitle: SUB,
                         scope: $scope,
                         buttons: [
-                            { text: '<i class="icon ion-ios-close-outline"></i>' },
                             {
                                 text: '<i class="icon ion-information-circled"></i>',
                                 type: 'button-positive',
                                 onTap: function(e) {
-                                    window.open($rootScope.orga.website, "_system");
+                                    if ($rootScope.party.contact.lastIndexOf('http', 0) === 0) {
+                                        window.open($rootScope.party.contact, "_system");
+                                    } else
+                                    if ($rootScope.party.contact.lastIndexOf('mailto:', 0) === 0) {
+                                        window.open($rootScope.party.contact, "_system");
+                                    } else
+                                    {
+                                        window.open("mailto:"+$rootScope.party.contact, "_system");
+                                    }
                                 }
-                            }
+                            },
+                            { text: '<i class="icon ion-ios-close-outline"></i>' }
                         ]
                     });
                     myPopup.then(function(res) {});
@@ -251,11 +306,18 @@ angular.module('starter.controllers', [])
             $scope.action();
         });
 
+        $scope.buttonIntroScreenOK = function() {
+            var state = AppContext.getLocalState();
+            state.introScreenShown = true;
+            AppContext.setLocalState(state);
+            $scope.action();
+        };
+
         $scope.action = function() {
 
             $scope.loadingParty = true;
 
-            $rootScope.orga = { id:0 };
+            $rootScope.party = { id:0 };
             $scope.requestsReview = [];
             $scope.requestsPosted = [];
             $scope.requestsInteraction = [];
@@ -265,6 +327,14 @@ angular.module('starter.controllers', [])
             // check if account init on startup is already done
             if (!AppContext.isReady()) {
                 $timeout($scope.action, 300);
+                return;
+            }
+
+            // display intro message
+            if (!AppContext.getLocalState().introScreenShown) {
+                $scope.state = "INTRO";
+                // show intro part of view
+                // --> button press AppContext.getLocalState.introScreenShown = true
                 return;
             }
 
@@ -319,26 +389,26 @@ angular.module('starter.controllers', [])
 
             $scope.state = "PARTYWAIT";
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
-                $rootScope.orga = data.orga;
-                $scope.requestsReview = data.requestsReview;
-                $scope.requestsPosted = data.requestsPosted;
-                $scope.requestsInteraction = data.requestsInteraction;
-                $scope.requestsOpen = data.requestsOpen;
+                $rootScope.party = data.party;
+                $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
+                $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().userId);
+                $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().userId);
+                $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');
                 $scope.notifications = data.notifications;
                 $scope.loadingParty = false;
                 $scope.sortRequests();
                 $scope.state = "";
+                $scope.showNotifications = ($scope.notifications.length>0);
             },function(code){
                 // FAIL
                 $scope.state = "INTERNETFAIL";
                 $timeout($scope.action, 5000);
             });
 
-        }
-
+        };
     })
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $timeout, $translate, $ionicPopup, ApiService) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, ApiService) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getProfile();
@@ -347,6 +417,7 @@ angular.module('starter.controllers', [])
   // request data skeleton
   $scope.headlineTemp = "";
   $scope.request = {id : 0};
+  $scope.userIsAuthor = false;
 
   // get request id if its a existing request
   if (typeof $stateParams.id!="undefined") {
@@ -354,15 +425,26 @@ angular.module('starter.controllers', [])
   } else {
       $scope.loadingRequest = false;
   }
+
   $scope.requestJSON = JSON.stringify($scope.request);
 
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
     ApiService.loadRequest($scope.request.id,function(req){
+
                 // WIN
                 $scope.request = req;
                 $scope.loadingRequest = false;
                 $scope.requestJSON = JSON.stringify($scope.request);
+                $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
+
+                // get anchor
+                if (typeof $stateParams.area!="undefined") {
+                    if ($stateParams.area==='chats') $timeout(function(){
+                        $ionicScrollDelegate.scrollBottom(true);
+                    },500);
+                }
+
     }, function(code){
                 // FAIL
                 $scope.state = "INTERNETFAIL";
@@ -402,7 +484,7 @@ angular.module('starter.controllers', [])
 
       ApiService.createChat($scope.request.id, function(result) {
         // WIN
-        $rootScope.chatPartner = { name: $scope.request.profile_name, imageUrl: $scope.request.profile_imageUrl};
+        $rootScope.chatPartner = { name: $scope.request.userName, imageUrl: $scope.request.imageUrl};
         var dataObj = {id: result.id};
         console.dir(dataObj);
         $state.go('tab.chat-detail', dataObj);
@@ -426,33 +508,23 @@ angular.module('starter.controllers', [])
   $scope.$on('$ionicView.enter', function(e) {
 
       // when no party is loaded
-      if ($rootScope.orga.id===0) {
+      if ($rootScope.party.id===0) {
           $state.go('tab.dash');
           return;
       }
 
       // clean request data skeleton
       if (($scope.reenter) || ($scope.request.id===0)){
-          $scope.request = {
-              id : 0,
-              author : $scope.profile.id,
-              profile_name : '',
-              profile_imageUrl : '',
-              profile_spokenLangs : [],
-              headline : {
-                  'en' : '',        // TODO: headline als info data field - jeder text braucht meta wer übersetzer, sprache, ...
-                  'de' : '',
-                  'ar' : ''
-              },
-              confetti : 0,
-              info: [],
-              chats : []
-          };
+          $scope.request = { id : 0 };
       }
 
       // load request if needed
+
       if ($scope.request.id!=0) {
+          $scope.userIsAuthor = false;
           $scope.loadRequest();
+      } else {
+          $scope.userIsAuthor = true;
       }
 
       // change title based on situation
@@ -471,8 +543,8 @@ angular.module('starter.controllers', [])
           });
       }
 
-      $scope.confettiMin = $rootScope.orga.newRequestMinKonfetti;
-      $scope.confettiMax = $rootScope.orga.konfettiCount;
+      $scope.confettiMin = $rootScope.party.newRequestMinKonfetti;
+      $scope.confettiMax = $rootScope.party.user.konfettiCount;
       $scope.confettiToSpend = $scope.confettiMin;
       $scope.headline = "";
 
@@ -579,7 +651,7 @@ angular.module('starter.controllers', [])
 
   $scope.$on('$ionicView.enter', function(e) {
       // when no party is loaded
-      if ($rootScope.orga.id===0) {
+      if ($rootScope.party.id===0) {
           $state.go('tab.dash');
           return;
       }
@@ -600,7 +672,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate) {
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext) {
 
    $scope.chatMessage = "";
    $scope.messages = [];
@@ -643,23 +715,26 @@ angular.module('starter.controllers', [])
 
        // for now load ALL items on chat FROM SERVER
        // TODO: later cache items in perstent app context and make paging for loading from server
-       var idToLoad = $scope.chat.messages[indexInArray].itemId;
+       var chatMessage = $scope.chat.messages[indexInArray];
+       var idToLoad = chatMessage.itemId;
        ApiService.loadMediaItem(idToLoad, function(loadedItem){
             // success
-           $scope.messages.push(loadedItem);
+
+           // TODO: cache item
+           var appUserId = AppContext.getAccount().userId;
+           if (appUserId==="") appUserId = 1;
+           chatMessage.isUser = (chatMessage.userId == appUserId);
+           console.log("("+chatMessage.userId +")===("+appUserId+") >> ("+chatMessage.isUser+")");
+           console.dir(chatMessage);
+           $scope.messages.push(chatMessage);
            if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
            if ((indexInArray+1) < $scope.chat.messages.length) {
-               console.log("next");
                indexInArray++;
                $scope.loadChatsItem(indexInArray);
            } else {
-               console.log("done");
                $scope.loading = false;
            }
-       }, function(errorcode){
-            // fail
-           $scope.messages.push({id:0, type:'text', data: '[FAIL LOADING '+idToLoad+']'});
-       });
+       }, function(errorcode){});
    };
 
    $scope.sendChatMessage = function() {

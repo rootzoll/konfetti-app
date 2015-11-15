@@ -17,6 +17,9 @@ angular.module('starter.services', [])
           spokenLangs : ["en", "ar"],
           name : "",
           imageUrl : ""
+      },
+      localState : {
+        introScreenShown: false,
       }
   };
 
@@ -39,6 +42,13 @@ angular.module('starter.services', [])
     },
     setProfile: function(profile) {
         appContext.profile = profile;
+        this.persistContext();
+    },
+    getLocalState: function() {
+        return appContext.localState;
+    },
+    setLocalState: function(state) {
+        appContext.localState = state;
         this.persistContext();
     },
     getAccount: function() {
@@ -92,4 +102,44 @@ angular.module('starter.services', [])
                 return ki;
             },
         };
- });
+ })
+
+.factory('KonfettiToolbox', function($log) {
+
+        return {
+            filterRequestsByState: function(requestArray, state) {
+                var resultArray = [];
+                for (var i = 0; i < requestArray.length; i++) {
+                    if (requestArray[i].state===state) resultArray.push(requestArray[i]);
+                }
+                return resultArray;
+            },
+            filterRequestsByAuthor: function(requestArray, authorUserId) {
+                var resultArray = [];
+                for (var i = 0; i < requestArray.length; i++) {
+                    if (requestArray[i].userId===authorUserId) resultArray.push(requestArray[i]);
+                }
+                return resultArray;
+            },
+            filterRequestsByInteraction: function(requestArray, userId) {
+                var resultArray = [];
+                for (var i = 0; i < requestArray.length; i++) {
+                    // ignore if user is author of request
+                    if (requestArray[i].userId===userId) continue;
+                    // use if there is a chat on request
+                    // server should just deliver chats if related to requesting user
+                    if (requestArray[i].chats.length>0) resultArray.push(requestArray[i]);
+                }
+                return resultArray;
+            }
+        };
+})
+
+.factory('CommonToolbox', function($log) {
+
+        return {
+            helloWorld: function(name) {
+                return 'hello '+name;
+            }
+        };
+});

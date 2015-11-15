@@ -86,7 +86,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         alert("FAIL i18n SETTINGS: "+e);
     }
 
-    $rootScope.orga = {id:0};
+    $rootScope.party = {id:0};
 
   });
 })
@@ -105,8 +105,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_MORE' : 'More',
             'KONFETTI' : 'confetti',
             'KONFETTI-APP' : 'Konfetti',
-            'ORGAINFO_TITLE': 'Organizer',
-            'ORGAINFO_SUB': 'editorial responsibility',
+            'PARTYINFO_TITLE': 'Party Info',
+            'PARTYINFO_SUB': 'editorial responsibility',
             'POSTSORT_MOST': 'top confetti',
             'POSTSORT_NEW': 'newest entry',
             'DASHHEADER_REVIEW': 'Please Review',
@@ -155,7 +155,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'HELPCHAT' : 'Start Chat',
             'INTERNETPROBLEM' : 'Problem with Connection. Please try again later.',
             'ENTERNAME' : 'Please enter your name:',
-            'SENDMESSAGE' : 'send a message'
+            'SENDMESSAGE' : 'send a message',
+            'INTRO_WELCOME' : 'Welcome to Konfetti App',
+            'INTRO_STEP1A' : 'This app is about',
+            'INTRO_STEP1B' : 'neighborly help parties.',
+            'INTRO_STEP2A' : 'Earn Konfetti',
+            'INTRO_STEP2B' : 'by taking care of tasks or by donating.',
+            'INTRO_STEP3A' : 'Use Konfetti',
+            'INTRO_STEP3B' : 'to post tasks to community or to up vote existing tasks.',
+            'INTRO_LETSGO' : 'Show confetti parties in my area.'
         });
 
    $translateProvider.translations('de', {
@@ -164,8 +172,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_MORE' : 'Mehr',
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti',
-            'ORGAINFO_TITLE': 'Veranstalter',
-            'ORGAINFO_SUB': 'inhaltlich verantwortlich',
+            'PARTYINFO_TITLE': 'Party Info',
+            'PARTYINFO_SUB': 'inhaltlich verantwortlich',
             'POSTSORT_MOST': 'top konfetti',
             'POSTSORT_NEW': 'neuste posts',
             'DASHHEADER_REVIEW': 'Bitte Prüfen',
@@ -214,7 +222,16 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'HELPCHAT' : 'Starte Chat',
             'INTERNETPROBLEM' : 'Problem mit der Verbindung. Bitte später nochmal probieren.',
             'ENTERNAME' : 'Bitte gib deinen Namen ein:',
-            'SENDMESSAGE' : 'sende eine Nachricht'
+            'SENDMESSAGE' : 'sende eine Nachricht',
+            'INTRO_WELCOME' : 'Willkommen zur Konfetti App :)',
+            'INTRO_STEP1A' : 'In dieser App geht es um',
+            'INTRO_STEP1B' : 'Nachbarschaftshilfe-Parties.',
+            'INTRO_STEP2A' : 'Verdiene Konfetti',
+            'INTRO_STEP2B' : 'indem du Aufgaben erledigst oder spendest.',
+            'INTRO_STEP3A' : 'Nutze Konfetti',
+            'INTRO_STEP3B' : 'um selber Aufgaben an die Gemeinschaft zu stellen oder bestehende Aufgaben zu unterstützen.',
+            'INTRO_LETSGO' : 'Zeige Konfetti-Parties in meiner Nähe.'
+
         });
 
    $translateProvider.translations('ar', {
@@ -223,8 +240,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'TAB_MORE' : 'مهر',
             'KONFETTI' : 'حلويات',
             'KONFETTI-APP' : 'حلويات',
-            'ORGAINFO_TITLE': 'منظم',
-            'ORGAINFO_SUB': 'المسؤولية التحريرية',
+            'PARTYINFO_TITLE': 'منظم',
+            'PARTYINFO_SUB': 'المسؤولية التحريرية',
             'POSTSORT_MOST': 'شعبية',
             'POSTSORT_NEW': 'جديد',
             'DASHHEADER_REVIEW': 'مراجعة',
@@ -273,7 +290,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'HELPCHAT' : 'بدء الدردشة',
             'INTERNETPROBLEM' : 'مشكلة مع الاتصال. الرجاء معاودة المحاولة في وقت لاحق.',
             'ENTERNAME' : 'من فضلك أدخل إسمك',
-            'SENDMESSAGE' : 'ارسل رسالة'
+            'SENDMESSAGE' : 'ارسل رسالة',
+            'INTRO_WELCOME' : 'أهلا بك',
+            'INTRO_STEP1A' : 'هذا التطبيق هو عن الأحزاب مساعدة الجوار .',
+            'INTRO_STEP1B' : '',
+            'INTRO_STEP2A' : '',
+            'INTRO_STEP2B' : 'كسب حلويات من رعاية المهام أو عن طريق التبرع .',
+            'INTRO_STEP3A' : '',
+            'INTRO_STEP3B' : 'استخدام الورق الملون لإضافة مهام ل مجتمع أو لغاية التصويت المهام الحالية .',
+            'INTRO_LETSGO' : 'تظهر الأطراف حلويات في مجال اختصاصي .'
         });
 
   $translateProvider.preferredLanguage("en");
@@ -315,7 +340,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   })
 
   .state('tab.request-detail', {
-      url: '/request/:id',
+      url: '/request/:id/:area',
       views: {
         'tab-chats': {
           templateUrl: 'templates/tab-request.html',

@@ -7,12 +7,33 @@
 <ion-view view-title="Chat">
   <ion-content class="padding">
 
-      <div style="width: 100%; height: 130px; background-color: green;"></div>
+      <div style="width: 100%; height: 140px;"></div>
 
       <div style="width: 100%">
-          <div class="list card" data-ng-repeat="message in messages">
-              {{message.data}}
+
+          <div data-ng-repeat="message in messages" style="text-align: center;">
+              <!-- chat bubble from app user-->
+              <div ng-show="message.isUser" style="width: 100%">
+                  <div class="list card" style="background-color: lightcyan; margin:10px; margin-left: 30%;">
+                      <div mediaitem itemid="{{message.itemId}}"></div>
+                  </div>
+              </div>
+              <!-- chat bubble from counter part-->
+              <div ng-hide="message.isUser" style="width: 100%">
+                  <table width="100%">
+                      <tr>
+                          <td width="15"><i class="icon ion-ios-person-outline"></i></td>
+                          <td width="*">
+                              <div class="list card"  style="background-color: lightyellow;  margin:10px; ">
+                                <div mediaitem itemid="{{message.itemId}}"></div>
+                              </div>
+                          </td>
+                          <td width="10%"></td>
+                      </tr>
+                  </table>
+              </div>
           </div>
+
       </div>
 
       <div ng-show="loading" style="min-height:70px;width:100%;text-align:center;margin-top: 10px; margin-bottom: 5px">
