@@ -163,7 +163,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'INTRO_STEP2B' : 'by taking care of tasks or by donating.',
             'INTRO_STEP3A' : 'Use Konfetti',
             'INTRO_STEP3B' : 'to post tasks to community or to up vote existing tasks.',
-            'INTRO_LETSGO' : 'Show confetti parties in my area.'
+            'INTRO_LETSGO' : 'Show confetti parties in my area.',
+            'CREATENEW'    : 'create new'
         });
 
    $translateProvider.translations('de', {
@@ -230,7 +231,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'INTRO_STEP2B' : 'indem du Aufgaben erledigst oder spendest.',
             'INTRO_STEP3A' : 'Nutze Konfetti',
             'INTRO_STEP3B' : 'um selber Aufgaben an die Gemeinschaft zu stellen oder bestehende Aufgaben zu unterstützen.',
-            'INTRO_LETSGO' : 'Zeige Konfetti-Parties in meiner Nähe.'
+            'INTRO_LETSGO' : 'Zeige Konfetti-Parties in meiner Nähe.',
+            'CREATENEW'    : 'Neu Erstellen'
 
         });
 
@@ -298,7 +300,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'INTRO_STEP2B' : 'كسب حلويات من رعاية المهام أو عن طريق التبرع .',
             'INTRO_STEP3A' : '',
             'INTRO_STEP3B' : 'استخدام الورق الملون لإضافة مهام ل مجتمع أو لغاية التصويت المهام الحالية .',
-            'INTRO_LETSGO' : 'تظهر الأطراف حلويات في مجال اختصاصي .'
+            'INTRO_LETSGO' : 'تظهر الأطراف حلويات في مجال اختصاصي .',
+            'CREATENEW'    : 'خلق فرص عمل جديدة'
         });
 
   $translateProvider.preferredLanguage("en");

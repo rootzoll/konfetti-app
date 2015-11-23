@@ -1,5 +1,12 @@
 <ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}" style="background-color: lightgrey;">
-  <ion-content>
+
+    <ion-nav-buttons side="secondary">
+        <button on-tap="setNewRequest()" ng-show="(!loadingParty) && (request.id!=0)" id="new-request-header-button" class="button button-small icon-left ion-star button-positive">
+            &nbsp;{{ 'CREATENEW' | translate }}
+        </button>
+    </ion-nav-buttons>
+
+    <ion-content>
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
 
@@ -117,7 +124,7 @@
                               </tr>
                           </table>
                       </td>
-                      <td colspan="2" width="*" style="text-align: center; vertical-align: middle;">
+                      <td colspan="2" width="*" style="text-align: center; vertical-align: middle;padding-top: 10px;">
                           <div style="font-size: 125%; font-weight: bold;  padding-top: 6px;">
                               {{request.title}}
                           </div>
@@ -139,7 +146,7 @@
                       <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
                           <div style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                               {{ 'ISPEAK' | translate }}
-                              <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                              <span data-ng-repeat="lang in request.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
                           </div>
                       </td>
                   </tr>
@@ -191,7 +198,7 @@
                           </td>
                           <td width="*" style="vertical-align: middle;">
                               <div style="padding-left: 10px;">
-                                  <b>{{chat.name}}</b><br>
+                                  <b>{{chat.userName}}</b><br>
                                   <span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>
                               </div>
                           </td>
@@ -200,10 +207,6 @@
                   </table>
               </a>
           </div>
-      </div>
-
-      <div style="width:100%;text-align: center; font-size: 75%; color: lightgrey;">
-        {{request.id}} / {{requestJSON}}
       </div>
 
   </ion-content>

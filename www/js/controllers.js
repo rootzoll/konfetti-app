@@ -419,15 +419,7 @@ angular.module('starter.controllers', [])
   $scope.request = {id : 0};
   $scope.userIsAuthor = false;
 
-  // get request id if its a existing request
-  if (typeof $stateParams.id!="undefined") {
-      $scope.request.id = $stateParams.id;
-  } else {
-      $scope.loadingRequest = false;
-  }
-
-  $scope.requestJSON = JSON.stringify($scope.request);
-
+  // load request function
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
     ApiService.loadRequest($scope.request.id,function(req){
@@ -453,6 +445,24 @@ angular.module('starter.controllers', [])
                 },5000);
     });
   };
+
+  // set new request function
+  $scope.setNewRequest = function() {
+     alert("TODO: Implement .setNewRequest()");
+     $scope.state = "";
+     $scope.headlineTemp = "";
+     $scope.request = {id : 0};
+     $scope.userIsAuthor = true;
+  };
+
+  // get request id if its a existing request
+  if (typeof $stateParams.id!="undefined") {
+    $scope.request.id = $stateParams.id;
+    $scope.loadRequest();
+  } else {
+    $scope.loadingRequest = false;
+    $scope.setNewRequest();
+  }
 
   $scope.tapRequestKonfetti = function($event, request) {
     alert("TODO - upvote in detail view");
@@ -484,9 +494,8 @@ angular.module('starter.controllers', [])
 
       ApiService.createChat($scope.request.id, function(result) {
         // WIN
-        $rootScope.chatPartner = { name: $scope.request.userName, imageUrl: $scope.request.imageUrl};
+        $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
-        console.dir(dataObj);
         $state.go('tab.chat-detail', dataObj);
       }, function(errorCode) {
         // FAIL
@@ -504,7 +513,7 @@ angular.module('starter.controllers', [])
     };
 
   // when re-entering the view
-  $scope.reenter = false;
+  //$scope.reenter = false;
   $scope.$on('$ionicView.enter', function(e) {
 
       // when no party is loaded
@@ -513,13 +522,8 @@ angular.module('starter.controllers', [])
           return;
       }
 
-      // clean request data skeleton
-      if (($scope.reenter) || ($scope.request.id===0)){
-          $scope.request = { id : 0 };
-      }
-
+      /*
       // load request if needed
-
       if ($scope.request.id!=0) {
           $scope.userIsAuthor = false;
           $scope.loadRequest();
@@ -546,10 +550,7 @@ angular.module('starter.controllers', [])
       $scope.confettiMin = $rootScope.party.newRequestMinKonfetti;
       $scope.confettiMax = $rootScope.party.user.konfettiCount;
       $scope.confettiToSpend = $scope.confettiMin;
-      $scope.headline = "";
-
-      // always keep as last in in this section
-      $scope.reenter = true;
+      */
   });
 
   // pop pup to choose languages
@@ -602,7 +603,9 @@ angular.module('starter.controllers', [])
 
   $scope.displayChat = function($event, chat) {
       $event.stopPropagation();
-      alert("TODO: Show Chat with id("+chat.id+")");
+      $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: chat.userName, imageUrl: chat.imageUrl, spokenLangs: chat.spokenLangs};
+      $state.go('tab.chat-detail', {id: chat.id});
+      return;
   };
 
   $scope.submitRequest = function() {
@@ -672,8 +675,18 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext) {
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $ionicHistory) {
 
+   // TODO: remove after testing
+   ApiService.createMediaItemAutoTranslate("test text", "de", function(){
+        //alert("WIN");
+   }, function(){
+        alert("FAIL");
+   });
+
+   $scope.loading = false;
+   $scope.sending = false;
+   $scope.senderror = false;
    $scope.chatMessage = "";
    $scope.messages = [];
 
@@ -696,22 +709,24 @@ angular.module('starter.controllers', [])
        $scope.chat = chatData;
        // TODO: make sure that message array is ordered
        $scope.loading = false;
-       console.log($scope.chat);
-       console.log("MESSAGES: "+$scope.chat.messages.length);
        if ($scope.chat.messages.length>0) $scope.loadChatsItem(0);
    }, function(errorCode) {
+       $translate("IMPORTANT").then(function (HEADLINE) {
        $translate("INTERNETPROBLEM").then(function (TEXT) {
            $ionicPopup.alert({
                title: HEADLINE,
                template: TEXT
-           }).then(function(res) {});
+           }).then(function(res) {
+               $ionicHistory.goBack();
+           });
+       });
        });
    });
 
    $scope.loadChatsItem = function(indexInArray) {
 
        $scope.loading = true;
-       console.log("loadChatsItem("+indexInArray+")");
+       //console.log("loadChatsItem("+indexInArray+")");
 
        // for now load ALL items on chat FROM SERVER
        // TODO: later cache items in perstent app context and make paging for loading from server
@@ -719,13 +734,10 @@ angular.module('starter.controllers', [])
        var idToLoad = chatMessage.itemId;
        ApiService.loadMediaItem(idToLoad, function(loadedItem){
             // success
-
            // TODO: cache item
            var appUserId = AppContext.getAccount().userId;
            if (appUserId==="") appUserId = 1;
            chatMessage.isUser = (chatMessage.userId == appUserId);
-           console.log("("+chatMessage.userId +")===("+appUserId+") >> ("+chatMessage.isUser+")");
-           console.dir(chatMessage);
            $scope.messages.push(chatMessage);
            if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
            if ((indexInArray+1) < $scope.chat.messages.length) {
@@ -738,8 +750,30 @@ angular.module('starter.controllers', [])
    };
 
    $scope.sendChatMessage = function() {
-       alert("TODO: Send Messsage: "+$scope.chatMessage);
-       $scope.chatMessage = "";
+       if ($scope.sending) {
+           console.log("ignore send because sending still in process");
+           return;
+       }
+       $scope.chatMessage = $scope.chatMessage.trim();
+       if ($scope.chatMessage.length===0) {
+           console.log("ignore send because empty message");
+           return;
+       }
+       $scope.sending = true;
+       ApiService.sendChatTextItem($scope.chat, $scope.chatMessage, function(chatItem) {
+          // WIN
+          $scope.sending = false;
+          $scope.senderror = false;
+          $scope.chatMessage = "";
+          chatItem.isUser = true;
+          console.dir(chatItem);
+          $scope.messages.push(chatItem);
+          if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
+       }, function(errorcode) {
+          // FAIL
+          $scope.senderror = true;
+          $scope.sending = false;
+       });
    };
 
 });

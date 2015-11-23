@@ -1,13 +1,14 @@
 angular.module('starter.api', [])
 
-    .factory('ApiService', function($log, $timeout) {
+    .factory('ApiService', function($log, $timeout, MultiLangToolbox) {
 
         var errorPossibility = 0.0;
+        var supportedLangs = ['de','en','ar'];
 
         var context = {
             baseUrl : "",
-            clientId : "",
-            userId : "",
+            clientId : 0,
+            userId : 0,
             secret : ""
         };
 
@@ -91,6 +92,10 @@ angular.module('starter.api', [])
             // user can change his name on user profile - but this may be reviewed information so keep a copy to display
             userName: "",
 
+            // spoken lang codes of request author
+            // can be the langs in actual user profile or copy of lang set on request creation, both should work
+            spokenLangs: [],
+
             // id of party request belongs to
             partyId: 0,
 
@@ -145,7 +150,7 @@ angular.module('starter.api', [])
 
         // CHAT ITEM
         // contains metadata of a single chat message
-        // the actual content of chat message is referenced in mediaitem field
+        // the actual conttent of chat message is referenced in mediaitem field
         var chatItemPrototype = {
             id: 0, // uid of chatitem -> will be set by server
             userId: 0, // author -> needs to be verified by server
@@ -164,6 +169,8 @@ angular.module('starter.api', [])
             // 0 = not reviewed - just private if context as activated review
             // 1 = reviewed and can be public
             reviewed: 0,
+            // last update of content
+            lastUpdateTS : 0,
             // the class name (just toplevel - no package) of media item type
             type: 'undefined'
         };
@@ -202,26 +209,29 @@ angular.module('starter.api', [])
 
         var exampleChatPreview1 = {
             id: 1,
-            name: 'Jan',
+            userName: 'Jan',
             imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
             lastLine: 'The task requested could ..',
             lastActivity: 423424243,
-            lastStatus: 'new'
+            lastStatus: 'new',
+            spokenLangs: ['de', 'en']
         };
 
         var exampleChatPreview2 = {
             id: 2,
-            name: 'Jamal',
+            userName: 'Jamal',
             imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
             lastLine: 'Do you speak english?',
             lastActivity: 423424245,
-            lastStatus: 'send'
+            lastStatus: 'send',
+            spokenLangs: ['ar', 'en']
         };
 
         var request11 = {
             id: 11,
             userId: 125,
             userName: "Johannes Kli",
+            spokenLangs: ["ar"],
             partyId: 2,
             time: 8238483432,
             konfettiCount: 8,
@@ -237,6 +247,7 @@ angular.module('starter.api', [])
             id: 12,
             userId: 1,
             userName: "Christian Bäle",
+            spokenLangs: ["de", "ar"],
             partyId: 2,
             time: 6238483432,
             konfettiCount: 34,
@@ -252,6 +263,7 @@ angular.module('starter.api', [])
             id: 13,
             userId: 124,
             userName: "Jochen Tuck",
+            spokenLangs: ["en", "ar"],
             partyId: 2,
             time: 5238483432,
             konfettiCount: 1,
@@ -267,6 +279,7 @@ angular.module('starter.api', [])
             id: 14,
             userId: 127,
             userName: "Jamal Klu",
+            spokenLangs: ["de"],
             partyId: 2,
             time: 7238483432,
             konfettiCount: 6,
@@ -279,6 +292,7 @@ angular.module('starter.api', [])
         };
 
         var chatItemIdCounter = 100;
+        var mediaItemIdCounter = 0;
 
         // a chat is metadata, participants and a time sorted list of chat items
         var chat1 = {
@@ -291,8 +305,8 @@ angular.module('starter.api', [])
 
         var mediaItemText1 = cloneObject(mediaItemPrototype);
         mediaItemText1.id = 1;
-        mediaItemText1 = "Text";
-        mediaItemText1 = "Hi there. I would like to help.";
+        mediaItemText1.type = "Text";
+        mediaItemText1.text = "Hi there. I would like to help.";
 
         var chatItem1 = cloneObject(chatItemPrototype);
         chatItem1.id = 1;
@@ -315,10 +329,25 @@ angular.module('starter.api', [])
                 return;
             },
             createAccount: function(win, fail) {
+                $http({
+                    method: 'GET',
+                    url: 'http://localhost:9000/konfetti/api/account'
+                }).then(function successCallback(response) {
+                    // WIN
+                    console.dir(response);
+                    alert("WIN: new Account created (see log)");
+                }, function errorCallback(response) {
+                    // FAIL
+                    console.dir(response);
+                    alert("FAIL new Account NOT created");
+                });
+                /*
                 $timeout(function(){
                     if (Math.random()>errorPossibility) {
                         // one user can have multiple accounts=clients bound to user profile
                         // no login up front - multiple clients can be bound to one user within settings option
+                        context.userId = 1;
+                        context.clientId = 1;
                         win({
                             clientId: 1,
                             userId: 1, // the userid equals the clientid in the beginning - later on one client id can get master id for other clients
@@ -329,6 +358,7 @@ angular.module('starter.api', [])
                         fail(321);
                     }
                 },1000);
+                */
                 return;
             },
             // gets called once a user starts a chat
@@ -356,16 +386,64 @@ angular.module('starter.api', [])
                 return;
             },
             // return an empty chat item (no server request)
-            getChatItemPrototype : function() {
+            getChatTItemPrototype : function() {
                 return cloneObject(chatItemPrototype);
             },
-            // gets called once a user starts a chat
-            sendChatItem: function(itemObj, win, fail) {
-                $timeout(function(){
+            // post a chat text message to a chat
+            sendChatTextItem: function(chatId, text, win, fail) {
+                $timeout(function() {
                     if (Math.random()>errorPossibility) {
-                        // item gets returned again with id and maybe corrected data
+                        // return stored chat item with id - this one just fake
+                        var itemObj = cloneObject(chatItemPrototype);
                         itemObj.id = chatItemIdCounter++;
+                        itemObj.userId = context.userId;
+                        itemObj.time = Date.now();
                         win(itemObj);
+                    } else {
+                        // fail gets an error code (number) that is displays in user feedback for support
+                        fail(331);
+                    }
+                },1000);
+                return;
+            },
+            // clients sends a text with a given language code ('de', 'ar', ...)
+            // and server creates a multi lang media item from it by using autotranslate
+            // returns just empty object with the id of the media item, so that translation can be done async by backend pipeline
+            createMediaItemAutoTranslate: function(text, langCode, win, fail) {
+                $timeout(function() {
+                    if (Math.random()>errorPossibility) {
+
+                        // return stored chat item with id - this one just fake
+                        var itemObj = cloneObject(mediaItemPrototype);
+                        itemObj.id = (mediaItemIdCounter++);
+                        win(itemObj);
+
+                        // simulate persistence
+                        itemObj.lastUpdateTS = Date.now;
+                        itemObj.type = "konfetti.data.mediaitem.MultiLang";
+
+                        itemObj.langs = [langCode];
+                        var comStr = "itemObj.lang_"+langCode+"='"+text+"';";
+                        console.log("COMMAND:"+comStr);
+                        eval(comStr);
+                        console.log("DYNAMIC MULTILANG OBJECT");
+                        console.dir(itemObj);
+
+                        alert("TODO: simulate instant auto translation");
+                        // go thru all supported languages
+                        for (var i=0; i<supportedLangs.length; i++) {
+                            // check if item has translaton
+                            var lang = supportedLangs[i];
+
+                            console.log(lang);
+
+                            if (MultiLangToolbox.langIsAvailable(itemObj,lang)) {
+                                console.log("GOT "+lang);
+                            } else {
+                                console.log("NOT "+lang);
+                            }
+                        }
+
                     } else {
                         // fail gets an error code (number) that is displays in user feedback for support
                         fail(331);

@@ -51,24 +51,35 @@
         <div class="list card" style="text-align: center; margin-top: 10px;margin-bottom: 2px;">
             <table style="width: 100%;">
                 <tr>
-                    <td width="70" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                    <td width="70" style="text-align: center; vertical-align: middle; padding-top: 6px;padding-bottom: 4px;" rowspan="2">
                         <image ng-src="{{chatPartner.imageUrl ? chatPartner.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                     </td>
-                    <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
+                    <td colspan="3" style="padding-top: 12px; padding-right: 35px; vertical-align: middle; font-weight: bold;">
+                        {{chatPartner.requestTitle}}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="*" style="text-align: center; vertical-align: middle; padding-top: 4px;padding-bottom: 4px;">
                         <div>
                             <span style="font-size: 75%">{{ 'CONTACT' | translate }}</span>&nbsp;
                             {{chatPartner.userName}}
                         </div>
                     </td>
+                    <td width="*" style="text-align: center; vertical-align: middle; padding-top: 4px;padding-bottom: 4px;">
+                        <div style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
+                            {{ 'ISPEAK' | translate }}
+                            <span data-ng-repeat="lang in chatPartner.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>
-        <div class="item item-input-inset" style="height:60px;background:lightgray;">
-            <label class="item-input-wrapper">
+        <div class="item item-input-inset" style="height:60px;background:lightgray; border-color: transparent;padding-bottom:0px;margin-bottom:0px;">
+            <label class="item-input-wrapper" style="background-color: white">
                 <!-- <input type="text" placeholder=""> -->
-                <textarea ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" rows="2" cols="40" style="height: 40px;background-color: transparent;"></textarea>
+                <textarea ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" rows="2" cols="40" style="height: 40px;background-color: white;"></textarea>
             </label>
-            <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive icon ion-android-send" style="height: 40px; width: 40px"></button>
+            <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive" style="height: 40px; width: 40px"><i ng-show="(!sending && !senderror)" class="icon ion-android-send"></i><i ng-show="(!sending && senderror)" class="icon ion-alert-circled"></i><img ng-show="sending" src="./img/spinner.gif" style="width: 14px; height: 14px"/></button>
         </div>
     </div>
 
