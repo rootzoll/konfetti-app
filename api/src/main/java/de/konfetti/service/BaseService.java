@@ -1,9 +1,6 @@
 package de.konfetti.service;
 
-import de.konfetti.data.Party;
-import de.konfetti.data.PartyRepository;
-import de.konfetti.data.Request;
-import de.konfetti.data.RequestRepository;
+import de.konfetti.data.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,6 +12,8 @@ public class BaseService {
     protected PartyRepository partyRepository;
 
     protected RequestRepository requestRepository;
+
+    protected UserRepository userRepository;
 
     public BaseService() {
     }

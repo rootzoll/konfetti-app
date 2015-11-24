@@ -1,6 +1,6 @@
 angular.module('starter.api', [])
 
-    .factory('ApiService', function($log, $timeout, MultiLangToolbox) {
+    .factory('ApiService', function($log, $timeout, MultiLangToolbox, $http) {
 
         var errorPossibility = 0.0;
         var supportedLangs = ['de','en','ar'];
