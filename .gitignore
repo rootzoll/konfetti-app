@@ -4,3 +4,6 @@ plugins/
 resources/android/
 resources/ios/
 bower_components/
+*.class
+api/target/
+*.log
