@@ -2,6 +2,7 @@
 
 its an app for neighborhood help exchange - part of of the refugeehackathon, Berlin 2015
 
+
 ## Concept Notes
 
 just install app - no sign up (hybrid, ios, android, ..) once app is released
@@ -32,11 +33,25 @@ konfetti exchange goes:
 
 ... you get the idea :D
 
+
 ## Building App from Source
 
 Make sure to have the IONIC framework installed (v1.x): http://ionicframework.com
 
 Checkout from git, run 'ionic state reset' and then 'ionic resources' with project folder.
+
+
+## Running local Server
+
+You need to have Maven installed. Check with 'mvn --version'.
+
+To run server on localhost, go into 'api' folder and run 'mvn spring-boot:run'.
+
+
+## Run App in local Browser (for development)
+
+Run in project root folder 'ionic serve' - this will run the app in local browser for development.
+
 
 ## Actual State of Project
 
@@ -47,15 +62,17 @@ After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm
 - this first draft and mockups: https://github.com/rootzoll/konfetti-app/blob/master/concept/app-mockups.pdf
 - first code commit: ionic hybrid app template
 
-After 2 weeks of free time spend on the project:
+After 4 weeks of free time spend on the project:
 
 - an almost ready click-prototype of the app - this will be awesome :)
+
 
 ## Next Steps
 
 user building backend design and implementaion, ...
 
 See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga will change later on)
+
 
 ## Join & Meet
 
