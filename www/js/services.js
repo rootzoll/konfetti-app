@@ -19,7 +19,7 @@ angular.module('starter.services', [])
           imageUrl : ""
       },
       localState : {
-        introScreenShown: false,
+        introScreenShown: false
       }
   };
 
@@ -70,6 +70,9 @@ angular.module('starter.services', [])
         // TODO
         $log.warn("TODO: persist App Context");
     },
+    getRunningOS: function() {
+        return (typeof window.device != "undefined") ? window.device.platform : "browser";
+    }
   };
 })
 

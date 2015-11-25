@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.api', 'ngCordova', 'pascalprecht.translate'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.api', 'starter.mock', 'ngCordova', 'pascalprecht.translate'])
 
 .run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
@@ -29,7 +29,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     } catch (e) {
         alert("FAIL on hide native status bar: "+e);
     }
-
 
     // set running os info
     try {
@@ -86,6 +85,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         alert("FAIL i18n SETTINGS: "+e);
     }
 
+    // global scope data
     $rootScope.party = {id:0};
 
   });
