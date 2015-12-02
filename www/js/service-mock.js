@@ -190,6 +190,10 @@ angular.module('starter.mock', [])
         party2.user.konfettiTotal = 10000;
         party2.user.topPosition = 4;
 
+        var welcomeNotifaction = [
+            {id: 98, clientId: 1, partyId: 1, type:0, ref:111}
+        ];
+
         var sampleNotifactions = [
             {id: 12, clientId: 1, partyId: 2, type:1, ref:0},
             {id: 87, clientId: 1, partyId: 2, type:2, ref:11},
@@ -295,8 +299,13 @@ angular.module('starter.mock', [])
 
         var mediaItemText1 = cloneObject(mediaItemPrototype);
         mediaItemText1.id = 1;
-        mediaItemText1.type = "Text";
+        mediaItemText1.type = "text";
         mediaItemText1.text = "Hi there. I would like to help.";
+
+        var mediaItemText111 = cloneObject(mediaItemPrototype);
+        mediaItemText111.id = 111;
+        mediaItemText111.type = "text";
+        mediaItemText111.data = "Welcome. You start with 14 confetti on this party. Use them to upvote Open Requests or create a request yourself.";
 
         var chatItem1 = cloneObject(chatItemPrototype);
         chatItem1.id = 1;

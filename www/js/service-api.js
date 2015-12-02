@@ -238,7 +238,7 @@ angular.module('starter.api', [])
                                 MockData.getMockData('request11'),
                                 MockData.getMockData('request14')
                             ],
-                            notifications: []
+                            notifications: MockData.getMockData('welcomeNotifaction')
                         });
                     } else
                     if (partyId===2) {
@@ -302,17 +302,21 @@ angular.module('starter.api', [])
                 // ### MOCK MODE ###
 
                 var mockCallback = function() {
-                    if (Math.random()>errorPossibility) {
+
+                        // default
                         var item = cloneObject(MockData.getMockData('mediaItemPrototype'));
                         item.id = itemId;
                         item.reviewed = 1;
                         item.type = "text";
                         item.data = "[TODO LOADING "+itemId+"]";
+
+                        // itemId 111
+                        if (itemId==111) {
+                            item = MockData.getMockData('mediaItemText111');
+                        }
+
+                        // deliver back
                         win(item);
-                    } else {
-                        // fail gets an error code (number) that is displays in user feedback for support
-                        fail(265);
-                    }
                 };
                 //if (activeServerUrl===apiUrlJustUseMock)
                 {
@@ -358,6 +362,34 @@ angular.module('starter.api', [])
                 //if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+
+            },
+            redeemCode: function(codeStr, langCode, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win({
+                        // list of commands to process internally
+                        action : [
+                            {
+                                command: 'focusParty',
+                                partyId: 123
+                            }
+                        ],
+                        // html to show in popup to user
+                        feedbackHtml : '<h3>OK</h3>999 Konfetti added to Party of Helferverein Nord.'
+                    });
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},3000);
                     return;
                 }
 

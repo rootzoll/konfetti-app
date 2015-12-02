@@ -157,6 +157,10 @@ angular.module('starter.controllers', [])
             }, 2000);
         };
 
+        $scope.onNewRequest = function() {
+            $state.go('tab.request-detail', {id: 0, area: 'top'});
+        };
+
         $scope.tapNotificationMore = function($event, noti) {
 
             // media item info --> ignore tap
@@ -297,7 +301,6 @@ angular.module('starter.controllers', [])
                     myPopup.then(function(res) {});
                 });
             });
-
         };
 
         $scope.$on('$ionicView.enter', function(e) {
@@ -650,7 +653,7 @@ angular.module('starter.controllers', [])
 
 })
 
-.controller('AccountCtrl', function($rootScope, $scope, $state) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading) {
 
   $scope.$on('$ionicView.enter', function(e) {
       // when no party is loaded
@@ -665,12 +668,63 @@ angular.module('starter.controllers', [])
     pauseChat: true
   };
 
+  // pop up with more info in party
+  $scope.showCodeRedeem = function(isRedeemCouponBool) {
+    var titleKey = "MAGICCODE";
+    var subKey = "REDEEM_MAGIC_SUB";
+    if ((typeof isRedeemCouponBool != "undefined") && (isRedeemCouponBool)) {
+        titleKey = "REDEEMCOUPON";
+        subKey = "REDEEM_COUPON_SUB";
+    }
+    $translate(titleKey).then(function (TITLE) {
+        $translate(subKey).then(function (SUB) {
+            $ionicPopup.prompt({
+                title: TITLE,
+                template: SUB,
+                // input type is number - because number codes work in all langs and alphabets
+                inputType: 'number',
+                inputPlaceholder: ''
+            }).then(function(res) {
+                console.log('name:', res);
+                if (typeof res != "undefined") {
+                    if (res.length==0) return;
+                    $ionicLoading.show({
+                        template: '<img src="img/spinner.gif" />'
+                    });
+                    ApiService.redeemCode(res, AppContext.getAppLang(), function(result){
+                        // WIN
+                        $ionicLoading.hide();
+                        alert("TODO: Process actions: "+JSON.stringify(result.action));
+                        $scope.feedbackOnCode(result.feedbackHtml);
+                    }, function(){
+                        // FAIL
+                        $ionicLoading.hide();
+                        $translate("INTERNETPROBLEM").then(function (text) {
+                            $scope.feedbackOnCode(text);
+                        });
+                    });
+                }
+            });
+        });
+    });
+  };
+
+  $scope.feedbackOnCode = function(html) {
+      $translate("ANSWERE").then(function (HEADLINE) {
+              $ionicPopup.alert({
+                  title: HEADLINE,
+                  template: html
+              }).then(function() {
+              });
+      });
+  }
+
   $scope.onButtonCoupon = function() {
-      alert("TODO: PopUp to enter number-COUPON-code (no text because different alphabet)");
+      $scope.showCodeRedeem(true);
   };
 
   $scope.onButtonCode = function() {
-      alert("TODO: PopUp to enter number-MAGICCODE-code (activate features, add privileges, ...)");
+      $scope.showCodeRedeem(false);
   };
 
 })

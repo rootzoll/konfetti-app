@@ -3,6 +3,14 @@
     <table width="100%">
 
         <!-- Media Item -->
+        <tr ng-show="(notification.type===0)">
+            <td width="*" style="vertical-align: middle;">
+                <div mediaitem itemid="{{notification.ref}}" id="mediaitem-{{notification.ref}}" style="position: relative; margin-bottom: 10px; margin-top: 10px; font-size: 75%"></div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+        </tr>
+
+        <!-- Media Item with info icon -->
         <tr ng-show="(notification.type===1)">
             <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-information-circled before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
