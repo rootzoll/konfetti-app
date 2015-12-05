@@ -35,6 +35,7 @@
 
           <!-- START CREATE NEW REQUEST -->
           <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
+
               <table ng-show="(confettiMax>=confettiMin)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
@@ -59,7 +60,7 @@
                       <td colspan="2">
                           <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
                               <label class="item-input-wrapper">
-                                  <input id="headline" ng-model="headline" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
+                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
                               </label>
                           </div>
                       </td>

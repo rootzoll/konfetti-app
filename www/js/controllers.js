@@ -411,14 +411,14 @@ angular.module('starter.controllers', [])
         };
     })
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, ApiService) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getProfile();
   $scope.state = "";
 
   // request data skeleton
-  $scope.headlineTemp = "";
+  $scope.headline = { temp: ""};
   $scope.request = {id : 0};
   $scope.userIsAuthor = false;
 
@@ -451,20 +451,38 @@ angular.module('starter.controllers', [])
 
   // set new request function
   $scope.setNewRequest = function() {
-     alert("TODO: Implement .setNewRequest()");
+
      $scope.state = "";
-     $scope.headlineTemp = "";
+     $scope.headline = { temp: ""};
      $scope.request = {id : 0};
      $scope.userIsAuthor = true;
+
+     // just for better debug in browser
+     if (typeof $rootScope.party.newRequestMinKonfetti == "undefined") {
+          $rootScope.party.newRequestMinKonfetti = 1;
+          console.warn("IF NOT DEV-MODE: MISSING newRequestMinKonfetti - setting DEV-DEFAULT");
+     }
+     if (typeof $rootScope.party.user == "undefined") {
+         $rootScope.party.user = {konfettiCount:  10};
+         console.warn("IF NOT DEV-MODE: MISSING party.user - setting DEV-DEFAULT");
+     }
+
+     $scope.confettiMin = $rootScope.party.newRequestMinKonfetti;
+     console.dir($rootScope.party);
+     $scope.confettiMax = $rootScope.party.user.konfettiCount;
+     $scope.confettiToSpend = $scope.confettiMin;
   };
 
   // get request id if its a existing request
-  if (typeof $stateParams.id!="undefined") {
+  if ((typeof $stateParams.id!="undefined") && ($stateParams.id!=0)) {
     $scope.request.id = $stateParams.id;
+    console.log("LOADING REQUEST: "+$scope.request.id);
     $scope.loadRequest();
   } else {
+    console.log("SET NEW REQUEST");
     $scope.loadingRequest = false;
     $scope.setNewRequest();
+
   }
 
   $scope.tapRequestKonfetti = function($event, request) {
@@ -625,8 +643,7 @@ angular.module('starter.controllers', [])
           return;
       }
 
-      alert($scope.headline);
-      if ($scope.headline.length<4) {
+      if ($scope.headline.temp.length<4) {
           $translate("IMPORTANT").then(function (HEADLINE) {
               $translate("ENTERREQUEST").then(function (TEXT) {
                   $ionicPopup.alert({
@@ -638,16 +655,35 @@ angular.module('starter.controllers', [])
           return;
       }
 
-      $translate("THANKYOU").then(function (HEADLINE) {
-          $translate("SUBMITINFO").then(function (TEXT) {
-              $ionicPopup.alert({
-                  title: HEADLINE,
-                  template: TEXT
-              }).then(function(res) {
-                  alert("TODO: make sure submitted task appears under 'you posted' in dash with waiting for review");
-                  $state.go('tab.dash');
+      var newRequest = {
+        userId: AppContext.getAccount().userId,
+        userName: $scope.profile.name,
+        spokenLangs : $scope.profile.spokenLangs,
+        partyId : $rootScope.party.id,
+        konfettiCount: $scope.confettiToSpend,
+        title : $scope.headline.temp
+      };
+      //console.dir(newRequest);
+      $ionicLoading.show();
+      ApiService.postRequest(newRequest, function(){
+          // WIN
+          $ionicLoading.hide();
+          $translate("THANKYOU").then(function (HEADLINE) {
+              $translate("SUBMITINFO").then(function (TEXT) {
+                  $ionicPopup.alert({
+                      title: HEADLINE,
+                      template: TEXT
+                  }).then(function(res) {
+                      $scope.headline.temp = "";
+                      $rootScope.party.user.konfettiCount - $scope.confettiToSpend;
+                      $state.go('tab.dash');
+                  });
               });
           });
+      }, function() {
+          // FAIL
+          $ionicLoading.hide();
+          alert("TODO: Fail handling");
       });
   };
 
@@ -717,7 +753,7 @@ angular.module('starter.controllers', [])
               }).then(function() {
               });
       });
-  }
+  };
 
   $scope.onButtonCoupon = function() {
       $scope.showCodeRedeem(true);

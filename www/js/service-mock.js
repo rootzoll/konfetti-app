@@ -14,6 +14,9 @@ angular.module('starter.mock', [])
         // putting already stuff in there for private parties
         var partyPrototype = {
 
+            // unique id
+            id: 0,
+
             // official name to display in short
             name: '',
 
@@ -99,7 +102,7 @@ angular.module('starter.mock', [])
             // this is always 0 but gets delivered by server
             konfettiAdd: 0,
 
-            // title of request --> TODO: ref to multilang item?
+            // title of request --> TODO: can also be multilang item?
             title: '',
 
             // image of user/selfi
@@ -171,6 +174,7 @@ angular.module('starter.mock', [])
          */
 
         var party1 = cloneObject(partyPrototype);
+        party1.id = 1;
         party1.name = 'Helferverein Nord e.V.';
         party1.detailText = 'Berliner Str. 99, 13189 Berlin, GERMANY';
         party1.contact = 'http://pankowhilft.blogsport.de';
@@ -181,6 +185,7 @@ angular.module('starter.mock', [])
         party1.user.topPosition = 4;
 
         var party2 = cloneObject(partyPrototype);
+        party2.id = 2;
         party2.name = 'Helferverein Süd e.V.';
         party2.detailText = 'Antonplatz 3, 89282 München, GERMANY';
         party2.contact = 'muenchen@helfer.de';
@@ -319,10 +324,20 @@ angular.module('starter.mock', [])
             {time:93797593474354, userId: 1, itemId:1236},
             {time:93797593474356, userId: 2, itemId:1237}];
 
+
+        var lastPostedRequest = null;
+
         return {
             getMockData: function(mockVarNameAsString) {
                 return eval(mockVarNameAsString);
-            }
+            },
+            putlastPostedRequest: function(request) {
+                lastPostedRequest = request;
+                return true;
+            },
+            getLastPostedRequest: function() {
+                return lastPostedRequest;
+            },
         };
 
     });

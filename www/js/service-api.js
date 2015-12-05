@@ -22,7 +22,7 @@ angular.module('starter.api', [])
 
         var fallbackToMockOnBrowser = function(mockCallback) {
             if (AppContext.getRunningOS()==='browser') {
-                alert("FAILED REQUEST to '"+activeServerUrl+"' - Fallback to FakeData");
+                console.warn("FAILED REQUEST to '"+activeServerUrl+"' - Fallback to FakeData");
                 activeServerUrl = apiUrlJustUseMock;
                 mockCallback();
             }
@@ -79,7 +79,7 @@ angular.module('starter.api', [])
                 // FAIL
                 var errorCallback = function(response) {
                     console.dir(response);
-                    alert("FAIL new Account NOT created");
+                    console.warn("FAIL new Account NOT created");
                     fallbackToMockOnBrowser(mockCallback);
                 };
                 $http(config).then(successCallback, errorCallback);
@@ -228,26 +228,38 @@ angular.module('starter.api', [])
 
                 // ### MOCK MODE ###
 
+                var addLastPostedRequest = function(partyId, requests) {
+                    var r = MockData.getLastPostedRequest();
+                    if ((r!=null) && (r.partyId==partyId)) {
+                        requests.push(r);
+                    }
+                    return requests;
+                };
+
                 var mockCallback = function() {
                     // one user can have multiple accounts=clients bound to user profile
                     // no login up front - multiple clients can be bound to one user within settings option
                     if (partyId===1) {
+                        var requests = [
+                            MockData.getMockData('request11'),
+                            MockData.getMockData('request14')
+                        ];
+                        requests = addLastPostedRequest(1, requests);
                         win({
                             party: MockData.getMockData('party1'),
-                            requests: [
-                                MockData.getMockData('request11'),
-                                MockData.getMockData('request14')
-                            ],
+                            requests: requests,
                             notifications: MockData.getMockData('welcomeNotifaction')
                         });
                     } else
                     if (partyId===2) {
+                        var requests = [
+                            MockData.getMockData('request12'),
+                            MockData.getMockData('request13')
+                        ];
+                        requests = addLastPostedRequest(2, requests);
                         win({
                             party:MockData.getMockData('party2'),
-                            requests: [
-                                MockData.getMockData('request12'),
-                                MockData.getMockData('request13')
-                            ],
+                            requests: requests,
                             notifications: MockData.getMockData('sampleNotifactions')
                         });
                     } else {
@@ -278,6 +290,9 @@ angular.module('starter.api', [])
                     } else
                     if (requestId==13) {
                         win(MockData.getMockData('request13'));
+                    } else
+                    if (requestId==999) {
+                        win(MockData.getLastPostedRequest());
                     } else
                     if (requestId==14) {
                         win(MockData.getMockData('request14'));
@@ -351,6 +366,28 @@ angular.module('starter.api', [])
 
                 // TODO
 
+            },
+            // post a
+            postRequest: function(requestObj, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    requestObj.state = "review";
+                    requestObj.id = 999;
+                    requestObj.time = Date.now();
+                    MockData.putlastPostedRequest(requestObj);
+                    win(requestObj);
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
             },
             markNotificationAsRead: function(notificationId, win, fail) {
 
