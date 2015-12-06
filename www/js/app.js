@@ -168,7 +168,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REDEEM_MAGIC_SUB' : 'activate features, add privileges ..',
             'REDEEM_COUPON_SUB' : 'Please enter the code number of your coupon:',
             'ANSWERE' : 'Result',
-            'REQUESTEDON' : 'Requested on'
+            'REQUESTEDON' : 'Requested on',
+            'REQUESTDONE': 'confirm request as done',
+            'REQUESTDELETE': 'delete request',
+            'REQUESTAPPROVE': 'approve request',
+            'REQUESTREJECT': 'reject request'
         });
 
    $translateProvider.translations('de', {
@@ -240,7 +244,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REDEEM_MAGIC_SUB' : 'Aktivierung von zusätzlichen Funktionen oder Rechten ..',
             'REDEEM_COUPON_SUB' : 'Bitte gib die Code-Nummer deines Gutscheines ein:',
             'ANSWERE' : 'Ergebnis',
-            'REQUESTEDON' : 'Angefragt am'
+            'REQUESTEDON' : 'Angefragt am',
+            'REQUESTDONE': 'Als erledigt bestätigen',
+            'REQUESTDELETE': 'Anfrage löschen',
+            'REQUESTAPPROVE': 'Anfrage freischalten',
+            'REQUESTREJECT': 'Anfrage ablehnen'
         });
 
    $translateProvider.translations('ar', {
@@ -312,7 +320,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REDEEM_MAGIC_SUB' : 'تنشيط الميزات ، إضافة امتيازات',
             'REDEEM_COUPON_SUB' : 'الرجاء إدخال قانون رقم الكوبون الخاص بك:',
             'ANSWERE' : 'نتيجة',
-            'REQUESTEDON' : 'طلب على'
+            'REQUESTEDON' : 'طلب على',
+            'REQUESTDONE': 'تأكيد الطلب كما فعلت',
+            'REQUESTDELETE': 'حذف الطلب',
+            'REQUESTAPPROVE': 'الموافقة على طلب',
+            'REQUESTREJECT': 'رفض طلب'
         });
 
   $translateProvider.preferredLanguage("en");

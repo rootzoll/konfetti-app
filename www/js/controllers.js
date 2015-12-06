@@ -454,6 +454,8 @@ angular.module('starter.controllers', [])
   $scope.headline = { temp: ""};
   $scope.request = {id : 0};
   $scope.userIsAuthor = false;
+  $scope.isAdmin = false;
+  $scope.isReviewer = false;
 
   // load request function
   $scope.loadRequest = function() {
@@ -465,6 +467,8 @@ angular.module('starter.controllers', [])
                 $scope.loadingRequest = false;
                 $scope.requestJSON = JSON.stringify($scope.request);
                 $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
+                $scope.isAdmin = AppContext.getProfile().admin.contains($scope.request.partyId);
+                $scope.isReviewer = AppContext.getProfile().reviewer.contains($scope.request.partyId);
 
                 // get anchor
                 if (typeof $stateParams.area!="undefined") {
@@ -519,7 +523,36 @@ angular.module('starter.controllers', [])
   }
 
   $scope.tapRequestKonfetti = function($event, request) {
-    alert("TODO - upvote in detail view");
+
+            $event.stopPropagation();
+            if ($rootScope.party.user.konfettiCount<=0) return;
+
+            // block further tapping when reporting to server
+            if (typeof request.blockTap === "undefined") request.blockTap = false;
+            if (request.blockTap) return;
+
+            // count up confetti to add
+            request.konfettiAdd++;
+            $rootScope.party.user.konfettiCount--;
+            request.lastAdd = Date.now();
+
+            $timeout(function() {
+                if ((Date.now() - request.lastAdd) < 999) return;
+                request.blockTap = true;
+                // Make SERVER REQUEST
+                ApiService.upvoteRequest(request.id, request.konfettiAdd, function(){
+                    // WIN -> update sort
+                    request.konfettiCount += request.konfettiAdd;
+                    request.konfettiAdd = 0;
+                    request.blockTap = false;
+                }, function(){
+                    // FAIL -> put konfetti back
+                    $rootScope.party.user.konfettiCount -= request.konfettiAdd;
+                    request.konfettiAdd = 0;
+                    request.blockTap = false;
+                });
+
+            },1000);
   };
 
   $scope.startChat = function() {
@@ -576,35 +609,6 @@ angular.module('starter.controllers', [])
           return;
       }
 
-      /*
-      // load request if needed
-      if ($scope.request.id!=0) {
-          $scope.userIsAuthor = false;
-          $scope.loadRequest();
-      } else {
-          $scope.userIsAuthor = true;
-      }
-
-      // change title based on situation
-      $scope.headerTitle= "";
-      if ($scope.request==0) {
-          $translate("NEWREQUEST").then(function (NEWREQUEST) {
-              $timeout(function() {
-                  $scope.headerTitle = NEWREQUEST;
-              },10);
-          });
-      } else {
-          $translate("TAB_REQUEST").then(function (TAB_REQUEST) {
-              $timeout(function() {
-                  $scope.headerTitle = TAB_REQUEST;
-              },10);
-          });
-      }
-
-      $scope.confettiMin = $rootScope.party.newRequestMinKonfetti;
-      $scope.confettiMax = $rootScope.party.user.konfettiCount;
-      $scope.confettiToSpend = $scope.confettiMin;
-      */
   });
 
   // pop pup to choose languages
@@ -655,6 +659,22 @@ angular.module('starter.controllers', [])
       alert("TODO: add info items -> popup with select type and than second popup to enter");
   };
 
+  $scope.buttonRequestDone = function() {
+    alert("TODO: Markt request as done id("+$scope.request.id+") - payout konfetti process - popup with chat partners - select people that done stuff");
+  };
+
+  $scope.buttonRequestDelete = function() {
+      alert("TODO: Delete request id("+$scope.request.id+")");
+  };
+
+  $scope.buttonRequestReject = function() {
+      alert("TODO: Reject request id("+$scope.request.id+")");
+  };
+
+  $scope.buttonRequestApprove = function() {
+      alert("TODO: Approve request id("+$scope.request.id+")");
+  };
+
   $scope.displayChat = function($event, chat) {
       $event.stopPropagation();
       $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: chat.userName, imageUrl: chat.imageUrl, spokenLangs: chat.spokenLangs};
@@ -696,7 +716,7 @@ angular.module('starter.controllers', [])
         konfettiCount: $scope.confettiToSpend,
         title : $scope.headline.temp
       };
-      //console.dir(newRequest);
+
       $ionicLoading.show();
       ApiService.postRequest(newRequest, function(){
           // WIN

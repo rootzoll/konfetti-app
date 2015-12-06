@@ -166,6 +166,47 @@
                   </button>
                 </div>
               </div>
+
+              <!-- SHOW WHEN USER IS THE AUTHOR -->
+              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+                  <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
+                      &nbsp; {{ 'ADDINFO' | translate }}
+                  </button>
+              </div>
+
+              <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
+              <div ng-show="(userIsAuthor) && (request.state==='open') && (!loadingRequest))" style="width:100%">
+                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-positive" style="border-radius: 6px">
+                          {{ 'REQUESTDONE' | translate }}
+                      </button>
+                  </div>
+                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-positive" style="border-radius: 6px">
+                          {{ 'REQUESTDELETE' | translate }}
+                      </button>
+                  </div>
+              </div>
+
+              <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
+              <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+                  <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-positive" style="border-radius: 6px">
+                          {{ 'REQUESTAPPROVE' | translate }}
+                      </button>
+                  </div>
+                  <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-positive" style="border-radius: 6px">
+                          {{ 'REQUESTREJECT' | translate }}
+                      </button>
+                  </div>
+                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-positive" style="border-radius: 6px">
+                          {{ 'REQUESTDELETE' | translate }}
+                      </button>
+                  </div>
+              </div>
+
           </div>
           <!-- END READ REQUEST -->
 
@@ -175,12 +216,6 @@
           <div class="item item-divider">
               {{ 'PUBLICINFO' | translate }}
           </div>
-      </div>
-
-      <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
-              &nbsp; {{ 'ADDINFO' | translate }}
-          </button>
       </div>
 
       <div class="card" ng-show="(request.chats.length>0)">

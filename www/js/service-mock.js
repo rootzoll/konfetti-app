@@ -231,7 +231,7 @@ angular.module('starter.mock', [])
             userId: 125,
             userName: "Johannes Kli",
             spokenLangs: ["ar"],
-            partyId: 2,
+            partyId: 1,
             time: 8238483432,
             konfettiCount: 8,
             konfettiAdd: 0, // this is always 0 but gets delivered by server
@@ -279,7 +279,7 @@ angular.module('starter.mock', [])
             userId: 127,
             userName: "Jamal Klu",
             spokenLangs: ["de"],
-            partyId: 2,
+            partyId: 1,
             time: 7238483432,
             konfettiCount: 6,
             konfettiAdd: 0, // this is always 0 but gets delivered by server
