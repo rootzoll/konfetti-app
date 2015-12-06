@@ -130,7 +130,7 @@
                               {{request.title}}
                           </div>
                           <div style="font-size: 75%; color:grey">
-                              Requested on 31.10.2015
+                              {{ 'REQUESTEDON' | translate }} {{request.time | date:'medium'}}
                           </div>
                       </td>
                   </tr>

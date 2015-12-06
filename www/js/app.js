@@ -165,9 +165,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'INTRO_STEP3B' : 'to post tasks to community or to up vote existing tasks.',
             'INTRO_LETSGO' : 'Show confetti parties in my area.',
             'CREATENEW'    : 'create new',
-            'REDEEM_MAGIC_SUB' : 'activate features, add privileges ... abrakadabra',
+            'REDEEM_MAGIC_SUB' : 'activate features, add privileges ..',
             'REDEEM_COUPON_SUB' : 'Please enter the code number of your coupon:',
-            'ANSWERE' : 'Result'
+            'ANSWERE' : 'Result',
+            'REQUESTEDON' : 'Requested on'
         });
 
    $translateProvider.translations('de', {
@@ -236,9 +237,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'INTRO_STEP3B' : 'um selber Aufgaben an die Gemeinschaft zu stellen oder bestehende Aufgaben zu unterstützen.',
             'INTRO_LETSGO' : 'Zeige Konfetti-Parties in meiner Nähe.',
             'CREATENEW'    : 'Neu Erstellen',
-            'REDEEM_MAGIC_SUB' : 'Aktivierung von zusätzlichen Funktionen oder Rechten ... Abrakadabra',
+            'REDEEM_MAGIC_SUB' : 'Aktivierung von zusätzlichen Funktionen oder Rechten ..',
             'REDEEM_COUPON_SUB' : 'Bitte gib die Code-Nummer deines Gutscheines ein:',
-            'ANSWERE' : 'Ergebnis'
+            'ANSWERE' : 'Ergebnis',
+            'REQUESTEDON' : 'Angefragt am'
         });
 
    $translateProvider.translations('ar', {
@@ -309,7 +311,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'CREATENEW'    : 'خلق فرص عمل جديدة',
             'REDEEM_MAGIC_SUB' : 'تنشيط الميزات ، إضافة امتيازات',
             'REDEEM_COUPON_SUB' : 'الرجاء إدخال قانون رقم الكوبون الخاص بك:',
-            'ANSWERE' : 'نتيجة'
+            'ANSWERE' : 'نتيجة',
+            'REQUESTEDON' : 'طلب على'
         });
 
   $translateProvider.preferredLanguage("en");
@@ -331,7 +334,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   // Each tab has its own nav history stack:
 
   .state('tab.dash', {
-    url: '/dash',
+    url: '/dash/:id',
     views: {
       'tab-dash': {
         templateUrl: 'templates/tab-dash.html',
@@ -381,7 +384,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/dash/0');
 
 });
 

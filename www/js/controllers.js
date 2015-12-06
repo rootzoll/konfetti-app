@@ -1,6 +1,12 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $ionicScrollDelegate, ApiService, KonfettiToolbox) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox) {
+
+        // check if id of chat is available
+
+        if (typeof $stateParams.id!="undefined") {
+            
+        }
 
         $scope.userId = 0;
         $scope.loadingParty = true;
@@ -392,8 +398,11 @@ angular.module('starter.controllers', [])
 
             $scope.state = "PARTYWAIT";
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
+                var isReviewerForThisParty = (AppContext.getProfile().reviewer.indexOf(data.party.id) > -1);
+                var isAdminForThisParty = (AppContext.getProfile().admin.indexOf(data.party.id) > -1);
+                console.log("party("+data.party.id+") isAdmin("+isAdminForThisParty+") isReviewer("+isReviewerForThisParty+")");
                 $rootScope.party = data.party;
-                $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
+                if (isAdminForThisParty || isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
                 $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().userId);
                 $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().userId);
                 $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');
@@ -539,7 +548,7 @@ angular.module('starter.controllers', [])
 
       // when no party is loaded
       if ($rootScope.party.id===0) {
-          $state.go('tab.dash');
+          $state.go('tab.dash', {id: 0});
           return;
       }
 
@@ -676,7 +685,7 @@ angular.module('starter.controllers', [])
                   }).then(function(res) {
                       $scope.headline.temp = "";
                       $rootScope.party.user.konfettiCount - $scope.confettiToSpend;
-                      $state.go('tab.dash');
+                      $state.go('tab.dash', {id: 0});
                   });
               });
           });
@@ -694,7 +703,7 @@ angular.module('starter.controllers', [])
   $scope.$on('$ionicView.enter', function(e) {
       // when no party is loaded
       if ($rootScope.party.id===0) {
-          $state.go('tab.dash');
+          $state.go('tab.dash', {id: 0});
           return;
       }
   });
@@ -730,8 +739,7 @@ angular.module('starter.controllers', [])
                     ApiService.redeemCode(res, AppContext.getAppLang(), function(result){
                         // WIN
                         $ionicLoading.hide();
-                        alert("TODO: Process actions: "+JSON.stringify(result.action));
-                        $scope.feedbackOnCode(result.feedbackHtml);
+                        $scope.feedbackOnCode(result);
                     }, function(){
                         // FAIL
                         $ionicLoading.hide();
@@ -745,14 +753,58 @@ angular.module('starter.controllers', [])
     });
   };
 
-  $scope.feedbackOnCode = function(html) {
+  $scope.feedbackOnCode = function(result) {
       $translate("ANSWERE").then(function (HEADLINE) {
               $ionicPopup.alert({
                   title: HEADLINE,
-                  template: html
+                  template: result.feedbackHtml
               }).then(function() {
+                  $scope.processRedeemActions(result.action);
               });
       });
+  };
+
+  $scope.processRedeemActions = function(actionArray) {
+      if (typeof actionArray=="undefined") {
+          console.warn("processRedeemActions: actionArray undefined - skip");
+          return;
+      }
+      for (var i = 0; i < actionArray.length; i++) {
+
+          var action = actionArray[i];
+          if (typeof action == "undefined") {
+              console.warn("processRedeemActions: action at index("+i+") is undefined - skip");
+              continue;
+          }
+
+          // upgrade user to reviewer
+          if (action.command=="reviewer") {
+              var profile = AppContext.getProfile();
+              if (!profile.reviewer.contains(action.partyId)) {
+                  profile.reviewer.push(action.partyId);
+                  AppContext.setProfile(profile);
+              }
+          } else
+
+          // upgrade user to admin
+          if (action.command=="admin") {
+              var profile = AppContext.getProfile();
+              if (!profile.admin.contains(action.partyId)) {
+                  profile.admin.push(action.partyId);
+                  AppContext.setProfile(profile);
+              }
+          } else
+
+          // focus party in GUI
+          if (action.command=="focusParty") {
+              alert("FocusParty("+action.partyId+")");
+          } else
+
+          // unkown
+          {
+             alert("UNKOWN COMMAND '"+action.command+"'");
+          }
+      }
   };
 
   $scope.onButtonCoupon = function() {
@@ -782,7 +834,7 @@ angular.module('starter.controllers', [])
 
    // check if id of chat is available
    if (typeof $stateParams.id==="undefined") {
-       $state.go('tab.dash');
+       $state.go('tab.dash', {id: 0});
        return;
    }
 

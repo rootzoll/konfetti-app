@@ -16,7 +16,9 @@ angular.module('starter.services', [])
       profile : {
           spokenLangs : ["en", "ar"],
           name : "",
-          imageUrl : ""
+          imageUrl : "",
+          admin: [], // ids of parties where user is admin
+          reviewer: [2], // ids of parties where user is reviewer
       },
       localState : {
         introScreenShown: false

@@ -13,6 +13,7 @@ angular.module('starter.api', [])
 
         var errorPossibility = 0.0;
         var supportedLangs = ['de','en','ar'];
+        var chatItemIdCounter = 123;
 
         var context = {
             clientId : 0,
@@ -412,17 +413,40 @@ angular.module('starter.api', [])
                 // ### MOCK MODE ###
 
                 var mockCallback = function() {
-                    win({
-                        // list of commands to process internally
-                        action : [
-                            {
-                                command: 'focusParty',
-                                partyId: 123
-                            }
-                        ],
-                        // html to show in popup to user
-                        feedbackHtml : '<h3>OK</h3>999 Konfetti added to Party of Helferverein Nord.'
-                    });
+
+                    // simulate getting reviewer
+                    if (codeStr=='888') {
+                        win({
+                            // list of commands to process internally
+                            action : [,
+                                {
+                                    command: 'reviewer',
+                                    partyId: 1
+                                },
+                                {
+                                    command: 'focusParty',
+                                    partyId: 1
+                                }
+                            ],
+                            // html to show in popup to user
+                            feedbackHtml : '<h3>OK</h3>You are now a reviewer for Helferverein Nord.'
+                        });
+                    } else
+
+                    // simulate getting konfetti
+                    {
+                        win({
+                            // list of commands to process internally
+                            action: [
+                                {
+                                    command: 'focusParty',
+                                    partyId: 2
+                                }
+                            ],
+                            // html to show in popup to user
+                            feedbackHtml: '<h3>OK</h3>999 Konfetti added to Party of Helferverein Nord.'
+                        });
+                    }
                 };
                 //if (activeServerUrl===apiUrlJustUseMock)
                 {
