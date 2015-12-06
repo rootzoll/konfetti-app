@@ -4,8 +4,10 @@ angular.module('starter.controllers', [])
 
         // check if id of chat is available
 
+        var focusPartyId = 0; // 0 = no focus
         if (typeof $stateParams.id!="undefined") {
-            
+            focusPartyId = $stateParams.id;
+            //console.log("The Party with id("+focusPartyId+") is marked for focus.");
         }
 
         $scope.userId = 0;
@@ -394,6 +396,28 @@ angular.module('starter.controllers', [])
                     });
                 }
                 return;
+            }
+
+
+            // check if focusPartyId is in partylist
+            var isFocusPartyInList = 0;
+            for (var i=0; i<$scope.partyList.length; i++) {
+                if ($scope.partyList[i].id == focusPartyId) isFocusPartyInList=i;
+            }
+            if (focusPartyId>0) {
+                if (isFocusPartyInList===0) {
+                    // add to list
+                    var partyObject = {
+                        id: focusPartyId,
+                        lat: 0,
+                        lon: 0,
+                        meter: 0,
+                        new: 1
+                    };
+                    $scope.partyList.unshift(partyObject);
+                }
+                // set focus index
+                $scope.actualPartyIndex = isFocusPartyInList;
             }
 
             $scope.state = "PARTYWAIT";
@@ -797,7 +821,7 @@ angular.module('starter.controllers', [])
 
           // focus party in GUI
           if (action.command=="focusParty") {
-              alert("FocusParty("+action.partyId+")");
+              $state.go('tab.dash', {id: action.partyId});
           } else
 
           // unkown
