@@ -376,6 +376,7 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     requestObj.state = "review";
                     requestObj.id = 999;
+                    requestObj.userId = context.userId;
                     requestObj.time = Date.now();
                     MockData.putlastPostedRequest(requestObj);
                     win(requestObj);

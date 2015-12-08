@@ -457,7 +457,10 @@ angular.module('starter.controllers', [])
   $scope.isAdmin = false;
   $scope.isReviewer = false;
 
-  // load request function
+  $scope.noticeTextId = "";
+  $scope.noticeColor = "";
+
+        // load request function
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
     ApiService.loadRequest($scope.request.id,function(req){
@@ -469,6 +472,57 @@ angular.module('starter.controllers', [])
                 $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
                 $scope.isAdmin = AppContext.getProfile().admin.contains($scope.request.partyId);
                 $scope.isReviewer = AppContext.getProfile().reviewer.contains($scope.request.partyId);
+
+                /*
+                 * make sure some explaining text is displayed
+                 * so the user is understanding the state of the request
+                 * according to his role (public, author, reviewer, admin)
+                 */
+
+                $scope.noticeColor = "";
+                $scope.noticeTextId = "";
+
+                // when in review and user is author
+                if (($scope.request.state=='review') && ($scope.userIsAuthor)) {
+                    $scope.noticeColor = "#ffc900";
+                    $scope.noticeTextId = "EXPLAIN_REVIEW_USER";
+                }
+
+                // when in review and user is reviewer/admin
+                if (($scope.request.state=='review') && ($scope.isReviewer || $scope.isAdmin)) {
+                    $scope.noticeColor = "#ffc900";
+                    $scope.noticeTextId = "EXPLAIN_REVIEW_ADMIN";
+                }
+
+                // when got rejected
+                if (($scope.request.state=='rejected')) {
+                    $scope.noticeColor = "red";
+                    $scope.noticeTextId = "EXPLAIN_REJECTED";
+                }
+
+                // when open and user is author
+                if (($scope.request.state=='open') && ($scope.userIsAuthor)) {
+                    $scope.noticeColor = "green";
+                    $scope.noticeTextId = "EXPLAIN_OPEN_AUTHOR";
+                }
+
+                // when open and user is public
+                if (($scope.request.state=='open') && (!$scope.userIsAuthor)) {
+                    $scope.noticeColor = "green";
+                    $scope.noticeTextId = "EXPLAIN_OPEN_PUBLIC";
+                }
+
+                // when done and user is not author
+                if (($scope.request.state=='done') && (!$scope.userIsAuthor)) {
+                    $scope.noticeColor = "green";
+                    $scope.noticeTextId = "EXPLAIN_DONE_PUBLIC";
+                }
+
+                // when done and user is author
+                if (($scope.request.state=='done') && ($scope.userIsAuthor)) {
+                    $scope.noticeColor = "green";
+                    $scope.noticeTextId = "EXPLAIN_DONE_AUTHOR";
+                }
 
                 // get anchor
                 if (typeof $stateParams.area!="undefined") {
@@ -493,6 +547,9 @@ angular.module('starter.controllers', [])
      $scope.headline = { temp: ""};
      $scope.request = {id : 0};
      $scope.userIsAuthor = true;
+
+     $scope.noticeColor = "";
+     $scope.noticeTextId = "";
 
      // just for better debug in browser
      if (typeof $rootScope.party.newRequestMinKonfetti == "undefined") {

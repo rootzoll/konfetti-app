@@ -60,8 +60,11 @@
                       <td colspan="2">
                           <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
                               <label class="item-input-wrapper">
-                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="30">
+                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
                               </label>
+                          </div>
+                          <div ng-show="headline.temp.length>35" style="color: red; font-size: 75%;">
+                              {{ 'KEEP_HEADLINE_SHORT' | translate }}
                           </div>
                       </td>
                   </tr>
@@ -103,6 +106,13 @@
           <!-- START READ REQUEST -->
           <div style="width:100%; padding:8px;" ng-show="(request.id!=0) && (!loadingRequest)">
               <table style="width: 100%;">
+                  <tr>
+                      <td colspan="3">
+                          <div ng-show="(noticeColor!='')" style="width: 100%; border-radius: 10px; border-width: 1px; border-style: solid; border-color: {{noticeColor}}; color: {{noticeColor}}; padding: 12px; margin-bottom: 10px;">
+                              {{ noticeTextId | translate }}
+                          </div>
+                      </td>
+                  </tr>
                   <tr>
                       <td ng-show="(request.state!='open')" width="50" style="vertical-align: middle; text-align: center">
 
@@ -175,7 +185,7 @@
               </div>
 
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
-              <div ng-show="(userIsAuthor) && (request.state==='open') && (!loadingRequest))" style="width:100%">
+              <div ng-show="((userIsAuthor) && (request.state==='open') && (!loadingRequest))" style="width:100%">
                   <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-positive" style="border-radius: 6px">
                           {{ 'REQUESTDONE' | translate }}
