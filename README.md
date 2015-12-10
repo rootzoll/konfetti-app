@@ -7,7 +7,7 @@ its an app for neighborhood help exchange - part of of the refugeehackathon, Ber
 
 just install app - no sign up (hybrid, ios, android, ..) once app is released
 
-app shows mirco support requests in your neighborhood (geolocation based)
+app shows micro support requests in your neighborhood (geolocation based)
 
 everybody can get rewarded KONFETTI by
 - doing those tasks
