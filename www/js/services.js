@@ -17,7 +17,7 @@ angular.module('starter.services', [])
           spokenLangs : ["en", "ar"],
           name : "",
           imageUrl : "",
-          admin: [], // ids of parties where user is admin
+          admin: [2], // ids of parties where user is admin
           reviewer: [2], // ids of parties where user is reviewer
       },
       localState : {

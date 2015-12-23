@@ -169,10 +169,32 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REDEEM_COUPON_SUB' : 'Please enter the code number of your coupon:',
             'ANSWERE' : 'Result',
             'REQUESTEDON' : 'Requested on',
-            'REQUESTDONE': 'confirm request as done',
+            'REQUESTDONE': 'mark as done - reward konfetti',
             'REQUESTDELETE': 'delete request',
             'REQUESTAPPROVE': 'approve request',
-            'REQUESTREJECT': 'reject request'
+            'REQUESTREJECT': 'reject request',
+            'REQUESTPROCESS' : 'help found - pause new chats',
+            'REQUESTREOPEN' : 're-open for help offers',
+            'ENTERREASON' : 'reason for rejection',
+            'CONFIRM_DELETE' : 'Do you really want to delete?',
+            'CONFIRM_DELETE_AUTHOR' : 'All konfetti spend by the author will get lost. Voting konfetti by others will get refunded. Do you really want to delete?',
+            'REQUESTREJECT_AFTER' : 'revoke request',
+            'EXPLAIN_REVIEW_USER' : 'Is not public yet - waiting for review.',
+            'EXPLAIN_REVIEW_ADMIN' : 'Please choose reject or approve this request.',
+            'EXPLAIN_REJECTED' : 'Not public - was rejected.',
+            'EXPLAIN_PROCESSING_AUTHOR' : 'Is public - but new help offers are blocked. Re-open if you need more help or reward konfetti when done.',
+            'EXPLAIN_PROCESSING_PUBLIC' : 'Still open, but author was already promised help. So chat is deactivated.',
+            'EXPLAIN_OPEN_AUTHOR' : 'Is public. Please answere incoming chats and reward konfetti once is done.',
+            'EXPLAIN_OPEN_PUBLIC' : 'If you are interested to help out, start a chat and ask for details. Our just upvote with your konfetti.',
+            'EXPLAIN_DONE_PUBLIC' : 'Sucessfully done. Visible just for the archive.',
+            'EXPLAIN_DONE_AUTHOR' : 'Done. Still public for people to see.',
+            'IMAGE' : 'image',
+            'TEXT'  : 'text',
+            'LOCATION' : 'location',
+            'ADDTEXT' : 'Add Text',
+            'ENTERTEXT' : 'Enter the text you like to add:',
+            'REWARDKONFETTI' : 'reward konfetti',
+            'SELECTREWARD' : 'select one or more chat partners'
         });
 
    $translateProvider.translations('de', {
@@ -245,10 +267,32 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REDEEM_COUPON_SUB' : 'Bitte gib die Code-Nummer deines Gutscheines ein:',
             'ANSWERE' : 'Ergebnis',
             'REQUESTEDON' : 'Angefragt am',
-            'REQUESTDONE': 'Als erledigt bestätigen',
+            'REQUESTDONE': 'Auf erledigt setzen - Konfetti verteilen',
             'REQUESTDELETE': 'Anfrage löschen',
             'REQUESTAPPROVE': 'Anfrage freischalten',
-            'REQUESTREJECT': 'Anfrage ablehnen'
+            'REQUESTREJECT': 'Anfrage ablehnen',
+            'REQUESTPROCESS' : 'Hilfe gefunden - keine weiteren Chats',
+            'REQUESTREOPEN' : 'Anfrage wieder für Chats öffnen',
+            'ENTERREASON' : 'Ablehungsbegründung',
+            'CONFIRM_DELETE' : 'Wirklich löschen?',
+            'CONFIRM_DELETE_AUTHOR' : 'Bei Löschung erhält der Autor kein Konfetti zurück. Hinzugegebenes Konfetto von anderen wird zurückerstattet. Wirklich löschen?',
+            'REQUESTREJECT_AFTER' : 'Anfrage zurückziehen',
+            'EXPLAIN_REVIEW_USER' : 'Noch nicht öffentlich - Warten auf Freigabe.',
+            'EXPLAIN_REVIEW_ADMIN' : 'Bitte freigeben oder ablehnen.',
+            'EXPLAIN_REJECTED' : 'Nicht öffentlich - Wurde abgelehnt.',
+            'EXPLAIN_PROCESSING_AUTHOR' : 'Öffentlich - doch für weitere Hilfsangebote geblockt. Wenn weitere Hilfe benötigt wird, Anfrage wieder öffnen oder Konfetti verteilen, wenn erledigt.',
+            'EXPLAIN_PROCESSING_PUBLIC' : 'Ausreichend Hilfe wurde zugesagt. Daher ist der Chat deaktiviert.',
+            'EXPLAIN_OPEN_AUTHOR' : 'Öffentlich. Bitte Chatanfrage beantworten und und wenn erledigt Konfetti verteilen.',
+            'EXPLAIN_OPEN_PUBLIC' : 'Du willst mithelfen? Dann frage im Chat nach Details. Du willst diese Anfrage unterstützen? Dann spende dein Konfetti für die Belohnung mit dem Gefällt-Mir Button.',
+            'EXPLAIN_DONE_PUBLIC' : 'Wurde bereits erledigt. Kommt bald ins Archiv.',
+            'EXPLAIN_DONE_AUTHOR' : 'Erledigt. Noch öffentlich sichtbar.',
+            'IMAGE' : 'Bild',
+            'TEXT'  : 'Text',
+            'LOCATION' : 'Ort',
+            'ADDTEXT' : 'Add Text',
+            'ENTERTEXT' : 'Enter the text you like to add:',
+            'REWARDKONFETTI' : 'Konfetti verteilen',
+            'SELECTREWARD' : 'wähle eine oder mehrere Personen'
         });
 
    $translateProvider.translations('ar', {
@@ -324,8 +368,30 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'REQUESTDONE': 'تأكيد الطلب كما فعلت',
             'REQUESTDELETE': 'حذف الطلب',
             'REQUESTAPPROVE': 'الموافقة على طلب',
-            'REQUESTREJECT': 'رفض طلب'
-        });
+            'REQUESTREJECT': 'رفض طلب',
+            'REQUESTPROCESS' : 'مساعدة وجدت - لا مزيد من الأحاديث',
+            'REQUESTREOPEN' : 'إعادة فتح للعروض المساعدة',
+            'ENTERREASON' : 'سبب الرفض',
+            'CONFIRM_DELETE' : 'حذف بالتأكيد ؟',
+            'CONFIRM_DELETE_AUTHOR' : 'حذف بالتأكيد ؟',
+            'REQUESTREJECT_AFTER' : 'إلغاء طلب',
+            'EXPLAIN_REVIEW_USER' : 'ليس الجمهور حتى الآن - في انتظار المراجعة.',
+            'EXPLAIN_REVIEW_ADMIN' : 'الرجاء اختيار رفض أو الموافقة على هذا الطلب.',
+            'EXPLAIN_REJECTED' : 'لا الجمهور - رفض .',
+            'EXPLAIN_PROCESSING_AUTHOR' : 'المقرر افتتاحه مرة أخرى اذا كنت بحاجة الى مزيد من المساعدة. مكافأة النثار عند الانتهاء.',
+            'EXPLAIN_PROCESSING_PUBLIC' : 'كان لا يزال مفتوحا ، ولكن المؤلف وعدت بالفعل المساعدة. حتى الدردشة و إبطال مفعولها .',
+            'EXPLAIN_OPEN_AUTHOR' : 'هو الجمهور . الرجاء الاجابه الأحاديث الواردة و مكافأة حلويات بمجرد القيام به.',
+            'EXPLAIN_OPEN_PUBLIC' : 'إذا كنت مهتما للمساعدة، بدء الدردشة و السؤال عن التفاصيل. لدينا فقط حتى التصويت مع حلويات الخاص بك .',
+            'EXPLAIN_DONE_PUBLIC' : 'فعلت بنجاح . فقط مرئية للأرشيف',
+            'EXPLAIN_DONE_AUTHOR' : 'تم الانتهاء من. لا يزال الجمهور ليرى الناس .',
+            'IMAGE' : 'صورة',
+            'TEXT'  : 'نص',
+            'LOCATION' : 'موقع',
+            'ADDTEXT' : 'اضافة نص',
+            'ENTERTEXT' : 'أدخل النص الذي ترغب في إضافة :',
+            'REWARDKONFETTI' : 'حلويات مكافأة',
+            'SELECTREWARD' : 'اختيار واحد أو أكثر من شخص'
+   });
 
   $translateProvider.preferredLanguage("en");
   $translateProvider.useSanitizeValueStrategy('escape');

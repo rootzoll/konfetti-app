@@ -86,7 +86,6 @@
                   </tr>
                   <tr>
                       <td colspan="2">
-
                           <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive" style="border-radius: 6px">
                               {{ 'SUBMIT' | translate }}
                           </button><br>
@@ -114,14 +113,14 @@
                       </td>
                   </tr>
                   <tr>
-                      <td ng-show="(request.state!='open')" width="50" style="vertical-align: middle; text-align: center">
+                      <td ng-show="((request.state!='open') && (request.state!='processing'))" width="50" style="vertical-align: middle; text-align: center">
 
                         <button ng-show="(request.state==='review')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
                         <button ng-show="(request.state==='done')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
                         <button ng-show="(request.state==='rejected')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
 
                       </td>
-                      <td ng-show="(request.state==='open')" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
+                      <td ng-show="((request.state==='open') || (request.state==='processing'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
                           <table class="round" style="width:100%;">
                               <tr>
                                   <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
@@ -166,7 +165,7 @@
               <hr style="width: 90%">
 
               <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
-              <div ng-show="(request.userId!=userId) && (request.state==='open')" style="width:100%">
+              <div ng-show="(!userIsAuthor) && (request.state==='open')" style="width:100%">
                   <div style="width:100%">
                     <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
                 </div>
@@ -178,21 +177,31 @@
               </div>
 
               <!-- SHOW WHEN USER IS THE AUTHOR -->
-              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest)) && (request.state!='rejected')" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
                   <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
                       &nbsp; {{ 'ADDINFO' | translate }}
                   </button>
               </div>
 
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
-              <div ng-show="((userIsAuthor) && (request.state==='open') && (!loadingRequest))" style="width:100%">
-                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-positive" style="border-radius: 6px">
+              <div ng-show="((userIsAuthor) && ((request.state==='open') || (request.state==='processing')) && (!loadingRequest))" style="width:100%">
+                  <div ng-show="(request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
+                  <div ng-show="(request.state==='open') && (request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestProcess()" class="button icon-left ion-pause button-energized" style="border-radius: 6px">
+                          {{ 'REQUESTPROCESS' | translate }}
+                      </button>
+                  </div>
+                  <div ng-show="(request.state==='processing')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized" style="border-radius: 6px">
+                          {{ 'REQUESTREOPEN' | translate }}
+                      </button>
+                  </div>
                   <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-positive" style="border-radius: 6px">
+                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
                           {{ 'REQUESTDELETE' | translate }}
                       </button>
                   </div>
@@ -200,21 +209,22 @@
 
               <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
               <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-                  <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-positive" style="border-radius: 6px">
-                          {{ 'REQUESTAPPROVE' | translate }}
-                      </button>
-                  </div>
-                  <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-positive" style="border-radius: 6px">
-                          {{ 'REQUESTREJECT' | translate }}
-                      </button>
-                  </div>
-                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-positive" style="border-radius: 6px">
-                          {{ 'REQUESTDELETE' | translate }}
-                      </button>
-                  </div>
+                      <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                          <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
+                              {{ 'REQUESTAPPROVE' | translate }}
+                          </button>
+                      </div>
+                      <div ng-show="(request.state==='open') || (request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                          <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-assertive" style="border-radius: 6px">
+                              <span ng-show="(request.state==='review')">{{ 'REQUESTREJECT' | translate }}</span>
+                              <span ng-show="(request.state==='open')">{{ 'REQUESTREJECT_AFTER' | translate }}</span>
+                          </button>
+                      </div>
+                      <div ng-show="isAdmin" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                          <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                              {{ 'REQUESTDELETE' | translate }}
+                          </button>
+                      </div>
               </div>
 
           </div>
@@ -235,20 +245,27 @@
       </div>
 
       <div ng-show="(request.chats.length>0)" class="list card">
-          <div data-ng-repeat="chat in request.chats">
+          <div data-ng-repeat="chat in request.chats" id="chat-id-{{chat.id}}">
               <a href="#" on-tap="displayChat($event, chat)" class="item" style="padding:14px;">
                   <table width="100%">
                       <tr>
-                          <td width="45" style="vertical-align: middle;">
+                          <td width="45" style="vertical-align: middle;" rowspan="2">
                               <image ng-src="{{chat.imageUrl ? chat.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                           </td>
-                          <td width="*" style="vertical-align: middle;">
+                          <td width="*" style="vertical-align: middle;" rowspan="2">
                               <div style="padding-left: 10px;">
                                   <b>{{chat.userName}}</b><br>
                                   <span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>
                               </div>
                           </td>
-                          <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;"><i class="icon ion-email-unread before-big"></i></td>
+                          <td on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">
+                              <i ng-hide="((request.chats.length==1) && (request.state==='processing'))" class="icon ion-ios-close-outline before-big"></i>
+                          </td>
+                      </tr>
+                      <tr>
+                         <td class="animationPulsate" style="text-align: center; vertical-align: middle; padding-right: 6px; padding-left: 6px; color: #ee2200;">
+                             <i class="icon ion-email-unread before-big"></i>
+                         </td>
                       </tr>
                   </table>
               </a>

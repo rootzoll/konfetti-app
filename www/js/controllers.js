@@ -398,7 +398,6 @@ angular.module('starter.controllers', [])
                 return;
             }
 
-
             // check if focusPartyId is in partylist
             var isFocusPartyInList = 0;
             for (var i=0; i<$scope.partyList.length; i++) {
@@ -460,7 +459,73 @@ angular.module('starter.controllers', [])
   $scope.noticeTextId = "";
   $scope.noticeColor = "";
 
-        // load request function
+  $scope.setNoticeTextByRequestState = function() {
+
+            /*
+             * make sure some explaining text is displayed
+             * so the user is understanding the state of the request
+             * according to his role (public, author, reviewer, admin)
+             */
+
+            $scope.noticeColor = "";
+            $scope.noticeTextId = "";
+
+            // when in review and user is author
+            if (($scope.request.state=='review') && ($scope.userIsAuthor)) {
+                $scope.noticeColor = "#ffc900";
+                $scope.noticeTextId = "EXPLAIN_REVIEW_USER";
+            }
+
+            // when in review and user is reviewer/admin
+            if (($scope.request.state=='review') && ($scope.isReviewer || $scope.isAdmin)) {
+                $scope.noticeColor = "#ffc900";
+                $scope.noticeTextId = "EXPLAIN_REVIEW_ADMIN";
+            }
+
+            // when got rejected
+            if (($scope.request.state=='rejected')) {
+                $scope.noticeColor = "red";
+                $scope.noticeTextId = "EXPLAIN_REJECTED";
+            }
+
+            // when open and user is author
+            if (($scope.request.state=='open') && ($scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_OPEN_AUTHOR";
+            }
+
+            // when open and user is public
+            if (($scope.request.state=='open') && (!$scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_OPEN_PUBLIC";
+            }
+
+            // when open and user is public
+            if (($scope.request.state=='processing') && ($scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_PROCESSING_AUTHOR";
+            }
+
+            // when is in the process of doing and user id author
+            if (($scope.request.state=='processing') && (!$scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_PROCESSING_PUBLIC";
+            }
+
+            // when done and user is not author
+            if (($scope.request.state=='done') && (!$scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_DONE_PUBLIC";
+            }
+
+            // when done and user is author
+            if (($scope.request.state=='done') && ($scope.userIsAuthor)) {
+                $scope.noticeColor = "green";
+                $scope.noticeTextId = "EXPLAIN_DONE_AUTHOR";
+            }
+  };
+
+  // load request function
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
     ApiService.loadRequest($scope.request.id,function(req){
@@ -472,57 +537,11 @@ angular.module('starter.controllers', [])
                 $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
                 $scope.isAdmin = AppContext.getProfile().admin.contains($scope.request.partyId);
                 $scope.isReviewer = AppContext.getProfile().reviewer.contains($scope.request.partyId);
+                if (AppContext.getRunningOS()=="browser") console.log("isAuthor("+$scope.userIsAuthor+") isReviewer("+$scope.isReviewer+") isAdmin("+$scope.isAdmin+")");
 
-                /*
-                 * make sure some explaining text is displayed
-                 * so the user is understanding the state of the request
-                 * according to his role (public, author, reviewer, admin)
-                 */
+                //alert("userid("+req.userId +") isAuthor("+$scope.userIsAuthor+")");
 
-                $scope.noticeColor = "";
-                $scope.noticeTextId = "";
-
-                // when in review and user is author
-                if (($scope.request.state=='review') && ($scope.userIsAuthor)) {
-                    $scope.noticeColor = "#ffc900";
-                    $scope.noticeTextId = "EXPLAIN_REVIEW_USER";
-                }
-
-                // when in review and user is reviewer/admin
-                if (($scope.request.state=='review') && ($scope.isReviewer || $scope.isAdmin)) {
-                    $scope.noticeColor = "#ffc900";
-                    $scope.noticeTextId = "EXPLAIN_REVIEW_ADMIN";
-                }
-
-                // when got rejected
-                if (($scope.request.state=='rejected')) {
-                    $scope.noticeColor = "red";
-                    $scope.noticeTextId = "EXPLAIN_REJECTED";
-                }
-
-                // when open and user is author
-                if (($scope.request.state=='open') && ($scope.userIsAuthor)) {
-                    $scope.noticeColor = "green";
-                    $scope.noticeTextId = "EXPLAIN_OPEN_AUTHOR";
-                }
-
-                // when open and user is public
-                if (($scope.request.state=='open') && (!$scope.userIsAuthor)) {
-                    $scope.noticeColor = "green";
-                    $scope.noticeTextId = "EXPLAIN_OPEN_PUBLIC";
-                }
-
-                // when done and user is not author
-                if (($scope.request.state=='done') && (!$scope.userIsAuthor)) {
-                    $scope.noticeColor = "green";
-                    $scope.noticeTextId = "EXPLAIN_DONE_PUBLIC";
-                }
-
-                // when done and user is author
-                if (($scope.request.state=='done') && ($scope.userIsAuthor)) {
-                    $scope.noticeColor = "green";
-                    $scope.noticeTextId = "EXPLAIN_DONE_AUTHOR";
-                }
+                $scope.setNoticeTextByRequestState();
 
                 // get anchor
                 if (typeof $stateParams.area!="undefined") {
@@ -682,7 +701,6 @@ angular.module('starter.controllers', [])
           }
       };
 
-    // An elaborate, custom popup
       $translate("ISPEAK").then(function (ISPEAK) {
 
             $scope.en = $scope.profile.spokenLangs.contains("en") ? 1 : 0;
@@ -703,7 +721,6 @@ angular.module('starter.controllers', [])
                 if ($scope.profile.spokenLangs.length===0) $scope.profile.spokenLangs.push(AppContext.getAppLang());
                 AppContext.setProfile($scope.profile);
             });
-
       });
 
   };
@@ -713,29 +730,254 @@ angular.module('starter.controllers', [])
   };
 
   $scope.addInfoItem = function() {
-      alert("TODO: add info items -> popup with select type and than second popup to enter");
+      $translate("ADDINFO").then(function (TITLE) {
+
+          $scope.add = {type: "text", ok: false};
+
+          var myPopup = $ionicPopup.show({
+              templateUrl: 'templates/pop-addinfo.html',
+              scope: $scope,
+              title: TITLE,
+              subTitle: "",
+              buttons: [
+                  { text: 'Cancel' },
+                  { text: 'Add',
+                    type: 'button-positive',
+                    onTap: function(e) {
+                        $scope.add.ok = true;
+                    }
+                  }
+              ]
+          });
+          myPopup.then(function(res) {
+              if (!$scope.add.ok) return;
+              if ($scope.add.type=='image') $scope.addInfoImage();
+              if ($scope.add.type=='text') $scope.addInfoText();
+              if ($scope.add.type=='location') $scope.addInfoLocation();
+          });
+      });
+  };
+
+  $scope.addInfoImage = function() {
+      alert("TODO: Pick Image from Galarie");
+  };
+
+  $scope.addInfoText = function() {
+      $translate("ADDTEXT").then(function (HEADLINE) {
+          $translate("ENTERTEXT").then(function (TEXT) {
+              $ionicPopup.prompt({
+                  title: HEADLINE,
+                  template: TEXT,
+                  inputType: 'text',
+                  inputPlaceholder: ''
+              }).then(function(res) {
+                  console.log('name:', res);
+                  if (typeof res != "undefined") {
+                    // TODO
+                    alert('TODO: Post text media item to request ('+$scope.request.id+'):'+res);
+                  }
+              });
+          });
+      });
+  };
+
+  $scope.addInfoLocation = function() {
+      alert("TODO: Show Map Location Picker");
   };
 
   $scope.buttonRequestDone = function() {
-    alert("TODO: Markt request as done id("+$scope.request.id+") - payout konfetti process - popup with chat partners - select people that done stuff");
+
+      $translate("REWARDKONFETTI").then(function (TITLE) {
+          $translate("SELECTREWARD").then(function (SUBLINE) {
+
+          $scope.rewardDialog = false;
+
+          var latestChat = null;
+          var latestTimestamp = 0;
+          for (var i = 0; i < $scope.request.chats.length; i++) {
+              $scope.request.chats[i].reward = false;
+              if ($scope.request.chats[i].lastActivity > latestTimestamp) {
+                  latestTimestamp = $scope.request.chats[i].lastActivity;
+                  latestChat = $scope.request.chats[i];
+              }
+          };
+
+          // preselect the chat with the latest activity to get reward
+          if (latestChat!=null) latestChat.reward = true;
+
+          // TODO: Dynamic Button Text translate
+          var myPopup = $ionicPopup.show({
+              templateUrl: 'templates/pop-reward.html',
+              scope: $scope,
+              title: TITLE,
+              subTitle: SUBLINE,
+              buttons: [
+                  { text: 'Cancel' },
+                  { text: 'OK',
+                      type: 'button-positive',
+                      onTap: function(e) {
+                          $scope.rewardDialog = true;
+                      }
+                  }
+              ]
+          });
+          myPopup.then(function(res) {
+
+              // if cancel button dont continue
+              if (!$scope.rewardDialog) return;
+
+              // create array of selected user ids to grant reward to
+              var rewardUserIds = [];
+              for (var i = 0; i < $scope.request.chats.length; i++) {
+                  if ($scope.request.chats[i].reward) {
+                      rewardUserIds.push($scope.request.chats[i].userId);
+                  }
+              };
+              if (rewardUserIds.length==0) {
+                  return;
+              }
+              $ionicLoading.show({
+                  template: '<img src="img/spinner.gif" />'
+              });
+              ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
+                  $ionicLoading.hide();
+                  $scope.request.state='done';
+                  $scope.setNoticeTextByRequestState();
+              }, function() {
+                  // FAIL
+                  $ionicLoading.hide();
+              });
+              alert("TODO:  Mark request as done id("+$scope.request.id+") - payout konfetti to selected partners ("+JSON.stringify(rewardUserIds)+")");
+          });
+         });
+      });
+
+  };
+
+  $scope.buttonRequestProcess = function() {
+    alert("TODO: Mark request as processing id("+$scope.request.id+") - block further chats");
+    $ionicLoading.show({
+        template: '<img src="img/spinner.gif" />'
+    });
+    ApiService.setStateOfRequestToProcessing($scope.request.id, function(){
+        // WIN
+        $ionicLoading.hide();
+        $scope.request.state = "processing";
+        $scope.setNoticeTextByRequestState();
+    }, function() {
+        // FAIL - TODO
+        $ionicLoading.hide();
+        alert("FAIL");
+    });
+  };
+
+  $scope.buttonRequestReopen = function() {
+      $ionicLoading.show({
+          template: '<img src="img/spinner.gif" />'
+      });
+      ApiService.setStateOfRequestToReOpen($scope.request.id, function(){
+          // WIN
+          $ionicLoading.hide();
+          $scope.request.state = "open";
+          $scope.setNoticeTextByRequestState();
+      }, function() {
+          // FAIL - TODO
+          $ionicLoading.hide();
+          alert("FAIL");
+      });
   };
 
   $scope.buttonRequestDelete = function() {
-      alert("TODO: Delete request id("+$scope.request.id+")");
+          $translate("IMPORTANT").then(function (HEADLINE) {
+              $translate("CONFIRM_DELETE_AUTHOR").then(function (TEXT) {
+                  var confirmPopup = $ionicPopup.confirm({
+                      title: HEADLINE,
+                      template: TEXT
+                  }).then(function(res) {
+                      if(res) {
+                          $ionicLoading.show({
+                              template: '<img src="img/spinner.gif" />'
+                          });
+                          ApiService.deleteRequest($scope.request.id, 0, function() {
+                              // WIN --> go to dash
+                              $ionicLoading.hide();
+                              $state.go('tab.dash', {id: $scope.request.partyId});
+                          }, function() {
+                              // FAIL
+                              alert("TODO: FAIL delete("+$scope.request.id+")");
+                              $ionicLoading.hide();
+                          });
+                      }
+                  });
+              });
+          });
   };
 
   $scope.buttonRequestReject = function() {
-      alert("TODO: Reject request id("+$scope.request.id+")");
+      $translate("IMPORTANT").then(function (HEADLINE) {
+          $translate("ENTERREASON").then(function (TEXT) {
+              $ionicPopup.prompt({
+                  title: HEADLINE,
+                  template: TEXT,
+                  inputType: 'text',
+                  inputPlaceholder: ''
+              }).then(function(res) {
+                  var response = null;
+                  if (res.length>0) response = res;
+                  $ionicLoading.show({
+                      template: '<img src="img/spinner.gif" />'
+                  });
+                  ApiService.reviewResultOnRequest($scope.request.id, false, null, response, function() {
+                      // WIN --> go to dash
+                      // todo: switch to next request to review
+                      $ionicLoading.hide();
+                      $state.go('tab.dash', {id: $scope.request.partyId});
+                  }, function() {
+                      // FAIL
+                      alert("TODO: FAIL reject("+$scope.request.id+")");
+                      $ionicLoading.hide();
+                  });
+              });
+          });
+      });
   };
 
   $scope.buttonRequestApprove = function() {
-      alert("TODO: Approve request id("+$scope.request.id+")");
+      ApiService.reviewResultOnRequest($scope.request.id, true, null, null, function(){
+        // WIN --> go to dash
+        // todo: switch to next request to review
+        $state.go('tab.dash', {id: $scope.request.partyId});
+      }, function() {
+        // FAIL
+          alert("TODO: FAIL approve("+$scope.request.id+")");
+      });
   };
 
   $scope.displayChat = function($event, chat) {
       $event.stopPropagation();
       $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: chat.userName, imageUrl: chat.imageUrl, spokenLangs: chat.spokenLangs};
       $state.go('tab.chat-detail', {id: chat.id});
+      return;
+  };
+
+  $scope.removeChat = function($event, chat) {
+      $event.stopPropagation();
+      if (($scope.request.chats.length==1) && ($scope.request.state==='processing')) {
+          return;
+      }
+      $ionicLoading.show({
+          template: '<img src="img/spinner.gif" />'
+      });
+      ApiService.muteChatOnRequest($scope.request.id, chat.id, false, function() {
+          $ionicLoading.hide();
+          document.getElementById('chat-id-'+chat.id).classList.add("animationFadeOut");
+          $timeout(function() {
+              $scope.request.chats.splice($scope.request.chats.indexOf(chat), 1);
+          },1000);
+      }, function() {
+          // FAIL
+          $ionicLoading.hide();
+      });
       return;
   };
 

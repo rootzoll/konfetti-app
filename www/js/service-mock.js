@@ -208,6 +208,7 @@ angular.module('starter.mock', [])
 
         var exampleChatPreview1 = {
             id: 1,
+            userId: 222,
             userName: 'Jan',
             imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
             lastLine: 'The task requested could ..',
@@ -218,6 +219,7 @@ angular.module('starter.mock', [])
 
         var exampleChatPreview2 = {
             id: 2,
+            userId: 123,
             userName: 'Jamal',
             imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
             lastLine: 'Do you speak english?',
@@ -239,7 +241,7 @@ angular.module('starter.mock', [])
             imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
             state: 'open',
             info: [],
-            chats:[]
+            chats:[exampleChatPreview1]
         };
 
         var request12 = {
@@ -251,7 +253,7 @@ angular.module('starter.mock', [])
             time: 6238483432,
             konfettiCount: 34,
             konfettiAdd: 0, // this is always 0 but gets delivered by server
-            title: 'Hecke am Spielplatz schneiden',
+            title: 'Strassenfest Aufbau',
             imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
             state: 'rejected',
             info: [],

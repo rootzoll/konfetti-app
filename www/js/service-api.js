@@ -56,8 +56,8 @@ angular.module('starter.api', [])
                     context.userId = 1;
                     context.clientId = 1;
                     win({
-                        clientId: 1,
-                        userId: 1, // the userid equals the clientid in the beginning - later on one client id can get master id for other clients
+                        clientId: 125,
+                        userId: 125, // the userid equals the clientid in the beginning - later on one client id can get master id for other clients
                         secret: 'da8ds68a6d8a6d8as6d8a6dsasad7a98d7s' // secret is tied to client
                     })
                 };
@@ -390,6 +390,119 @@ angular.module('starter.api', [])
                 // ### SERVER MODE ###
 
                 // TODO
+            },
+            // delete a request or a part of a request
+            // mediaitemId = if 0 or null its the complete request
+            // if a mediaitemId is given then just a part of the request gets deleted
+            deleteRequest: function(requestId, mediaitemId, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
+            rewardRequest: function(requestId, arrayOfRewardGetterUserIds, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
+            // a chat belonging to a request should no longer be shown
+            // to author - dongt delete chat, can get visible again if
+            // chat partner send new message if foreverMute = false
+            muteChatOnRequest: function(requestId, chatId, foreverMute, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
+            setStateOfRequestToProcessing: function(requestId, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
+            setStateOfRequestToReOpen: function(requestId, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
+            // set the review result on a request
+            // mediaItemId - if rejection is targeted at a sub element of the request (0 or null = the request itself)
+            // messageStr - just optional in case reviewer likes to chat back the reason
+            reviewResultOnRequest : function(requestId, allowRequestBool, mediaItemId, messageStr, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    win();
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+
+
             },
             markNotificationAsRead: function(notificationId, win, fail) {
 
