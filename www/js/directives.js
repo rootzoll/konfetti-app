@@ -26,6 +26,7 @@ angular.module('starter')
             replace: true,
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
+                
                 $scope.loading = true;
                 $scope.itemid = $attributes.itemid;
                 $scope.mediaItemData = null;

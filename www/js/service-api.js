@@ -411,6 +411,27 @@ angular.module('starter.api', [])
 
                 // TODO
             },
+            postTextMediaItemOnRequest: function(requestId, text, langCode, win, fail) {
+
+                // ### MOCK MODE ###
+
+                var mockCallback = function() {
+                    var result = MockData.getMockData("mediaItemText1");
+                    result.id = 898;
+                    result.type = "text";
+                    result.text = text;
+                    win(result);
+                };
+                //if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){mockCallback();},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // TODO
+            },
             rewardRequest: function(requestId, arrayOfRewardGetterUserIds, win, fail) {
 
                 // ### MOCK MODE ###

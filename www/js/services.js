@@ -16,7 +16,7 @@ angular.module('starter.services', [])
       profile : {
           spokenLangs : ["en", "ar"],
           name : "",
-          imageUrl : "",
+          imageData : "",
           admin: [2], // ids of parties where user is admin
           reviewer: [2], // ids of parties where user is reviewer
       },
@@ -109,7 +109,7 @@ angular.module('starter.services', [])
         };
  })
 
-.factory('KonfettiToolbox', function($log) {
+.factory('KonfettiToolbox', function($log, $ionicPopup, $translate) {
 
         return {
             filterRequestsByState: function(requestArray, state) {
@@ -136,7 +136,18 @@ angular.module('starter.services', [])
                     if (requestArray[i].chats.length>0) resultArray.push(requestArray[i]);
                 }
                 return resultArray;
-            }
+            },
+            showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText) {
+                $translate(i18nKeyTitle).then(function (TITLE) {
+                    $translate(i18nKeyText).then(function (TEXT) {
+                        $ionicPopup.alert({
+                            title: TITLE,
+                            template: TEXT
+                        }).then(function(res) {
+                        });                    
+                    });
+                });                   
+           }
         };
 })
 

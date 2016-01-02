@@ -237,6 +237,13 @@
               {{ 'PUBLICINFO' | translate }}
           </div>
       </div>
+      
+      <div ng-show="(request.info.length>0)" class="list card">
+          <div data-ng-repeat="info in request.info" >
+              <mediaitem itemid="{{info.id}}" id="media-id-{{info.id}}" />
+          </div>
+          
+      </div>       
 
       <div class="card" ng-show="(request.chats.length>0)">
           <div class="item item-divider">

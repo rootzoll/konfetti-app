@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'starter.api', 'starter.mock', 'ngCordova', 'pascalprecht.translate'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.dash', 'starter.controller.request', 'starter.controller.account', 'starter.services', 'starter.api', 'starter.mock', 'ngCordova', 'pascalprecht.translate'])
 
 .run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
@@ -194,7 +194,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ADDTEXT' : 'Add Text',
             'ENTERTEXT' : 'Enter the text you like to add:',
             'REWARDKONFETTI' : 'reward konfetti',
-            'SELECTREWARD' : 'select one or more chat partners'
+            'SELECTREWARD' : 'select one or more chat partners',
+            'INFO' : 'info',
+            'INFO_ZEROKONFETTI' : 'You have no konfetti to support this request. See party info how to get konfetti.',
+            'OK' : 'OK',
+            'CANCEL' : 'Cancel',
+            'INFO_REQUESTFAIL' : 'Check Internet or try again later.',
+            'INFO_FAILTRYAGAIN': 'This failed. Please try again or report to developers.'
         });
 
    $translateProvider.translations('de', {
@@ -292,7 +298,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ADDTEXT' : 'Add Text',
             'ENTERTEXT' : 'Enter the text you like to add:',
             'REWARDKONFETTI' : 'Konfetti verteilen',
-            'SELECTREWARD' : 'wähle eine oder mehrere Personen'
+            'SELECTREWARD' : 'wähle eine oder mehrere Personen',
+            'INFO' : 'Info',
+            'INFO_ZEROKONFETTI' : 'Du hast kein Konfetti um diese Anfrage zu unterstützen. Für mehr Konfetti siehe Party Info.',
+            'OK' : 'OK',
+            'CANCEL' : 'Abbrechen',
+            'INFO_REQUESTFAIL' : 'Internet überprüfen. Später noch einmal probieren.',
+            'INFO_FAILTRYAGAIN': 'Das hat nicht geklappt. Bitte noch einmal probieren oder an die Entwickler melden.'
         });
 
    $translateProvider.translations('ar', {
@@ -390,7 +402,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
             'ADDTEXT' : 'اضافة نص',
             'ENTERTEXT' : 'أدخل النص الذي ترغب في إضافة :',
             'REWARDKONFETTI' : 'حلويات مكافأة',
-            'SELECTREWARD' : 'اختيار واحد أو أكثر من شخص'
+            'SELECTREWARD' : 'اختيار واحد أو أكثر من شخص',
+            'INFO' : 'المعلومات',
+            'INFO_ZEROKONFETTI' : 'لا يوجد لديك حلويات لدعم هذا الطلب . انظر المعلومات الأحزاب كيفية الحصول على قصاصات من الورق .',
+            'OK' : 'حسنا',
+            'CANCEL' : 'إلغاء',
+            'INFO_REQUESTFAIL' : 'تحقق الإنترنت أو المحاولة مرة أخرى في وقت لاحق .',
+            'INFO_FAILTRYAGAIN': 'وهذا فشل. الرجاء المحاولة مرة أخرى أو يقدم للمطورين.'
    });
 
   $translateProvider.preferredLanguage("en");
