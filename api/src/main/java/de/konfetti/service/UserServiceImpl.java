@@ -1,21 +1,15 @@
 package de.konfetti.service;
 
+import java.util.List;
+
 import de.konfetti.data.User;
 import de.konfetti.data.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.UUID;
-
-/**
- * Created by relampago on 23.11.15.
- */
 @Service
 public class UserServiceImpl extends BaseService implements UserService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(RequestServiceImpl.class);
 
     public UserServiceImpl() {
     }
@@ -24,18 +18,42 @@ public class UserServiceImpl extends BaseService implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    
     @Override
     public User create() {
+    	
+    	// user gets created
         User user = new User();
-        user.setSecret(UUID.randomUUID().toString());
 
+        // user gets persisted and returned to user  
         User persited = userRepository.saveAndFlush(user);
-        persited.setClientId(persited.getId());
+        
+        // return to caller
         return persited;
+        
     }
 
     @Override
-    public User findById(long userId) {
-        return userRepository.findOne(userId);
+    public User findById(long id) {
+    	
+    	// gets the one with the given id
+        return userRepository.findOne(id);
+    
     }
+
+	@Override
+	public User findByClientId(long clientId) {
+		Long clientID = new Long(clientId);
+		List<User> all = userRepository.findAll();
+		for (User user : all) {
+			if (user.getClientId().equals(clientID)) return user;
+		}
+		return null;
+	}
+
+	@Override
+	public User update(User user) {
+		return userRepository.saveAndFlush(user);
+	}
+    
 }

@@ -5,9 +5,6 @@ import de.konfetti.data.Party;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/**
- * Created by catarata02 on 08.11.15.
- */
 public interface PartyService {
 
     Party create(@NotNull Party party);

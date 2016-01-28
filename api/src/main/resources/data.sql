@@ -1,2 +1,6 @@
-INSERT INTO party (address, konfetti_count, konfetti_total, lat, lon, meters, name, person, top_class, website) VALUES ('Berliner Str. 99, 13189 Berlin, GERMANY', 14, 4532452, 0, 0, 500, 'Helferverein Nord e.V.', 'Max Mustermann', 5, 'http://pankowhilft.blogsport.de');
-INSERT INTO party (address, konfetti_count, konfetti_total, lat, lon, meters, name, person, top_class, website) VALUES ('Antonplatz 3, 89282 München, GERMANY', 15, 10, 0, 0, 500000, 'Helferverein Süd e.V.', 'Maxie Musterfrau', 20, 'http://muenchen.blogsport.de');
+INSERT INTO party (name, contact, detail_text, lat, lon, meters, visibility, review_level, new_request_min_konfetti, welcome_balance) VALUES ('Helferverein Nord e.V.', 'http://pankowhilft.blogsport.de', 'Berliner Str. 99, 13189 Berlin, GERMANY', 0, 0, 1000, 0, 1, 0, 100);
+INSERT INTO request (user_id, party_id, state, title, time, user_name, image_url) VALUES (99, 1, 'open', 'Aufbau Informationsabend', 1323123123, 'Jochen', 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg');
+INSERT INTO account (name, balance) VALUES ('r1', 12);
+INSERT INTO request (user_id, party_id, state, title, time, user_name, image_url) VALUES (99, 1, 'open', 'Hilfe bei Einkäufen', 1323123126, 'Jada', 'https://d236bkdxj385sg.cloudfront.net/wp-content/uploads/2013/09/Screen-shot-2013-09-25-at-5.12.08-PM.png');
+INSERT INTO account (name, balance) VALUES ('r2', 10);
+INSERT INTO party (name, contact, detail_text, lat, lon, meters, visibility, review_level, new_request_min_konfetti, welcome_balance) VALUES ('Helferverein Süd e.V.', 'http://muenchen.blogsport.de', 'Antonplatz 3, 89282 München, GERMANY', 0, 0, 50000, 0, 0, 10, 10);

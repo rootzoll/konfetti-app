@@ -32,6 +32,6 @@ public class PartyServiceImplTestUnit {
     public void testCreateWithId() throws Exception {
         Party testParty1 = testHelper.getTestParty1();
         testParty1.setId((long) 10);
-        Party createdParty = partyService.create(testParty1);
+        partyService.create(testParty1);
     }
 }

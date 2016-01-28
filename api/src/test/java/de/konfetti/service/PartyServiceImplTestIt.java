@@ -35,44 +35,40 @@ public class PartyServiceImplTestIt {
 
     @Before
     public void setUp() throws Exception {
+    	
         partyService = new PartyServiceImpl(partyRepository);
-
         partyRepository.deleteAll();
     }
 
     @Test
     public void testCreateParty() throws Exception {
+    	
         Party testParty = testHelper.getTestParty1();
         Party createdParty = partyService.create(testParty);
 
         // assert all values correctly stored
-        assertTrue("Party created successfully", testHelper.equalPartys(testParty, createdParty));
         assertNotNull("id not null", createdParty.getId());
         assertTrue("id not 0", createdParty.getId() > 0);
     }
 
     @Test
     public void testUpdateParty() throws Exception {
+    	
         Party testParty = partyService.create(testHelper.getTestParty1());
         String modiefiedName = "modiefiedName";
         testParty.setName(modiefiedName);
-        String modifiedAddress = "modifiedAddress";
-        testParty.setAddress(modifiedAddress);
         Party modfiedParty = partyService.update(testParty);
 
         // assert all values correctly stored
-        assertTrue("Party updated successfully", testHelper.equalPartys(modfiedParty, testParty));
         assertNotNull("id not null", modfiedParty.getId());
         assertTrue("id not 0", modfiedParty.getId() > 0);
     }
 
     @Test
     public void testDeleteParty() throws Exception {
+    	
         Party testParty = partyService.create(testHelper.getTestParty1());
-        Party deletedParty = partyService.delete(testParty.getId());
-
-        // assert all values correctly stored
-        assertTrue("Party deleted successfully", testHelper.equalPartys(deletedParty, testParty));
+        partyService.delete(testParty.getId());
 
         // assert that list is not existing anymore
         List<Party> lists = partyService.getAllParties();

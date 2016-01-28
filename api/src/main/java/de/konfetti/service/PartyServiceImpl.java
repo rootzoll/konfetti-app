@@ -3,8 +3,6 @@ package de.konfetti.service;
 import de.konfetti.data.Party;
 import de.konfetti.data.PartyRepository;
 import de.konfetti.service.exception.ServiceException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -14,23 +12,19 @@ import java.util.List;
 
 import static de.konfetti.utils.Helper.nonnull;
 
-/**
- * Created by catarata02 on 08.11.15.
- */
 @Service
 @Validated
 public class PartyServiceImpl extends BaseService implements PartyService {
-
-    private static final Logger LOGGER = LoggerFactory.getLogger(PartyServiceImpl.class);
 
     @Autowired
     public PartyServiceImpl(PartyRepository partyRepository) {
         this.partyRepository = partyRepository;
     }
 
-
     @Override
     public Party create(@NotNull Party party) {
+    	
+    	// check input
         nonnull(party);
 
         Long partyId = party.getId();
@@ -46,21 +40,12 @@ public class PartyServiceImpl extends BaseService implements PartyService {
 
     @Override
     public Party update(@NotNull Party party) {
-        nonnull(party);
-
-        Party dbParty = getPartyOrThrowError(party.getId());
-
-        // update the fields TODO: could be done with entityManager merge??
-        dbParty.setName(party.getName());
-        dbParty.setAddress(party.getAddress());
-        dbParty.setLon(party.getLon());
-        dbParty.setLat(party.getLat());
-
-        return partyRepository.saveAndFlush(dbParty);
+        return partyRepository.saveAndFlush(party);
     }
 
     @Override
     public Party delete(long listId) {
+    	
         // make sure the list exists
         Party dbParty = partyRepository.findOne(listId);
         if (dbParty == null) {

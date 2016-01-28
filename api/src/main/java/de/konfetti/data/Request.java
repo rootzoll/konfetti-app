@@ -1,39 +1,65 @@
 package de.konfetti.data;
 
 import javax.persistence.*;
-import java.util.Date;
 
-/**
- * Created by catarata02 on 09.11.15.
- */
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 public class Request {
 
+	// possible sates of an request
+	public static final String STATE_REVIEW = "review";
+	public static final String STATE_REJECTED = "rejected";
+	public static final String STATE_OPEN = "open";
+	public static final String STATE_PROCESSING = "processing";
+	public static final String STATE_DONE = "done";
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    private User user;
+    private Long userId;
 
-    @ManyToOne
-    @JoinColumn(name="PARTY_ID")
-    private Party party;
-
-    private Date time;
-
-    private int konfettiCount;
-
-    private int konfettiAdd;
-
+    private Long partyId;
+    
+    private String state;
+    
     private String title;
-
+    
+    private Long time;
+    
+    /*
+     * Hard Copy
+     * Some data fields like user name and image are a hard copy from user and does not update when changed on user object
+     * thats because a request object should not be changed on public visible info after a review was done
+     */
+    
+    // hard copy from user
+    private String userName;
+    
+    // hard copy from user
     private String imageUrl;
+    
+    // hard copy from user
+    private String[] spokenLangs;
+ 
+    
+    /*
+     * Transient Data
+     */
 
-//    private Enum<RequestState> state;
+    @Transient // --> get from accounting
+    private long konfettiCount;
 
-//    private Set<Chat> chats;
-
-//    private ??? info;
+    @Transient // --> just for transport
+    private long konfettiAdd;
+    
+    @Transient // --> for delivery
+    private List<Chat> chats = new ArrayList<Chat>();
+    
+	@Transient // --> for delivery
+    private List<MediaItem> info = new ArrayList<MediaItem>();
 
 
     public Long getId() {
@@ -44,35 +70,19 @@ public class Request {
         this.id = id;
     }
 
-    public Party getParty() {
-        return party;
-    }
-
-    public void setParty(Party party) {
-        this.party = party;
-    }
-
-    public Date getTime() {
-        return time;
-    }
-
-    public void setTime(Date time) {
-        this.time = time;
-    }
-
-    public int getKonfettiCount() {
+    public long getKonfettiCount() {
         return konfettiCount;
     }
 
-    public void setKonfettiCount(int konfettiCount) {
+    public void setKonfettiCount(long konfettiCount) {
         this.konfettiCount = konfettiCount;
     }
 
-    public int getKonfettiAdd() {
+    public long getKonfettiAdd() {
         return konfettiAdd;
     }
 
-    public void setKonfettiAdd(int konfettiAdd) {
+    public void setKonfettiAdd(long konfettiAdd) {
         this.konfettiAdd = konfettiAdd;
     }
 
@@ -91,4 +101,69 @@ public class Request {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+	public Long getTime() {
+		return time;
+	}
+
+	public void setTime(Long time) {
+		this.time = time;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public Long getPartyId() {
+		return partyId;
+	}
+
+	public void setPartyId(Long partyId) {
+		this.partyId = partyId;
+	}
+
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String[] getSpokenLangs() {
+		return spokenLangs;
+	}
+
+	public void setSpokenLangs(String[] spokenLangs) {
+		this.spokenLangs = spokenLangs;
+	}
+	
+    public List<Chat> getChats() {
+		return chats;
+	}
+
+	public void setChats(List<Chat> chats) {
+		this.chats = chats;
+	}
+
+	public List<MediaItem> getInfo() {
+		return info;
+	}
+
+	public void setInfo(List<MediaItem> info) {
+		this.info = info;
+	}
+
 }

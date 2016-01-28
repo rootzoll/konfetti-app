@@ -38,6 +38,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
         alert("FAIL set running os info: "+e);
     }
 
+
+    $rootScope.lat  = 0;
+    $rootScope.lon = 0;
+
     /*
      * START GEOLOCATION
      * http://ngcordova.com/docs/plugins/geolocation/

@@ -8,7 +8,7 @@ angular.module('starter.controller.dash', [])
 
         // set which party is in focus of dash screen
         var focusPartyId = 0; // 0 = no focus
-        if (typeof $stateParams.id!="undefined") {
+        if ((typeof $stateParams.id!="undefined") && ($stateParams.id!=0)) {
             focusPartyId = $stateParams.id;
         }
         
@@ -243,7 +243,7 @@ angular.module('starter.controller.dash', [])
             $event.stopPropagation();
 
             // check if enough konfetti available
-            if ($rootScope.party.user.konfettiCount<=0) {
+            if ($rootScope.party.konfettiCount<=0) {
                 if (request.konfettiAdd===0) {
                     KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 }
@@ -256,7 +256,7 @@ angular.module('starter.controller.dash', [])
 
             // count up confetti to add
             request.konfettiAdd++;
-            $rootScope.party.user.konfettiCount--;
+            $rootScope.party.konfettiCount--;
             request.lastAdd = Date.now();
 
             $timeout(function() {
@@ -264,7 +264,7 @@ angular.module('starter.controller.dash', [])
                 request.blockTap = true;
                 // Make SERVER REQUEST
                 document.getElementById('openRequestCard'+request.id).classList.add("pulse");
-                ApiService.upvoteRequest(request.id, request.konfettiAdd, function(){
+                ApiService.upvoteRequest($rootScope.party.id, request.id, request.konfettiAdd, function(){
                     // WIN -> update sort
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
                     request.konfettiCount += request.konfettiAdd;
@@ -274,7 +274,7 @@ angular.module('starter.controller.dash', [])
                 }, function(){
                     // FAIL -> put konfetti back
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
-                    $rootScope.party.user.konfettiCount -= request.konfettiAdd;
+                    $rootScope.party.konfettiCount -= request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 });
@@ -326,7 +326,7 @@ angular.module('starter.controller.dash', [])
 
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
-            $scope.userId = AppContext.getProfile().userId;
+            $scope.userId = AppContext.getAccount().userId;
             $scope.controllerInitDone = true;
             $scope.action();
         });
@@ -435,15 +435,16 @@ angular.module('starter.controller.dash', [])
                 }
                 // set focus index
                 $scope.actualPartyIndex = isFocusPartyInList;
+                focusPartyId = 0;
             }
 
             // make API call to load party data
             $scope.state = "PARTYWAIT";
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
-                var isReviewerForThisParty = (AppContext.getProfile().reviewer.indexOf(data.party.id) > -1);
-                var isAdminForThisParty = (AppContext.getProfile().admin.indexOf(data.party.id) > -1);
-                console.log("party("+data.party.id+") isAdmin("+isAdminForThisParty+") isReviewer("+isReviewerForThisParty+")");
-                $rootScope.party = data.party;
+                var isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
+                var isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
+                //console.log("party("+data.id+") isAdmin("+isAdminForThisParty+") isReviewer("+isReviewerForThisParty+")");
+                $rootScope.party = data;
                 if (isAdminForThisParty || isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
                 $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().userId);
                 $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().userId);

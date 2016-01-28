@@ -16,7 +16,7 @@
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
                               <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">({{party.meters}}m) / {{party.user.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                              <div style="direction: ltr;">({{party.meters}}m) / {{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                           </div>
                       </td>
                   </tr>
@@ -36,7 +36,7 @@
           <!-- START CREATE NEW REQUEST -->
           <div style="width:100%; padding:8px;" ng-show="(request.id===0)">
 
-              <table ng-show="(confettiMax>=confettiMin)" style="width: 100%;">
+              <table ng-show="(confetti.max>=confetti.min)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
                           <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
@@ -71,16 +71,16 @@
                   <tr>
                       <td colspan="2">
                           <div style="padding-top: 12px;padding-bottom: 1px;">
-                              <span style="font-size:100%">{{ 'YOUGIVE' | translate }}&nbsp;</span> <span style="font-size:150%; font-weight: bold;">{{confettiToSpend}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'REWARD' | translate }}</span>
+                              <span style="font-size:100%">{{ 'YOUGIVE' | translate }}&nbsp;</span> <span style="font-size:150%; font-weight: bold;">{{confetti.toSpend}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'REWARD' | translate }}</span>
                           </div>
                       </td>
                   </tr>
                   <tr>
                       <td colspan="2" align="center">
                           <div class="item range" style="width:95%">
-                              <span style="font-size: 75%">{{confettiMin}}</span>
-                              <input id="konfettiSlide" ng-model="confettiToSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confettiMin}}" max="{{confettiMax}}">
-                              <span style="font-size: 75%">{{confettiMax}}</span>
+                              <span style="font-size: 75%">{{confetti.min}}</span>
+                              <input id="konfettiSlide" ng-model="confetti.toSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confetti.min}}" max="{{confetti.max}}">
+                              <span style="font-size: 75%">{{confetti.max}}</span>
                           </div>
                       </td>
                   </tr>
@@ -95,9 +95,9 @@
                       </td>
                   </tr>
               </table>
-              <div ng-show="(confettiMax<confettiMin)" style="text-align:center;padding:10px">
+              <div ng-show="(confetti.max<confetti.min)" style="text-align:center;padding:10px">
                     <div>{{ 'LOWKONFETTI' | translate }}</div>
-                    <div>{{ 'MINKONFETTI' | translate }} {{confettiMin}}</div>
+                    <div>{{ 'MINKONFETTI' | translate }} {{confetti.min}}</div>
               </div>
           </div>
           <!-- END CREATE NEW REQUEST -->

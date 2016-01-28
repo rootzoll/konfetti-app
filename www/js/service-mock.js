@@ -27,11 +27,10 @@ angular.module('starter.mock', [])
             // optional but should be seperate field so client can offer options
             contact: '',
 
-            // 'public' = default
-            // 'private' = can be found but is asking for invitation code
-            // 'hidden' = cannot be found, just enter with invitaion code
-            // --> codes should be stored in seperate table, so they can be individual if needed
-            visibility: 'public',
+            // 0 = default - for everybody to see
+            // 1 = can be found but is asking for invitation code
+            // 2 = cannot be found, just enter with invitation code
+            visibility: 0,
 
             // determines if orga admins need to review public posting
             // 0 = no review,
@@ -49,18 +48,23 @@ angular.module('starter.mock', [])
             // dont store in DB - just gets calculated by server and delivered to client
             meters: 500,
 
-            // user specific data on orga - not in DB gets added by server on the fly
-            user: {
-                // distance of user to party location
-                meters: 0,
-                // amount of konfetti user owns on party
-                konfettiCount: 0,
-                // total konfetti user collected on party
-                konfettiTotal: 0,
-                // position in most collected (over e.g. a month)
-                // like a position in the high scores, e.g. top 3
-                topPosition: 0
-            }
+            /*
+             * user specific data on orga - not in DB gets added by server on the fly
+             */
+
+            // distance of user to party location
+            userMeters: 0,
+
+            // amount of konfetti user owns on party
+            konfettiCount: 0,
+
+            // total konfetti user collected on party
+            konfettiTotal: 0,
+
+            // position in most collected (over e.g. a month)
+            // like a position in the high scores, e.g. top 3
+            topPosition: 0
+
         };
 
         // REQUEST
@@ -176,13 +180,13 @@ angular.module('starter.mock', [])
         var party1 = cloneObject(partyPrototype);
         party1.id = 1;
         party1.name = 'Helferverein Nord e.V.';
-        party1.detailText = 'Berliner Str. 99, 13189 Berlin, GERMANY';
+        party1.detailText = '<b>Berliner Str. 99</b>, 13189 Berlin, GERMANY';
         party1.contact = 'http://pankowhilft.blogsport.de';
         party1.newRequestMinKonfetti = 10;
-        party1.user.meters = 500;
-        party1.user.konfettiCount = 14;
-        party1.user.konfettiTotal = 200;
-        party1.user.topPosition = 4;
+        party1.userMeters = 500;
+        party1.konfettiCount = 14;
+        party1.konfettiTotal = 200;
+        party1.topPosition = 4;
 
         var party2 = cloneObject(partyPrototype);
         party2.id = 2;
@@ -190,20 +194,20 @@ angular.module('starter.mock', [])
         party2.detailText = 'Antonplatz 3, 89282 München, GERMANY';
         party2.contact = 'muenchen@helfer.de';
         party2.newRequestMinKonfetti = 1;
-        party2.user.meters = 500000;
-        party2.user.konfettiCount = 140;
-        party2.user.konfettiTotal = 10000;
-        party2.user.topPosition = 4;
+        party2.userMeters = 500000;
+        party2.konfettiCount = 140;
+        party2.konfettiTotal = 10000;
+        party2.topPosition = 4;
 
         var welcomeNotifaction = [
-            {id: 98, clientId: 1, partyId: 1, type:0, ref:111}
+            {id: 98, userId: 1, partyId: 1, type:0, ref:111}
         ];
 
         var sampleNotifactions = [
-            {id: 12, clientId: 1, partyId: 2, type:1, ref:0},
-            {id: 87, clientId: 1, partyId: 2, type:2, ref:11},
-            {id: 88, clientId: 1, partyId: 2, type:3, ref:12},
-            {id: 96, clientId: 1, partyId: 2, type:4, ref:13}
+            {id: 12, userId: 1, partyId: 2, type:1, ref:0},
+            {id: 87, userId: 1, partyId: 2, type:2, ref:11},
+            {id: 88, userId: 1, partyId: 2, type:3, ref:12},
+            {id: 96, userId: 1, partyId: 2, type:4, ref:13}
         ];
 
         var exampleChatPreview1 = {
@@ -307,7 +311,7 @@ angular.module('starter.mock', [])
         var mediaItemText1 = cloneObject(mediaItemPrototype);
         mediaItemText1.id = 1;
         mediaItemText1.type = "text";
-        mediaItemText1.text = "Hi there. I would like to help.";
+        mediaItemText1.data = "Hi there. I would like to help.";
 
         var mediaItemText111 = cloneObject(mediaItemPrototype);
         mediaItemText111.id = 111;
@@ -339,7 +343,7 @@ angular.module('starter.mock', [])
             },
             getLastPostedRequest: function() {
                 return lastPostedRequest;
-            },
+            }
         };
 
     });
