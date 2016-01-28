@@ -3,7 +3,7 @@ angular.module('starter.controller.request', [])
 .controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox) {
 
   $scope.loadingRequest = true;
-  $scope.profile = AppContext.getProfile();
+  $scope.profile = AppContext.getAccount();
   $scope.state = "";
 
   // request data skeleton
@@ -85,15 +85,15 @@ angular.module('starter.controller.request', [])
   // load request function
   $scope.loadRequest = function() {
     $scope.loadingRequest = true;
-    ApiService.loadRequest($scope.request.id,function(req){
+    ApiService.loadRequest(0, $scope.request.id, function(req){
 
                 // WIN
                 $scope.request = req;
                 $scope.loadingRequest = false;
                 $scope.requestJSON = JSON.stringify($scope.request);
                 $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
-                $scope.isAdmin = AppContext.getProfile().admin.contains($scope.request.partyId);
-                $scope.isReviewer = AppContext.getProfile().reviewer.contains($scope.request.partyId);
+                $scope.isAdmin = AppContext.getAccount().adminOnParties.contains($scope.request.partyId);
+                $scope.isReviewer = AppContext.getAccount().reviewerOnParties.contains($scope.request.partyId);
                 if (AppContext.getRunningOS()=="browser") console.log("isAuthor("+$scope.userIsAuthor+") isReviewer("+$scope.isReviewer+") isAdmin("+$scope.isAdmin+")");
 
                 //alert("userid("+req.userId +") isAuthor("+$scope.userIsAuthor+")");
@@ -137,19 +137,16 @@ angular.module('starter.controller.request', [])
          console.warn("IF NOT DEV-MODE: MISSING party.user - setting DEV-DEFAULT");
      }
 
-     $scope.confettiMin = $rootScope.party.newRequestMinKonfetti;
-     console.dir($rootScope.party);
-     $scope.confettiMax = $rootScope.party.user.konfettiCount;
-     $scope.confettiToSpend = $scope.confettiMin;
+     $scope.confetti = {min: $rootScope.party.newRequestMinKonfetti, max: $rootScope.party.konfettiCount, toSpend: $rootScope.party.newRequestMinKonfetti};
   };
 
   // get request id if its a existing request
   if ((typeof $stateParams.id!="undefined") && ($stateParams.id!=0)) {
     $scope.request.id = $stateParams.id;
-    console.log("LOADING REQUEST: "+$scope.request.id);
+    //console.log("LOADING REQUEST: "+$scope.request.id);
     $scope.loadRequest();
   } else {
-    console.log("SET NEW REQUEST");
+    //console.log("SET NEW REQUEST");
     $scope.loadingRequest = false;
     $scope.setNewRequest();
 
@@ -158,7 +155,7 @@ angular.module('starter.controller.request', [])
   $scope.tapRequestKonfetti = function($event, request) {
 
             $event.stopPropagation();
-            if ($rootScope.party.user.konfettiCount<=0) return;
+            if ($rootScope.party.konfettiCount<=0) return;
 
             // block further tapping when reporting to server
             if (typeof request.blockTap === "undefined") request.blockTap = false;
@@ -166,21 +163,21 @@ angular.module('starter.controller.request', [])
 
             // count up confetti to add
             request.konfettiAdd++;
-            $rootScope.party.user.konfettiCount--;
+            $rootScope.party.konfettiCount--;
             request.lastAdd = Date.now();
 
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
                 request.blockTap = true;
                 // Make SERVER REQUEST
-                ApiService.upvoteRequest(request.id, request.konfettiAdd, function(){
+                ApiService.upvoteRequest($rootScope.party.id, request.id, request.konfettiAdd, function(){
                     // WIN -> update sort
                     request.konfettiCount += request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 }, function(){
                     // FAIL -> put konfetti back
-                    $rootScope.party.user.konfettiCount -= request.konfettiAdd;
+                    $rootScope.party.konfettiCount -= request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 });
@@ -200,10 +197,9 @@ angular.module('starter.controller.request', [])
                     inputType: 'text',
                     inputPlaceholder: ''
                 }).then(function(res) {
-                    console.log('name:', res);
                     if (typeof res != "undefined") {
                         $scope.profile.name = res;
-                        AppContext.setProfile($scope.profile);
+                        AppContext.setAccount((AppContext.getAccount().name=res));
                         $scope.startChat();
                     }
                 });
@@ -212,7 +208,7 @@ angular.module('starter.controller.request', [])
           return;
       }
 
-      ApiService.createChat($scope.request.id, function(result) {
+      ApiService.createChat($scope.request.id, AppContext.getAccount().userId, $scope.request.userId, function(result) {
         // WIN
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
@@ -276,7 +272,6 @@ angular.module('starter.controller.request', [])
             });
             myPopup.then(function(res) {
                 if ($scope.profile.spokenLangs.length===0) $scope.profile.spokenLangs.push(AppContext.getAppLang());
-                AppContext.setProfile($scope.profile);
             });
       });
 
@@ -293,9 +288,9 @@ angular.module('starter.controller.request', [])
         // WIN
         
         // store image on profile (base64 JPEG)
-        var profile = AppContext.getProfile();
-        profile.imageData = imageData;
-        AppContext.setProfile(profile);
+        var localState = AppContext.getLocalState();
+        localState.imageData = imageData;
+        AppContext.setLocalState(localState);
         
         // set data of image in request object that is later posted to to server
         var image = document.getElementById('myImage');
@@ -370,7 +365,7 @@ angular.module('starter.controller.request', [])
                   inputType: 'text',
                   inputPlaceholder: ''
               }).then(function(res) {
-                  console.log('name:', res);
+                  //console.log('name:', res);
                   if (typeof res != "undefined") {  
                     $ionicLoading.show({
                         template: '<img src="img/spinner.gif" />'
@@ -624,7 +619,7 @@ angular.module('starter.controller.request', [])
         userName: $scope.profile.name,
         spokenLangs : $scope.profile.spokenLangs,
         partyId : $rootScope.party.id,
-        konfettiCount: $scope.confettiToSpend,
+        konfettiCount: $scope.confetti.toSpend,
         title : $scope.headline.temp
       };
 
@@ -639,7 +634,9 @@ angular.module('starter.controller.request', [])
                       template: TEXT
                   }).then(function(res) {
                       $scope.headline.temp = "";
-                      $rootScope.party.user.konfettiCount - $scope.confettiToSpend;
+                      $rootScope.party.konfettiCount - $scope.confetti.toSpend;
+                      $scope.confetti.max = $scope.confetti.max - $scope.confetti.toSpend;
+                      $scope.confetti.toSpend = $scope.confetti.min;
                       $state.go('tab.dash', {id: 0});
                   });
               });

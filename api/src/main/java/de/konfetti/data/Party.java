@@ -3,41 +3,101 @@ package de.konfetti.data;
 import javax.persistence.*;
 import java.util.Set;
 
-/**
- * Created by catarata02 on 08.11.15.
- */
 @Entity
 public class Party {
+
+	/*
+	 * FINAL VISIBILITY VALUES
+	 */
+
+    // 0 = default - for everybody to see
+	public static final int VISIBILITY_PUBLIC = 0;
+    // 1 = can be found but is asking for invitation code
+	public static final int VISIBILITY_HIDDEN = 1;
+    // 2 = cannot be found, just enter with invitation code
+	public static final int VISIBILITY_PRIVATE = 2;
+	
+	/*
+	 * FINAL REVIEW LEVEL VALUES
+	 */
+	
+	// 0 = no review
+	public static final int REVIEWLEVEL_NONE = 0;	
+    // 1 = full review of all public posts
+	public static final int REVIEWLEVEL_EVERYTHING = 1;
+    // 2 = just review request, follow up public info on request no review
+	public static final int REVIEWLEVEL_REQUESTS = 2;
+	
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    /*
+     * DESCRIBING DATA
+     */
 
+    // name of party to display
     private String name;
+    
+    // detail text (can contain basic HTML)
+    // for e.g. address to show for editorial info
+    private String detailText;
 
-    private String town;
+    // website http-address or email for further info
+    // optional but should be seperate field so client can offer options
+    private String contact;
+    
+    /*
+     * PARTY SETTINGS
+     */
+    
+    // determines the visibilty of the party to new users
+    // see final values VISIBILITY_* above
+    private int visibility = 0;
+    
+    // determines if orga admins need to review public posting
+    // see final values REVIEWLEVEL_* above
+    private int reviewLevel = 0;
+    
+    // minimal konfetti to spend on new request posting
+    private int newRequestMinKonfetti = 0;
+    
+    // konfetti amount a new user gets 
+    private long welcomeBalance = 0;
 
-    private String address;
-
+    /*
+     * GEO DATA
+     * is a GPS coordinate (lat/lon) together with a radius in meter
+     * just if user within this radius party will be shown
+     */
+    
     private Float lon;
-
     private Float lat;
-
     private int meters;
 
-    private String person;
-
-    private String website;
-
-    private int konfettiCount;
-
-    private int konfettiTotal;
-
-    private int topClass;
-
-    @OneToMany(mappedBy="party", fetch = FetchType.EAGER)
-    private Set<Request> requestSet;
-
+    /*
+     * TRANSIENT DATA
+     * just be delivered to client on REST end point
+     */
+    
+    @Transient // how many konfetti has calling user personally on this party
+    private long konfettiCount;
+    @Transient // how many konfetti calling user earned total on this party
+    private long konfettiTotal;
+    @Transient // which ranking place the calling user has on this party   
+    private int topPosition;
+    
+    @Transient // requests (tasks) relevant for this party
+    private Set<Request> requests;
+    
+	@Transient // notification relevant for this party and user
+    private Set<Notification> notifications;
+    
+    /*
+     * METHODS 
+     */
+    
     public Long getId() {
         return id;
     }
@@ -52,22 +112,6 @@ public class Party {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getTown() {
-        return town;
-    }
-
-    public void setTown(String town) {
-        this.town = town;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public Float getLon() {
@@ -94,51 +138,91 @@ public class Party {
         this.meters = meters;
     }
 
-    public String getPerson() {
-        return person;
-    }
-
-    public void setPerson(String person) {
-        this.person = person;
-    }
-
-    public String getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(String website) {
-        this.website = website;
-    }
-
-    public int getKonfettiCount() {
+    public long getKonfettiCount() {
         return konfettiCount;
     }
 
-    public void setKonfettiCount(int konfettiCount) {
+    public void setKonfettiCount(long konfettiCount) {
         this.konfettiCount = konfettiCount;
     }
 
-    public int getKonfettiTotal() {
+    public long getKonfettiTotal() {
         return konfettiTotal;
     }
 
-    public void setKonfettiTotal(int konfettiTotal) {
+    public void setKonfettiTotal(long konfettiTotal) {
         this.konfettiTotal = konfettiTotal;
     }
 
-    public int getTopClass() {
-        return topClass;
+    public int getTopPosition() {
+        return topPosition;
     }
 
-    public void setTopClass(int topClass) {
-        this.topClass = topClass;
+    public void setTopPosition(int topClass) {
+        this.topPosition = topClass;
     }
 
-    public Set<Request> getRequestSet() {
-        return requestSet;
-    }
+	public String getContact() {
+		return contact;
+	}
 
-    public void setRequestSet(Set<Request> requestSet) {
-        this.requestSet = requestSet;
-    }
+	public void setContact(String contact) {
+		this.contact = contact;
+	}
+
+	public int getNewRequestMinKonfetti() {
+		return newRequestMinKonfetti;
+	}
+
+	public void setNewRequestMinKonfetti(int newRequestMinKonfetti) {
+		this.newRequestMinKonfetti = newRequestMinKonfetti;
+	}
+
+	public int getReviewLevel() {
+		return reviewLevel;
+	}
+
+	public void setReviewLevel(int reviewLevel) {
+		this.reviewLevel = reviewLevel;
+	}
+
+	public int getVisibility() {
+		return visibility;
+	}
+
+	public void setVisibility(int visibility) {
+		this.visibility = visibility;
+	}
+
+	public String getDetailText() {
+		return detailText;
+	}
+
+	public void setDetailText(String detailText) {
+		this.detailText = detailText;
+	}
+	
+    public Set<Request> getRequests() {
+		return requests;
+	}
+
+	public void setRequests(Set<Request> requests) {
+		this.requests = requests;
+	}
+
+	public Set<Notification> getNotifications() {
+		return notifications;
+	}
+
+	public void setNotifications(Set<Notification> notifications) {
+		this.notifications = notifications;
+	}
+
+	public long getWelcomeBalance() {
+		return welcomeBalance;
+	}
+
+	public void setWelcomeBalance(long welcomeBalance) {
+		this.welcomeBalance = welcomeBalance;
+	}
 }

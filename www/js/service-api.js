@@ -15,39 +15,33 @@ angular.module('starter.api', [])
         var supportedLangs = ['de','en','ar'];
         var chatItemIdCounter = 123;
 
-        var context = {
-            clientId : 0,
-            userId : 0,
-            secret : ""
+        var isRunningMock = function() {
+            return activeServerUrl===apiUrlJustUseMock;
         };
 
-        var fallbackToMockOnBrowser = function(mockCallback) {
+        var fallbackToMockOnBrowserOrFail = function(mockCallback, fail, err) {
             if (AppContext.getRunningOS()==='browser') {
                 console.warn("FAILED REQUEST to '"+activeServerUrl+"' - Fallback to FakeData");
                 activeServerUrl = apiUrlJustUseMock;
                 mockCallback();
+            } else {
+                fail(err);
             }
         };
 
         var getBasicHttpHeaderConfig = function() {
+            var account = AppContext.getAccount();
             var basicConfig = {
                 timeout: 6000,
                 headers: {
-                    'clientId': context.clientId+'',
-                    'userId': context.userId+'',
-                    'secret': context.secret+''
+                    'X-CLIENT-ID': account.clientId+'',
+                    'X-CLIENT-SECRET': account.clientSecret+''
                 }
             };
             return basicConfig;
         };
 
         return {
-            // --> gets set once called on start of app and those credentials can than be used on background API calls
-            setCredentials: function(clientId, userId, secret) {
-                context.clientId = clientId;
-                context.userId = userId;
-                context.secret = secret;
-            },
             createAccount: function(win, fail) {
 
                 // ### MOCK MODE ###
@@ -56,12 +50,11 @@ angular.module('starter.api', [])
                     context.userId = 1;
                     context.clientId = 1;
                     win({
-                        clientId: 125,
-                        userId: 125, // the userid equals the clientid in the beginning - later on one client id can get master id for other clients
-                        secret: 'da8ds68a6d8a6d8as6d8a6dsasad7a98d7s' // secret is tied to client
-                    })
+                        clientId: 2,
+                        clientSecret: "6dd615a7-1c1e-490a-ba6b-8f008bd25d31",
+                        userId: 2})
                 };
-                if (activeServerUrl===apiUrlJustUseMock) {
+                if (isRunningMock()) {
                     $timeout(function(){mockCallback();},1000);
                     return;
                 }
@@ -70,39 +63,59 @@ angular.module('starter.api', [])
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
-                config.method = 'GET';
+                config.method = 'POST';
                 config.url = activeServerUrl+'/account';
                 // WIN
                 var successCallback = function(response) {
-                    console.dir(response);
-                    alert("WIN: new Account created (see log)");
+                    win(response.data);
                 };
                 // FAIL
                 var errorCallback = function(response) {
-                    console.dir(response);
-                    console.warn("FAIL new Account NOT created");
-                    fallbackToMockOnBrowser(mockCallback);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
                 };
                 $http(config).then(successCallback, errorCallback);
 
             },
             // gets called once a user starts a chat
-            createChat: function(requestId, win, fail) {
+            createChat: function(requestId, hostId, partnerId, win, fail) {
 
                 // ### MOCK MODE ###
 
                 var mockCallback = function() {
                     win(MockData.getMockData('chat1'));
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api createChat() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var chatObj = {
+                    requestId : requestId,
+                    hostId : hostId,
+                    members : [partnerId]
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/chat';
+                config.data = chatObj;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL createChat:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             // gets called once a user starts a chat
@@ -113,15 +126,31 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win(MockData.getMockData('chat2'));
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api loadChat() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/chat/'+chatId;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL loadChat:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             // return an empty chat item (no server request)
@@ -141,15 +170,56 @@ angular.module('starter.api', [])
                     itemObj.time = Date.now();
                     win(itemObj);
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function() {mockCallback();},1000);
+                    console.warn("TODO: service-api sendChatTextItem() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var mediaObj = {
+                    type : 'text',
+                    data : text
+                };
+
+                var messageObj = {
+                    chatId : chatId,
+                    itemId : 0
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL postTextMediaItemOnRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                // WIN - second step
+                var successCallback2 = function(response) {
+                    console.log("WIN result of 2nd call");
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // WIN
+                var successCallback = function(response) {
+                    console.log("WIN result of 1st call");
+                    console.dir(response.data);
+                    messageObj.itemId = response.data.id;
+
+                    var config2 = getBasicHttpHeaderConfig();
+                    config2.method = 'POST';
+                    config2.url = activeServerUrl+'chat/'+chatId+"/message";
+                    config2.data = messageObj;
+                    $http(config2).then(successCallback2, errorCallback);
+                };
+
+                $http(config).then(successCallback, errorCallback);
 
             },
             // clients sends a text with a given language code ('de', 'ar', ...)
@@ -194,6 +264,7 @@ angular.module('starter.api', [])
                 //if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api createMediaItemAutoTranslate() CREATE SERVER CALL");
                     return;
                 }
 
@@ -214,7 +285,7 @@ angular.module('starter.api', [])
                         {id: 2, lat: 3.342, lon: 3.222, meter: 40000, new: 1}
                     ]);
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
                     return;
@@ -222,7 +293,30 @@ angular.module('starter.api', [])
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party?lat='+encodeURIComponent(lat)+'&lon='+encodeURIComponent(lon);
+                // WIN
+                var successCallback = function(response) {
+
+                    for (var i=0; i<response.data.length; i++) {
+                        var party = response.data[i];
+                        if (typeof party.requests == "undefined") party.requests = [];
+                        if (typeof party.notifications == "undefined") party.notifications = [];
+                        if (party.requests == null) party.requests = [];
+                        if (party.notifications == null) party.notifications = [];
+                    }
+
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL loadPartylist");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             loadParty: function(partyId, win, fail) {
@@ -246,11 +340,10 @@ angular.module('starter.api', [])
                             MockData.getMockData('request14')
                         ];
                         requests = addLastPostedRequest(1, requests);
-                        win({
-                            party: MockData.getMockData('party1'),
-                            requests: requests,
-                            notifications: MockData.getMockData('welcomeNotifaction')
-                        });
+                        var party = MockData.getMockData('party1');
+                        party.requests = requests;
+                        party.notifications = MockData.getMockData('welcomeNotifaction');
+                        win(party);
                     } else
                     if (partyId===2) {
                         var requests = [
@@ -258,27 +351,48 @@ angular.module('starter.api', [])
                             MockData.getMockData('request13')
                         ];
                         requests = addLastPostedRequest(2, requests);
-                        win({
-                            party:MockData.getMockData('party2'),
-                            requests: requests,
-                            notifications: MockData.getMockData('sampleNotifactions')
-                        });
+                        var party = MockData.getMockData('party2');
+                        party.requests = requests;
+                        party.notifications = MockData.getMockData('sampleNotifactions');
+                        win(party);
                     } else {
                         fail(323);
                     }
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api loadParty() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/'+partyId;
+                // WIN
+                var successCallback = function(response) {
+
+                    if (typeof response.data.requests == "undefined") response.data.requests = [];
+                    if (typeof response.data.notifications == "undefined") response.data.notifications = [];
+                    if (response.data.requests == null) response.data.requests = [];
+                    if (response.data.notifications == null) response.data.notifications = [];
+
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL loadParty");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
-            loadRequest: function(requestId, win, fail) {
+            loadRequest: function(partyId, requestId, win, fail) {
 
                 // ### MOCK MODE ###
 
@@ -302,15 +416,31 @@ angular.module('starter.api', [])
                         fail(353);
                     }
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api loadRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/'+partyId+'/request/'+requestId;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL loadRequest");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             loadMediaItem: function(itemId, win, fail){
@@ -334,18 +464,34 @@ angular.module('starter.api', [])
                         // deliver back
                         win(item);
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api loadMediaItem() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/media/'+itemId;
+                // WIN
+                var successCallback = function(response) {
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL loadMediaItem");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
-            upvoteRequest: function(requestId, confettiCount, win, fail) {
+            upvoteRequest: function(partyId, requestId, confettiCount, win, fail) {
 
                 // ### MOCK MODE ###
 
@@ -357,15 +503,31 @@ angular.module('starter.api', [])
                         fail(235);
                     }
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api upvoteRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/'+partyId+'/request/'+requestId+'?upvoteAmount='+confettiCount;
+                // WIN
+                var successCallback = function(response) {
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL loadRequest");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             // post a
@@ -376,20 +538,37 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     requestObj.state = "review";
                     requestObj.id = 999;
-                    requestObj.userId = context.userId;
+                    requestObj.userId = 1;
                     requestObj.time = Date.now();
                     MockData.putlastPostedRequest(requestObj);
                     win(requestObj);
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api postRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/party/'+requestObj.partyId+'/request';
+                config.data = requestObj;
+                // WIN
+                var successCallback = function(response) {
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL postRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             // delete a request or a part of a request
             // mediaitemId = if 0 or null its the complete request
@@ -401,15 +580,31 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api deleteRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'DELETE';
+                config.url = activeServerUrl+'/party/0/request/'+requestId;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL deleteRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             postTextMediaItemOnRequest: function(requestId, text, langCode, win, fail) {
 
@@ -422,15 +617,37 @@ angular.module('starter.api', [])
                     result.text = text;
                     win(result);
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api postTextMediaItemOnRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var mediaObj = {
+                    type : 'text',
+                    data : text
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL postTextMediaItemOnRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             rewardRequest: function(requestId, arrayOfRewardGetterUserIds, win, fail) {
 
@@ -439,18 +656,36 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api rewardRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var json = JSON.stringify(arrayOfRewardGetterUserIds);
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=reward&json="+json;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL rewardRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             // a chat belonging to a request should no longer be shown
-            // to author - dongt delete chat, can get visible again if
+            // to author - dont delete chat, can get visible again if
             // chat partner send new message if foreverMute = false
             muteChatOnRequest: function(requestId, chatId, foreverMute, win, fail) {
 
@@ -459,15 +694,32 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api muteChatOnRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=muteChat&json="+chatId;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL muteChatOnRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
+
             },
             setStateOfRequestToProcessing: function(requestId, win, fail) {
 
@@ -476,15 +728,31 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api setStateOfRequestToProcessing() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=processing";
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL setStateOfRequestToProcessing:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             setStateOfRequestToReOpen: function(requestId, win, fail) {
 
@@ -493,15 +761,31 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api setStateOfRequestToReOpen() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=open";
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL setStateOfRequestToReOpen:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
             },
             // set the review result on a request
             // mediaItemId - if rejection is targeted at a sub element of the request (0 or null = the request itself)
@@ -513,16 +797,34 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api reviewResultOnRequest() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var action = "reject";
+                if (allowRequestBool) action = "open";
 
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action="+action;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL setStateOfRequestToReOpen:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             markNotificationAsRead: function(notificationId, win, fail) {
@@ -532,15 +834,33 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     win();
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
+                    console.warn("TODO: service-api markNotificationAsRead() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                var json = JSON.stringify(arrayOfRewardGetterUserIds);
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/0/notification/'+notificationId+"?action=delete";
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL markNotificationAsRead:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             redeemCode: function(codeStr, langCode, win, fail) {
@@ -555,12 +875,12 @@ angular.module('starter.api', [])
                             // list of commands to process internally
                             action : [,
                                 {
-                                    command: 'reviewer',
-                                    partyId: 1
+                                    command: 'updateUser',
+                                    json: JSON.stringify(AppContext.getAccount())
                                 },
                                 {
                                     command: 'focusParty',
-                                    partyId: 1
+                                    json: "1"
                                 }
                             ],
                             // html to show in popup to user
@@ -575,7 +895,8 @@ angular.module('starter.api', [])
                             action: [
                                 {
                                     command: 'focusParty',
-                                    partyId: 2
+                                    partyId: 2,
+                                    user: null
                                 }
                             ],
                             // html to show in popup to user
@@ -583,15 +904,31 @@ angular.module('starter.api', [])
                         });
                     }
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},3000);
+                    console.warn("TODO: service-api  redeemCode() CREATE SERVER CALL");
                     return;
                 }
 
                 // ### SERVER MODE ###
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/redeem/'+codeStr;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL redeemCode:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             }
 

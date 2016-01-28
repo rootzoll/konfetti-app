@@ -10,15 +10,13 @@ import java.util.List;
  */
 public interface RequestService {
 
-    Request create(@NotNull long partyId, @NotNull Request request);
+    Request create(@NotNull Request request);
 
-    Request update(@NotNull long partyId, @NotNull Request request);
+    Request update(@NotNull Request request);
 
-    Request delete(@NotNull long partyId, @NotNull long requestId);
-
-    Request get(@NotNull long partyId, @NotNull long requestId);
+    Request delete(@NotNull long requestId);
+    
+    Request findById(long requestId);
 
     List<Request> getAllPartyRequests(@NotNull long partyId);
-
-    Request findById(long requestId);
 }

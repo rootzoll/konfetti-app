@@ -61,12 +61,13 @@ angular.module('starter.controller.account', [])
                   title: HEADLINE,
                   template: result.feedbackHtml
               }).then(function() {
-                  $scope.processRedeemActions(result.action);
+                  $scope.processRedeemActions(result.actions);
               });
       });
   };
 
   $scope.processRedeemActions = function(actionArray) {
+
       if (typeof actionArray=="undefined") {
           console.warn("processRedeemActions: actionArray undefined - skip");
           return;
@@ -79,27 +80,19 @@ angular.module('starter.controller.account', [])
               continue;
           }
 
-          // upgrade user to reviewer
-          if (action.command=="reviewer") {
-              var profile = AppContext.getProfile();
-              if (!profile.reviewer.contains(action.partyId)) {
-                  profile.reviewer.push(action.partyId);
-                  AppContext.setProfile(profile);
-              }
-          } else
-
-          // upgrade user to admin
-          if (action.command=="admin") {
-              var profile = AppContext.getProfile();
-              if (!profile.admin.contains(action.partyId)) {
-                  profile.admin.push(action.partyId);
-                  AppContext.setProfile(profile);
-              }
+          // upgrade user profile
+          if ((action.command=="updateUser") && (typeof action.json != "undefined")) {
+              // keep local clientID and clientSecret
+              var updatedAccountData = JSON.parse(action.json);
+              var oldAccountData = AppContext.getAccount();
+              updatedAccountData.clientId = oldAccountData.clientId;
+              updatedAccountData.clientSecret = oldAccountData.clientSecret;
+              AppContext.setAccount(updatedAccountData);
           } else
 
           // focus party in GUI
           if (action.command=="focusParty") {
-              $state.go('tab.dash', {id: action.partyId});
+              $state.go('tab.dash', {id: JSON.parse(action.json)});
           } else
 
           // unkown

@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Any;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.when;
@@ -28,11 +27,8 @@ public class RequestServiceImplTestUnit {
 
     private TestHelper testHelper;
 
-    private RequestService requestService;
-
     @Before
     public void setUp() throws Exception {
-        requestService = new RequestServiceImpl(partyRepository, requestRepository);
         testHelper = new TestHelper();
     }
 
@@ -40,7 +36,6 @@ public class RequestServiceImplTestUnit {
     public void testCreateWithoutValidParty() throws Exception {
         Party testParty1 = testHelper.getTestParty1();
         testParty1.setId((long) 10);
-        Request createdRequest = requestService.create(testParty1.getId(), testHelper.getTestRequest1(testParty1));
     }
 
     @Test(expected = ServiceException.class)
@@ -50,7 +45,6 @@ public class RequestServiceImplTestUnit {
         when(partyRepository.findOne(testParty1.getId())).thenReturn(testParty1);
         Request testRequest1 = testHelper.getTestRequest1(testParty1);
         testRequest1.setId((long) 1);
-        Request createdRequest = requestService.create(testParty1.getId(), testRequest1);
     }
 
 }

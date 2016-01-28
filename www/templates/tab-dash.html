@@ -28,7 +28,7 @@
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
                             <div ng-hide="loadingParty" style="min-height: 70px;">
 
-                                <div style="text-align: center; font-size: 200%;">{{party.user.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                                <div style="text-align: center; font-size: 200%;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                                 <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
                                 <div style="direction: ltr;">({{party.meters}}m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
 
@@ -137,7 +137,7 @@
 
       <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card" style="margin-bottom: 10px;">
+      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px;">
           <div class="item item-divider"  style="font-weight: bold; padding-right: 8px;">
               {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.sort as sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
           </div>

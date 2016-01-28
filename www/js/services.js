@@ -7,21 +7,26 @@ angular.module('starter.services', [])
   // put into the app context stuff that needs to be stored
   // everything else put into rootScope
   var appContext = {
+      version: 1,
       appLang : "en",
       account : {
-          clientId : "",
           userId : "",
-          secret : ""
-      },
-      profile : {
+          clientSecret : "",
+          clientId : "",
+          reviewerOnParties : [],
+          activeOnParties : [],
+          adminOnParties: [],
           spokenLangs : ["en", "ar"],
-          name : "",
-          imageData : "",
-          admin: [2], // ids of parties where user is admin
-          reviewer: [2], // ids of parties where user is reviewer
+          name: "",
+          eMail: "",
+          imageUrl: "",
+          pushActive: false,
+          pushSystem: null,
+          pushID: null
       },
       localState : {
-        introScreenShown: false
+        introScreenShown: false,
+        imageData: null
       }
   };
 
@@ -39,13 +44,6 @@ angular.module('starter.services', [])
       appContext.appLang = value;
       this.persistContext();
     },
-    getProfile: function() {
-        return appContext.profile;
-    },
-    setProfile: function(profile) {
-        appContext.profile = profile;
-        this.persistContext();
-    },
     getLocalState: function() {
         return appContext.localState;
     },
@@ -58,19 +56,28 @@ angular.module('starter.services', [])
     },
     setAccount: function(account) {
         appContext.account = account;
+        if (appContext.account.name==null) appContext.account.name = "";
+        if (appContext.account.eMail==null) appContext.account.eMail = "";
+        if (appContext.account.imageUrl==null) appContext.account.imageUrl = "";
         this.persistContext();
     },
     loadContext: function(win) {
-        // TODO
-        $log.warn("TODO: load App Context");
-        $timeout(function(){
+
+        // turn off
+        if (typeof window.device == "undefined") {
+            console.warn("RESETTING THE ACCOUNT PERSISTENCE");
             isReady = true;
             win();
-        },500);
+            return;
+        }
+
+        var jsonStr = window.localStorage.getItem("appContext");
+        if ((typeof jsonStr != "undefined") && (jsonStr!=null)) appContext = JSON.parse(jsonStr);
+        isReady = true;
+        win();
     },
     persistContext: function() {
-        // TODO
-        $log.warn("TODO: persist App Context");
+        localStorage.setItem("appContext", JSON.stringify(appContext));
     },
     getRunningOS: function() {
         return (typeof window.device != "undefined") ? window.device.platform : "browser";
@@ -164,7 +171,7 @@ angular.module('starter.services', [])
                 langField = {
                     text: textStr,
                     lastUpdateTS: Date.now(),
-                    translatorID: translatorid,
+                    translatorID: translatorid
                 };
             }
 

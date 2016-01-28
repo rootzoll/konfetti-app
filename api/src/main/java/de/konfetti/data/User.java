@@ -1,24 +1,74 @@
 package de.konfetti.data;
 
-/**
- * Created by catarata02 on 09.11.15.
- */
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.*;
 
 @Entity
 public class User {
+	
+	/*
+	 * OBJECT DATA FIELDS
+	 * 
+	 * data fields relevant to the user object
+	 */
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    // self written name (nick or real)
+    private String name;
+    
+    // email -> good for admins and reviewers
+    private String eMail;
+    
+    // URL to public image of user 
+    private String imageUrl;
+    
+    // list of languages the user speaks (e.g. 'de', 'en', 'ar')
+    private String[] spokenLangs = {};
+    
+    // IDs of parties the user has an konfetti balance on
+    private Long[] activeOnParties = {};
+    
+    // IDs of parties the user has admin privileges on
+    private Long[] adminOnParties = {};
+    
+    // IDs of parties the user has reviewer privileges on
+    private Long[] reviewerOnParties = {};
+    
+    /*
+     * PUSH MESSAGING
+     */
+    
+    public static final String PUSHSYSTEM_IOS = "ios";
+    public static final String PUSHSYSTEM_ANDROID = "android";
+    public static final String PUSHSYSTEM_CHROME = "chrome";
+    
+    private Boolean pushActive = false;
+    
+    private String pushSystem;
+    
+    private String pushID;
+    
+    /*
+     * REST DELIVERY DATA
+     * 
+     * the following values are used to deliver the user together with
+     * relevant client info to client on user REST end point
+     */
 
-    @Transient
+    @Transient // multiple client can exists per user
     private Long clientId;
 
-    private String secret;
+    @Transient // is persistent on client object
+    private String clientSecret;
 
+    /*
+     * METHODS 
+     */
+    
     @JsonProperty("userId")
     public Long getId() {
         return id;
@@ -36,12 +86,93 @@ public class User {
         this.clientId = clientId;
     }
 
-    public String getSecret() {
-        return secret;
+    public String getClientSecret() {
+        return clientSecret;
     }
 
-    public void setSecret(String secret) {
-        this.secret = secret;
+    public void setClientSecret(String secret) {
+        this.clientSecret = secret;
     }
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String[] getSpokenLangs() {
+		return spokenLangs;
+	}
+
+	public void setSpokenLangs(String[] spokenLangs) {
+		this.spokenLangs = spokenLangs;
+	}
+
+	public Long[] getActiveOnParties() {
+		return activeOnParties;
+	}
+
+	public void setActiveOnParties(Long[] activeOnParties) {
+		this.activeOnParties = activeOnParties;
+	}
+
+	public Long[] getAdminOnParties() {
+		return adminOnParties;
+	}
+
+	public void setAdminOnParties(Long[] adminOnParties) {
+		this.adminOnParties = adminOnParties;
+	}
+
+	public Long[] getReviewerOnParties() {
+		return reviewerOnParties;
+	}
+
+	public void setReviewerOnParties(Long[] reviewerOnParties) {
+		this.reviewerOnParties = reviewerOnParties;
+	}
+
+	public Boolean getPushActive() {
+		return pushActive;
+	}
+
+	public void setPushActive(Boolean pushActive) {
+		this.pushActive = pushActive;
+	}
+
+	public String getPushSystem() {
+		return pushSystem;
+	}
+
+	public void setPushSystem(String pushSystem) {
+		this.pushSystem = pushSystem;
+	}
+
+	public String getPushID() {
+		return pushID;
+	}
+
+	public void setPushID(String pushID) {
+		this.pushID = pushID;
+	}
+
+	public String geteMail() {
+		return eMail;
+	}
+
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
+	}
+    
 }
 
