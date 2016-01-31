@@ -624,7 +624,7 @@ angular.module('starter.controller.request', [])
       };
 
       $ionicLoading.show();
-      ApiService.postRequest(newRequest, function(){
+      ApiService.postRequest(newRequest, AppContext.getAppLang(), function(){
           // WIN
           $ionicLoading.hide();
           $translate("THANKYOU").then(function (HEADLINE) {

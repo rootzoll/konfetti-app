@@ -27,7 +27,9 @@ public class Request {
     
     private String title;
     
-    private Long time;
+    private Long titleMultiLangRef;
+    
+	private Long time;
     
     /*
      * Hard Copy
@@ -61,8 +63,19 @@ public class Request {
 	@Transient // --> for delivery
     private List<MediaItem> info = new ArrayList<MediaItem>();
 
+	@Transient // --> just for delivery
+	private MediaItem titleMultiLang;
+	
+	
+    public MediaItem getTitleMultiLang() {
+		return titleMultiLang;
+	}
 
-    public Long getId() {
+	public void setTitleMultiLang(MediaItem titleMultiLang) {
+		this.titleMultiLang = titleMultiLang;
+	}
+
+	public Long getId() {
         return id;
     }
 
@@ -164,6 +177,14 @@ public class Request {
 
 	public void setInfo(List<MediaItem> info) {
 		this.info = info;
+	}
+	
+	public Long getTitleMultiLangRef() {
+		return titleMultiLangRef;
+	}
+
+	public void setTitleMultiLangRef(Long titleMultiLangRef) {
+		this.titleMultiLangRef = titleMultiLangRef;
 	}
 
 }

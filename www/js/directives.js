@@ -20,6 +20,40 @@ angular.module('starter')
             }
         };
     })
+    .directive('multilang', function ($translate, $ionicPopup) {
+        return {
+            templateUrl: 'templates/directive-multilang.html',
+            replace: true,
+            restrict: 'A',
+            link: function ($scope, $element, $attributes) {
+                $scope.data = $scope.$eval($attributes.data);
+                $scope.lang = $attributes.lang;
+                $scope.showAutoTranslateInfo = function($event) {
+                  $event.stopPropagation();
+                  $translate("AUTOTRANSLATE_HEAD").then(function (HEADLINE) {
+                        $translate("AUTOTRANSLATE_INFO").then(function (TEXT) {
+                            $ionicPopup.alert({
+                                title: HEADLINE,
+                                template: TEXT
+                            });
+                        });
+                  });
+
+                };
+            }
+        };
+    })
+    // fallback src for images
+    .directive('fallbackSrc', function () {
+        var fallbackSrc = {
+            link: function postLink(scope, iElement, iAttrs) {
+                iElement.bind('error', function() {
+                    angular.element(this).attr("src", iAttrs.fallbackSrc);
+                });
+            }
+        };
+        return fallbackSrc;
+    })
     .directive('mediaitem', function (ApiService) {
         return {
             templateUrl: 'templates/directive-media-item.html',

@@ -180,7 +180,7 @@ angular.module('starter.api', [])
                 // ### SERVER MODE ###
 
                 var mediaObj = {
-                    type : 'text',
+                    type : 'java.lang.String',
                     data : text
                 };
 
@@ -237,7 +237,7 @@ angular.module('starter.api', [])
 
                     // simulate persistence
                     itemObj.lastUpdateTS = Date.now;
-                    itemObj.type = "konfetti.data.mediaitem.MultiLang";
+                    itemObj.type = "de.konfetti.data.mediaitem.MultiLang";
 
                     itemObj.langs = [langCode];
                     var comStr = "itemObj.lang_"+langCode+"='"+text+"';";
@@ -261,16 +261,34 @@ angular.module('starter.api', [])
                         }
                     }
                 };
-                //if (activeServerUrl===apiUrlJustUseMock)
+                if (activeServerUrl===apiUrlJustUseMock)
                 {
                     $timeout(function(){mockCallback();},1000);
                     console.warn("TODO: service-api createMediaItemAutoTranslate() CREATE SERVER CALL");
                     return;
                 }
 
-                // ### SERVER MODE ###
+                var mediaObjJson = "{type:'de.konfetti.data.mediaitem.MultiLang',data:{"+langCode+":{text:'"+text+"',translator:0}}}";
+                console.log("mediaobjJSON: "+mediaObjJson);
+                var mediaObj = JSON.parse(mediaObjJson);
 
-                // TODO
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.dir(response);
+                    console.warn("FAIL createMediaItemAutoTranslate");
+                    fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
 
             },
             loadPartylist: function(lat, lon, win, fail) {
@@ -380,6 +398,14 @@ angular.module('starter.api', [])
                     if (response.data.requests == null) response.data.requests = [];
                     if (response.data.notifications == null) response.data.notifications = [];
 
+                    // go thru requests and optimize data
+                    for (var i=0; i<response.data.requests.length; i++) {
+                        var multiLangTitle = response.data.requests[i].titleMultiLang;
+                        if ((typeof multiLangTitle == "undefined") || (multiLangTitle==null)) continue;
+                        response.data.requests[i].titleMultiLang.data = JSON.parse(multiLangTitle.data);
+                    }
+
+                    //console.log("Result loadParty:");
                     //console.dir(response.data);
                     win(response.data);
                 };
@@ -453,7 +479,7 @@ angular.module('starter.api', [])
                         var item = cloneObject(MockData.getMockData('mediaItemPrototype'));
                         item.id = itemId;
                         item.reviewed = 1;
-                        item.type = "text";
+                        item.type = "java.lang.String";
                         item.data = "[TODO LOADING "+itemId+"]";
 
                         // itemId 111
@@ -531,7 +557,7 @@ angular.module('starter.api', [])
 
             },
             // post a
-            postRequest: function(requestObj, win, fail) {
+            postRequest: function(requestObj, langCode, win, fail) {
 
                 // ### MOCK MODE ###
 
@@ -555,7 +581,7 @@ angular.module('starter.api', [])
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'POST';
-                config.url = activeServerUrl+'/party/'+requestObj.partyId+'/request';
+                config.url = activeServerUrl+'/party/'+requestObj.partyId+'/'+langCode+'/request';
                 config.data = requestObj;
                 // WIN
                 var successCallback = function(response) {
@@ -613,7 +639,7 @@ angular.module('starter.api', [])
                 var mockCallback = function() {
                     var result = MockData.getMockData("mediaItemText1");
                     result.id = 898;
-                    result.type = "text";
+                    result.type = "java.lang.String";
                     result.text = text;
                     win(result);
                 };
@@ -627,7 +653,7 @@ angular.module('starter.api', [])
                 // ### SERVER MODE ###
 
                 var mediaObj = {
-                    type : 'text',
+                    type : 'java.lang.String',
                     data : text
                 };
 
