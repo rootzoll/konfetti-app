@@ -38,6 +38,7 @@ angular.module('starter.controller.dash', [])
             {code:'de', display:'Deutsch', dir:'ltr'},
             {code:'ar', display:'عربي', dir:'rtl'}
         ];
+        $scope.actualLang = AppContext.getAppLang();
 
         // sorting options
         $scope.sortSet = [
@@ -150,6 +151,7 @@ angular.module('starter.controller.dash', [])
 
         // receiving changes lang settings --> with i18n
         $scope.selectedLang = function(selected) {
+            $scope.actualLang = selected.code;
             $translate.use(selected.code);
             AppContext.setAppLang(selected.code);
             $rootScope.spClass = AppContext.getAppLangDirection();

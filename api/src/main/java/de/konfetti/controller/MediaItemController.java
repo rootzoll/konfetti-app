@@ -5,8 +5,10 @@ import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.MediaItem;
+import de.konfetti.data.mediaitem.MultiLang;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.MediaService;
+import de.konfetti.utils.AutoTranslator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @CrossOrigin
 @RestController
@@ -60,8 +64,27 @@ public class MediaItemController {
     	template.setId(null);
     	template.setLastUpdateTS(System.currentTimeMillis());
     	
-    	// work in special types
-    	// TODO: if type is multilang --> make auto translation
+    	// check if type is supported
+    	boolean typeIsSupported = false;
+    	if (String.class.toString().equals(template.getType())) typeIsSupported = true;
+    	if (MultiLang.class.toString().equals(template.getType())) typeIsSupported = true;
+    	if (!typeIsSupported) throw new Exception("type("+template.getType()+") is not supported as media item");
+    	
+    	// MULTI-LANG auto translation
+    	if (MultiLang.class.toString().equals(template.getType())) {
+    		LOGGER.info("Is MultiLang --> AUTOTRANSLATION");
+    		try {
+    			MultiLang multiLang = new ObjectMapper().readValue(template.getData(), MultiLang.class);
+    			multiLang = AutoTranslator.getInstance().reTranslate(multiLang);
+    			template.setData(new ObjectMapper().writeValueAsString(multiLang));
+    			LOGGER.info(template.getData());
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    			throw new Exception("MultiLang Data is not valid: "+e.getMessage());
+    		}
+    	} else {
+    		LOGGER.info("NOT MultiLang --> no special treatment needed");
+    	}
     	  	    	
     	// create new user
     	MediaItem item = mediaService.create(template);

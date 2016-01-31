@@ -2,6 +2,7 @@ package de.konfetti.service;
 
 import de.konfetti.data.Account;
 import de.konfetti.data.AccountRepository;
+import de.konfetti.data.MediaRepository;
 import de.konfetti.data.PartyRepository;
 import de.konfetti.data.Request;
 import de.konfetti.data.RequestRepository;
@@ -25,10 +26,11 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     }
 
     @Autowired
-    public RequestServiceImpl(PartyRepository partyRepository, RequestRepository requestRepository, AccountRepository accountRepository) {
+    public RequestServiceImpl(PartyRepository partyRepository, RequestRepository requestRepository, AccountRepository accountRepository, MediaRepository mediaRepository) {
         this.partyRepository = partyRepository;
         this.requestRepository = requestRepository;
         this.accountRepository = accountRepository;
+        this.mediaRepository = mediaRepository;
     }
 
     @Override
@@ -89,6 +91,11 @@ public class RequestServiceImpl extends BaseService implements RequestService {
 					}
 				}
 				request.setKonfettiCount(requestBalance);
+				
+				// get multi language media item
+				if (request.getTitleMultiLangRef()!=null) {
+					request.setTitleMultiLang(mediaRepository.findOne(request.getTitleMultiLangRef()));
+				}
 				
 				// add to result set
 				result.add(request);

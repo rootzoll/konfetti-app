@@ -9,7 +9,8 @@ import javax.persistence.Id;
 public class MediaItem {
 
 	public static final String TYPE_UNKOWN = "n/a";
-	public static final String TYPE_TEXT = "text";
+	public static final String TYPE_TEXT = "java.lang.String";
+	public static final String TYPE_MULTILANG = "MediaItemMultiLang";
 	
 	public static final Integer REVIEWED_PUBLIC = 0;
 	public static final Integer REVIEWED_PRIVATE = 1;

@@ -204,8 +204,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'OK' : 'OK',
             'CANCEL' : 'Cancel',
             'INFO_REQUESTFAIL' : 'Check Internet or try again later.',
-            'INFO_FAILTRYAGAIN': 'This failed. Please try again or report to developers.'
-        });
+            'INFO_FAILTRYAGAIN': 'This failed. Please try again or report to developers.',
+            'AUTOTRANSLATE_HEAD' : 'Auto Translate',
+            'AUTOTRANSLATE_INFO' : 'This text was auto translated by a robot. Please keep in mind, that robots are not perfect and make mistakes.'
+   });
 
    $translateProvider.translations('de', {
             'TAB_PARTIES' : 'Parties',
@@ -308,7 +310,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'OK' : 'OK',
             'CANCEL' : 'Abbrechen',
             'INFO_REQUESTFAIL' : 'Internet überprüfen. Später noch einmal probieren.',
-            'INFO_FAILTRYAGAIN': 'Das hat nicht geklappt. Bitte noch einmal probieren oder an die Entwickler melden.'
+            'INFO_FAILTRYAGAIN': 'Das hat nicht geklappt. Bitte noch einmal probieren oder an die Entwickler melden.',
+            'AUTOTRANSLATE_HEAD' : 'Automatische Übersetzung',
+            'AUTOTRANSLATE_INFO' : 'Dieser Text wurde automatisiert von einem Roboter aus einer anderen Sprache übersetzt. Roboter sind nicht perfekt. Die Übersetzung kann fehlerhaft sein.'
         });
 
    $translateProvider.translations('ar', {
@@ -412,7 +416,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'OK' : 'حسنا',
             'CANCEL' : 'إلغاء',
             'INFO_REQUESTFAIL' : 'تحقق الإنترنت أو المحاولة مرة أخرى في وقت لاحق .',
-            'INFO_FAILTRYAGAIN': 'وهذا فشل. الرجاء المحاولة مرة أخرى أو يقدم للمطورين.'
+            'INFO_FAILTRYAGAIN': 'وهذا فشل. الرجاء المحاولة مرة أخرى أو يقدم للمطورين.',
+            'AUTOTRANSLATE_HEAD' : 'السيارات ترجمة',
+            'AUTOTRANSLATE_INFO' : 'كان هذا النص السيارات وترجم من قبل الروبوت . يرجى أن نضع في اعتبارنا، أن الروبوتات ليست مثالية و ارتكاب الأخطاء .'
    });
 
   $translateProvider.preferredLanguage("en");

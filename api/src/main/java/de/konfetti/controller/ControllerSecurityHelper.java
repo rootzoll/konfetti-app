@@ -10,7 +10,7 @@ import de.konfetti.service.ClientService;
 
 public class ControllerSecurityHelper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSecurityHelper .class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSecurityHelper.class);
 	
 	/*
 	 * ADMIN-LEVEL
@@ -23,7 +23,7 @@ public class ControllerSecurityHelper {
 	
 	// 2. PASSWORD-Security
 	private static final boolean enforcePassword = false;
-	private static final String[]  allowedPasswords = {"pleaseSetLongPassword"};
+	private static final String  allowedPassword = "";
 	
 	
 	// if throws an Exception ==> security check failed
@@ -63,13 +63,7 @@ public class ControllerSecurityHelper {
 			if (requestingPassword==null) throw new Exception("ControllerSecurityHelper: Missing X-ADMIN-PASSWORD header field on HTTP request for ADMIN-LEVEL SECURITY from IP("+req.getRemoteAddr()+")");
 			
 			// check if given password is valid
-			boolean correctPassword = false;
-			for (String allowedPassword : allowedPasswords) {
-				if ((allowedPassword!=null) && (allowedPassword.equals(requestingPassword))) {
-					correctPassword = true;
-					break;
-				}
-			}
+			boolean correctPassword = ((allowedPassword!=null) && (allowedPassword.equals(requestingPassword)));
 			if (!correctPassword) throw new Exception("ControllerSecurityHelper: Requesting Password("+requestingPassword+") is not correct for ADMIN-LEVEL SECURITY from IP("+req.getRemoteAddr()+")");
 			
 		}
@@ -93,15 +87,19 @@ public class ControllerSecurityHelper {
 			throw new Exception("ControllerSecurityHelper: X-CLIENT-ID id no Number ("+clientId+"/"+clientSecret+") from IP("+req.getRemoteAddr()+")");
 		}
 		
+		LOGGER.info("clientId("+clientId+") clientSecret("+clientSecret+")");
+		
 		// check if client exists
 		Client client = clientService.findById(clientIdLong);
 		if (client==null) {
+			LOGGER.info("CLIENT NOT FOUND");
 			Thread.sleep(300); // security delay against brute force
 			throw new Exception("ControllerSecurityHelper: No client found with id ("+clientId+") from IP("+req.getRemoteAddr()+")");
 		}
 		
 		// check if client has correct secret
 		if (!clientSecret.equals(client.getSecret())) {
+			LOGGER.info("WRONG SECRET");
 			Thread.sleep(300); // security delay against brute force
 			throw new Exception("ControllerSecurityHelper: Client("+clientId+") wrong secretGiven("+clientSecret+") should be secretIs("+client.getSecret()+") from IP("+req.getRemoteAddr()+")");
 		}

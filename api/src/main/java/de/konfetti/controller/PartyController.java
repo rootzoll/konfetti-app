@@ -7,6 +7,7 @@ import de.konfetti.data.Notification;
 import de.konfetti.data.Party;
 import de.konfetti.data.Request;
 import de.konfetti.data.User;
+import de.konfetti.data.mediaitem.MultiLang;
 import de.konfetti.service.AccountingService;
 import de.konfetti.service.ChatService;
 import de.konfetti.service.ClientService;
@@ -16,6 +17,7 @@ import de.konfetti.service.PartyService;
 import de.konfetti.service.RequestService;
 import de.konfetti.service.UserService;
 import de.konfetti.service.exception.AccountingTools;
+import de.konfetti.utils.AutoTranslator;
 import de.konfetti.utils.Helper;
 
 import org.slf4j.Logger;
@@ -117,12 +119,26 @@ public class PartyController {
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(request, clientService);
 			
         	if (client!=null) {
-        		
+ 
+        		User user = userService.findById(client.getUserId());
+        		boolean userIsPartyAdmin = Helper.contains(user.getAdminOnParties(), party.getId());
+        		boolean userIsPartyReviewer = Helper.contains(user.getReviewerOnParties(), party.getId());
+        	
         		List<Request> requests = requestService.getAllPartyRequests(partyId);
         		List<Notification> notifications = notificationService.getAllNotifications(partyId, client.getUserId());
         		if (requests==null) requests = new ArrayList<Request>();
         		if (notifications==null) notifications = new ArrayList<Notification>();
         		
+        		// if not reviewer or admin then return just public and own requests
+        		if ((!userIsPartyAdmin) && (!userIsPartyReviewer)) {
+            		List<Request> filteredRequests = new ArrayList<Request>();
+            		for (Request r : requests) {
+    					if ((r.getUserId().equals(user.getId())) || (r.getState().equals(Request.STATE_DONE)) || (r.getState().equals(Request.STATE_PROCESSING)) || (r.getState().equals(Request.STATE_OPEN))) {
+    						filteredRequests.add(r);
+    					}
+    				}	
+            		requests = filteredRequests;
+        		}
         		// TODO optional: filter requests and notifications if needed 
         	
         		party.setRequests(new HashSet<Request>(requests));
@@ -138,6 +154,7 @@ public class PartyController {
         	}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			// exception can be ignored - because its just optional
 			LOGGER.info("Was not able to get optional client info on request for party("+partyId+"): "+e.getMessage());
 		}
@@ -326,8 +343,8 @@ public class PartyController {
     //---------------------------------------------------
     
     @CrossOrigin(origins = "*")
-    @RequestMapping(value = "/{partyId}/request", method = RequestMethod.POST)
-    public Request createRequest(@PathVariable long partyId, @RequestBody @Valid final Request request, HttpServletRequest httpRequest) throws Exception {
+    @RequestMapping(value = "/{partyId}/{langCode}/request", method = RequestMethod.POST)
+    public Request createRequest(@PathVariable long partyId, @PathVariable String langCode, @RequestBody @Valid final Request request, HttpServletRequest httpRequest) throws Exception {
         
     	// load party for background info
     	Party party = partyService.findById(partyId);
@@ -366,6 +383,20 @@ public class PartyController {
     	user.setName(request.getUserName());
     	user.setSpokenLangs(request.getSpokenLangs());
     	userService.update(user);
+    	
+    	// title --> multi language
+    	MultiLang multiLang = AutoTranslator.getInstance().translate(langCode, request.getTitle());
+    	String json = new ObjectMapper().writeValueAsString(multiLang);
+    	LOGGER.info("request title --autotranslate--> "+json);
+    	MediaItem mediaItem = new MediaItem();
+    	mediaItem.setData(json);
+    	mediaItem.setLastUpdateTS(System.currentTimeMillis());
+    	mediaItem.setReviewed(MediaItem.REVIEWED_PUBLIC);
+    	mediaItem.setType(MediaItem.TYPE_MULTILANG);
+    	mediaItem.setUserId(client.getUserId());
+    	mediaItem = mediaService.create(mediaItem);
+    	LOGGER.info("multilang stored with id("+mediaItem.getId()+")");
+    	request.setTitleMultiLangRef(mediaItem.getId());
     	
     	// create request
     	Request persistent = requestService.create(request);

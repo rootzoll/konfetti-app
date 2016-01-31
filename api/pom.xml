@@ -27,8 +27,9 @@
         <!--Used for CrossOrigin-->
         <spring.version>4.2.2.RELEASE</spring.version>
     </properties>
-
+    
     <dependencies>
+    
         <!--Spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -98,7 +99,22 @@
             <artifactId>jsr305</artifactId>
             <version>2.0.1</version>
         </dependency>
-
+        
+        <!-- Google Translate API -->
+        <dependency> 
+        	<groupId>org.json</groupId> 
+        	<artifactId>json</artifactId> 
+        	<version>20090211</version>
+       </dependency>
+        
+  		<dependency>
+    		<groupId>com.googlecode</groupId>
+    		<artifactId>google-api-translate-java</artifactId>
+    		<version>0.97</version>
+    		<scope>system</scope>
+    		<systemPath>${basedir}/lib/google-api-translate-java-0.97.jar</systemPath>
+  		</dependency>
+        
     </dependencies>
 
     <build>
