@@ -9,7 +9,7 @@ angular.module('starter.api', [])
         var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
         // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
-        var activeServerUrl = apiUrlBaseLocalhost;
+        var activeServerUrl = apiUrlBaseDevServer; //apiUrlBaseLocalhost;
 
         var errorPossibility = 0.0;
         var supportedLangs = ['de','en','ar'];

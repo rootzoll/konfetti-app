@@ -322,11 +322,6 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.takeSelfi = function() {
-      
-    if (typeof navigator.camera==="undefined") {
-        alert("feature not available");
-        return;
-    }
 
       var options = {
           quality: 70,
@@ -353,7 +348,11 @@ angular.module('starter.controller.request', [])
         KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
     };
 
-    $cordovaCamera.getPicture(options).then(win, fail);
+    try {
+        $cordovaCamera.getPicture(options).then(win, fail);
+    } catch (e) {
+        alert("FAILED to access camera.");
+    }
 
   };
 
@@ -430,10 +429,10 @@ angular.module('starter.controller.request', [])
               imageData = "data:image/jpeg;base64,"+imageData;
           }
 
-          /*
+
           console.log("GOT PICTURE");
           console.dir(imageData);
-          */
+
 
           $ionicLoading.show({
               template: '<img src="img/spinner.gif" />'
@@ -441,6 +440,7 @@ angular.module('starter.controller.request', [])
           ApiService.postImageMediaItemOnRequest($scope.request.id, imageData, function(mediaitem) {
               // WIN
               $ionicLoading.hide();
+              alert("JSON:"+JSON.stringify(mediaitem));
               $scope.addMediaItem(mediaitem);
           }, function() {
               // FAIL
@@ -504,15 +504,23 @@ angular.module('starter.controller.request', [])
                       $ionicLoading.show({
                           template: '<img src="img/spinner.gif" />'
                       });
-                      var posOptions = {timeout: 10000, enableHighAccuracy: false};
+                      var posOptions = {timeout: 10000, enableHighAccuracy: true};
                       $cordovaGeolocation
                           .getCurrentPosition(posOptions)
                           .then(function (position) {
                               $ionicLoading.hide();
+                              $rootScope.lat = position.coords.latitude;
+                              $rootScope.lon = position.coords.longitude;
                               $scope.saveLocationMediaItem(position.coords.latitude,position.coords.longitude);
                           }, function(err) {
                               $ionicLoading.hide();
-                              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                              if (($rootScope.lon!=null) && ($rootScope.lon!=0)
+                                  && ($rootScope.lat!=null) && ($rootScope.lat!=0)) {
+                                  // use backup start coordinates
+                                  $scope.saveLocationMediaItem($rootScope.lat,$rootScope.lon);
+                              } else {
+                                  KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                              }
                           });
                   }
               });
@@ -522,6 +530,8 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.saveLocationMediaItem = function(lat, lon) {
+
+      console.log("saveLocationMediaItem("+lat+","+lon+")");
 
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'

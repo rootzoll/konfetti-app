@@ -16,7 +16,7 @@ angular.module('starter.services', [])
           reviewerOnParties : [],
           activeOnParties : [],
           adminOnParties: [],
-          spokenLangs : ["en", "ar"],
+          spokenLangs : [],
           name: "",
           eMail: "",
           imageMediaID: 0,

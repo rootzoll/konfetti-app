@@ -141,13 +141,15 @@ angular.module('starter.controller.dash', [])
         };
 
         // setting selected lang in view to setting
-        $scope.actualLangSelect = $scope.langSet[0];
-        for (i = 0; i < $scope.langSet.length; i++) {
-            if ($scope.langSet[i].code===AppContext.getAppLang) {
-                $scope.actualLangSelect = $scope.langSet[i];
-                break;
+        $scope.setActualLangOnSelector = function() {
+            $scope.actualLangSelect = $scope.langSet[0];
+            for (i = 0; i < $scope.langSet.length; i++) {
+                if ($scope.langSet[i].code===AppContext.getAppLang()) {
+                    $scope.actualLangSelect = $scope.langSet[i];
+                    break;
+                }
             }
-        }
+        };
 
         // receiving changes lang settings --> with i18n
         $scope.selectedLang = function(selected) {
@@ -331,6 +333,9 @@ angular.module('starter.controller.dash', [])
             $scope.userId = AppContext.getAccount().userId;
             $scope.controllerInitDone = true;
             $scope.action();
+            $timeout(function(){
+                $scope.setActualLangOnSelector();
+            },1000);
         });
 
         // the OK button on the intro/welcome screen
@@ -408,7 +413,12 @@ angular.module('starter.controller.dash', [])
                     ApiService.loadPartylist($rootScope.lat, $rootScope.lon, function(list) {
                         // WIN;
                         $scope.partyList = list;
-                        $scope.action();
+                        if ($scope.partyList.length==0) {
+                            alert("no parties in your area - maybe a server error - try again later");
+                            navigator.app.exitApp();
+                        } else {
+                            $scope.action();
+                        }
                     }, function(code) {
                         // FAIL
                         $scope.state = "INTERNETFAIL";

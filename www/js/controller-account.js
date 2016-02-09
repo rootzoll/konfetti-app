@@ -8,6 +8,7 @@ angular.module('starter.controller.account', [])
           $state.go('tab.dash', {id: 0});
           return;
       }
+      $scope.accountJson = JSON.stringify(AppContext.getAccount());
   });
 
   $scope.settings = {

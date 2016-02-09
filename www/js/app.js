@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.dash', 'starter.controller.request', 'starter.controller.account', 'starter.services', 'starter.api', 'starter.mock', 'ngCordova', 'pascalprecht.translate'])
 
-.run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGeolocation, $log, $cordovaToast, $translate) {
+.run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -38,6 +38,52 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
         alert("FAIL set running os info: "+e);
     }
 
+    /*
+     * GET LANGUAGE OF DEVICE
+     * http://ngcordova.com/docs/plugins/globalization/
+     */
+    var gotLang = false;
+    $cordovaGlobalization.getLocaleName().then(
+          function(result) {
+              // WIN
+              if (!gotLang) {
+                  gotLang=true;
+
+                  // check available lang
+                  var lang = result.value.substr(0,2);
+                  if ((lang!="en") && (lang!="de") && (lang!="ar")) {
+                      $log.warn("lang '"+lang+"' not available ... using 'en'");
+                      lang = "en";
+                  }
+
+                  // check if changed
+                  if (AppContext.getAppLang()!=lang) {
+                      $log.info("switching to lang("+lang+")");
+                      AppContext.setAppLang(lang);
+                      $translate.use(AppContext.getAppLang());
+                      $rootScope.spClass = AppContext.getAppLangDirection();
+                  } else {
+                      $log.info("already running lang("+lang+") ... no need to switch");
+                  }
+
+                  // check if user spoken lang is set
+                  var account = AppContext.getAccount();
+                  if (account.spokenLangs.length==0) {
+                      $log.info("user default lang in account set to: "+lang);
+                      account.spokenLangs.push(lang);
+                      AppContext.setAccount(account);
+                  }
+
+              } else {
+                  $log.warn("double call prevent of $cordovaGlobalization.getLocaleName()");
+              }
+
+          },
+          function(err) {
+              // FAIL
+              $log.info("cordovaGlobalization: FAIL "+err);
+          }
+    );
 
     $rootScope.lat  = 0;
     $rootScope.lon = 0;
@@ -45,7 +91,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
     /*
      * START GEOLOCATION
      * http://ngcordova.com/docs/plugins/geolocation/
-
+     */
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $rootScope.gps  = 'wait';
     $rootScope.lat  = 0;
@@ -59,20 +105,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
               $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
           }, function(err) {
               // error
+
+              alert("GPS ERROR ---> FOR TESTING RUNNING WITH FAKE COORDINATES ---> REMOVE LATER");
+              $rootScope.lat  = 52.52;
+              $rootScope.lon = 13.13;
+              $rootScope.gps  = 'win';
+
+              /* TODO enable again later on
               $log.info("GPS ERROR");
               $rootScope.gps  = 'fail';
+              */
           });
-     */
-
-    /*
-     * TEST NATIVE TOAST
-     * http://ngcordova.com/docs/plugins/toast/
-      $cordovaToast.showShortTop('APP STARTED').then(function(success) {
-          $log.info("Toast OK");
-      }, function (error) {
-          $log.info("Toast ERROR");
-      });
-     */
 
     /*
      * App Context
