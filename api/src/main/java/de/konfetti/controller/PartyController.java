@@ -379,7 +379,7 @@ public class PartyController {
     	}
     	
     	// update fields in user and persist
-    	user.setImageUrl(request.getImageUrl());
+    	user.setImageMediaID(request.getImageMediaID());
     	user.setName(request.getUserName());
     	user.setSpokenLangs(request.getSpokenLangs());
     	userService.update(user);

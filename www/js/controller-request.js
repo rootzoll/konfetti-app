@@ -359,18 +359,10 @@ angular.module('starter.controller.request', [])
 
   $scope.storeSelfi = function(imageDataUrl) {
 
-      /*
-      // store image on profile (base64 JPEG)
-      var localState = AppContext.getLocalState();
-      localState.imageData = imageData;
-      AppContext.setLocalState(localState);
-      */
+      // user id will get updated once 
 
       ApiService.postImageMediaItemOnRequest(0, imageDataUrl, function(item){
           // WIN
-
-          // TODO
-          alert("update account on server side");
 
           // set in actual request
           $scope.request.imageUrl = imageData;
