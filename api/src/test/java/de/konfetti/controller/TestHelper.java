@@ -27,7 +27,6 @@ public class TestHelper {
     public Request getTestRequest1(Party party){
         Request request = new Request();
         request.setTitle("testPartyTitle1");
-        request.setImageUrl("testPartyImageUrl1");
         request.setKonfettiAdd(10);
         request.setKonfettiCount(20);
         return request;
@@ -37,7 +36,6 @@ public class TestHelper {
         if (actual.getKonfettiCount() != expected.getKonfettiCount()) return false;
         if (actual.getKonfettiAdd() != expected.getKonfettiAdd()) return false;
         if (actual.getTitle() != null ? !actual.getTitle().equals(expected.getTitle()) : expected.getTitle() != null) return false;
-        return !(actual.getImageUrl() != null ? !actual.getImageUrl().equals(expected.getImageUrl()) : expected.getImageUrl() != null);
     }
 
 }
