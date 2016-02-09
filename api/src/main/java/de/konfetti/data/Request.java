@@ -30,6 +30,8 @@ public class Request {
     private Long titleMultiLangRef;
     
 	private Long time;
+	
+	private Long[] mediaItemIds = {}; 
     
     /*
      * Hard Copy
@@ -37,14 +39,14 @@ public class Request {
      * thats because a request object should not be changed on public visible info after a review was done
      */
     
-    // hard copy from user
+	// hard copy from user
     private String userName;
     
     // hard copy from user
-    private String imageUrl;
+    private Long imageMediaID;
     
     // hard copy from user
-    private String[] spokenLangs;
+    private String[] spokenLangs = {};
  
     
     /*
@@ -105,14 +107,6 @@ public class Request {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 
 	public Long getTime() {
@@ -185,6 +179,22 @@ public class Request {
 
 	public void setTitleMultiLangRef(Long titleMultiLangRef) {
 		this.titleMultiLangRef = titleMultiLangRef;
+	}
+	
+	public Long[] getMediaItemIds() {
+		return mediaItemIds;
+	}
+
+	public void setMediaItemIds(Long[] mediaItemIds) {
+		this.mediaItemIds = mediaItemIds;
+	}
+
+	public Long getImageMediaID() {
+		return imageMediaID;
+	}
+
+	public void setImageMediaID(Long imageMediaID) {
+		this.imageMediaID = imageMediaID;
 	}
 
 }

@@ -23,10 +23,10 @@ public class User {
     // email -> good for admins and reviewers
     private String eMail;
     
-    // URL to public image of user 
-    private String imageUrl;
+    // image of user 
+    private Long imageMediaID;
     
-    // list of languages the user speaks (e.g. 'de', 'en', 'ar')
+	// list of languages the user speaks (e.g. 'de', 'en', 'ar')
     private String[] spokenLangs = {};
     
     // IDs of parties the user has an konfetti balance on
@@ -102,12 +102,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+    public Long getImageMediaID() {
+		return imageMediaID;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImageMediaID(Long imageMediaID) {
+		this.imageMediaID = imageMediaID;
 	}
 
 	public String[] getSpokenLangs() {

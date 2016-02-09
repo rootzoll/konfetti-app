@@ -5,7 +5,7 @@ angular.module('starter.api', [])
         // the possible API servers for app
         var apiUrlJustUseMock    = "mock";
         var apiUrlBaseLocalhost  = "http://localhost:9000/konfetti/api";
-        var apiUrlBaseDevServer  = "https://konfetti-dev.testserver.de/konfetti/api";
+        var apiUrlBaseDevServer  = "http://fourcores2016.cloudapp.net:9000/konfetti/api";
         var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
         // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
@@ -23,7 +23,11 @@ angular.module('starter.api', [])
             if (AppContext.getRunningOS()==='browser') {
                 console.warn("FAILED REQUEST to '"+activeServerUrl+"' - Fallback to FakeData");
                 activeServerUrl = apiUrlJustUseMock;
-                mockCallback();
+                if (mockCallback!=null) {
+                    mockCallback();
+                } else {
+                    fail(err);
+                }
             } else {
                 fail(err);
             }
@@ -33,6 +37,7 @@ angular.module('starter.api', [])
             var account = AppContext.getAccount();
             var basicConfig = {
                 timeout: 6000,
+                cache: false,
                 headers: {
                     'X-CLIENT-ID': account.clientId+'',
                     'X-CLIENT-SECRET': account.clientSecret+''
@@ -74,6 +79,12 @@ angular.module('starter.api', [])
                     fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
                 };
                 $http(config).then(successCallback, errorCallback);
+
+            },
+            getImageUrlFromMediaItem: function(mediaItemID) {
+
+                if (isRunningMock()) return "./img/spinner.gif";
+                return activeServerUrl+"/media/"+mediaItemID+"/image";
 
             },
             // gets called once a user starts a chat
@@ -556,6 +567,62 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, errorCallback);
 
             },
+            makeMediaItemPublic: function(requestId, mediaId, win, fail) {
+
+                // ### MOCK MODE ###
+
+                if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    fail();
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+'?action=publicMedia&json='+mediaId;
+                // WIN
+                var successCallback = function(response) {
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    fallbackToMockOnBrowserOrFail(null, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
+
+            },
+            deleteItemFromRequest: function(requestId, mediaId, win, fail) {
+
+                // ### MOCK MODE ###
+
+                if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    fail();
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+'?action=deleteMedia&json='+mediaId;
+                // WIN
+                var successCallback = function(response) {
+                    //console.dir(response.data);
+                    win(response.data);
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    fallbackToMockOnBrowserOrFail(null, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
+
+            },
             // post a
             postRequest: function(requestObj, langCode, win, fail) {
 
@@ -665,13 +732,114 @@ angular.module('starter.api', [])
                 // WIN
                 var successCallback = function(response) {
                     console.dir(response.data);
-                    win(response.data);
+                    if (requestId>0) {
+                        // add media item to request
+                        var config2 = getBasicHttpHeaderConfig();
+                        config2.method = 'GET';
+                        config2.url = activeServerUrl+'/party/action/request/'+requestId+"?action=addMedia&json="+response.data.id;
+                        var orgResponse = response;
+                        $http(config2).then(function(){
+                            win(orgResponse.data);
+                        }, errorCallback);
+                    } else {
+                        win(response.data);
+                    }
                 };
                 // FAIL
                 var errorCallback = function(response) {
                     console.warn("FAIL postTextMediaItemOnRequest:");
                     console.dir(response);
                     fallbackToMockOnBrowserOrFail(mockCallback, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
+            },
+            postImageMediaItemOnRequest: function(requestId, base64, win, fail) {
+
+                // ### MOCK MODE ###
+                if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){fail()},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                var mediaObj = {
+                    type : 'Image',
+                    data : base64
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    if (requestId>0) {
+                        // add media item to request
+                        var config2 = getBasicHttpHeaderConfig();
+                        config2.method = 'GET';
+                        config2.url = activeServerUrl+'/party/action/request/'+requestId+"?action=addMedia&json="+response.data.id;
+                        var orgResponse = response;
+                        $http(config2).then(function(){
+                            win(orgResponse.data);
+                        }, errorCallback);
+                    } else {
+                        win(response.data);
+                    }
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL postImageMediaItemOnRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(null, fail, response);
+                };
+                $http(config).then(successCallback, errorCallback);
+            },
+            postLocationMediaItemOnRequest: function(requestId, lat, lon, win, fail) {
+
+                // ### MOCK MODE ###
+                if (activeServerUrl===apiUrlJustUseMock)
+                {
+                    $timeout(function(){fail()},1000);
+                    return;
+                }
+
+                // ### SERVER MODE ###
+
+                var mediaObj = {
+                    type : 'Location',
+                    data : JSON.stringify({lat:lat,lon:lon})
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // WIN
+                var successCallback = function(response) {
+                    console.dir(response.data);
+                    if (requestId>0) {
+                        // add media item to request
+                        var config2 = getBasicHttpHeaderConfig();
+                        config2.method = 'GET';
+                        config2.url = activeServerUrl+'/party/action/request/'+requestId+"?action=addMedia&json="+response.data.id;
+                        var orgResponse = response;
+                        $http(config2).then(function(){
+                            win(orgResponse.data);
+                        }, errorCallback);
+                    } else {
+                        win(response.data);
+                    }
+                };
+                // FAIL
+                var errorCallback = function(response) {
+                    console.warn("FAIL postImageMediaItemOnRequest:");
+                    console.dir(response);
+                    fallbackToMockOnBrowserOrFail(null, fail, response);
                 };
                 $http(config).then(successCallback, errorCallback);
             },

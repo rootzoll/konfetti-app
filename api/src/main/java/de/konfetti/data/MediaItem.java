@@ -1,9 +1,11 @@
 package de.konfetti.data;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 @Entity
 public class MediaItem {
@@ -11,6 +13,8 @@ public class MediaItem {
 	public static final String TYPE_UNKOWN = "n/a";
 	public static final String TYPE_TEXT = "java.lang.String";
 	public static final String TYPE_MULTILANG = "MediaItemMultiLang";
+	public static final String TYPE_LOCATION = "Location";
+	public static final String TYPE_IMAGE = "Image";
 	
 	public static final Integer REVIEWED_PUBLIC = 0;
 	public static final Integer REVIEWED_PRIVATE = 1;
@@ -30,6 +34,8 @@ public class MediaItem {
     private String type = TYPE_UNKOWN; 
     
     // JSON or BASE64
+    @Lob
+    @Column(length = 1000000)
     private String data = ""; 
     
     /*
