@@ -4,6 +4,7 @@ import de.konfetti.data.Party;
 import de.konfetti.data.Request;
 
 public class TestHelper {
+	
     public TestHelper() {
     }
 
@@ -30,12 +31,6 @@ public class TestHelper {
         request.setKonfettiAdd(10);
         request.setKonfettiCount(20);
         return request;
-    }
-
-    public boolean equalRequests(Request actual, Request expected){
-        if (actual.getKonfettiCount() != expected.getKonfettiCount()) return false;
-        if (actual.getKonfettiAdd() != expected.getKonfettiAdd()) return false;
-        if (actual.getTitle() != null ? !actual.getTitle().equals(expected.getTitle()) : expected.getTitle() != null) return false;
     }
 
 }
