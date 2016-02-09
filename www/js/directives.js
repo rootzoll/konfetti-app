@@ -104,4 +104,10 @@ angular.module('starter')
 
             }
         };
+    })
+    .filter('distance', function() {
+        return function(input) {
+            if (input<1000) return input+" m";
+            return Math.round(input/1000)+" km";
+        };
     });

@@ -30,7 +30,7 @@
 
                                 <div style="text-align: center; font-size: 200%;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                                 <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                                <div style="direction: ltr;">({{party.meters}}m) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
+                                <div style="direction: ltr;">({{party.meters | distance}}) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
 
                             </div>
                             <div ng-show="loadingParty" style="min-height: 70px;">
