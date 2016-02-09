@@ -54,7 +54,7 @@ angular.module('starter')
         };
         return fallbackSrc;
     })
-    .directive('mediaitem', function (ApiService) {
+    .directive('mediaitem', function (ApiService, $sce) {
         return {
             templateUrl: 'templates/directive-media-item.html',
             replace: true,
@@ -65,17 +65,43 @@ angular.module('starter')
                 $scope.itemid = $attributes.itemid;
                 $scope.mediaItemData = null;
 
-                // check first if media item is within cache
-                // display chached version - than check update - e.g. on review status if needed
+                $scope.reviewInfo = function() {
+                    console.log("TODO: reviewInfo id("+$scope.itemid+")");
+                };
 
-                ApiService.loadMediaItem($scope.itemid, function(data){
-                    // WIN
-                    $scope.mediaItemData = data;
+                $scope.getMapUrl = function() {
+                    return $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q="+$scope.mediaItemData.data.lat+",+"+$scope.mediaItemData.data.lon+"&key=AIzaSyAsGmhV2-6ahp6i_n62GZgVddpITrLDNkw");
+                };
+
+                if ((typeof $attributes.item != "undefined") && ($attributes.item!=null)) {
+
+                    /*
+                     * Use given Media Item
+                     */
+
                     $scope.loading = false;
-                }, function(code) {
-                    // FAIL
-                    $scope.loading = false;
-                });
+                    $scope.mediaItemData = JSON.parse($attributes.item);
+
+
+                } else {
+
+                    /*
+                     * Load Media Item
+                     */
+
+                    // check first if media item is within cache
+                    // display chached version - than check update - e.g. on review status if needed
+
+                    ApiService.loadMediaItem($scope.itemid, function(data){
+                        // WIN
+                        $scope.mediaItemData = data;
+                        $scope.loading = false;
+                    }, function(code) {
+                        // FAIL
+                        $scope.loading = false;
+                    });
+                }
+
             }
         };
     });

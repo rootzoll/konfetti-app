@@ -1,12 +1,60 @@
-<div>
+<div style="padding: 8px;
+    border-top-width: 1px;
+    border-top-color: lightgrey;
+    border-top-style: solid;">
+
     <div ng-show="loading">
         ...
     </div>
     <div ng-hide="loading">
 
-        <div ng-show="mediaItemData.type=='text'" style="white-space: normal;">
-            {{mediaItemData.data}}
-        </div>
-        
+        <table width="100%">
+            <tr>
+                <td width="*">
+
+                    <!-- SIMPLE TEXT -->
+                    <div ng-if="mediaItemData.type=='java.lang.String'" style="white-space: normal;">
+                        {{mediaItemData.data}}
+                    </div>
+
+                    <!-- MULTILANG TEXT -->
+                    <div ng-if="mediaItemData.type=='MediaItemMultiLang'" style="white-space: normal;">
+                        <div multilang data="{{mediaItemData.data}}" lang="{{actualLang}}" />
+                    </div>
+
+                    <!-- IMAGE -->
+                    <div ng-if="mediaItemData.type=='Image'" style="white-space: normal;">
+                        <img src="{{mediaItemData.data}}" style="max-width: 300px"/>
+                    </div>
+
+                    <!-- LOCATION -->
+                    <div ng-if="mediaItemData.type=='Location'" style="white-space: normal;">
+                        <iframe width="300" height="200" frameborder="0" style="border:0"
+                                ng-src="{{getMapUrl()}}" allowfullscreen></iframe>
+                    </div>
+
+                </td>
+                <td width="20px" style=" vertical-align: top;">
+                    <div ng-show="(isAdmin) || (userIsAuthor)">
+                        <i on-tap="deleteItemFromRequest(itemid)" class="icon ion-close-circled" sytle="color: lightgrey;"></i>
+                        <br>
+                        <i ng-show="(reviewed==1)" on-tap="reviewInfo()" class="icon ion-clock" style="color: orange;"></i>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-show="(reviewed==1) && ((isAdmin) || (isReviewer))">
+                <td align="center" style="vertical-align: middle">
+                    <span>{{ 'PLEASE_REVIEW' | translate }}</span>
+                    <button on-tap="reviewFail(itemid)" class="button button-small" style="min-width: 100px;">
+                        <i class="icon ion-close-circled" style="color: red;"></i>
+                    </button>
+                    <button on-tap="reviewOk(itemid)" class="button button-small" style="min-width: 100px;">
+                        <i class="icon ion-checkmark-circled" style="color: green;"></i>
+                    </button>
+                </td>
+                <td></td>
+            </tr>
+        </table>
+
     </div>
 </div>

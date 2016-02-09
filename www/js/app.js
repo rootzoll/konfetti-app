@@ -203,10 +203,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'INFO_ZEROKONFETTI' : 'You have no konfetti to support this request. See party info how to get konfetti.',
             'OK' : 'OK',
             'CANCEL' : 'Cancel',
+            'PLEASE_REVIEW' : 'please review',
             'INFO_REQUESTFAIL' : 'Check Internet or try again later.',
             'INFO_FAILTRYAGAIN': 'This failed. Please try again or report to developers.',
             'AUTOTRANSLATE_HEAD' : 'Auto Translate',
-            'AUTOTRANSLATE_INFO' : 'This text was auto translated by a robot. Please keep in mind, that robots are not perfect and make mistakes.'
+            'AUTOTRANSLATE_INFO' : 'This text was auto translated by a robot. Please keep in mind, that robots are not perfect and make mistakes.',
+            'USELOCATION' : 'Would you like to add your current location?'
    });
 
    $translateProvider.translations('de', {
@@ -309,10 +311,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'INFO_ZEROKONFETTI' : 'Du hast kein Konfetti um diese Anfrage zu unterstützen. Für mehr Konfetti siehe Party Info.',
             'OK' : 'OK',
             'CANCEL' : 'Abbrechen',
+            'PLEASE_REVIEW' : 'bitte freigeben',
             'INFO_REQUESTFAIL' : 'Internet überprüfen. Später noch einmal probieren.',
             'INFO_FAILTRYAGAIN': 'Das hat nicht geklappt. Bitte noch einmal probieren oder an die Entwickler melden.',
             'AUTOTRANSLATE_HEAD' : 'Automatische Übersetzung',
-            'AUTOTRANSLATE_INFO' : 'Dieser Text wurde automatisiert von einem Roboter aus einer anderen Sprache übersetzt. Roboter sind nicht perfekt. Die Übersetzung kann fehlerhaft sein.'
+            'AUTOTRANSLATE_INFO' : 'Dieser Text wurde automatisiert von einem Roboter aus einer anderen Sprache übersetzt. Roboter sind nicht perfekt. Die Übersetzung kann fehlerhaft sein.',
+            'USELOCATION' : 'Die aktuelle Position hinzufügen?'
         });
 
    $translateProvider.translations('ar', {
@@ -415,10 +419,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'INFO_ZEROKONFETTI' : 'لا يوجد لديك حلويات لدعم هذا الطلب . انظر المعلومات الأحزاب كيفية الحصول على قصاصات من الورق .',
             'OK' : 'حسنا',
             'CANCEL' : 'إلغاء',
+            'PLEASE_REVIEW' : 'من فضلك اعد النظر',
             'INFO_REQUESTFAIL' : 'تحقق الإنترنت أو المحاولة مرة أخرى في وقت لاحق .',
             'INFO_FAILTRYAGAIN': 'وهذا فشل. الرجاء المحاولة مرة أخرى أو يقدم للمطورين.',
             'AUTOTRANSLATE_HEAD' : 'السيارات ترجمة',
-            'AUTOTRANSLATE_INFO' : 'كان هذا النص السيارات وترجم من قبل الروبوت . يرجى أن نضع في اعتبارنا، أن الروبوتات ليست مثالية و ارتكاب الأخطاء .'
+            'AUTOTRANSLATE_INFO' : 'كان هذا النص السيارات وترجم من قبل الروبوت . يرجى أن نضع في اعتبارنا، أن الروبوتات ليست مثالية و ارتكاب الأخطاء .',
+            'USELOCATION' : 'هل ترغب في إضافة موقعك الحالي ؟'
    });
 
   $translateProvider.preferredLanguage("en");

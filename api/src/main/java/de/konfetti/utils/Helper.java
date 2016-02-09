@@ -2,6 +2,8 @@ package de.konfetti.utils;
 
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class Helper {
@@ -49,6 +51,14 @@ public class Helper {
                 return true;
 
         return false;
+    }
+    
+    public static <T> T[] remove(T[] input, T element) {
+        List<T> result = new LinkedList<T>();
+        for(T item : input)
+            if(!element.equals(item))
+                result.add(item);
+        return result.toArray(input);
     }
     
     // get a value from the property file

@@ -19,7 +19,7 @@ angular.module('starter.services', [])
           spokenLangs : ["en", "ar"],
           name: "",
           eMail: "",
-          imageUrl: "",
+          imageMediaID: 0,
           pushActive: false,
           pushSystem: null,
           pushID: null

@@ -398,6 +398,25 @@ public class PartyController {
     	LOGGER.info("multilang stored with id("+mediaItem.getId()+")");
     	request.setTitleMultiLangRef(mediaItem.getId());
     	
+    	// check media items on new request
+    	if (request.getMediaItemIds().length>0) {
+    		Long[] mediaItemIds = request.getMediaItemIds();
+    		for (int i=0; i<mediaItemIds.length; i++) {
+    			Long mediaItemId = mediaItemIds[i];
+				MediaItem item = mediaService.findById(mediaItemId);
+				if (item==null) {
+					request.setMediaItemIds(null);
+					LOGGER.error("new request has non existing media items on it - security clearing all mediaitems on request");
+					break;
+				}
+				if (!item.getUserId().equals(client.getUserId())) {
+					request.setMediaItemIds(null);
+					LOGGER.error("new request has media items other users on it - security clearing all mediaitems on request");
+					break;					
+				}
+			}
+    	}
+    	
     	// create request
     	Request persistent = requestService.create(request);
     	
@@ -683,6 +702,96 @@ public class PartyController {
             	// TODO
             	LOGGER.warn("TODO: Implement send notification to muted chat user or add info as chat message");
             		
+            } else
+            	
+            // delete media item from request
+            if (action.equals("deleteMedia")) {
+                		
+            	// needed json data --> the id of the media item to add
+            	if ((json==null) || (json.length()==0)) throw new Exception("missing parameter json");
+            	Long mediaId = 0l;
+            	try {
+            		mediaId = (new ObjectMapper()).readValue(json, mediaId.getClass());
+            	} catch (Exception e) {
+            		e.printStackTrace();
+            		throw new Exception("json paramter not valid");
+            	}
+            	
+            	// check if media item exists
+            	MediaItem item = mediaService.findById(mediaId);
+            	if (item==null) throw new Exception("media("+mediaId+") not found");
+                	
+                // check if admin or author
+                if ((!userIsPartyAdmin) && (!userIsAuthor) && (!userIsPartyReviewer)) throw new Exception("request("+requestId+") not allowed to remove media("+mediaId+")");
+                		
+                // remove media
+                request.setMediaItemIds(Helper.remove(request.getMediaItemIds(), new Long(mediaId)));
+            	requestService.update(request);
+            	LOGGER.info("mediaItem("+mediaId+") removed from request("+requestId+")");
+                		
+            } else
+            	
+            // add media item to request
+            if (action.equals("addMedia")) {
+                		
+                	// needed json data --> the id of the media item to add
+                	if ((json==null) || (json.length()==0)) throw new Exception("missing parameter json");
+                	Long mediaId = 0l;
+                	try {
+                		mediaId = (new ObjectMapper()).readValue(json, mediaId.getClass());
+                	} catch (Exception e) {
+                		e.printStackTrace();
+                		throw new Exception("json paramter not valid");
+                	}
+                	
+                	// check if media item exists
+                	MediaItem item = mediaService.findById(mediaId);
+                	if (item==null) throw new Exception("media("+mediaId+") not found");
+                	
+                	// check if admin or author
+                	if ((!userIsPartyAdmin) && (!userIsAuthor)) throw new Exception("request("+requestId+") not allowed to ad media("+mediaId+")");
+                		
+                	// add media to request
+                	Long[] itemIds = request.getMediaItemIds();
+                	itemIds = Helper.append(itemIds, mediaId);
+                	request.setMediaItemIds(itemIds);
+                	requestService.update(request);
+                	LOGGER.info("mediaItem("+mediaId+") add to request("+requestId+")");
+                		
+                	// TODO
+                	LOGGER.warn("TODO: Implement send notification to reviewer if media item still needs review");
+                		
+            } else
+            	
+            	
+            // make a media item public (set as reviewed)
+            if (action.equals("publicMedia")) {
+                    		
+            	// needed json data --> the id of the media item to add
+                if ((json==null) || (json.length()==0)) throw new Exception("missing parameter json");
+                Long mediaId = 0l;
+                try {
+                	mediaId = (new ObjectMapper()).readValue(json, mediaId.getClass());
+                } catch (Exception e) {
+                	e.printStackTrace();
+                	throw new Exception("json paramter not valid");
+                }
+                	
+                // check if media item exists
+                MediaItem item = mediaService.findById(mediaId);
+                if (item==null) throw new Exception("media("+mediaId+") not found");
+                    	
+                // check if request contains this media item
+                if (!Helper.contains(request.getMediaItemIds(), mediaId)) throw new Exception("mediaItem("+mediaId+") is not part of request("+requestId+")");
+                
+                // check if admin or reviewer
+                if ((!userIsPartyAdmin) && (!userIsPartyReviewer)) throw new Exception("request("+requestId+") not allowed to remove media("+mediaId+")");
+                    		
+                // set media public
+                item.setReviewed(MediaItem.REVIEWED_PUBLIC);
+                mediaService.update(item);
+                LOGGER.info("mediaItem("+mediaId+") is now public");
+                    		
             } else
             	
         	// unkown action
