@@ -335,7 +335,7 @@ angular.module('starter.controller.dash', [])
             $scope.action();
             $timeout(function(){
                 $scope.setActualLangOnSelector();
-            },1000);
+            },100);
         });
 
         // the OK button on the intro/welcome screen
