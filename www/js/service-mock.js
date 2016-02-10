@@ -1,131 +1,11 @@
 angular.module('starter.mock', [])
 
+    /*
+     * ALREADY OBSOLETE - JUST KEEP CHAT & NOTIFICATION OBJECTS UNTIL
+     * THE REAL ONES ARE FULLY IMPLEMENTED
+     */
+
     .factory('MockData', function() {
-
-        /*
-         * DATA PROTOTYPE OBJECTS (data skeletons with description)
-         * objects as needed by client as result from requests
-         * of course can be stored different or with additional fields in DB
-         */
-
-        // PARTY
-        // config params of party and
-        // the organisation responsible for party
-        // putting already stuff in there for private parties
-        var partyPrototype = {
-
-            // unique id
-            id: 0,
-
-            // official name to display in short
-            name: '',
-
-            // detail text - for e.g. address to show for editorial info
-            detailText: '',
-
-            // website http-address or email for further info
-            // optional but should be seperate field so client can offer options
-            contact: '',
-
-            // 0 = default - for everybody to see
-            // 1 = can be found but is asking for invitation code
-            // 2 = cannot be found, just enter with invitation code
-            visibility: 0,
-
-            // determines if orga admins need to review public posting
-            // 0 = no review,
-            // 1 = full review of all public posts
-            // 2 = just review request, follow up public info on request no review
-            reviewLevel: 1,
-
-            // minimal konfetti to spend on new request posting
-            newRequestMinKonfetti: 1,
-
-            // location - just if party should be found by location
-            lon: 0.0,
-            lat: 0.0,
-
-            // dont store in DB - just gets calculated by server and delivered to client
-            meters: 500,
-
-            /*
-             * user specific data on orga - not in DB gets added by server on the fly
-             */
-
-            // distance of user to party location
-            userMeters: 0,
-
-            // amount of konfetti user owns on party
-            konfettiCount: 0,
-
-            // total konfetti user collected on party
-            konfettiTotal: 0,
-
-            // position in most collected (over e.g. a month)
-            // like a position in the high scores, e.g. top 3
-            topPosition: 0
-
-        };
-
-        // REQUEST
-        // every party contains requests
-        var requestPrototype = {
-
-            // unique id
-            id: 0,
-
-            // author of request
-            userId: 0,
-
-            // different states used by app at the moment
-            // 'review'
-            // 'open'
-            // 'rejected'
-            // 'done'
-            state: 'open',
-
-            // user name of this user
-            // a fixed copy of the name of user when request was created in DB
-            // user can change his name on user profile - but this may be reviewed information so keep a copy to display
-            userName: "",
-
-            // spoken lang codes of request author
-            // can be the langs in actual user profile or copy of lang set on request creation, both should work
-            spokenLangs: [],
-
-            // id of party request belongs to
-            partyId: 0,
-
-            // server timestamp of creation
-            time: 0,
-
-            // actual amount on konfetti of request
-            konfettiCount: 0,
-
-            // this field is just handled on client side - no need to store in DB
-            // this is always 0 but gets delivered by server
-            konfettiAdd: 0,
-
-            // title of request --> TODO: can also be multilang item?
-            title: '',
-
-            // image of user/selfi
-            // maybe re reviewed information, so keep copy - dont take selfi from actual user profile
-            // ? --> may be ref to media item
-            imageUrl: '',
-
-            // list of ids of media items
-            // with additional public info on request
-            // --> deliver all media item ids if user is author
-            // --> deliver just public media items if user is not author
-            info: [],
-
-            // list of ids of chats as part of this request
-            // --> deliver up to multiple chat ids, if user is author of chat
-            // --> deliver array with just one id, if requesting user has active chat on this request
-            chats:[]
-
-        };
 
         // CHAT
         // basic chat information
@@ -157,48 +37,6 @@ angular.module('starter.mock', [])
             mediaItem: 0
         };
 
-        // MEDIA ITEM
-        // its kind of a abstract base class
-        // sub classes can be --> text, multilang text, image, location
-        var mediaItemPrototype = {
-            // uid of media item
-            id: 0,
-            // 0 = not reviewed - just private if context as activated review
-            // 1 = reviewed and can be public
-            reviewed: 0,
-            // last update of content
-            lastUpdateTS : 0,
-            // the class name (just toplevel - no package) of media item type
-            type: 'undefined'
-        };
-
-        /*
-         * SAMPLE DATA
-         * for click prototype when on server available
-         */
-
-        var party1 = cloneObject(partyPrototype);
-        party1.id = 1;
-        party1.name = 'Helferverein Nord e.V.';
-        party1.detailText = '<b>Berliner Str. 99</b>, 13189 Berlin, GERMANY';
-        party1.contact = 'http://pankowhilft.blogsport.de';
-        party1.newRequestMinKonfetti = 10;
-        party1.userMeters = 500;
-        party1.konfettiCount = 14;
-        party1.konfettiTotal = 200;
-        party1.topPosition = 4;
-
-        var party2 = cloneObject(partyPrototype);
-        party2.id = 2;
-        party2.name = 'Helferverein Süd e.V.';
-        party2.detailText = 'Antonplatz 3, 89282 München, GERMANY';
-        party2.contact = 'muenchen@helfer.de';
-        party2.newRequestMinKonfetti = 1;
-        party2.userMeters = 500000;
-        party2.konfettiCount = 140;
-        party2.konfettiTotal = 10000;
-        party2.topPosition = 4;
-
         var welcomeNotifaction = [
             {id: 98, userId: 1, partyId: 1, type:0, ref:111}
         ];
@@ -210,95 +48,6 @@ angular.module('starter.mock', [])
             {id: 96, userId: 1, partyId: 2, type:4, ref:13}
         ];
 
-        var exampleChatPreview1 = {
-            id: 1,
-            userId: 222,
-            userName: 'Jan',
-            imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
-            lastLine: 'The task requested could ..',
-            lastActivity: 423424243,
-            lastStatus: 'new',
-            spokenLangs: ['de', 'en']
-        };
-
-        var exampleChatPreview2 = {
-            id: 2,
-            userId: 123,
-            userName: 'Jamal',
-            imageUrl: "http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg",
-            lastLine: 'Do you speak english?',
-            lastActivity: 423424245,
-            lastStatus: 'send',
-            spokenLangs: ['ar', 'en']
-        };
-
-        var request11 = {
-            id: 11,
-            userId: 125,
-            userName: "Johannes Kli",
-            spokenLangs: ["ar"],
-            partyId: 1,
-            time: 8238483432,
-            konfettiCount: 8,
-            konfettiAdd: 0, // this is always 0 but gets delivered by server
-            title: 'Hecke am Spielplatz schneiden',
-            imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
-            state: 'open',
-            info: [],
-            chats:[exampleChatPreview1]
-        };
-
-        var request12 = {
-            id: 12,
-            userId: 1,
-            userName: "Christian Bäle",
-            spokenLangs: ["de", "ar"],
-            partyId: 2,
-            time: 6238483432,
-            konfettiCount: 34,
-            konfettiAdd: 0, // this is always 0 but gets delivered by server
-            title: 'Strassenfest Aufbau',
-            imageUrl: 'http://img2.timeinc.net/people/i/2011/database/110214/christian-bale-300.jpg',
-            state: 'rejected',
-            info: [],
-            chats:[exampleChatPreview1]
-        };
-
-        var request13 = {
-            id: 13,
-            userId: 124,
-            userName: "Jochen Tuck",
-            spokenLangs: ["en", "ar"],
-            partyId: 2,
-            time: 5238483432,
-            konfettiCount: 1,
-            konfettiAdd: 0, // this is always 0 but gets delivered by server
-            title: 'Aufbau Grillfest bei Jannes auf dem Acker',
-            imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
-            state: 'open',
-            chats:[exampleChatPreview2],
-            info: []
-        };
-
-        var request14 = {
-            id: 14,
-            userId: 127,
-            userName: "Jamal Klu",
-            spokenLangs: ["de"],
-            partyId: 1,
-            time: 7238483432,
-            konfettiCount: 6,
-            konfettiAdd: 0, // this is always 0 but gets delivered by server
-            title: 'Backofen reinigen',
-            imageUrl: 'http://www.mnf.uni-greifswald.de/fileadmin/Biochemie/AK_Heinicke/bilder/kontaktbilder/Fischer__Christian_II_WEB.jpg',
-            state: 'open',
-            info: [],
-            chats:[]
-        };
-
-        var chatItemIdCounter = 100;
-        var mediaItemIdCounter = 0;
-
         // a chat is metadata, participants and a time sorted list of chat items
         var chat1 = {
             id: 1,
@@ -307,16 +56,6 @@ angular.module('starter.mock', [])
             members: [123], // array of user ids of people part of the chat
             messages: [] // list of chatitems (see below)
         };
-
-        var mediaItemText1 = cloneObject(mediaItemPrototype);
-        mediaItemText1.id = 1;
-        mediaItemText1.type = "text";
-        mediaItemText1.data = "Hi there. I would like to help.";
-
-        var mediaItemText111 = cloneObject(mediaItemPrototype);
-        mediaItemText111.id = 111;
-        mediaItemText111.type = "text";
-        mediaItemText111.data = "Welcome. You start with 14 confetti on this party. Use them to upvote Open Requests or create a request yourself.";
 
         var chatItem1 = cloneObject(chatItemPrototype);
         chatItem1.id = 1;

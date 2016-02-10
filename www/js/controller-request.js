@@ -282,6 +282,11 @@ angular.module('starter.controller.request', [])
           return;
       }
 
+      // make sure lang seletor is set correct
+      $timeout(function(){
+          $rootScope.setActualLangOnSelector();
+      },100);
+
   });
 
   // pop pup to choose languages

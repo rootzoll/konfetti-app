@@ -16,9 +16,10 @@ angular.module('starter.controller.dash', [])
          * prepare local scope
          */
 
+        $scope.state = "INIT";
+
         $scope.userId = 0;
         $scope.loadingParty = true;
-        $scope.state = "init";
 
         $scope.actualSorting = null;
 
@@ -31,14 +32,6 @@ angular.module('starter.controller.dash', [])
         $scope.requestsOpen = [];
         $scope.notifications = [];
         $scope.showNotifications = false;
-
-        // available app languages
-        $scope.langSet = [
-            {code:'en', display:'English', dir:'ltr'},
-            {code:'de', display:'Deutsch', dir:'ltr'},
-            {code:'ar', display:'عربي', dir:'rtl'}
-        ];
-        $scope.actualLang = AppContext.getAppLang();
 
         // sorting options
         $scope.sortSet = [
@@ -140,23 +133,10 @@ angular.module('starter.controller.dash', [])
 
         };
 
-        // setting selected lang in view to setting
-        $scope.setActualLangOnSelector = function() {
-            $scope.actualLangSelect = $scope.langSet[0];
-            for (i = 0; i < $scope.langSet.length; i++) {
-                if ($scope.langSet[i].code===AppContext.getAppLang()) {
-                    $scope.actualLangSelect = $scope.langSet[i];
-                    break;
-                }
-            }
-        };
-
         // receiving changes lang settings --> with i18n
+        // overwriting rootScope
         $scope.selectedLang = function(selected) {
-            $scope.actualLang = selected.code;
-            $translate.use(selected.code);
-            AppContext.setAppLang(selected.code);
-            $rootScope.spClass = AppContext.getAppLangDirection();
+            $rootScope.selectedLang(selected);
             $scope.updateSortOptions();
             $scope.action();
         };
@@ -333,8 +313,10 @@ angular.module('starter.controller.dash', [])
             $scope.userId = AppContext.getAccount().userId;
             $scope.controllerInitDone = true;
             $scope.action();
+            console.dir($rootScope);
             $timeout(function(){
-                $scope.setActualLangOnSelector();
+                console.dir($rootScope);
+                $rootScope.setActualLangOnSelector();
             },100);
         });
 
@@ -380,6 +362,7 @@ angular.module('starter.controller.dash', [])
                     $scope.state = "ACCOUNTWAIT";
                     ApiService.createAccount(function(account){
                         // WIN
+                        account.spokenLangs = [AppContext.getAppLang()];
                         AppContext.setAccount(account);
                         $scope.action();
                     },function(code){
@@ -393,7 +376,7 @@ angular.module('starter.controller.dash', [])
             }
 
             // check if GPS is available
-            if ($rootScope.gps==='wait') {
+            if ($scope.gps==='wait') {
                 $scope.state = "GPSWAIT";
                 $timeout($scope.action, 300);
                 return;
@@ -401,7 +384,7 @@ angular.module('starter.controller.dash', [])
 
             // check if GPS is failed
             //$rootScope.gps = 'fail';
-            if ($rootScope.gps==='fail') {
+            if ($scope.gps==='fail') {
                 $scope.state = "GPSFAIL";
                 return;
             }
@@ -452,6 +435,7 @@ angular.module('starter.controller.dash', [])
 
             // make API call to load party data
             $scope.state = "PARTYWAIT";
+            $rootScope.party.id = 0;
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
                 var isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 var isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
@@ -464,8 +448,9 @@ angular.module('starter.controller.dash', [])
                 $scope.notifications = data.notifications;
                 $scope.loadingParty = false;
                 $scope.sortRequests();
-                $scope.state = "";
+                $scope.state = "OK";
                 $scope.showNotifications = ($scope.notifications.length>0);
+                $rootScope.initDone = true;
             },function(code){
                 // FAIL
                 $scope.loadingParty = false;

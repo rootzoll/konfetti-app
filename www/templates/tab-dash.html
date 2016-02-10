@@ -7,6 +7,7 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
+        <!-- lang select gets handled on root scope level -->
         <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
     </ion-nav-buttons>
 

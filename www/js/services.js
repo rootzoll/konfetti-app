@@ -58,7 +58,6 @@ angular.module('starter.services', [])
         appContext.account = account;
         if (appContext.account.name==null) appContext.account.name = "";
         if (appContext.account.eMail==null) appContext.account.eMail = "";
-        if (appContext.account.imageUrl==null) appContext.account.imageUrl = "";
         this.persistContext();
     },
     loadContext: function(win) {
@@ -77,7 +76,8 @@ angular.module('starter.services', [])
         win();
     },
     persistContext: function() {
-        localStorage.setItem("appContext", JSON.stringify(appContext));
+        var data = JSON.stringify(appContext);
+        localStorage.setItem("appContext", data);
     },
     getRunningOS: function() {
         return (typeof window.device != "undefined") ? window.device.platform : "browser";

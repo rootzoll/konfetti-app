@@ -7,8 +7,10 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.dash', 'starter.controller.request', 'starter.controller.account', 'starter.services', 'starter.api', 'starter.mock', 'ngCordova', 'pascalprecht.translate'])
 
-.run(function(AppContext, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate) {
   $ionicPlatform.ready(function() {
+
+    $rootScope.initDone = false;
 
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -39,51 +41,94 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
     }
 
     /*
+     * GLOBAL LANGUAGE SELECTOR (displayed in every tab)
+     */
+
+    // available app languages
+    $rootScope.langSet = [
+          {code:'en', display:'English', dir:'ltr'},
+          {code:'de', display:'Deutsch', dir:'ltr'},
+          {code:'ar', display:'عربي', dir:'rtl'}
+    ];
+    $rootScope.actualLang = AppContext.getAppLang();
+
+    // setting selected lang in view to setting
+    // should be called on every view enter
+    $rootScope.setActualLangOnSelector = function() {
+          $rootScope.actualLangSelect = $rootScope.langSet[0];
+          for (i = 0; i < $rootScope.langSet.length; i++) {
+              if ($rootScope.langSet[i].code===AppContext.getAppLang()) {
+                  $rootScope.actualLangSelect = $rootScope.langSet[i];
+                  break;
+              }
+          }
+    };
+
+    // receiving changes lang settings from selector --> with i18n
+    $rootScope.selectedLang = function(selected) {
+          $rootScope.actualLang = selected.code;
+          $translate.use(selected.code);
+          AppContext.setAppLang(selected.code);
+          $rootScope.spClass = AppContext.getAppLangDirection();
+    };
+
+    /*
      * GET LANGUAGE OF DEVICE
      * http://ngcordova.com/docs/plugins/globalization/
      */
     var gotLang = false;
-    $cordovaGlobalization.getLocaleName().then(
-          function(result) {
-              // WIN
-              if (!gotLang) {
-                  gotLang=true;
+    var setLocale = function(lang) {
 
-                  // check available lang
-                  var lang = result.value.substr(0,2);
-                  if ((lang!="en") && (lang!="de") && (lang!="ar")) {
-                      $log.warn("lang '"+lang+"' not available ... using 'en'");
-                      lang = "en";
-                  }
+        // check if changed
+        if (AppContext.getAppLang() != lang) {
+            $log.info("switching to lang(" + lang + ")");
+            AppContext.setAppLang(lang);
+            $translate.use(AppContext.getAppLang());
+            $rootScope.spClass = AppContext.getAppLangDirection();
+        } else {
+            $log.info("already running lang(" + lang + ") ... no need to switch");
+        }
 
-                  // check if changed
-                  if (AppContext.getAppLang()!=lang) {
-                      $log.info("switching to lang("+lang+")");
-                      AppContext.setAppLang(lang);
-                      $translate.use(AppContext.getAppLang());
-                      $rootScope.spClass = AppContext.getAppLangDirection();
-                  } else {
-                      $log.info("already running lang("+lang+") ... no need to switch");
-                  }
+    };
+    if (AppContext.getRunningOS()!="browser") {
+        $cordovaGlobalization.getLocaleName().then(
+            function (result) {
+                // WIN
+                if (!gotLang) {
+                    gotLang = true;
 
-                  // check if user spoken lang is set
-                  var account = AppContext.getAccount();
-                  if (account.spokenLangs.length==0) {
-                      $log.info("user default lang in account set to: "+lang);
-                      account.spokenLangs.push(lang);
-                      AppContext.setAccount(account);
-                  }
+                    // check available lang
+                    var lang = result.value.substr(0, 2);
+                    var langOK = false;
+                    for (var i=0; i < $rootScope.langSet.length; i++) {
+                        var availableLang = $rootScope.langSet[i];
+                        if (availableLang.code == lang) {
+                            langOk = true;
+                            break;
+                        }
+                    }
+                    if (!langOK) {
+                        $log.warn("lang '" + lang + "' not available ... using 'en'");
+                        lang = "en";
+                    }
 
-              } else {
-                  $log.warn("double call prevent of $cordovaGlobalization.getLocaleName()");
-              }
+                    setLocale(lang);
 
-          },
-          function(err) {
-              // FAIL
-              $log.info("cordovaGlobalization: FAIL "+err);
-          }
-    );
+                } else {
+                    $log.warn("double call prevent of $cordovaGlobalization.getLocaleName()");
+                }
+
+            },
+            function (err) {
+                // FAIL
+                $log.info("cordovaGlobalization: FAIL " + err);
+            }
+        );
+
+        } else {
+            $log.warn("TODO: On browser check lang setting differently");
+            setLocale("en");
+        }
 
     $rootScope.lat  = 0;
     $rootScope.lon = 0;
@@ -93,6 +138,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
      * http://ngcordova.com/docs/plugins/geolocation/
      */
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
+    if (ApiService.runningDevelopmentEnv()) posOptions.timeout = 1000;
     $rootScope.gps  = 'wait';
     $rootScope.lat  = 0;
     $rootScope.lon = 0;
@@ -106,7 +152,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
           }, function(err) {
               // error
 
-              alert("GPS ERROR ---> FOR TESTING RUNNING WITH FAKE COORDINATES ---> REMOVE LATER");
+              if (!ApiService.runningDevelopmentEnv()) alert("GPS ERROR ---> FOR TESTING RUNNING WITH FAKE COORDINATES ---> REMOVE LATER");
               $rootScope.lat  = 52.52;
               $rootScope.lon = 13.13;
               $rootScope.gps  = 'win';

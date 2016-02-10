@@ -1,9 +1,14 @@
 <ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
-    <ion-nav-buttons side="secondary">
+    <ion-nav-buttons side="first">
         <button on-tap="setNewRequest()" ng-show="(!loadingParty) && (request.id!=0)" id="new-request-header-button" class="button button-small icon-left ion-star button-positive">
             &nbsp;{{ 'CREATENEW' | translate }}
         </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="secondary">
+        <!-- lang select gets handled on root scope level -->
+        <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
     </ion-nav-buttons>
 
     <ion-content>
@@ -16,7 +21,7 @@
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
                               <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">({{party.meters}}m) / {{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                              <div style="direction: ltr;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                           </div>
                       </td>
                   </tr>
