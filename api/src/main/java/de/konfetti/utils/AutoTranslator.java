@@ -66,6 +66,7 @@ public class AutoTranslator {
 		org.translator = LangData.ORIGIN_ORGINAL;
 		result.put(langCode, org);
 		
+		// go thru all supported languages
 		for (String toLangCode : SUPPORTED_LANGCODES) {
 			
 			if (toLangCode.equals(langCode)) continue;

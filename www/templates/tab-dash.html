@@ -2,7 +2,7 @@
 
     <ion-nav-buttons side="first">
         <button on-tap="reloadPartyList()" ng-show="!loadingParty" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i id="reloadIcon" class="icon ion-ios-loop"></i>
+            <i id="reloadIcon" class="icon ion-loop"></i>
         </button>
     </ion-nav-buttons>
 
@@ -31,7 +31,12 @@
 
                                 <div style="text-align: center; font-size: 200%;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
                                 <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                                <div style="direction: ltr;">({{party.meters | distance}}) <i class="icon ion-ios-information-outline" style="padding: 1px;"></i></div>
+                                <div style="direction: ltr;">
+                                    ({{party.meters | distance}})
+                                    <i class="icon ion-ios-information-outline" style="padding: 1px;"></i>
+                                    <span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">REVIEWER</span>
+                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">ADMIN</span>
+                                </div>
 
                             </div>
                             <div ng-show="loadingParty" style="min-height: 70px;">

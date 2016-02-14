@@ -573,10 +573,13 @@ public class PartyController {
         	if (action.equals(Request.STATE_OPEN)) {
         		
         		// check if pre-state is valid
-        		if (!request.getState().equals(Request.STATE_REVIEW)) throw new Exception("request("+requestId+") with state("+request.getState()+") CANNOT set to '"+Request.STATE_OPEN+"'");
+        		if ((!request.getState().equals(Request.STATE_REVIEW)) && (!request.getState().equals(Request.STATE_PROCESSING))) throw new Exception("request("+requestId+") with state("+request.getState()+") CANNOT set to '"+Request.STATE_OPEN+"'");
         		
         		// check if admin or reviewer
-        		if ((!userIsPartyAdmin) && (!userIsPartyReviewer)) throw new Exception("request("+requestId+") author cannot set to open");
+        		if ((!userIsPartyAdmin) && (!userIsPartyReviewer)) {
+        			// if is author unpausing an request
+        			if ((!userIsAuthor) || (!request.getState().equals(Request.STATE_PROCESSING))) throw new Exception("request("+requestId+") author cannot set to open");
+        		}
         	
         		// set open & persists
         		request.setState(Request.STATE_OPEN);

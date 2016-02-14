@@ -1,8 +1,8 @@
 <ion-view view-title="{{headerTitle}}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <ion-nav-buttons side="first">
-        <button on-tap="setNewRequest()" ng-show="(!loadingParty) && (request.id!=0)" id="new-request-header-button" class="button button-small icon-left ion-star button-positive">
-            &nbsp;{{ 'CREATENEW' | translate }}
+        <button on-tap="back()" ng-show="(!loadingParty) && (request.id!=0)" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="backIcon" class="icon ion-arrow-left-c"></i>
         </button>
     </ion-nav-buttons>
 
@@ -195,7 +195,7 @@
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
-                  <div ng-show="(request.state==='open') && (request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                  <div ng-show="(request.state==='open')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestProcess()" class="button icon-left ion-pause button-energized" style="border-radius: 6px">
                           {{ 'REQUESTPROCESS' | translate }}
                       </button>
@@ -214,6 +214,7 @@
 
               <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
               <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+                      <div ng-show="(request.state==='review') && (request.mediaItemIds.length>0)" style="width:100%" class="animationPulsateSimple">{{ 'CHECK_MEDIAITEMS' | translate }}</div>
                       <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                           <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
                               {{ 'REQUESTAPPROVE' | translate }}
@@ -232,23 +233,37 @@
                       </div>
               </div>
 
+              <!-- SHOW WHEN YOU ARE AUTHOR AND REQUEST IS REJECTED -->
+              <div ng-show="((isAdmin || userIsAuthor) && (request.id>0) && (request.state==='rejected'))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                          {{ 'REQUESTDELETE' | translate }}
+                      </button>
+                  </div>
+              </div>
+
           </div>
           <!-- END READ REQUEST -->
 
       </div>
 
-      <div class="card" ng-show="( (request.info.length>0) )">
+      <div class="card" ng-show="( (request.info.length>0) || (request.mediaItemIds.length>0))">
           <div class="item item-divider">
               {{ 'PUBLICINFO' | translate }}
           </div>
       </div>
-      
+
       <div ng-show="(request.info.length>0)" class="list card">
           <div data-ng-repeat="info in request.info" >
-              <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" />
+              <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" ></div>
           </div>
-          
-      </div>       
+      </div>
+
+      <div ng-show="((request.info.length==0) && (request.mediaItemIds.length>0))" class="list card">
+          <div data-ng-repeat="mediaItemId in request.mediaItemIds" >
+              <div mediaitem itemid="{{mediaItemId}}" id="media-id-{{mediaItemId}}"></div>
+          </div>
+      </div>
 
       <div class="card" ng-show="(request.chats.length>0)">
           <div class="item item-divider">

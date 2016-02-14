@@ -1,13 +1,21 @@
-<!--
-  This template loads for the 'tab.friend-detail' state (app.js)
-  'friend' is a $scope variable created in the FriendsCtrl controller (controllers.js)
-  The FriendsCtrl pulls data from the Friends service (service.js)
-  The Friends service returns an array of friend data
--->
-<ion-view view-title="Chat">
+<ion-view view-title="Chat" hide-back-button="true">
+
+    <ion-nav-buttons side="first">
+        <button on-tap="back()" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="backIcon" class="icon ion-arrow-left-c"></i>
+        </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="secondary">
+        <button on-tap="reload()" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="reloadIcon" class="icon ion-loop"></i>
+        </button>
+    </ion-nav-buttons>
+
   <ion-content class="padding">
 
-      <div style="width: 100%; height: 140px;"></div>
+      <!-- head space -->
+      <div style="width: 100%; height: 130px;"></div>
 
       <div style="width: 100%">
 
@@ -20,7 +28,7 @@
               </div>
               <!-- chat bubble from counter part-->
               <div ng-hide="message.isUser" style="width: 100%">
-                  <table width="100%">
+                  <table width="90%">
                       <tr>
                           <td width="15"><i class="icon ion-ios-person-outline"></i></td>
                           <td width="*">
@@ -74,12 +82,13 @@
                 </tr>
             </table>
         </div>
-        <div class="item item-input-inset" style="height:60px;background:lightgray; border-color: transparent;padding-bottom:0px;margin-bottom:0px;">
+        <div class="item item-input-inset" style="height:45px;background:lightgray; border-color: transparent;padding-bottom:0px;margin-bottom:0px;">
             <label class="item-input-wrapper" style="background-color: white">
-                <!-- <input type="text" placeholder=""> -->
-                <textarea ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" rows="2" cols="40" style="height: 40px;background-color: white;"></textarea>
+                <input type="text" ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" style="width: 100%; height: 30px;background-color: white;">
             </label>
-            <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive" style="height: 40px; width: 40px"><i ng-show="(!sending && !senderror)" class="icon ion-android-send"></i><i ng-show="(!sending && senderror)" class="icon ion-alert-circled"></i><img ng-show="sending" src="./img/spinner.gif" style="width: 14px; height: 14px"/></button>
+            <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive" style="height: 30px; width: 40px">
+                <i ng-show="(!sending && !senderror)" class="icon ion-android-send"></i><i ng-show="(!sending && senderror)" class="icon ion-alert-circled"></i><img ng-show="sending" src="./img/spinner.gif" style="width: 14px; height: 14px"/>
+            </button>
         </div>
     </div>
 

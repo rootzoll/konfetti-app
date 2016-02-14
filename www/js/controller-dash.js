@@ -21,6 +21,9 @@ angular.module('starter.controller.dash', [])
         $scope.userId = 0;
         $scope.loadingParty = true;
 
+        $scope.isReviewerForThisParty = false;
+        $scope.isAdminForThisParty = false;
+
         $scope.actualSorting = null;
 
         $scope.partyList = [];
@@ -437,11 +440,10 @@ angular.module('starter.controller.dash', [])
             $scope.state = "PARTYWAIT";
             $rootScope.party.id = 0;
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
-                var isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
-                var isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
-                //console.log("party("+data.id+") isAdmin("+isAdminForThisParty+") isReviewer("+isReviewerForThisParty+")");
+                $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
+                $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.party = data;
-                if (isAdminForThisParty || isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
+                if ($scope.isAdminForThisParty || $scope.isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
                 $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().userId);
                 $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().userId);
                 $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');

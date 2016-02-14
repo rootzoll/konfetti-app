@@ -11,7 +11,7 @@ navigation history that also transitions its views in and out.
   </ion-tab>
 
   <!-- Chats Tab -->
-  <ion-tab ng-if="initDone" title="{{ 'TAB_REQUEST' | translate }}" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/request">
+  <ion-tab ng-if="initDone" title="{{ tabRequestTitle | translate }}" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/request/0/top">
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 

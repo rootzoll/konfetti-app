@@ -58,7 +58,7 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     z-index: 999;
     position: absolute;
     background-color: lightgray;
-    height: 150px;
+    height: 135px;
     width: 100%;
     top: 40px;
     left:0px;
@@ -231,5 +231,25 @@ div.popup-body span {
     80% { width:17px;height: 17px;  opacity: .40}
     90% { width:19px;height: 19px;  opacity: .20}
     100% { width:21px;height: 21px;  opacity: 0.0}
+}
+
+.animationPulsateSimple{
+    -webkit-animation-name: pulsateSimple;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite
+}
+@-webkit-keyframes pulsateSimple {
+    0% { opacity: 0.0}
+    10% { opacity: .20}
+    20% { opacity: .40 }
+    30% {  opacity: .60 }
+    40% { opacity: .80 }
+    50% {  opacity: 1.0}
+    60% {  opacity: .80}
+    70% {  opacity: .60}
+    80% {  opacity: .40}
+    90% { opacity: .20}
+    100% { opacity: 0.0}
 }
 

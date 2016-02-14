@@ -156,33 +156,4 @@ angular.module('starter.services', [])
                 });                   
            }
         };
-})
-
-.factory('MultiLangToolbox', function($log) {
-
-     return {
-
-            // checks on multi lang object
-            langIsAvailable: function(multiLangObj, langCode) {
-                return (typeof eval("multiLangObj.lang_"+langCode) != 'undefined');
-            },
-            setLang : function(multiLangObj, langCode, textStr, translatorid) {
-                var langField = eval("multiLangObj.lang_"+langCode);
-                langField = {
-                    text: textStr,
-                    lastUpdateTS: Date.now(),
-                    translatorID: translatorid
-                };
-            }
-
-     };
-})
-
-.factory('CommonToolbox', function($log) {
-
-        return {
-            helloWorld: function(name) {
-                return 'hello '+name;
-            }
-        };
-});
+});;

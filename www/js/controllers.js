@@ -1,19 +1,9 @@
 angular.module('starter.controllers', [])
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $ionicHistory) {
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval) {
 
-   // TODO: remove after testing
-   ApiService.createMediaItemAutoTranslate("test text", "de", function(){
-        //alert("WIN");
-   }, function(){
-        alert("FAIL");
-   });
-
-   $scope.loading = false;
-   $scope.sending = false;
-   $scope.senderror = false;
-   $scope.chatMessage = "";
-   $scope.messages = [];
+   $scope.chat = { id: $stateParams.id};
+   $scope.interval = null;
 
    // check if id of chat is available
    if (typeof $stateParams.id==="undefined") {
@@ -21,32 +11,68 @@ angular.module('starter.controllers', [])
        return;
    }
 
+   $scope.back = function() {
+       $window.history.back();
+   };
+
+   $scope.reload = function() {
+       $scope.loadChat($scope.chat.id);
+   };
+
    window.addEventListener('native.keyboardshow', function($event){
         console.log("KEYBOARD");
         console.dir($event);
    });
 
-   // load chat data
-   $scope.chat = { id: $stateParams.id};
-   $scope.loading = true;
-   $scope.loadingText = "";
-   ApiService.loadChat($stateParams.id, function(chatData) {
-       $scope.chat = chatData;
-       // TODO: make sure that message array is ordered
+   $scope.$on('$ionicView.enter', function(e) {
+
        $scope.loading = false;
-       if ($scope.chat.messages.length>0) $scope.loadChatsItem(0);
-   }, function(errorCode) {
-       $translate("IMPORTANT").then(function (HEADLINE) {
-       $translate("INTERNETPROBLEM").then(function (TEXT) {
-           $ionicPopup.alert({
-               title: HEADLINE,
-               template: TEXT
-           }).then(function(res) {
-               $ionicHistory.goBack();
+       $scope.sending = false;
+       $scope.senderror = false;
+       $scope.chatMessage = "";
+       $scope.messages = [];
+
+       // load chat data
+       $scope.loadChat($scope.chat.id);
+
+       // start interval - start polling
+       $scope.interval = $interval(function(){
+           $scope.loadChat($scope.chat.id);
+       }, 5000);
+   });
+
+
+   $scope.$on('$ionicView.beforeLeave', function(e){
+
+       // stop polling
+       $interval.cancel($scope.interval);
+
+   });
+
+   $scope.loadChat = function(chatId) {
+       $scope.loading = true;
+       $scope.loadingText = "";
+       ApiService.loadChat($stateParams.id, function(chatData) {
+           $scope.chat = chatData;
+           // TODO: make sure that message array is ordered
+           $scope.loading = false;
+           if (($scope.chat.messages.length>0) && ($scope.chat.messages.length>$scope.messages.length)) {
+               $scope.messages = [];
+               $scope.loadChatsItem(0);
+           }
+       }, function(errorCode) {
+           $translate("IMPORTANT").then(function (HEADLINE) {
+               $translate("INTERNETPROBLEM").then(function (TEXT) {
+                   $ionicPopup.alert({
+                       title: HEADLINE,
+                       template: TEXT
+                   }).then(function(res) {
+                       $window.history.back();
+                   });
+               });
            });
        });
-       });
-   });
+   };
 
    $scope.loadChatsItem = function(indexInArray) {
 
@@ -70,6 +96,7 @@ angular.module('starter.controllers', [])
                $scope.loadChatsItem(indexInArray);
            } else {
                $scope.loading = false;
+               if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
            }
        }, function(errorcode){});
    };
@@ -85,7 +112,7 @@ angular.module('starter.controllers', [])
            return;
        }
        $scope.sending = true;
-       ApiService.sendChatTextItem($scope.chat, $scope.chatMessage, function(chatItem) {
+       ApiService.sendChatTextItem($scope.chat.id, $scope.chatMessage, function(chatItem) {
           // WIN
           $scope.sending = false;
           $scope.senderror = false;

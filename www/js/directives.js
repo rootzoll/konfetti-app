@@ -20,14 +20,30 @@ angular.module('starter')
             }
         };
     })
-    .directive('multilang', function ($translate, $ionicPopup) {
+    .directive('multilang', function ($translate, $ionicPopup, $rootScope) {
         return {
             templateUrl: 'templates/directive-multilang.html',
             replace: true,
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
+
+                // set basic data
                 $scope.data = $scope.$eval($attributes.data);
                 $scope.lang = $attributes.lang;
+
+                // if actual lang not available try to default to en or de
+                for (var i=0; i<$rootScope.langSet.length; i++) {
+                    // check if actual set language is available ob multi lang item
+                    if ((typeof $scope.data.data[$scope.lang] == "undefined") || ($scope.data.data[$scope.lang].length==0)) {
+                        // actual lang is available - try next
+                        $scope.lang = $rootScope.langSet[i].code;
+                    } else {
+                        // ok- got data - no need to check other langs
+                        break;
+                    }
+                }
+
+                // info dialog about auto translation
                 $scope.showAutoTranslateInfo = function($event) {
                   $event.stopPropagation();
                   $translate("AUTOTRANSLATE_HEAD").then(function (HEADLINE) {
@@ -96,6 +112,10 @@ angular.module('starter')
                         // WIN
                         $scope.mediaItemData = data;
                         $scope.loading = false;
+
+                        // parse data for complex data
+                        if ($scope.mediaItemData.type=='Location') $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+
                     }, function(code) {
                         // FAIL
                         $scope.loading = false;

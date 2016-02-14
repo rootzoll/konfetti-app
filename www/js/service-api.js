@@ -1,6 +1,6 @@
 angular.module('starter.api', [])
 
-    .factory('ApiService', function($log, $timeout, MultiLangToolbox, AppContext, $http) {
+    .factory('ApiService', function($log, $timeout, AppContext, $http) {
 
         // the possible API servers for app
         var apiUrlBaseLocalhost  = "http://localhost:9000/konfetti/api";
@@ -8,7 +8,7 @@ angular.module('starter.api', [])
         var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
         // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
-        var activeServerUrl = apiUrlBaseDevServer; //apiUrlBaseLocalhost;
+        var activeServerUrl = apiUrlBaseLocalhost;
 
         var getBasicHttpHeaderConfig = function() {
             var account = AppContext.getAccount();
@@ -108,7 +108,7 @@ angular.module('starter.api', [])
                     messageObj.itemId = response.data.id;
                     var config2 = getBasicHttpHeaderConfig();
                     config2.method = 'POST';
-                    config2.url = activeServerUrl+'chat/'+chatId+"/message";
+                    config2.url = activeServerUrl+'/chat/'+chatId+"/message";
                     config2.data = messageObj;
                     $http(config2).then(successCallback2, fail);
                 };
@@ -300,7 +300,7 @@ angular.module('starter.api', [])
                         var orgResponse = response;
                         $http(config2).then(function(){
                             win(orgResponse.data);
-                        }, errorCallback);
+                        }, fail);
                     } else {
                         win(response.data);
                     }
@@ -329,7 +329,7 @@ angular.module('starter.api', [])
                         var orgResponse = response;
                         $http(config2).then(function(){
                             win(orgResponse.data);
-                        }, errorCallback);
+                        }, fail);
                     } else {
                         win(response.data);
                     }
@@ -358,7 +358,7 @@ angular.module('starter.api', [])
                         var orgResponse = response;
                         $http(config2).then(function(){
                             win(orgResponse.data);
-                        }, errorCallback);
+                        }, fail);
                     } else {
                         win(response.data);
                     }
@@ -424,7 +424,7 @@ angular.module('starter.api', [])
             // messageStr - just optional in case reviewer likes to chat back the reason
             reviewResultOnRequest : function(requestId, allowRequestBool, mediaItemId, messageStr, win, fail) {
 
-                var action = "reject";
+                var action = "rejected";
                 if (allowRequestBool) action = "open";
 
                 // CONFIG

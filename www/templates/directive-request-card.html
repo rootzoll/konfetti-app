@@ -9,7 +9,8 @@
                                 <button ng-show="(request.state==='review')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
                                 <button ng-show="(request.state==='done')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
                                 <button ng-show="(request.state==='rejected')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
-                                <button ng-show="((request.state==='open') || (request.state==='processing'))" class="button button-small button-positive" style="width:50px;"><i class="icon ion-information-circled"></i></button>
+                                <button ng-show="(request.state==='processing')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-pause"></i></button>
+                                <button ng-show="(request.state==='open')" class="button button-small button-positive" style="width:50px;"><i class="icon ion-information-circled"></i></button>
                             </td>
                         </tr>
                     </table>
