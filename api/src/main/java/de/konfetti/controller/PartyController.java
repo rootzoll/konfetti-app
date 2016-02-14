@@ -475,15 +475,27 @@ public class PartyController {
     @RequestMapping(value = "/{partyId}/request/{requestId}", method = RequestMethod.GET)
     public Request getRequest(@PathVariable long partyId, @PathVariable long requestId, @RequestParam(value="upvoteAmount", defaultValue="0") Long upvoteAmount, HttpServletRequest httpRequest) throws Exception {
         
+    	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     	LOGGER.info("PartyController getRequest("+requestId+") upvoteAmount("+upvoteAmount+") ...");
     	
     	Request request = requestService.findById(requestId);
         if (request!=null) {
         	
-        	// add chats to request
+        	// add chats to request (when user is host or member)
         	List<Chat> chats = this.chatService.getAllByRequestId(request.getId());
         	if (chats==null) chats = new ArrayList<Chat>();
-        	request.setChats(chats);
+        	List<Chat> relevantChats = new ArrayList<Chat>();
+        	for (Chat chat : chats) {
+        		if (chat.getHostId().equals(client.getUserId())) {
+        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+        			relevantChats.add(chat);
+        		}
+        		if (Helper.contains(chat.getMembers(), client.getUserId())) {
+        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId());
+        			relevantChats.add(chat);
+        		}
+			}
+        	request.setChats(relevantChats);
         	
         	// add media items to request // TODO
         	List<MediaItem> infos = null;
@@ -496,7 +508,6 @@ public class PartyController {
         		LOGGER.info("Upvoting request("+requestId+") with amount("+upvoteAmount+") ...");
         		
         		// get user/client from request
-        		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
         		if (client==null) throw new Exception("no valid client info on request - need for upvote");
         		
         		// check if user has enough balance

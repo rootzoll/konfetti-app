@@ -10,13 +10,20 @@ angular.module('starter')
             }
         };
     })
-    .directive('requestcard', function () {
+    .directive('requestcard', function (ApiService) {
         return {
             templateUrl: 'templates/directive-request-card.html',
             replace: true,
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 $scope.requesttype = $attributes.requesttype;
+                $scope.getImageUrl = function() {
+                    if ((typeof $scope.request.imageMediaID != "undefined") && ($scope.request.imageMediaID!=null)) {
+                        return ApiService.getImageUrlFromMediaItem($scope.request.imageMediaID);
+                    } else {
+                        return "./img/person.png";
+                    }
+                };
             }
         };
     })

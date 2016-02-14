@@ -44,7 +44,7 @@
               <table ng-show="(confetti.max>=confetti.min)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
-                          <image ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                          <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div>
@@ -150,7 +150,7 @@
                   </tr>
                   <tr>
                       <td width="70" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
-                          <image fallbackSrc="./img/person.png" ng-src="{{request.imageUrl ? request.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                          <image fallbackSrc="./img/person.png" ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
                           <div>
@@ -174,10 +174,15 @@
                   <div style="width:100%">
                     <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
                 </div>
-                <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                <div ng-show="request.chats.length==0" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                   <button on-tap="startChat()" class="button icon-left ion-android-contacts button-positive" style="border-radius: 6px">
                       {{ 'HELPCHAT' | translate }}
                   </button>
+                </div>
+                <div ng-show="request.chats.length>0" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <button on-tap="continueChat()" class="button icon-left ion-android-contacts button-positive" style="border-radius: 6px">
+                          {{ 'HELPCHAT_CONT' | translate }}
+                      </button>
                 </div>
               </div>
 
@@ -277,12 +282,12 @@
                   <table width="100%">
                       <tr>
                           <td width="45" style="vertical-align: middle;" rowspan="2">
-                              <image ng-src="{{chat.imageUrl ? chat.imageUrl : './img/person.png'}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                              <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                           </td>
                           <td width="*" style="vertical-align: middle;" rowspan="2">
                               <div style="padding-left: 10px;">
-                                  <b>{{chat.userName}}</b><br>
-                                  <span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>
+                                  <b>{{chat.chatPartnerName}}</b>
+                                  <!--TODO <br><span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>-->
                               </div>
                           </td>
                           <td on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">

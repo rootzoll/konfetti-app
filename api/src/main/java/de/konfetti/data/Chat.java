@@ -34,6 +34,15 @@ public class Chat {
     @Transient
     private List<Message> messages;
     
+    @Transient
+    private String chatPartnerName;
+    
+	@Transient
+    private Long chatPartnerImageMediaID;
+	
+	@Transient
+    private String[] chatPartnerSpokenLangs;
+    
     /*
      * METHODS
      */
@@ -84,6 +93,30 @@ public class Chat {
 
 	public void setMuted(Boolean muted) {
 		this.muted = muted;
+	}
+	
+    public String getChatPartnerName() {
+		return chatPartnerName;
+	}
+
+	public void setChatPartnerName(String chatPartnerName) {
+		this.chatPartnerName = chatPartnerName;
+	}
+
+	public Long getChatPartnerImageMediaID() {
+		return chatPartnerImageMediaID;
+	}
+
+	public void setChatPartnerImageMediaID(Long chatPartnerImageMediaID) {
+		this.chatPartnerImageMediaID = chatPartnerImageMediaID;
+	}
+	
+	public String[] getChatPartnerSpokenLangs() {
+		return chatPartnerSpokenLangs;
+	}
+
+	public void setChatPartnerSpokenLangs(String[] chatPartnerSpokenLangs) {
+		this.chatPartnerSpokenLangs = chatPartnerSpokenLangs;
 	}
 
 }

@@ -19,6 +19,14 @@ angular.module('starter.controllers', [])
        $scope.loadChat($scope.chat.id);
    };
 
+   $scope.getChatPartnerImage = function() {
+       if ((typeof $scope.chat.chatPartnerImageMediaID != "undefined") && ($scope.chat.chatPartnerImageMediaID!=null)) {
+           return ApiService.getImageUrlFromMediaItem($scope.chat.chatPartnerImageMediaID);
+       } else {
+           return "./img/person.png";
+       }
+   };
+
    window.addEventListener('native.keyboardshow', function($event){
         console.log("KEYBOARD");
         console.dir($event);
@@ -33,11 +41,11 @@ angular.module('starter.controllers', [])
        $scope.messages = [];
 
        // load chat data
-       $scope.loadChat($scope.chat.id);
+       $scope.loadChat($scope.chat.id, true);
 
        // start interval - start polling
        $scope.interval = $interval(function(){
-           $scope.loadChat($scope.chat.id);
+           $scope.loadChat($scope.chat.id, false);
        }, 5000);
    });
 
@@ -49,7 +57,7 @@ angular.module('starter.controllers', [])
 
    });
 
-   $scope.loadChat = function(chatId) {
+   $scope.loadChat = function(chatId, showErrorAlert) {
        $scope.loading = true;
        $scope.loadingText = "";
        ApiService.loadChat($stateParams.id, function(chatData) {
@@ -61,16 +69,18 @@ angular.module('starter.controllers', [])
                $scope.loadChatsItem(0);
            }
        }, function(errorCode) {
+           if (showErrorAlert) {
            $translate("IMPORTANT").then(function (HEADLINE) {
                $translate("INTERNETPROBLEM").then(function (TEXT) {
                    $ionicPopup.alert({
                        title: HEADLINE,
                        template: TEXT
-                   }).then(function(res) {
+                   }).then(function (res) {
                        $window.history.back();
                    });
                });
            });
+           }
        });
    };
 

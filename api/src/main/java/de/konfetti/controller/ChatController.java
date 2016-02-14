@@ -85,6 +85,15 @@ public class ChatController {
     	    	
     	// create new user
     	Chat chat = chatService.create(template);
+    	
+    	// add transient chat partner info
+    	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
+			if (chat.getMembers().length==1) {
+				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+			} else {
+				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
+			}
+    	}
     
         return chat;
     }
@@ -111,6 +120,20 @@ public class ChatController {
 				}
 			}
     		if ((!userIsHost) && (!userIsMember)) throw new Exception("not host or member on chat("+chatId+")");
+    		
+    		
+    		// B) add transient chat partner info
+    		if (userIsHost) {
+    			// show member as chat partner
+    			if (chat.getMembers().length==1) {
+    				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+    			} else {
+    				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
+    			}
+    		} else {
+    			// show host as chat partner
+    			setChatPartnerInfoOn(userService, chat, chat.getHostId());
+    		}
     
     	} else {
     		
@@ -123,6 +146,17 @@ public class ChatController {
     	chat.setMessages(messages);
     	
     	return chat;
+    }
+    
+    public static void setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId) {
+    	User user = userService.findById(chatPartnerUserId);
+    	if (user==null) {
+    		LOGGER.warn("Cannot set ChatPartnerInfo for user("+chatPartnerUserId+") - NOT FOUND");
+    		return;
+    	}
+    	chat.setChatPartnerName(user.getName());
+    	if ((user.getImageMediaID()!=null) && (user.getImageMediaID()>0)) chat.setChatPartnerImageMediaID(user.getImageMediaID());
+    	if ((user.getSpokenLangs()!=null) && (user.getSpokenLangs().length>0)) chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
     }
     
     //---------------------------------------------------
