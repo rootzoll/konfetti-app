@@ -641,7 +641,11 @@ public class PartyController {
             	if ((json==null) || (json.length()==0)) throw new Exception("minning parameter json");
             	List<Long> ids = new ArrayList<Long>();
             	try {
-            		ids = (new ObjectMapper()).readValue(json, ids.getClass());
+            		List<Integer> idsInts = (new ObjectMapper()).readValue(json, ids.getClass());
+            		int nInts = idsInts.size();
+            		for (int i=0;i<nInts;++i) {
+            		    ids.add(idsInts.get(i).longValue());
+            		}
             	} catch (Exception e) {
             		e.printStackTrace();
             		throw new Exception("json paramter not valid");

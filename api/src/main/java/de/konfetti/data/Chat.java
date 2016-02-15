@@ -33,8 +33,11 @@ public class Chat {
     
     @Transient
     private List<Message> messages;
-    
+
     @Transient
+    private Long chatPartnerId;
+    
+	@Transient
     private String chatPartnerName;
     
 	@Transient
@@ -119,4 +122,11 @@ public class Chat {
 		this.chatPartnerSpokenLangs = chatPartnerSpokenLangs;
 	}
 
+    public Long getChatPartnerId() {
+		return chatPartnerId;
+	}
+
+	public void setChatPartnerId(Long chatPartnerId) {
+		this.chatPartnerId = chatPartnerId;
+	}
 }

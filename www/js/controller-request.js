@@ -642,7 +642,7 @@ angular.module('starter.controller.request', [])
                     var rewardUserIds = [];
                     for (var i = 0; i < $scope.request.chats.length; i++) {
                     if ($scope.request.chats[i].reward) {
-                          rewardUserIds.push($scope.request.chats[i].userId);
+                          rewardUserIds.push($scope.request.chats[i].chatPartnerId);
                     }
 
                     if ((rewardUserIds.length>$scope.request.konfettiCount) && ($scope.request.konfettiCount>0)) {
@@ -657,8 +657,6 @@ angular.module('starter.controller.request', [])
                 $ionicLoading.show({
                       template: '<img src="img/spinner.gif" />'
                 });
-                alert("IDS: "+JSON.stringify(rewardUserIds));
-                return;
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
                       $ionicLoading.hide();
                     $scope.request.state='done';
@@ -849,20 +847,40 @@ angular.module('starter.controller.request', [])
           // WIN
           $scope.entercount = 0;
           $ionicLoading.hide();
-          $translate("THANKYOU").then(function (HEADLINE) {
-              $translate("SUBMITINFO").then(function (TEXT) {
-                  $ionicPopup.alert({
-                      title: HEADLINE,
-                      template: TEXT
-                  }).then(function(res) {
-                      $scope.headline.temp = "";
-                      $rootScope.party.konfettiCount - $scope.confetti.toSpend;
-                      $scope.confetti.max = $scope.confetti.max - $scope.confetti.toSpend;
-                      $scope.confetti.toSpend = $scope.confetti.min;
-                      $state.go('tab.dash', {id: 0});
+
+          var afterPopUpAction = function() {
+              $scope.headline.temp = "";
+              $rootScope.party.konfettiCount - $scope.confetti.toSpend;
+              $scope.confetti.max = $scope.confetti.max - $scope.confetti.toSpend;
+              $scope.confetti.toSpend = $scope.confetti.min;
+              $state.go('tab.dash', {id: $rootScope.party.id});
+          };
+
+          if ($rootScope.party.reviewLevel==0) {
+              // no review needed
+              $translate("THANKYOU").then(function (HEADLINE) {
+                  $translate("SUBMITINFO_NOREVIEW").then(function (TEXT) {
+                      $ionicPopup.alert({
+                          title: HEADLINE,
+                          template: TEXT
+                      }).then(function(res) {
+                          afterPopUpAction();
+                      });
                   });
               });
-          });
+          } else {
+              // show review info
+              $translate("THANKYOU").then(function (HEADLINE) {
+                  $translate("SUBMITINFO").then(function (TEXT) {
+                      $ionicPopup.alert({
+                          title: HEADLINE,
+                          template: TEXT
+                      }).then(function(res) {
+                          afterPopUpAction();
+                      });
+                  });
+              });
+          }
       }, function() {
           // FAIL
           $ionicLoading.hide();

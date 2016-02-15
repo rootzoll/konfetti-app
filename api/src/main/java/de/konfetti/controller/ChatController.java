@@ -154,6 +154,7 @@ public class ChatController {
     		LOGGER.warn("Cannot set ChatPartnerInfo for user("+chatPartnerUserId+") - NOT FOUND");
     		return;
     	}
+    	chat.setChatPartnerId(user.getId());
     	chat.setChatPartnerName(user.getName());
     	if ((user.getImageMediaID()!=null) && (user.getImageMediaID()>0)) chat.setChatPartnerImageMediaID(user.getImageMediaID());
     	if ((user.getSpokenLangs()!=null) && (user.getSpokenLangs().length>0)) chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
