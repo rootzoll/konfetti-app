@@ -171,6 +171,8 @@ public class PartyController {
     		@RequestParam(value="lon", defaultValue="0.0") String lonStr,
     		HttpServletRequest request ) throws Exception {
     	
+    	LOGGER.info("getAllParties lat("+latStr+") lon("+lonStr+")");
+    	
     	// TODO: improve later by filter on GPS per search index
     	
     	List<Party> allParties = partyService.getAllParties();
@@ -189,6 +191,7 @@ public class PartyController {
     	if ((latStr.equals("0.0")) && (lonStr.equals("0.0"))) {
     		
     		// return all parties when lat & lon not given
+         	LOGGER.info("return all parties");
     		
     		resultParties = allParties;
     	
@@ -199,6 +202,7 @@ public class PartyController {
     		double lat = Double.parseDouble(latStr);
     		double lon = Double.parseDouble(lonStr);
     		
+        	LOGGER.info("filter parties on lat("+lat+") lon("+lon+")");
     	
         	for (Party party : allParties) {
     		        		
@@ -208,14 +212,22 @@ public class PartyController {
         		if (distanceMetersLong>Integer.MAX_VALUE) distanceMetersLong = Integer.MAX_VALUE;
         		int distanceMeters = (int) distanceMetersLong;
         		
+        		LOGGER.info("party("+party.getId()+") with meterrange("+party.getMeters()+") has distance to user of meters("+distanceMeters+")");
+        		
         		// check if user GPS is within party area or party is global
         		if ((distanceMeters <= party.getMeters()) || (party.getMeters()==0)) {
+        			
+        			LOGGER.info("--> IN");
         			
         			// use meters field to set distance for user perspective
             		party.setMeters(distanceMeters);
         			
             		// add to result list
         			resultParties.add(party);
+        		} else {
+        			
+        			LOGGER.info("--> OUT");
+        			
         		}
         		
     		}
@@ -295,6 +307,7 @@ public class PartyController {
 			LOGGER.info("Was not able to get optional client info on request for party list: "+e.getMessage());
 		}
     	
+    	LOGGER.info("RESULT number of parties is "+resultParties.size());
         return resultParties;
  
     }
