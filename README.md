@@ -2,22 +2,13 @@
 
 its an app for neighborhood help exchange - part of of the refugeehackathon, Berlin 2015
 
-
 ## Concept Notes
 
-just install app - no sign up (hybrid, ios, android, ..) once app is released
-
-app shows micro support requests in your neighborhood (geolocation based)
-
-everybody can get rewarded KONFETTI by
+Everybody can get rewarded KONFETTI by
 - doing those tasks
 - donating goods
 
-Konfetti is like Karma-Points
-
-everybody who has konfetti can
-vote-up other support requests
-to make them more valuable
+Konfetti is like Karma-Points. Everybody who has konfetti can vote-up other support requests to make them more valuable
 = throw your konfetti on it
 
 neighborhood orga does
@@ -32,6 +23,25 @@ konfetti exchange goes:
 - refugee2neighbor
 
 ... you get the idea :D
+
+## Contact
+
+For non-programmers: maxie.lutze@gmail.com
+For programmers: christian@geektank.de
+
+## German Slides
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/1_de.png)
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/2_de.png)
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/3_de.png)
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/4_de.png)
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/5_de.png)
+
+![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/6_de.png)
 
 
 ## Building App from Source
