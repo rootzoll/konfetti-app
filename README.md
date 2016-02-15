@@ -27,6 +27,7 @@ konfetti exchange goes:
 ## Contact
 
 For non-programmers: maxie.lutze@gmail.com
+
 For programmers: christian@geektank.de
 
 ## German Slides
@@ -43,6 +44,11 @@ For programmers: christian@geektank.de
 
 ![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/6_de.png)
 
+## Join & Meet
+
+If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
+
+We like to meet at the Migration Hub Berlin but will also be around at the ['Civil Society 4.0'](http://www.hkw.de/en/programm/projekte/2016/civil_society_4_0/civil_society_4_0_start.php) event on 3rd of March 2016 at HKW in Berlin.
 
 ## Building App from Source
 
@@ -61,31 +67,3 @@ To run server on localhost, go into 'api' folder and run 'mvn spring-boot:run'.
 ## Run App in local Browser (for development)
 
 Run in project root folder 'ionic serve' - this will run the app in local browser for development.
-
-
-## Actual State of Project
-
-After 1 day of refugeehackathon.de we came from fresh new idea, group brainstorm, first design, throwing stuff away, going circles, fresh start, getting excited, testing idea, reducing it to the max, to:
-
-- a group concept agreement
-- smiling faces explaining the idea to others
-- this first draft and mockups: https://github.com/rootzoll/konfetti-app/blob/master/concept/app-mockups.pdf
-- first code commit: ionic hybrid app template
-
-After 4 weeks of free time spend on the project:
-
-- an almost ready click-prototype of the app - this will be awesome :)
-
-
-## Next Steps
-
-user building backend design and implementaion, ...
-
-See OpenTasks here: https://trello.com/b/4xAQTPd0/konfetti (maybe tool of orga will change later on)
-
-
-## Join & Meet
-
-If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
-
-We like to meet at the Migration Hub Berlin but will also be around at the Chaos Communication Congress 2015 between christmas and new years at Hamburg.
