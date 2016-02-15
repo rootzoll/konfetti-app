@@ -112,6 +112,7 @@ public class PartyController {
     public Party getParty(@PathVariable long partyId, HttpServletRequest request) throws Exception {
     	
     	Party party = partyService.findById(partyId);
+    	if (party==null) throw new Exception("was not able to load party with id("+partyId+") - NOT FOUND");
     	
     	// if user/client is set by header -> add requests and notifications important to user
     	try {
@@ -121,6 +122,7 @@ public class PartyController {
         	if (client!=null) {
  
         		User user = userService.findById(client.getUserId());
+        		if (user==null) throw new Exception("was not able to load user with id("+client.getUserId()+") - NOT FOUND");
         		boolean userIsPartyAdmin = Helper.contains(user.getAdminOnParties(), party.getId());
         		boolean userIsPartyReviewer = Helper.contains(user.getReviewerOnParties(), party.getId());
         	
