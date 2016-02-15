@@ -282,7 +282,7 @@
                   <table width="100%">
                       <tr>
                           <td width="45" style="vertical-align: middle;" rowspan="2">
-                              <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                              <image ng-src="{{getImageUrlFromMediaId(chat.chatPartnerImageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                           </td>
                           <td width="*" style="vertical-align: middle;" rowspan="2">
                               <div style="padding-left: 10px;">
@@ -290,15 +290,20 @@
                                   <!--TODO <br><span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>-->
                               </div>
                           </td>
-                          <td on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">
+                          <td rowspan="2" on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">
+                              <i class="icon ion-arrow-right-c before-big"></i>
+                              <!--
                               <i ng-hide="((request.chats.length==1) && (request.state==='processing'))" class="icon ion-ios-close-outline before-big"></i>
+                              -->
                           </td>
                       </tr>
+                      <!--
                       <tr>
                          <td class="animationPulsate" style="text-align: center; vertical-align: middle; padding-right: 6px; padding-left: 6px; color: #ee2200;">
                              <i class="icon ion-email-unread before-big"></i>
                          </td>
                       </tr>
+                      -->
                   </table>
               </a>
           </div>

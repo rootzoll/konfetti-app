@@ -96,7 +96,7 @@ angular.module('starter.controllers', [])
        ApiService.loadMediaItem(idToLoad, function(loadedItem){
             // success
            // TODO: cache item
-           var appUserId = AppContext.getAccount().userId;
+           var appUserId = AppContext.getAccount().id;
            if (appUserId==="") appUserId = 1;
            chatMessage.isUser = (chatMessage.userId == appUserId);
            $scope.messages.push(chatMessage);

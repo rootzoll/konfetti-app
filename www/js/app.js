@@ -208,10 +208,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DASHHEADER_POSTED': 'You Posted',
             'DASHHEADER_ACTIVE': 'You Answered',
             'DASHHEADER_OPEN': 'Open Tasks',
+            'DASHHEADER_RECENTLYDONE': 'Recently Done',
             'NOTIFICATION_REVIEWOK' : 'Your task is now public.',
             'NOTIFICATION_REVIEWFAIL' : 'Your task was rejected.',
             'NOTIFICATION_CHATREQUEST' : 'You got a chat message.',
-            'NOCONTENT' : 'no tasks yet',
+            'NOCONTENT' : 'no open tasks',
             'NEWREQUEST' : 'Publish a new Task',
             'YOURNAME' : 'Your Name',
             'YOURREQUEST' : 'Your Tasks',
@@ -301,6 +302,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_HEAD' : 'Auto Translate',
             'AUTOTRANSLATE_INFO' : 'This text was auto translated by a robot. Please keep in mind, that robots are not perfect and make mistakes.',
             'USELOCATION' : 'Would you like to add your current location?',
+            'SELECT_LESS' : 'Please select less.',
             'CHECK_MEDIAITEMS' : 'contains additional media items (see below)'
    });
 
@@ -319,10 +321,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DASHHEADER_POSTED': 'Deine Aufgaben',
             'DASHHEADER_ACTIVE': 'Deine Antworten',
             'DASHHEADER_OPEN': 'Offene Aufgaben',
+            'DASHHEADER_RECENTLYDONE': 'Kürzlich Erledigt',
             'NOTIFICATION_REVIEWOK' : 'Deine Aufgabe ist jetzt öffentlich.',
             'NOTIFICATION_REVIEWFAIL' : 'Deine Aufgabe wurde abgelehnt.',
             'NOTIFICATION_CHATREQUEST' : 'Du hast eine Nachricht.',
-            'NOCONTENT' : 'bisher keine Aufgaben',
+            'NOCONTENT' : 'keine offene Aufgaben',
             'NEWREQUEST' : 'Neue Aufgabe erstellen',
             'YOURNAME' : 'Dein Name',
             'YOURREQUEST' : 'Deine Aufgabe',
@@ -412,6 +415,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_HEAD' : 'Automatische Übersetzung',
             'AUTOTRANSLATE_INFO' : 'Dieser Text wurde automatisiert von einem Roboter aus einer anderen Sprache übersetzt. Roboter sind nicht perfekt. Die Übersetzung kann fehlerhaft sein.',
             'USELOCATION' : 'Die aktuelle Position hinzufügen?',
+            'SELECT_LESS' : 'Bitte weniger auswählen.',
             'CHECK_MEDIAITEMS' : 'enthält weitere Medienelemente (siehe unten)'
         });
 
@@ -430,6 +434,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DASHHEADER_POSTED': 'استفساراتك',
             'DASHHEADER_ACTIVE': 'ردكم',
             'DASHHEADER_OPEN': 'طلبات نشطة',
+            'DASHHEADER_RECENTLYDONE': 'فعلت مؤخرا',
             'NOTIFICATION_REVIEWOK' : 'طلبك الآن العام',
             'NOTIFICATION_REVIEWFAIL' : 'وقد رفض طلبك',
             'NOTIFICATION_CHATREQUEST' : 'كنت حصلت على رسالة دردشة',
@@ -523,6 +528,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_HEAD' : 'السيارات ترجمة',
             'AUTOTRANSLATE_INFO' : 'كان هذا النص السيارات وترجم من قبل الروبوت . يرجى أن نضع في اعتبارنا، أن الروبوتات ليست مثالية و ارتكاب الأخطاء .',
             'USELOCATION' : 'هل ترغب في إضافة موقعك الحالي ؟',
+            'SELECT_LESS' : 'الرجاء تحديد أقل.',
             'CHECK_MEDIAITEMS' : 'يحتوي على عناصر وسائط إضافية (انظر أدناه)'
    });
 

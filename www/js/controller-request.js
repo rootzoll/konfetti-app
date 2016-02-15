@@ -140,12 +140,10 @@ angular.module('starter.controller.request', [])
                 $scope.request = req;
                 $scope.loadingRequest = false;
                 $scope.requestJSON = JSON.stringify($scope.request);
-                $scope.userIsAuthor = (req.userId == AppContext.getAccount().userId);
+                $scope.userIsAuthor = (req.userId == AppContext.getAccount().id);
                 $scope.isAdmin = AppContext.getAccount().adminOnParties.contains($scope.request.partyId);
                 $scope.isReviewer = AppContext.getAccount().reviewerOnParties.contains($scope.request.partyId);
                 if (AppContext.getRunningOS()=="browser") console.log("isAuthor("+$scope.userIsAuthor+") isReviewer("+$scope.isReviewer+") isAdmin("+$scope.isAdmin+")");
-
-                //alert("userid("+req.userId +") isAuthor("+$scope.userIsAuthor+")");
 
                 $scope.setNoticeTextByRequestState();
 
@@ -244,9 +242,19 @@ angular.module('starter.controller.request', [])
                         $scope.profile.name = res;
                         var account = AppContext.getAccount();
                         account.name = res;
-                        AppContext.setAccount(account);
-                        // TODO -------> FIRST UPADTE ACCOUNT (NAME+SPOKEN LANGS) and then start start chat!
-                        $scope.startChat();
+                        $ionicLoading.show({
+                            template: '<img src="img/spinner.gif" />'
+                        });
+                        ApiService.updateAccount(account, function(updatedAccount){
+                            // WIN
+                            $ionicLoading.hide();
+                            AppContext.setAccount(updatedAccount);
+                            $scope.startChat();
+                        },function(){
+                            // FAIL
+                            $ionicLoading.hide();
+                            KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                        });
                     }
                 });
               });
@@ -254,7 +262,7 @@ angular.module('starter.controller.request', [])
           return;
       }
 
-      ApiService.createChat($scope.request.id, AppContext.getAccount().userId, $scope.request.userId, function(result) {
+      ApiService.createChat($scope.request.id, AppContext.getAccount().id, $scope.request.userId, function(result) {
         // WIN
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
@@ -592,6 +600,7 @@ angular.module('starter.controller.request', [])
 
           $scope.rewardDialog = false;
 
+          // find latest chat for pre select
           var latestChat = null;
           var latestTimestamp = 0;
           for (var i = 0; i < $scope.request.chats.length; i++) {
@@ -635,6 +644,12 @@ angular.module('starter.controller.request', [])
                     if ($scope.request.chats[i].reward) {
                           rewardUserIds.push($scope.request.chats[i].userId);
                     }
+
+                    if ((rewardUserIds.length>$scope.request.konfettiCount) && ($scope.request.konfettiCount>0)) {
+                        KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LESS');
+                        return;
+                    }
+
                 };
                 if (rewardUserIds.length==0) {
                       return;
@@ -642,13 +657,17 @@ angular.module('starter.controller.request', [])
                 $ionicLoading.show({
                       template: '<img src="img/spinner.gif" />'
                 });
+                alert("IDS: "+JSON.stringify(rewardUserIds));
+                return;
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
                       $ionicLoading.hide();
                     $scope.request.state='done';
                     $scope.setNoticeTextByRequestState();
+                    $ionicScrollDelegate.scrollTop(true);
                 }, function() {
                   // FAIL
                   $ionicLoading.hide();
+                  $ionicScrollDelegate.scrollTop(true);
                 });
             });
             });
@@ -815,7 +834,7 @@ angular.module('starter.controller.request', [])
       }
 
       var newRequest = {
-        userId: AppContext.getAccount().userId,
+        userId: AppContext.getAccount().id,
         userName: $scope.profile.name,
         spokenLangs : $scope.profile.spokenLangs,
         partyId : $rootScope.party.id,

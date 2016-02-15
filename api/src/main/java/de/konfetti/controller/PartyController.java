@@ -477,19 +477,22 @@ public class PartyController {
         
     	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     	LOGGER.info("PartyController getRequest("+requestId+") upvoteAmount("+upvoteAmount+") ...");
-    	
+    	    	
     	Request request = requestService.findById(requestId);
         if (request!=null) {
+        	
+        	User user = userService.findById(client.getUserId());
+    		boolean userIsPartyAdmin = Helper.contains(user.getAdminOnParties(), request.getPartyId());
         	
         	// add chats to request (when user is host or member)
         	List<Chat> chats = this.chatService.getAllByRequestId(request.getId());
         	if (chats==null) chats = new ArrayList<Chat>();
         	List<Chat> relevantChats = new ArrayList<Chat>();
         	for (Chat chat : chats) {
-        		if (chat.getHostId().equals(client.getUserId())) {
+        		if ((chat.getHostId().equals(client.getUserId())) || (userIsPartyAdmin)) {
         			ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
         			relevantChats.add(chat);
-        		}
+        		} else
         		if (Helper.contains(chat.getMembers(), client.getUserId())) {
         			ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId());
         			relevantChats.add(chat);
@@ -644,6 +647,7 @@ public class PartyController {
             		throw new Exception("json paramter not valid");
             	}
             	if (ids.isEmpty()) throw new Exception("json("+json+") is empty list if ids");
+            	if (ids.get(0)==null) throw new Exception("json("+json+") contains just NULL and no list if ids");
             	
             	// check if admin or reviewer
             	if ((!userIsPartyAdmin) && (!userIsAuthor)) throw new Exception("request("+requestId+") author cannot set to rejected");
@@ -653,31 +657,41 @@ public class PartyController {
             	// get reward balance
             	final String requestAccountName = AccountingTools.getAccountNameFromRequest(request.getId());
             	Long requestBalance = accountingService.getBalanceOfAccount(requestAccountName);
-            	if (requestBalance<ids.size()) throw new Exception("there are more rewardees than reward - not possible");
+            	if ((requestBalance<ids.size()) && (requestBalance>0)) throw new Exception("there are more rewardees than reward - not possible");
             	
             	// split reward
-            	Long rewardPerPerson = (long) Math.floor((requestBalance*1d) / (ids.size()*1d));
-            	if (((rewardPerPerson*ids.size())>requestBalance) || (rewardPerPerson<=0)) throw new Exception("reward("+requestBalance+") is not splitting up correctly to "+ids.size()+" --> "+rewardPerPerson);
+            	Long rewardPerPerson = 0l;
+            	if (requestBalance>0) {
+            		
+                	rewardPerPerson = (long) Math.floor((requestBalance*1d) / (ids.size()*1d));
+                	if (((rewardPerPerson*ids.size())>requestBalance) || (rewardPerPerson<=0)) throw new Exception("reward("+requestBalance+") is not splitting up correctly to "+ids.size()+" --> "+rewardPerPerson);
             	
-            	// transfere reward to users
-            	for (Long rewardId : ids) {
-					if (rewardId.equals(request.getUserId())) {
-						LOGGER.warn("ignoring the author self-rewrad");
-						continue;
-					}
-					final String rewardeeAccountName = AccountingTools.getAccountNameFromUserAndParty(rewardId, request.getPartyId());
-					if (!accountingService.transfereBetweenAccounts(requestAccountName, rewardeeAccountName, rewardPerPerson)) {
-						LOGGER.error("FAIL payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
-					} else {
-						LOGGER.error("OK payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
-		            	// TODO
-		            	LOGGER.warn("TODO: Implement send notification to rewardee");
-					}
+                   	// transfere reward to users
+                	for (Long rewardId : ids) {
+                		LOGGER.info("making transfere reward to userId("+rewardId+") ...");
+                		if (rewardId==null) {
+                			LOGGER.warn("skipping a NULL rewardId");
+                			continue;
+                		}
+    					if (rewardId.equals(request.getUserId())) {
+    						LOGGER.warn("ignoring the author self-rewrad");
+    						continue;
+    					}
+    					final String rewardeeAccountName = AccountingTools.getAccountNameFromUserAndParty(rewardId, request.getPartyId());
+    					if (!accountingService.transfereBetweenAccounts(requestAccountName, rewardeeAccountName, rewardPerPerson)) {
+    						LOGGER.error("FAIL payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
+    					} else {
+    						LOGGER.error("OK payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
+    		            	// TODO
+    		            	LOGGER.warn("TODO: Implement send notification to rewardee");
+    					}
+                	}
+                	
+                	// TODO: write payout history 
+                	
+                	// TODO: notification to all supporters of request about finish
+            	
             	}
-            	
-            	// TODO: write payout history 
-            	
-            	// TODO: notification to all supporters of request about finish
             	
             	// set processing & persists
             	request.setState(Request.STATE_DONE);

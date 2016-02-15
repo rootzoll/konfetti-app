@@ -4,9 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.ClientAction;
+import de.konfetti.data.Message;
 import de.konfetti.data.User;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.UserService;
@@ -17,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -62,8 +65,63 @@ public class UserController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{userId}", method = RequestMethod.GET, produces = "application/json")
-    public User readUser(@PathVariable Long userId) {
-        return userService.findById(userId);
+    public User readUser(@PathVariable Long userId, HttpServletRequest httpRequest) throws Exception {
+    	
+        User user = userService.findById(userId);
+        if (user==null) throw new Exception("NOT FOUND user("+userId+")");
+    	
+    	// check if user is allowed to read
+    	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
+    		
+    		// A) check that user is himself
+    		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+    		if (!client.getUserId().equals(user.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userId+")");
+    	
+    	} else {
+    		
+    		// B) check for trusted application with administrator privilege
+        	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
+    	}
+    	
+        return user;
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/{userId}", method = RequestMethod.PUT, produces = "application/json")
+    public User updateUser( @RequestBody @Valid final User userInput, HttpServletRequest httpRequest) throws Exception {
+    	
+        User userExisting = userService.findById(userInput.getId());
+        if (userExisting==null) throw new Exception("NOT FOUND user("+userInput.getId()+")");
+    	
+    	// check if user is allowed to read
+    	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
+    		
+    		// A) check that user is himself
+    		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+    		if (!client.getUserId().equals(userExisting.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userExisting.getId()+")");
+    	
+        	// transfer selective values from input to existing user
+        	userExisting.seteMail(userInput.geteMail());
+        	userExisting.setImageMediaID(userInput.getImageMediaID());
+        	userExisting.setName(userInput.getName());
+        	userExisting.setPushActive(userInput.getPushActive());
+        	userExisting.setPushSystem(userInput.getPushSystem());    	
+        	userExisting.setSpokenLangs(userInput.getSpokenLangs());  
+    		
+    	} else {
+    		
+    		// B) check for trusted application with administrator privilege
+        	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
+        	
+        	// complete overwrite allowed
+        	userExisting = userInput;
+        	
+    	}
+    	
+    	// update user in persistence
+    	userService.update(userExisting);
+    	
+        return userExisting;
     }
     
 	class RedeemResponse {

@@ -10,7 +10,7 @@ angular.module('starter.services', [])
       version: 1,
       appLang : "en",
       account : {
-          userId : "",
+          id : 0,
           clientSecret : "",
           clientId : "",
           reviewerOnParties : [],

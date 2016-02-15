@@ -33,6 +33,7 @@ angular.module('starter.controller.dash', [])
         $scope.requestsPosted = [];
         $scope.requestsInteraction = [];
         $scope.requestsOpen = [];
+        $scope.requestsDone = [];
         $scope.notifications = [];
         $scope.showNotifications = false;
 
@@ -313,7 +314,7 @@ angular.module('starter.controller.dash', [])
 
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
-            $scope.userId = AppContext.getAccount().userId;
+            $scope.userId = AppContext.getAccount().id;
             $scope.controllerInitDone = true;
             $scope.action();
             console.dir($rootScope);
@@ -343,6 +344,7 @@ angular.module('starter.controller.dash', [])
             $scope.requestsPosted = [];
             $scope.requestsInteraction = [];
             $scope.requestsOpen = [];
+            $scope.requestsDone = [];
             $scope.notifications = [];
 
             // check if account init on startup is already done
@@ -444,9 +446,10 @@ angular.module('starter.controller.dash', [])
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.party = data;
                 if ($scope.isAdminForThisParty || $scope.isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
-                $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().userId);
-                $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().userId);
+                $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().id);
+                $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().id);
                 $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');
+                $scope.requestsDone = KonfettiToolbox.filterRequestsByState(data.requests, 'done');
                 $scope.notifications = data.notifications;
                 $scope.loadingParty = false;
                 $scope.sortRequests();

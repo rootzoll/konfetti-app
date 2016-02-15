@@ -1,7 +1,5 @@
 package de.konfetti.data;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import javax.persistence.*;
 
 @Entity
@@ -69,7 +67,6 @@ public class User {
      * METHODS 
      */
     
-    @JsonProperty("userId")
     public Long getId() {
         return id;
     }
