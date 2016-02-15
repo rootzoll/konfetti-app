@@ -208,7 +208,6 @@ public class PartyController {
         		if (distanceMetersLong>Integer.MAX_VALUE) distanceMetersLong = Integer.MAX_VALUE;
         		int distanceMeters = (int) distanceMetersLong;
         		
-        		
         		// check if user GPS is within party area or party is global
         		if ((distanceMeters <= party.getMeters()) || (party.getMeters()==0)) {
         			
