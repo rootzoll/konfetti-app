@@ -72,8 +72,8 @@ angular.module('starter.controller.dash', [])
             },100);
         };
 
+        // redeem button
         $scope.onButtonCoupon = function() {
-            alert("A");
             KonfettiToolbox.processCode(true);
         };
 

@@ -116,7 +116,7 @@ angular.module('starter.services', [])
         };
  })
 
-.factory('KonfettiToolbox', function($log, $ionicPopup, $translate, $ionicLoading, $state, AppContext) {
+.factory('KonfettiToolbox', function($log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService) {
 
         return {
             filterRequestsByState: function(requestArray, state) {
@@ -156,8 +156,6 @@ angular.module('starter.services', [])
                 });                   
            },
            processCode : function(isRedeemCouponBool) {
-
-               alert("B");
 
                var processRedeemActions = function(actionArray) {
 

@@ -153,9 +153,8 @@ public class UserController {
     	
     	// add 100 Konfetto #1
     	if (code.equals("1")) {
-    		result.actions = makeUserAdminOnParty(user, 1l, result.actions);
-    		addKonfettiOnParty(user, 1l, 100l, result.actions);
-    		result.feedbackHtml = "Plus 100 konfetti.";
+    		result.actions = addKonfettiOnParty(user, 1l, 100l, result.actions);
+    		result.feedbackHtml = "Plus 100 konfetti on party #1.";
     	} else
     	// upgrade user to admin of party #1
     	if (code.equals("111")) {
@@ -171,9 +170,8 @@ public class UserController {
     	
         // add 100 Konfetto #2
     	if (code.equals("2")) {
-    		result.actions = makeUserAdminOnParty(user, 2l, result.actions);
-        	addKonfettiOnParty(user, 2l, 100l, result.actions);
-        	result.feedbackHtml = "Plus 100 konfetti.";
+    		result.actions = addKonfettiOnParty(user, 2l, 100l, result.actions);
+        	result.feedbackHtml = "Plus 100 konfetti on party #2.";
         } else
     		
     	// upgrade user to admin of party #2
