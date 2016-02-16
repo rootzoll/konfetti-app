@@ -1,6 +1,6 @@
 # Konfetti App
 
-Its an app for neighborhood building thru a community todo list and a playful currency called konfetti.
+Its an app for neighborhood building thru a community todo list and a playful in-app currency called konfetti.
 
 ## Concept Notes
 
@@ -12,7 +12,7 @@ Spend konfetti on:
 - creating a task on the community todo list
 - upvote tasks you like on the community todo list
 
-The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange goes:
+The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange can go:
 - neighbor2refugee
 - refugee2refugee
 - refugee2neighbor
