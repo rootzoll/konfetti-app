@@ -1,23 +1,18 @@
 # Konfetti App
 
-its an app for neighborhood help exchange - part of of the refugeehackathon, Berlin 2015
+Its an app for neighborhood building thru a community todo list and a playful currency called konfetti.
 
 ## Concept Notes
 
-Everybody can get rewarded KONFETTI by
-- doing those tasks
-- donating goods
+Get konfetti for:
+- doing a task on the community todo list
+- get a konfetti voucher for helping or donating
 
-Konfetti is like Karma-Points. Everybody who has konfetti can vote-up other support requests to make them more valuable
-= throw your konfetti on it
+Spend konfetti on:
+- creating a task on the community todo list
+- upvote tasks you like on the community todo list
 
-neighborhood orga does
-- curate task postings
-- puts more konfetti on it
-
-konfetti supply is endless - like love.
-
-konfetti exchange goes:
+The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange goes:
 - neighbor2refugee
 - refugee2refugee
 - refugee2neighbor
