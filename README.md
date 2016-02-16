@@ -21,7 +21,7 @@ The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange can 
 
 ## Contact
 
-For non-programmers: maxie.lutze@gmail.com
+For non-programmers: maxie@konfettiapp.de
 
 For programmers: christian@geektank.de
 
