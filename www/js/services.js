@@ -116,7 +116,7 @@ angular.module('starter.services', [])
         };
  })
 
-.factory('KonfettiToolbox', function($log, $ionicPopup, $translate) {
+.factory('KonfettiToolbox', function($log, $ionicPopup, $translate, $ionicLoading, $state, AppContext) {
 
         return {
             filterRequestsByState: function(requestArray, state) {
@@ -154,6 +154,95 @@ angular.module('starter.services', [])
                         });                    
                     });
                 });                   
-           }
+           },
+           processCode : function(isRedeemCouponBool) {
+
+               alert("B");
+
+               var processRedeemActions = function(actionArray) {
+
+                   if (typeof actionArray=="undefined") {
+                       console.warn("processRedeemActions: actionArray undefined - skip");
+                       return;
+                   }
+                   for (var i = 0; i < actionArray.length; i++) {
+
+                       var action = actionArray[i];
+                       if (typeof action == "undefined") {
+                           console.warn("processRedeemActions: action at index("+i+") is undefined - skip");
+                           continue;
+                       }
+
+                       // upgrade user profile
+                       if ((action.command=="updateUser") && (typeof action.json != "undefined")) {
+                           // keep local clientID and clientSecret
+                           var updatedAccountData = JSON.parse(action.json);
+                           var oldAccountData = AppContext.getAccount();
+                           updatedAccountData.clientId = oldAccountData.clientId;
+                           updatedAccountData.clientSecret = oldAccountData.clientSecret;
+                           AppContext.setAccount(updatedAccountData);
+                       } else
+
+                       // focus party in GUI
+                       if (action.command=="focusParty") {
+                           $state.go('tab.dash', {id: JSON.parse(action.json)});
+                       } else
+
+                       // unkown
+                       {
+                           alert("UNKOWN COMMAND '"+action.command+"'");
+                       }
+                   }
+               };
+
+               var feedbackOnCode = function(result) {
+                   $translate("ANSWERE").then(function (HEADLINE) {
+                       $ionicPopup.alert({
+                           title: HEADLINE,
+                           template: result.feedbackHtml
+                       }).then(function() {
+                           processRedeemActions(result.actions);
+                       });
+                   });
+               };
+
+
+                var titleKey = "MAGICCODE";
+                var subKey = "REDEEM_MAGIC_SUB";
+                if ((typeof isRedeemCouponBool != "undefined") && (isRedeemCouponBool)) {
+                    titleKey = "REDEEMCOUPON";
+                    subKey = "REDEEM_COUPON_SUB";
+                }
+                $translate(titleKey).then(function (TITLE) {
+                    $translate(subKey).then(function (SUB) {
+                        $ionicPopup.prompt({
+                            title: TITLE,
+                            template: SUB,
+                            // input type is number - because number codes work in all langs and alphabets
+                            inputType: 'number',
+                            inputPlaceholder: ''
+                        }).then(function(res) {
+                            console.log('name:', res);
+                            if (typeof res != "undefined") {
+                                if (res.length==0) return;
+                                $ionicLoading.show({
+                                    template: '<img src="img/spinner.gif" />'
+                                });
+                                ApiService.redeemCode(res, AppContext.getAppLang(), function(result){
+                                    // WIN
+                                    $ionicLoading.hide();
+                                    feedbackOnCode(result);
+                                }, function(){
+                                    // FAIL
+                                    $ionicLoading.hide();
+                                    $translate("INTERNETPROBLEM").then(function (text) {
+                                        feedbackOnCode(text);
+                                    });
+                                });
+                            }
+                        });
+                    });
+                });
+            }
         };
 });;

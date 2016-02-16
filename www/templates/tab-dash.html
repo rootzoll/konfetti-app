@@ -119,6 +119,16 @@
           <div notification ng-show="notification.id>0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}"></div>
       </div>
 
+      <!--
+        REDEEM CODE - when zero konfetti on party
+      -->
+
+      <div ng-show="party.konfettiCount==0" style="padding-top: 16px; text-align: center;">
+        <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px">
+             {{ 'REDEEMCOUPON' | translate }}
+        </button>
+      </div>
+
       <div class="card" ng-show="(requestsReview.length>0)" style="margin-bottom: 10px;">
           <div class="item item-divider" style="font-weight: bold;">
               {{ 'DASHHEADER_REVIEW' | translate }}

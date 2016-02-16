@@ -72,6 +72,11 @@ angular.module('starter.controller.dash', [])
             },100);
         };
 
+        $scope.onButtonCoupon = function() {
+            alert("A");
+            KonfettiToolbox.processCode(true);
+        };
+
         // sort the open requests based on points
         // set changedRequestId if there is a request in user focus
         $scope.sortRequests = function(changedRequestId) {
@@ -403,7 +408,7 @@ angular.module('starter.controller.dash', [])
                         $scope.partyList = list;
                         if ($scope.partyList.length==0) {
                             alert("no parties in your area - maybe a server error - try again later");
-                            navigator.app.exitApp();
+                            if (typeof navigator.app != "undefined") navigator.app.exitApp();
                         } else {
                             $scope.action();
                         }

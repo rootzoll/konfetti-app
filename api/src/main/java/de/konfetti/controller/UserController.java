@@ -8,10 +8,11 @@ import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.ClientAction;
-import de.konfetti.data.Message;
 import de.konfetti.data.User;
+import de.konfetti.service.AccountingService;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.UserService;
+import de.konfetti.service.exception.AccountingTools;
 import de.konfetti.utils.Helper;
 
 import org.slf4j.Logger;
@@ -36,11 +37,13 @@ public class UserController {
 	
     private final UserService userService;
     private final ClientService clientService;
+    private final AccountingService accountingService;
 
     @Autowired
-    public UserController(final UserService userService, final ClientService clientService) {
+    public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService) {
         this.userService = userService;
         this.clientService = clientService;
+        this.accountingService = accountingService;
     }
 
     //---------------------------------------------------
@@ -148,6 +151,12 @@ public class UserController {
     	
     	// TODO: implement code data base - work with fixed cheat codes for now
     	
+    	// add 100 Konfetto #1
+    	if (code.equals("1")) {
+    		result.actions = makeUserAdminOnParty(user, 1l, result.actions);
+    		addKonfettiOnParty(user, 1l, 100l, result.actions);
+    		result.feedbackHtml = "Plus 100 konfetti.";
+    	} else
     	// upgrade user to admin of party #1
     	if (code.equals("111")) {
     		result.actions = makeUserAdminOnParty(user, 1l, result.actions);
@@ -160,6 +169,13 @@ public class UserController {
     		result.feedbackHtml = "You are now REVIEWER on party #1";
     	} else
     	
+        // add 100 Konfetto #2
+    	if (code.equals("2")) {
+    		result.actions = makeUserAdminOnParty(user, 2l, result.actions);
+        	addKonfettiOnParty(user, 2l, 100l, result.actions);
+        	result.feedbackHtml = "Plus 100 konfetti.";
+        } else
+    		
     	// upgrade user to admin of party #2
     	if (code.equals("222")) {
     		result.actions = makeUserAdminOnParty(user, 2l, result.actions);
@@ -205,6 +221,21 @@ public class UserController {
 		LOGGER.info("user("+user.getId()+") is now REVIEWER on party("+partyId+")");
 		
 		actions = addUpdateUserAction(actions, user);
+		actions = addFocusPartyAction(actions, partyId);
+		
+		return actions;
+	}  
+	
+	private List<ClientAction> addKonfettiOnParty(User user, Long partyId, Long konfettiAmount, List<ClientAction> actions) throws Exception {
+
+		final String userAccountName = AccountingTools.getAccountNameFromUserAndParty(user.getId(), partyId);
+		Long konfettiBefore = this.accountingService.getBalanceOfAccount(userAccountName);
+		Long konfettiAfter = this.accountingService.addBalanceToAccount(userAccountName, konfettiAmount);
+		
+		if (konfettiBefore.equals(konfettiAfter)) throw new Exception("adding amount failed");
+		
+		LOGGER.info("user("+user.getId()+") on party("+partyId+") +"+konfettiAmount+" konfetti");
+		
 		actions = addFocusPartyAction(actions, partyId);
 		
 		return actions;
