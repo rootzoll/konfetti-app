@@ -215,7 +215,8 @@ public class PartyController {
         		LOGGER.info("party("+party.getId()+") with meterrange("+party.getMeters()+") has distance to user of meters("+distanceMeters+")");
         		
         		// check if user GPS is within party area or party is global
-        		if ((distanceMeters <= party.getMeters()) || (party.getMeters()==0)) {
+        		LOGGER.warn("TODO: Fix this geo filter later ... now just show every party"); // TODO fix
+        		if ((distanceMeters <= party.getMeters()) || (party.getMeters() >= 0)) { // || (party.getMeters()==0)) {
         			
         			LOGGER.info("--> IN");
         			
