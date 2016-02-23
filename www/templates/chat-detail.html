@@ -84,7 +84,7 @@
         </div>
         <div class="item item-input-inset" style="height:45px;background:lightgray; border-color: transparent;padding-bottom:0px;margin-bottom:0px;">
             <label class="item-input-wrapper" style="background-color: white">
-                <input type="text" ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" style="width: 100%; height: 30px;background-color: white;">
+                <input ng-enter="sendChatMessage()" type="text" ng-model="chatMessage" placeholder="{{ 'SENDMESSAGE' | translate }}" style="width: 100%; height: 30px;background-color: white;">
             </label>
             <button on-tap="sendChatMessage()" id='sendChatButton' class="button button-small button-positive" style="height: 30px; width: 40px">
                 <i ng-show="(!sending && !senderror)" class="icon ion-android-send"></i><i ng-show="(!sending && senderror)" class="icon ion-alert-circled"></i><img ng-show="sending" src="./img/spinner.gif" style="width: 14px; height: 14px"/>

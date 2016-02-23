@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService) {
 
         /*
          * get state parameter of controller
@@ -36,6 +36,7 @@ angular.module('starter.controller.dash', [])
         $scope.requestsDone = [];
         $scope.notifications = [];
         $scope.showNotifications = false;
+        $scope.updatesOnParty = false;
 
         // sorting options
         $scope.sortSet = [
@@ -43,7 +44,8 @@ angular.module('starter.controller.dash', [])
             {sort:'new', display:'new'}
         ];
         $scope.actualSorting = $scope.sortSet[0].sort;
-        
+
+
          /*
          * controller logic
          */       
@@ -277,8 +279,10 @@ angular.module('starter.controller.dash', [])
 
         // when user pressed the reload button
         $scope.reloadPartyList = function() {
+            focusPartyId = $scope.partyList[$scope.actualPartyIndex].id;
             $scope.partyList = [];
             $scope.actualPartyIndex = 0;
+            $scope.updatesOnParty = false;
             $log.info("TODO: Also UPDATE GPS coordinates later");
             $scope.action();
         };
@@ -385,6 +389,31 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+            // make sure websocket is connected & listen on incoming
+            WebSocketService.init();
+            WebSocketService.receive("dash", function(message){
+                if (message.command=="update-party") {
+                    var data = JSON.parse(message.data);
+                    var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
+                    if (data.party==visiblePartyId) {
+                        if ((data.state!="review") || ($scope.isReviewerForThisParty))
+                        $timeout(function(){
+                            if (typeof data.konfetti != "undefined") {
+                                // check if konfetti amount is different
+                                for (var i=0; i < $scope.requestsOpen.length; i++) {
+                                    if (($scope.requestsOpen[i].id==data.request) && ($scope.requestsOpen[i].konfettiCount!=data.konfetti)) {
+                                        $scope.updatesOnParty = true;
+                                        break;
+                                    }
+                                }
+                            } else {
+                                $scope.updatesOnParty = true;
+                            }
+                        },10);
+                    }
+                }
+            });
+
             // check if GPS is available
             if ($scope.gps==='wait') {
                 $scope.state = "GPSWAIT";
@@ -459,6 +488,7 @@ angular.module('starter.controller.dash', [])
                 $scope.loadingParty = false;
                 $scope.sortRequests();
                 $scope.state = "OK";
+                $scope.updatesOnParty = false;
                 $scope.showNotifications = ($scope.notifications.length>0);
                 $rootScope.initDone = true;
             },function(code){

@@ -239,6 +239,7 @@ div.popup-body span {
     -webkit-animation-timing-function: ease-in-out;
     -webkit-animation-iteration-count: infinite
 }
+
 @-webkit-keyframes pulsateSimple {
     0% { opacity: 0.0}
     10% { opacity: .20}
@@ -251,5 +252,9 @@ div.popup-body span {
     80% {  opacity: .40}
     90% { opacity: .20}
     100% { opacity: 0.0}
+}
+
+.red {
+    color: red;
 }
 

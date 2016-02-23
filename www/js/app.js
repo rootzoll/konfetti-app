@@ -304,7 +304,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_INFO' : 'This text was auto translated by a robot. Please keep in mind, that robots are not perfect and make mistakes.',
             'USELOCATION' : 'Would you like to add your current location?',
             'SELECT_LESS' : 'Please select less.',
-            'CHECK_MEDIAITEMS' : 'contains additional media items (see below)'
+            'CHECK_MEDIAITEMS' : 'contains additional media items (see below)',
+            'KEEP_HEADLINE_SHORT' : 'try to keep headline short'
    });
 
    $translateProvider.translations('de', {
@@ -418,7 +419,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_INFO' : 'Dieser Text wurde automatisiert von einem Roboter aus einer anderen Sprache übersetzt. Roboter sind nicht perfekt. Die Übersetzung kann fehlerhaft sein.',
             'USELOCATION' : 'Die aktuelle Position hinzufügen?',
             'SELECT_LESS' : 'Bitte weniger auswählen.',
-            'CHECK_MEDIAITEMS' : 'enthält weitere Medienelemente (siehe unten)'
+            'CHECK_MEDIAITEMS' : 'enthält weitere Medienelemente (siehe unten)',
+            'KEEP_HEADLINE_SHORT' : 'versuch die Überschrift kurz zu halten'
         });
 
    $translateProvider.translations('ar', {
@@ -532,7 +534,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'AUTOTRANSLATE_INFO' : 'كان هذا النص السيارات وترجم من قبل الروبوت . يرجى أن نضع في اعتبارنا، أن الروبوتات ليست مثالية و ارتكاب الأخطاء .',
             'USELOCATION' : 'هل ترغب في إضافة موقعك الحالي ؟',
             'SELECT_LESS' : 'الرجاء تحديد أقل.',
-            'CHECK_MEDIAITEMS' : 'يحتوي على عناصر وسائط إضافية (انظر أدناه)'
+            'CHECK_MEDIAITEMS' : 'يحتوي على عناصر وسائط إضافية (انظر أدناه)',
+            'KEEP_HEADLINE_SHORT' : 'محاولة للحفاظ على التوجه قصيرة'
    });
 
   $translateProvider.preferredLanguage("en");

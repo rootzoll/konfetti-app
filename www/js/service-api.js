@@ -60,6 +60,10 @@ angular.module('starter.api', [])
             getImageUrlFromMediaItem: function(mediaItemID) {
                 return activeServerUrl+"/media/"+mediaItemID+"/image";
             },
+            // api URL
+            getApiUrlBase: function() {
+                return activeServerUrl;
+            },
             // gets called once a user starts a chat
             createChat: function(requestId, hostId, partnerId, win, fail) {
 
@@ -485,4 +489,77 @@ angular.module('starter.api', [])
 
         };
 
+    })
+
+    /*
+     * WebSocket Connection to API
+     */
+
+    .service("WebSocketService", function($q, $timeout, ApiService) {
+
+        var service = {}, listener = $q.defer(), socket = {
+            client: null,
+            stomp: null
+        };
+
+        service.RECONNECT_TIMEOUT = 30000;
+        service.SOCKET_URL = ApiService.getApiUrlBase()+"/websocket";
+        service.CHAT_TOPIC = "/out/updates";
+        service.CHAT_BROKER = "/in/websocket";
+
+        service.isConnected = false;
+
+        service.listener = null;
+
+        service.init = function(username, password) {
+            initialize(username, password);
+        };
+
+        // service.receive(function(message){..})
+        service.receive = function(listenerName, onReceive) {
+            service.listener = onReceive;
+        };
+
+        service.send = function(data) {
+            var id = Math.floor(Math.random() * 1000000);
+            socket.stomp.send(service.CHAT_BROKER, {
+                priority: 9
+            }, JSON.stringify({
+                command: "ping",
+                data: data
+            }));
+        };
+
+        var reconnect = function() {
+            $timeout(function() {
+                service.isConnected = false;
+                initialize();
+            }, this.RECONNECT_TIMEOUT);
+        };
+
+        var startListener = function(frame) {
+
+            service.isConnected = true;
+
+            console.log("CHECK FOR USER INFO LATER:");
+            console.dir(frame);
+
+            var suffix = "";
+            if ((typeof frame != "undefined") && (typeof frame.headers['queue-suffix'] != "undefined"))
+                suffix = frame.headers['queue-suffix'];
+
+            socket.stomp.subscribe(service.CHAT_TOPIC+suffix, function(data) {
+                if (service.listener!=null) service.listener(JSON.parse(data.body));
+            });
+        };
+
+        var initialize = function(user, pass) {
+            if (service.isConnected) return;
+            socket.client = new SockJS(service.SOCKET_URL);
+            socket.stomp = Stomp.over(socket.client);
+            socket.stomp.connect(user,pass,startListener);
+            socket.stomp.onclose = reconnect;
+        };
+
+        return service;
     });

@@ -3,6 +3,7 @@ package de.konfetti.controller;
 import de.konfetti.data.Chat;
 import de.konfetti.data.Client;
 import de.konfetti.data.MediaItem;
+import de.konfetti.data.Message;
 import de.konfetti.data.Notification;
 import de.konfetti.data.Party;
 import de.konfetti.data.Request;
@@ -19,14 +20,19 @@ import de.konfetti.service.UserService;
 import de.konfetti.service.exception.AccountingTools;
 import de.konfetti.utils.AutoTranslator;
 import de.konfetti.utils.Helper;
+import de.konfetti.websocket.CommandMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.socket.WebSocketMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -41,7 +47,9 @@ import java.util.List;
 public class PartyController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PartyController.class);
-	
+    
+    private static final Gson GSON = new GsonBuilder().create();
+    
     private final PartyService partyService;
 
     private final RequestService requestService;
@@ -57,7 +65,10 @@ public class PartyController {
     private final ChatService chatService;
     
     private final MediaService mediaService;
-
+    
+    @Autowired
+    private SimpMessagingTemplate webSocket;
+    
     @Autowired
     public PartyController(
     		final PartyService partyService, 
@@ -441,6 +452,12 @@ public class PartyController {
     		accountingService.transfereBetweenAccounts(AccountingTools.getAccountNameFromUserAndParty(client.getUserId(),partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
     	}
     	
+    	// publish info about update on public channel
+    	CommandMessage msg = new CommandMessage();
+    	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);
+    	msg.setData("{\"party\":"+persistent.getPartyId()+", \"request\":"+persistent.getId()+" ,\"state\":\""+persistent.getState()+"\"}");
+    	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));   
+    	
     	return persistent;
     }
 
@@ -550,6 +567,12 @@ public class PartyController {
         	// add account balance to request object
         	request.setKonfettiCount(accountingService.getBalanceOfAccount(AccountingTools.getAccountNameFromRequest(requestId)));
         	
+        	// publish info about update on public channel
+        	CommandMessage msg = new CommandMessage();
+        	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);
+        	msg.setData("{\"party\":"+request.getPartyId()+", \"request\":"+request.getId()+" ,\"state\":\""+request.getState()+"\", \"konfetti\":"+request.getKonfettiCount()+"}");
+        	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));  
+        	
         } else {
         	
         	LOGGER.warn("PartyController getRequest("+requestId+") --> NULL");
@@ -617,6 +640,12 @@ public class PartyController {
         		
         		// TODO
         		LOGGER.warn("TODO: Implement send notification to author");
+        		
+            	// publish info about update on public channel
+            	CommandMessage msg = new CommandMessage();
+            	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);
+            	msg.setData("{\"party\":"+request.getPartyId()+", \"request\":"+request.getId()+" ,\"state\":\""+request.getState()+"\"}");
+            	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));
         		
         	} else
         	
@@ -720,7 +749,7 @@ public class PartyController {
             } else
         		
             	
-            // set rejected (by admin and reviewer)
+            // mute chat on request
             if (action.equals("muteChat")) {
             		
             	// needed json data

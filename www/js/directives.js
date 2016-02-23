@@ -137,4 +137,16 @@ angular.module('starter')
             if (input<1000) return input+" m";
             return Math.round(input/1000)+" km";
         };
-    });
+    }).directive('ngEnter', function() {
+        return function(scope, element, attrs) {
+            element.bind("keydown keypress", function(event) {
+                if(event.which === 13) {
+                    scope.$apply(function(){
+                        scope.$eval(attrs.ngEnter, {'event': event});
+                    });
+
+                    event.preventDefault();
+                }
+            });
+        };
+    });;

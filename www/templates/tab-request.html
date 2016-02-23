@@ -252,6 +252,49 @@
 
       </div>
 
+        <!--  CHATS -->
+
+        <div class="card" ng-show="(request.chats.length>0)">
+            <div class="item item-divider">
+                {{ 'PRIVATECHATS' | translate }}
+            </div>
+        </div>
+
+        <div ng-show="(request.chats.length>0)" class="list card">
+            <div data-ng-repeat="chat in request.chats" id="chat-id-{{chat.id}}">
+                <a href="#" on-tap="displayChat($event, chat)" class="item" style="padding:14px;">
+                    <table width="100%">
+                        <tr>
+                            <td width="45" style="vertical-align: middle;" rowspan="2">
+                                <image ng-src="{{getImageUrlFromMediaId(chat.chatPartnerImageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                            </td>
+                            <td width="*" style="vertical-align: middle;" rowspan="2">
+                                <div style="padding-left: 10px;">
+                                    <b>{{chat.chatPartnerName}}</b>
+                                    <!--TODO <br><span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>-->
+                                </div>
+                            </td>
+                            <td rowspan="2" on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">
+                                <i class="icon ion-arrow-right-c before-big"></i>
+                                <!--
+                                <i ng-hide="((request.chats.length==1) && (request.state==='processing'))" class="icon ion-ios-close-outline before-big"></i>
+                                -->
+                            </td>
+                        </tr>
+                        <!--
+                        <tr>
+                           <td class="animationPulsate" style="text-align: center; vertical-align: middle; padding-right: 6px; padding-left: 6px; color: #ee2200;">
+                               <i class="icon ion-email-unread before-big"></i>
+                           </td>
+                        </tr>
+                        -->
+                    </table>
+                </a>
+            </div>
+        </div>
+
+      <!--  MEDIA ITEMS -->
+
       <div class="card" ng-show="( (request.info.length>0) || (request.mediaItemIds.length>0))">
           <div class="item item-divider">
               {{ 'PUBLICINFO' | translate }}
@@ -267,45 +310,6 @@
       <div ng-show="((request.info.length==0) && (request.mediaItemIds.length>0))" class="list card">
           <div data-ng-repeat="mediaItemId in request.mediaItemIds" >
               <div mediaitem itemid="{{mediaItemId}}" id="media-id-{{mediaItemId}}"></div>
-          </div>
-      </div>
-
-      <div class="card" ng-show="(request.chats.length>0)">
-          <div class="item item-divider">
-              {{ 'PRIVATECHATS' | translate }}
-          </div>
-      </div>
-
-      <div ng-show="(request.chats.length>0)" class="list card">
-          <div data-ng-repeat="chat in request.chats" id="chat-id-{{chat.id}}">
-              <a href="#" on-tap="displayChat($event, chat)" class="item" style="padding:14px;">
-                  <table width="100%">
-                      <tr>
-                          <td width="45" style="vertical-align: middle;" rowspan="2">
-                              <image ng-src="{{getImageUrlFromMediaId(chat.chatPartnerImageMediaID)}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
-                          </td>
-                          <td width="*" style="vertical-align: middle;" rowspan="2">
-                              <div style="padding-left: 10px;">
-                                  <b>{{chat.chatPartnerName}}</b>
-                                  <!--TODO <br><span style="font-size: 75%;color:grey">{{chat.lastLine}}</span>-->
-                              </div>
-                          </td>
-                          <td rowspan="2" on-tap="removeChat($event, chat)" width="30" style="text-align: center; vertical-align: middle;padding-right: 6px; padding-left: 6px; color: darkgrey;">
-                              <i class="icon ion-arrow-right-c before-big"></i>
-                              <!--
-                              <i ng-hide="((request.chats.length==1) && (request.state==='processing'))" class="icon ion-ios-close-outline before-big"></i>
-                              -->
-                          </td>
-                      </tr>
-                      <!--
-                      <tr>
-                         <td class="animationPulsate" style="text-align: center; vertical-align: middle; padding-right: 6px; padding-left: 6px; color: #ee2200;">
-                             <i class="icon ion-email-unread before-big"></i>
-                         </td>
-                      </tr>
-                      -->
-                  </table>
-              </a>
           </div>
       </div>
 
