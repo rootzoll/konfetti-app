@@ -3,7 +3,6 @@ package de.konfetti.controller;
 import de.konfetti.data.Chat;
 import de.konfetti.data.Client;
 import de.konfetti.data.MediaItem;
-import de.konfetti.data.Message;
 import de.konfetti.data.Notification;
 import de.konfetti.data.Party;
 import de.konfetti.data.Request;
@@ -28,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.socket.WebSocketMessage;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
@@ -40,6 +38,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @CrossOrigin
 @RestController
@@ -120,7 +119,7 @@ public class PartyController {
 
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{partyId}", method = RequestMethod.GET)
-    public Party getParty(@PathVariable long partyId, HttpServletRequest request) throws Exception {
+    public Party getParty(@PathVariable long partyId, @RequestParam(value="lastTS", defaultValue="0") long lastTs, HttpServletRequest request) throws Exception {
     	
     	Party party = partyService.findById(partyId);
     	if (party==null) throw new Exception("was not able to load party with id("+partyId+") - NOT FOUND");
@@ -138,7 +137,7 @@ public class PartyController {
         		boolean userIsPartyReviewer = Helper.contains(user.getReviewerOnParties(), party.getId());
         	
         		List<Request> requests = requestService.getAllPartyRequests(partyId);
-        		List<Notification> notifications = notificationService.getAllNotifications(partyId, client.getUserId());
+        		List<Notification> notifications = notificationService.getAllNotificationsSince(client.getUserId(), partyId, lastTs, true);
         		if (requests==null) requests = new ArrayList<Request>();
         		if (notifications==null) notifications = new ArrayList<Notification>();
         		
@@ -152,7 +151,6 @@ public class PartyController {
     				}	
             		requests = filteredRequests;
         		}
-        		// TODO optional: filter requests and notifications if needed 
         	
         		party.setRequests(new HashSet<Request>(requests));
         		party.setNotifications(new HashSet<Notification>(notifications));
@@ -164,6 +162,24 @@ public class PartyController {
         		party.setKonfettiCount(userBalance);
         		party.setKonfettiTotal(-1l); // TODO: implement statistic later
         		party.setTopPosition(-1); // TODO: implement statistic later
+        		
+        		// see if there is any new chat message for user TODO: find a more performat way
+        		List<Chat> allPartyChatsUserIsPartOf = chatService.getAllByUserAndParty(client.getUserId(), partyId);
+        		for (Chat chat : allPartyChatsUserIsPartOf) {
+					if (!chat.hasUserSeenLatestMessage(client.getUserId())) {
+						// create temporary notification (a notification that is not in DB)
+						Notification noti = new Notification();
+						noti.setId(-System.currentTimeMillis());
+						noti.setPartyId(partyId);
+						noti.setRef(chat.getRequestId());
+						noti.setType(Notification.TYPE_CHAT_NEW);
+						noti.setUserId(client.getUserId());
+						noti.setTimeStamp(System.currentTimeMillis());
+						Set<Notification> notis = party.getNotifications();
+						notis.add(noti);
+						party.setNotifications(notis);
+					}
+				}
         	}
 			
 		} catch (Exception e) {
@@ -298,11 +314,19 @@ public class PartyController {
             				} catch (Exception e) {
             					e.printStackTrace();
             				}
-            				
+            				            				
             			}
+            			
+        				// show welcome notification
+            			LOGGER.info("NOTIFICATION Welcome Paty ("+party.getId()+")");
+        				notificationService.create(Notification.TYPE_PARTY_WELCOME, user.getId(), party.getId(), 0l);
             			
         				LOGGER.info("userBalance("+userBalance+")");
 
+            		} else {
+            			
+            			LOGGER.info("user known on party");
+            			
             		}
             		party.setKonfettiCount(userBalance);
             		
@@ -330,7 +354,7 @@ public class PartyController {
     
     @CrossOrigin(origins = "*")
     @RequestMapping(value = "/{partyId}/notification/{notiId}", method = RequestMethod.GET)
-    public Notification getNotification(@PathVariable long partyId, @PathVariable long notiId, @RequestParam(value="action", defaultValue="no") Long action, HttpServletRequest httpRequest) throws Exception {
+    public Notification getNotification(@PathVariable long partyId, @PathVariable long notiId, @RequestParam(value="action", defaultValue="no") String action, HttpServletRequest httpRequest) throws Exception {
         
     	LOGGER.info("PartyController getNotification("+notiId+") action("+action+") ...");
     	
@@ -344,7 +368,7 @@ public class PartyController {
     		// A) check if user is owner of notification
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     		boolean userIsOwner = (noti.getUserId().equals(client.getUserId()));
-    		if (!userIsOwner) throw new Exception("cannot action notification("+notiId+") - user is not noti owner");
+    		if (!userIsOwner) throw new Exception("cannot action notification("+notiId+") - user is not noti owner / client.userID("+client.getUserId()+") != notiUserId("+noti.getUserId()+")");
     		
     	} else {
     		
@@ -357,8 +381,13 @@ public class PartyController {
     	 */
     	
     	if (action.equals("delete")) {
-    		notificationService.delete(notiId);
-    		LOGGER.info("Notification("+notiId+") DELETED");
+    		if (notiId>=0l) {
+        		notificationService.delete(notiId);
+        		LOGGER.info("Notification("+notiId+") DELETED");	
+    		} else {
+    			LOGGER.warn("Client should not try to delete temporaray notifications with id<0");	
+    		}
+
     	}
     	
     	return noti;
@@ -521,12 +550,13 @@ public class PartyController {
         	if (chats==null) chats = new ArrayList<Chat>();
         	List<Chat> relevantChats = new ArrayList<Chat>();
         	for (Chat chat : chats) {
+        		if (!chat.chatContainsMessages()) continue;
         		if ((chat.getHostId().equals(client.getUserId())) || (userIsPartyAdmin)) {
-        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
         			relevantChats.add(chat);
         		} else
         		if (Helper.contains(chat.getMembers(), client.getUserId())) {
-        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId());
+        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId(), client.getUserId());
         			relevantChats.add(chat);
         		}
 			}
@@ -638,8 +668,8 @@ public class PartyController {
         		requestService.update(request);
         		LOGGER.info("request("+requestId+") set STATE to "+Request.STATE_OPEN);
         		
-        		// TODO
-        		LOGGER.warn("TODO: Implement send notification to author");
+        		// send notification to author
+        		notificationService.create(Notification.TYPE_REVIEW_OK, request.getUserId(), request.getPartyId(), request.getId());
         		
             	// publish info about update on public channel
             	CommandMessage msg = new CommandMessage();
@@ -673,8 +703,14 @@ public class PartyController {
         		requestService.update(request);
         		LOGGER.info("request("+requestId+") set STATE to "+Request.STATE_REJECTED);
         		
-        		// TODO
-        		LOGGER.warn("TODO: Implement send notification to author");
+            	// publish info about update on public channel
+            	CommandMessage msg = new CommandMessage();
+            	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);
+            	msg.setData("{\"party\":"+request.getPartyId()+", \"request\":"+request.getId()+" ,\"state\":\""+request.getState()+"\"}");
+            	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));        		
+        		
+        		// send notification to author
+        		notificationService.create(Notification.TYPE_REVIEW_FAIL, request.getUserId(), request.getPartyId(), request.getId());
         		
         	} else
         		
@@ -729,8 +765,11 @@ public class PartyController {
     					if (!accountingService.transfereBetweenAccounts(requestAccountName, rewardeeAccountName, rewardPerPerson)) {
     						LOGGER.error("FAIL payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
     					} else {
-    						LOGGER.error("OK payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
-    		            	// TODO
+    						LOGGER.info("OK payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
+    		        		// send notification to author
+    		        		notificationService.create(Notification.TYPE_REWARD_GOT, request.getUserId(), request.getPartyId(), request.getId());
+    						
+    						// TODO
     		            	LOGGER.warn("TODO: Implement send notification to rewardee");
     					}
                 	}

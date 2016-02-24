@@ -51,5 +51,15 @@ public class MessageServiceImpl extends BaseService implements MessageService {
 		}
 		return res;
 	}
+
+	@Override
+	public List<Message> getAllMessagesOfChatSince(long id, long ts) {
+		List<Message> all = getAllMessagesOfChat(id);
+		List<Message> res = new ArrayList<Message>();
+		for (Message message : all) {
+			if (message.getTime()>ts) res.add(message);
+		}
+		return res;
+	}
     
 }

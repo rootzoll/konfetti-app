@@ -25,7 +25,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
     
     @Override
-    public Notification create(Long userId, Long partyId, Integer type, Long ref) {
+    public Notification create(Integer type, Long userId, Long partyId, Long ref) {
     	
     	// user gets created
         Notification notification = new Notification();
@@ -33,6 +33,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
         notification.setPartyId(partyId);
         notification.setType(type);
         notification.setRef(ref);
+        notification.setTimeStamp(System.currentTimeMillis());
         
         // user gets persisted and returned to user  
         Notification persited = notificationRepository.saveAndFlush(notification);
@@ -54,9 +55,8 @@ public class NotificationServiceImpl extends BaseService implements Notification
     }
 
 	@Override
-	public Notification delete(long notiId) {
-		// TODO Auto-generated method stub
-		throw new RuntimeException("TODO: implement NotificationServiceImpl.delete()");
+	public void delete(long notiId) {
+		notificationRepository.delete(notiId);
 	}
 
 	@Override
@@ -71,11 +71,26 @@ public class NotificationServiceImpl extends BaseService implements Notification
 		
 		List<Notification> all = getAllNotifications();
 		List<Notification> result = new ArrayList<Notification>();
-		
 		for (Notification notification : all) {
 			if ((notification.getPartyId().equals(partyId)) && (notification.getUserId().equals(userId))) result.add(notification);
 		}
+		return result;
+	}
 
+	@Override
+	public List<Notification> getAllNotificationsSince(Long userId,Long partyId, Long sinceTimestamp, boolean deleteOlder) {
+		
+		// TODO: improve performance !!
+		
+		List<Notification> allUserOnParty = getAllNotifications(userId, partyId);
+		List<Notification> result = new ArrayList<Notification>();
+		for (Notification notification : allUserOnParty) {
+			if (notification.getTimeStamp()>sinceTimestamp) {
+				result.add(notification);
+			} else {
+				if (deleteOlder) delete(notification.getId());
+			}
+		}
 		return result;
 	}
 

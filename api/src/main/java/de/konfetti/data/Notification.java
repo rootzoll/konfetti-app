@@ -10,8 +10,8 @@ public class Notification {
 	public static final Integer TYPE_REVIEW_OK 		= 2;
 	public static final Integer TYPE_REVIEW_FAIL 	= 4;
 	public static final Integer TYPE_CHAT_NEW 		= 5;
-	
-    // sample from app { id: 12, userId: 1, partyId: 2, type:1, ref:0 }
+	public static final Integer TYPE_PARTY_WELCOME 	= 6;
+	public static final Integer TYPE_REWARD_GOT 	= 7;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,6 +28,9 @@ public class Notification {
     
     // reference - depending on type
     private Long ref;
+    
+    // timestamp of creation
+    private Long ts;
     
     /*
      * METHODS 
@@ -71,6 +74,14 @@ public class Notification {
 
 	public void setRef(Long ref) {
 		this.ref = ref;
+	}
+
+	public Long getTimeStamp() {
+		return ts;
+	}
+
+	public void setTimeStamp(Long ts) {
+		this.ts = ts;
 	}
 
 }

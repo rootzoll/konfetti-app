@@ -11,6 +11,8 @@ public interface ChatService {
     Chat findById(long id);
 
 	List<Chat> getAllByRequestId(long id);
+	
+	List<Chat> getAllByUserAndParty(long userId, long partyId);
 
 	Chat update(Chat chat);
     

@@ -186,14 +186,20 @@ angular.module('starter.controller.dash', [])
             }
 
             // request rejected --> go to request page
-            if (noti.type==3) {
+            if (noti.type==4) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // new chat message --> go to request page - scroll down to chats
-            if (noti.type==4) {
+            if (noti.type==5) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
+                return;
+            }
+
+            // rewarded --> go to request page
+            if (noti.type==7) {
+                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
@@ -279,11 +285,12 @@ angular.module('starter.controller.dash', [])
 
         // when user pressed the reload button
         $scope.reloadPartyList = function() {
-            focusPartyId = $scope.partyList[$scope.actualPartyIndex].id;
+            focusPartyId = $rootScope.party.id;
             $scope.partyList = [];
             $scope.actualPartyIndex = 0;
             $scope.updatesOnParty = false;
             $log.info("TODO: Also UPDATE GPS coordinates later");
+            $ionicScrollDelegate.scrollTop(true);
             $scope.action();
         };
 
@@ -392,7 +399,9 @@ angular.module('starter.controller.dash', [])
             // make sure websocket is connected & listen on incoming
             WebSocketService.init();
             WebSocketService.receive("dash", function(message){
+                console.log("GOT MESSAGE: "+JSON.stringify(message));
                 if (message.command=="update-party") {
+                    console.log("go update-party");
                     var data = JSON.parse(message.data);
                     var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
                     if (data.party==visiblePartyId) {
@@ -411,7 +420,29 @@ angular.module('starter.controller.dash', [])
                             }
                         },10);
                     }
+                    return;
                 }
+                if (message.command=="update-chat") {
+                    var data = JSON.parse(message.data);
+                    var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
+                    // only when chat is on actual visible party
+                    if (data.party==visiblePartyId) {
+                        // only when user is party of chat
+                        if (data.users.contains(AppContext.getAccount().id)) {
+                            $timeout(function(){
+                                $scope.updatesOnParty = true;
+                            },10);
+                        } else {
+                            console.log("update-chat: on party but contains not user("+AppContext.getAccount().id+")");
+                        }
+                    } else {
+                        console.log("update-chat: not on visible party("+visiblePartyId+")");
+                    }
+                    return;
+                }
+
+                console.log("Unkown WebSocket message with command("+message.command+")");
+                return;
             });
 
             // check if GPS is available

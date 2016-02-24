@@ -6,14 +6,16 @@ import de.konfetti.data.Notification;
 
 public interface NotificationService {
 
-    Notification create(Long userId, Long partyId, Integer type, Long ref);
+    Notification create(Integer type, Long userId, Long partyId, Long ref);
 
-    Notification delete(long notiId);
+    void delete(long notiId);
     
     Notification findById(long notiId);
        
     List<Notification> getAllNotifications();
     
     List<Notification> getAllNotifications(Long userId, Long partyId);
+    
+    List<Notification> getAllNotificationsSince(Long userId, Long partyId, Long sinceTimestamp, boolean deleteOlder);
     
 }

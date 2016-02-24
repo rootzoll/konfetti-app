@@ -11,5 +11,7 @@ public interface MessageService {
 	Message findById(long id);
 
 	List<Message> getAllMessagesOfChat(long id);
+	
+	List<Message> getAllMessagesOfChatSince(long id, long ts);
     
 }

@@ -26,7 +26,8 @@ angular.module('starter.services', [])
       },
       localState : {
         introScreenShown: false,
-        imageData: null
+        imageData: null,
+        lastPartyUpdates: {}
       }
   };
 

@@ -116,7 +116,7 @@
       -->
 
       <div ng-show="showNotifications" class="list card">
-          <div notification ng-show="notification.id>0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}"></div>
+          <div notification ng-show="notification.id!=0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}"></div>
       </div>
 
       <!--

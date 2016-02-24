@@ -3,53 +3,91 @@
     <table width="100%">
 
         <!-- Media Item -->
-        <tr ng-show="(notification.type===0)">
+        <tr ng-if="(notification.type===0)">
             <td width="*" style="vertical-align: middle;">
                 <div mediaitem itemid="{{notification.ref}}" id="mediaitem-{{notification.ref}}" style="position: relative; margin-bottom: 10px; margin-top: 10px; font-size: 75%"></div>
             </td>
-            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
         </tr>
 
         <!-- Media Item with info icon -->
-        <tr ng-show="(notification.type===1)">
+        <tr ng-if="(notification.type===1)">
             <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-information-circled before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div mediaitem itemid="{{notification.ref}}" id="mediaitem-{{notification.ref}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
             </td>
-            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
         </tr>
 
         <!-- Review OK -->
-        <tr ng-show="(notification.type===2)">
-            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-checkmark-circled before-big"></i></td>
-            <td width="*" style="vertical-align: middle;">
+        <tr ng-if="(notification.type===2)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-checkmark-circled before-big" style="color:green;"></i></td>
+            <td width="*" style="vertical-align: middle; color: green;">
                 <div>
                     {{ 'NOTIFICATION_REVIEWOK' | translate }}
                 </div>
             </td>
-            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px; padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
         </tr>
 
         <!-- Review FAIL -->
-        <tr ng-show="(notification.type===3)">
-            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-alert before-big"></i></td>
-            <td width="*" style="vertical-align: middle;">
+        <tr ng-if="(notification.type===4)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;">
+                <i style="color: darkgray;" class="icon ion-android-alert before-big" style="color:red;"></i>
+            </td>
+            <td width="*" style="vertical-align: middle;color:red;">
                 <div>
                     {{ 'NOTIFICATION_REVIEWFAIL' | translate }}
                 </div>
             </td>
-            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
         </tr>
 
         <!-- New Chat Message -->
-        <tr ng-show="(notification.type===4)">
+        <tr ng-if="(notification.type===5)">
             <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-chatboxes before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div>
                     {{ 'NOTIFICATION_CHATREQUEST' | translate }}
                 </div>
             </td>
-            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;" on-tap="tapNotificationDelete($event, notification)"><i class="icon ion-ios-close-outline before-big"></i></td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
+        </tr>
+
+        <!-- Welcome to Party -->
+        <tr ng-if="(notification.type===6)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-contacts before-big"></i></td>
+            <td width="*" style="vertical-align: middle;">
+                <div>
+                    WELCOME TO PARTY (TODO TRANSLATE)
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
+        </tr>
+
+        <!-- Got Reward -->
+        <tr ng-if="(notification.type===7)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-contacts before-big"></i></td>
+            <td width="*" style="vertical-align: middle;">
+                <div>
+                    You got rewarded (TODO TRANSLATE)
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
         </tr>
 
     </table>

@@ -180,10 +180,13 @@ angular.module('starter.api', [])
             },
             loadParty: function(partyId, win, fail) {
 
+                var localState = AppContext.getLocalState();
+                if (typeof localState.lastPartyUpdates[partyId] == "undefined") localState.lastPartyUpdates[partyId] = 0;
+
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
-                config.url = activeServerUrl+'/party/'+partyId;
+                config.url = activeServerUrl+'/party/'+partyId+'?lastTS='+localState.lastPartyUpdates[partyId];
                 // WIN
                 var successCallback = function(response) {
 
@@ -197,6 +200,16 @@ angular.module('starter.api', [])
                         var multiLangTitle = response.data.requests[i].titleMultiLang;
                         if ((typeof multiLangTitle == "undefined") || (multiLangTitle==null)) continue;
                         response.data.requests[i].titleMultiLang.data = JSON.parse(multiLangTitle.data);
+                    }
+
+                    // remember highest notification TS
+                    var newLastNotiTS = localState.lastPartyUpdates[partyId];
+                    if (typeof response.data.notifications != "undefined") {
+                       for (var i=0; i < response.data.notifications.length; i++) {
+                           if (response.data.notifications[i].timeStamp>newLastNotiTS) newLastNotiTS = response.data.notifications[i].timeStamp;
+                       }
+                       localState.lastPartyUpdates[partyId] = newLastNotiTS;
+                       AppContext.setLocalState(localState);
                     }
 
                     win(response.data);
@@ -459,8 +472,6 @@ angular.module('starter.api', [])
 
             },
             markNotificationAsRead: function(notificationId, win, fail) {
-
-                var json = JSON.stringify(arrayOfRewardGetterUserIds);
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();

@@ -9,21 +9,29 @@ import javax.validation.Valid;
 import de.konfetti.data.Chat;
 import de.konfetti.data.Client;
 import de.konfetti.data.Message;
+import de.konfetti.data.Request;
 import de.konfetti.data.User;
 import de.konfetti.service.ChatService;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.MessageService;
+import de.konfetti.service.RequestService;
 import de.konfetti.service.UserService;
+import de.konfetti.websocket.CommandMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @CrossOrigin
 @RestController
@@ -31,18 +39,25 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ChatController.class);
+    
+    private static final Gson GSON = new GsonBuilder().create();
 	
     private final UserService userService;
     private final ClientService clientService;
     private final ChatService chatService;
     private final MessageService messageService;
+    private final RequestService requestService;
+    
+    @Autowired
+    private SimpMessagingTemplate webSocket;
 
     @Autowired
-    public ChatController(final UserService userService, final ClientService clientService, final ChatService chatService, final MessageService messageService) {
+    public ChatController(final UserService userService, final ClientService clientService, final ChatService chatService, final MessageService messageService, final RequestService requestService) {
         this.userService = userService;
         this.clientService = clientService;
         this.chatService = chatService;
         this.messageService = messageService;
+        this.requestService = requestService;
     }
 
     //---------------------------------------------------
@@ -61,10 +76,15 @@ public class ChatController {
     		boolean userIsHost = (template.getHostId().equals(client.getUserId()));
     		if (!userIsHost) throw new Exception("user cannot create chat for other users");
     	
-        	// check if request is set
+        	// B) check if request is set and and set correct party id from request
         	if (template.getRequestId()==null) throw new Exception("request reference is not set");
+        	Request request = requestService.findById(template.getRequestId());
+        	if (request==null) throw new Exception("request("+template.getRequestId()+") not found");
+        	template.setPartyId(request.getPartyId());
     		
-        	// TODO: check if request is open for chats (not done or processing)
+        	// C) check if request is open for chats (not done or processing)
+        	if (Request.STATE_DONE.equals(request.getState())) throw new Exception("no chat possible on DONE request");
+        	if (Request.STATE_PROCESSING.equals(request.getState())) throw new Exception("no chat possible on PROCESSING request");
         	
     	} else {
     		
@@ -86,10 +106,10 @@ public class ChatController {
     	// create new user
     	Chat chat = chatService.create(template);
     	
-    	// add transient chat partner info
+    	// add transient chat partner info	
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
-			if (chat.getMembers().length==1) {
-				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+    		if (chat.getMembers().length==1) {
+				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], 0l);
 			} else {
 				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
 			}
@@ -100,13 +120,17 @@ public class ChatController {
     
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{chatId}", method = RequestMethod.GET, produces = "application/json")
-    public Chat getChat(@PathVariable Long chatId, HttpServletRequest httpRequest) throws Exception {
+    public Chat getChat(@PathVariable Long chatId, @RequestParam(value="lastTS",defaultValue="0") Long lastTS, HttpServletRequest httpRequest) throws Exception {
         
     	// try to load message and chat
     	Chat chat = chatService.findById(chatId);
     	if (chat==null) throw new Exception("chat("+chatId+") not found");
 
-    	// check if user is allowed to create
+    	// load messages of chat
+    	List<Message> messages = messageService.getAllMessagesOfChatSince(chat.getId(),lastTS);
+    	chat.setMessages(messages);
+    	
+    	// check if user is allowed to get data
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
     		
     		// A) check that user is host or member of chat
@@ -120,35 +144,40 @@ public class ChatController {
 				}
 			}
     		if ((!userIsHost) && (!userIsMember)) throw new Exception("not host or member on chat("+chatId+")");
-    		
-    		
-    		// B) add transient chat partner info
+    		    		
+        	// B) find biggest message TS of delivered messages and remember
+        	long biggestTS = 0l;
+        	for (Message message : messages) {
+    			if (message.getTime()>biggestTS) biggestTS = message.getTime();
+    		}
+        	if (biggestTS>chat.getLastTSforMember(client.getUserId())) {
+        		chat.setLastTSforMember(client.getUserId(), biggestTS);
+        		chatService.update(chat);
+        	}
+        	
+    		// C) add transient chat partner info
     		if (userIsHost) {
     			// show member as chat partner
     			if (chat.getMembers().length==1) {
-    				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0]);
+    				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
     			} else {
     				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
     			}
     		} else {
     			// show host as chat partner
-    			setChatPartnerInfoOn(userService, chat, chat.getHostId());
+    			setChatPartnerInfoOn(userService, chat, chat.getHostId(), client.getUserId());
     		}
-    
+        	
     	} else {
     		
     		// B) check for trusted application with administrator privilege
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
     	
-    	// load messages of chat
-    	List<Message> messages = messageService.getAllMessagesOfChat(chat.getId());
-    	chat.setMessages(messages);
-    	
     	return chat;
     }
     
-    public static void setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId) {
+    public static void setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId, Long selfId) {
     	User user = userService.findById(chatPartnerUserId);
     	if (user==null) {
     		LOGGER.warn("Cannot set ChatPartnerInfo for user("+chatPartnerUserId+") - NOT FOUND");
@@ -158,6 +187,8 @@ public class ChatController {
     	chat.setChatPartnerName(user.getName());
     	if ((user.getImageMediaID()!=null) && (user.getImageMediaID()>0)) chat.setChatPartnerImageMediaID(user.getImageMediaID());
     	if ((user.getSpokenLangs()!=null) && (user.getSpokenLangs().length>0)) chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
+    	chat.setUnreadMessage(!chat.hasUserSeenLatestMessage(selfId));
+    	//LOGGER.info("user("+selfId+") has unread message on chat("+chat.getId()+") --> "+chat.isUnreadMessage());
     }
     
     //---------------------------------------------------
@@ -167,6 +198,8 @@ public class ChatController {
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{chatId}/message", method = RequestMethod.POST, produces = "application/json")
     public Message addMessage(@PathVariable Long chatId, @RequestBody @Valid final Message template, HttpServletRequest httpRequest) throws Exception {
+    	
+    	long messageTS = System.currentTimeMillis();
     	
     	Chat chat = chatService.findById(chatId);
     	if (chat==null) throw new Exception("chat("+chatId+") not found");
@@ -188,16 +221,25 @@ public class ChatController {
     	
     		// make sure userId is correct
         	template.setUserId(client.getUserId());
+        	
+        	// B) set last TS for posting user to this message TS
+        	long lastTSofUser = chat.getLastTSforMember(client.getUserId());
+        	if (lastTSofUser<messageTS) {
+        		chat.setLastTSforMember(client.getUserId(), messageTS);
+        		chatService.update(chat);
+        	} else {
+        		LOGGER.warn("strange: messageTS <= lastTSofUser");
+        	}
     		
     	} else {
     		
-    		// B) check for trusted application with administrator privilege
+    		// A) check for trusted application with administrator privilege
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
     	
     	// security override on template
     	template.setId(null);
-    	template.setTime(System.currentTimeMillis());
+    	template.setTime(messageTS);
     	template.setChatId(chat.getId());
     	    	
     	// TODOD check that itemId exists
@@ -205,6 +247,19 @@ public class ChatController {
     	// create new user
     	Message message = messageService.create(template);
     	LOGGER.info("Message("+message.getId()+") CREATED on chat("+chatId+")");
+    	
+    	
+    	// publish info about new chat message public channel
+    	CommandMessage msg = new CommandMessage();
+    	msg.setCommand(CommandMessage.COMMAND_CHATUPADTE);
+    	String jsonArray = "[";
+    	for (Long memberID : chat.getMembers()) {
+    		jsonArray += (memberID + ",");
+		}
+		jsonArray += (chat.getHostId() + "]");
+    	msg.setData("{\"party\":"+chat.getPartyId()+", \"users\":"+jsonArray+"}");
+    	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));  
+    	
         return message;
     }
     

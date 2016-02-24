@@ -5,6 +5,7 @@ public class CommandMessage {
 	  public static final String COMMAND_PING = "ping";
 	  public static final String COMMAND_PONG = "pong";
 	  public static final String COMMAND_PARTYUPADTE = "update-party";
+	  public static final String COMMAND_CHATUPADTE = "update-chat";
 	 
 	  private String command;
 	  private String data;

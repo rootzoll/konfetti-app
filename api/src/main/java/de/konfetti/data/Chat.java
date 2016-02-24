@@ -1,6 +1,8 @@
 package de.konfetti.data;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,6 +20,9 @@ public class Chat {
     // the request this chat belongs to (if possible keep optional)
     private Long requestId;
     
+    // the party this chat belongs to - request --> party (if possible keep optional)
+    private Long partyId;
+    
     // the admin / initiator of the chat ... the userId
     private Long hostId;
     
@@ -27,11 +32,14 @@ public class Chat {
     // true if the author dont want chat to be displayed anymore
     private Boolean muted = false;
     
+    // remember which TS was the last message received per member
+    private HashMap<Long, Long> lastTSperMember = new HashMap<Long, Long>();
+    
     /*
      * TRANSITENT --> just for delivery
      */
     
-    @Transient
+	@Transient
     private List<Message> messages;
 
     @Transient
@@ -45,6 +53,9 @@ public class Chat {
 	
 	@Transient
     private String[] chatPartnerSpokenLangs;
+	
+	@Transient
+	private boolean unreadMessage;
     
     /*
      * METHODS
@@ -129,4 +140,55 @@ public class Chat {
 	public void setChatPartnerId(Long chatPartnerId) {
 		this.chatPartnerId = chatPartnerId;
 	}
+	
+	public Long getLastTSforMember(Long userId) {
+		Long lastTS = this.lastTSperMember.get(userId);
+		if (lastTS==null) lastTS = 0l;
+		return lastTS;
+	}
+	
+	public void setLastTSforMember(Long userId, Long ts) {
+		this.lastTSperMember.put(userId, ts);
+	}
+	
+	public boolean hasUserSeenLatestMessage(Long userId) {
+		if ((userId==null) || (userId==0)) return true;
+		Long userTS = this.getLastTSforMember(userId);
+		for (Long memberID : this.lastTSperMember.keySet()) {
+			if (this.lastTSperMember.get(memberID).longValue()>userTS.longValue()) return false;
+		}
+		return true;
+	}
+
+	public Long getPartyId() {
+		return partyId;
+	}
+
+	public void setPartyId(Long partyId) {
+		this.partyId = partyId;
+	}
+
+	public boolean isUnreadMessage() {
+		return unreadMessage;
+	}
+
+	public void setUnreadMessage(boolean unreadMessage) {
+		this.unreadMessage = unreadMessage;
+	}
+	
+    public HashMap<Long, Long> getLastTSperMember() {
+		return lastTSperMember;
+	}
+
+	public void setLastTSperMember(HashMap<Long, Long> lastTSperMember) {
+		this.lastTSperMember = lastTSperMember;
+	}
+	
+	public boolean chatContainsMessages() {
+		for (Long member : this.lastTSperMember.keySet()) {
+			if (this.getLastTSforMember(member).longValue()>0l) return true;
+		}
+		return false;
+	}
+		
 }
