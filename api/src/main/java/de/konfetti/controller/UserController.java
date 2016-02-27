@@ -13,11 +13,13 @@ import de.konfetti.service.AccountingService;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.UserService;
 import de.konfetti.service.exception.AccountingTools;
+import de.konfetti.utils.EMailManager;
 import de.konfetti.utils.Helper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +41,9 @@ public class UserController {
     private final ClientService clientService;
     private final AccountingService accountingService;
 
+    @Autowired
+    private JavaMailSender javaMailSender;
+    
     @Autowired
     public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService) {
         this.userService = userService;
