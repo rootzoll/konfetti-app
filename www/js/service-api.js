@@ -8,7 +8,7 @@ angular.module('starter.api', [])
         var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
         // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
-        var activeServerUrl = apiUrlBaseDevServer; //apiUrlBaseLocalhost;
+        var activeServerUrl = apiUrlBaseDevServer;
 
         var getBasicHttpHeaderConfig = function() {
             var account = AppContext.getAccount();
@@ -278,6 +278,20 @@ angular.module('starter.api', [])
                 // WIN
                 var successCallback = function(response) {
                     win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
+            generateCoupons: function(partyId, count, amount, email, lang, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.timeout = 60000;
+                config.url = activeServerUrl+'/account/coupons/'+partyId+'?count='+count+'&amount='+amount+'&email='+encodeURIComponent(email)+'&locale='+lang;
+                // WIN
+                var successCallback = function(response) {
+                    win();
                 };
                 $http(config).then(successCallback, fail);
 

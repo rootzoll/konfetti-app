@@ -509,6 +509,7 @@ angular.module('starter.controller.dash', [])
             ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
                 $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
+                $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;
                 $rootScope.party = data;
                 if ($scope.isAdminForThisParty || $scope.isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
                 $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().id);

@@ -57,6 +57,20 @@
               </button>
           </div>
 
+          <div style="text-align: center; padding-top:10px; padding-left: 20%; padding-right: 20%; border-top-width: 1px; border-style: solid; border-color: lightgrey;">
+              {{ 'EMAIL_INFO' | translate }}
+          </div>
+
+          <div class="item item-input-inset" style="border-top-width: 0px;">
+              <label class="item-input-wrapper">
+                  <input type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email">
+              </label>
+              <button class="button button-small" on-tap="storeMail(email)">
+                  <!-- TODO add button trigger when user hits enter on eMail input -->
+                  {{ 'SAVE' | translate }}
+              </button>
+          </div>
+
           <!-- DEACTIVATED FOR NOW
 
           <div style="width:100%;padding-top:8px;padding-left: 16px;text-align: left;">
@@ -73,17 +87,34 @@
               </ion-toggle>
           </div>
 
-
-
-      </div>
-
-          <div style="color: lightgrey">GPS: lat({{lat}}) lon({{lon}})</div>
-
-          <div style="color: lightgrey">Account JSON: {{accountJson}}</div>
+        -->
 
       </div>
 
-      -->
+
+
+      <!-- PARTY ADMIN PANEL -->
+
+      <div ng-show="isAdminForThisParty" class="card">
+          <div class="item item-divider">
+               {{ 'PARTYADMIN_OPTIONS' | translate }}
+          </div>
+      </div>
+
+      <div ng-show="isAdminForThisParty" class="list card" style="text-align: center; margin-top: 8px;">
+
+          <div style="margin-top: 14px;">
+              {{party.name}}
+          </div>
+
+          <div style="padding-top: 16px; padding-bottom: 16px">
+              <button on-tap="onButtonAdminCreateCoupons(email)" class="button icon-left ion-cash button-positive" style="border-radius: 6px">
+                  {{ 'CREATE_COUPONS' | translate }}
+              </button>
+          </div>
+
+      </div>
+
 
   </ion-content>
 </ion-view>

@@ -305,7 +305,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'USELOCATION' : 'Would you like to add your current location?',
             'SELECT_LESS' : 'Please select less.',
             'CHECK_MEDIAITEMS' : 'contains additional media items (see below)',
-            'KEEP_HEADLINE_SHORT' : 'try to keep headline short'
+            'KEEP_HEADLINE_SHORT' : 'try to keep headline short',
+            'INVALID_EMAIL' : 'Please enter a valid email address.',
+            'EMAIL_OK' : 'Thanks. Your email got stored and more info send to your address.',
+            'EMAIL_NEEDED' : 'You need to set your email to create coupons.',
+            'EMAIL_INFO' : 'Set email for backup and important announcements:',
+            'SAVE' : 'save',
+            'WELCOME_PARTY' :'Welcome to this Konfetti party.',
+            'REWARD_NOTI' : 'You got a reward.',
+            'PARTYADMIN_OPTIONS' : 'Party Admin Options',
+            'CREATE_COUPONS' : 'Create Konfetti Coupons',
+            'COUPON_COUNT' : 'Number of Coupons:',
+            'COUPON_AMOUNT' : 'Konfetti per Coupon:',
+            'CREATE_COUPON_TITLE' : 'Create Konfetti Coupons',
+            'CREATE_COUPON_SUBLINE' : 'you will get an email with a PDF to print out',
+            'CREATE_COUPON_OK' : 'Your coupons got created. Check your email.'
    });
 
    $translateProvider.translations('de', {
@@ -420,8 +434,22 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'USELOCATION' : 'Die aktuelle Position hinzufügen?',
             'SELECT_LESS' : 'Bitte weniger auswählen.',
             'CHECK_MEDIAITEMS' : 'enthält weitere Medienelemente (siehe unten)',
-            'KEEP_HEADLINE_SHORT' : 'versuch die Überschrift kurz zu halten'
-        });
+            'KEEP_HEADLINE_SHORT' : 'versuch die Überschrift kurz zu halten',
+            'INVALID_EMAIL' : 'Bitte eine gültige eMail eingeben.',
+            'EMAIL_OK' : 'Danke. Deine eMail wurde gespeichert. Weitere Infos wurden dir zugesandt.',
+            'EMAIL_NEEDED' : 'Bitte zuerst eine eMail angeben, um Coupons zu erstellen.',
+            'EMAIL_INFO' : 'eMail für Konfetti Backup und wichtige Ankündigungen:',
+            'SAVE' : 'speichern',
+            'WELCOME_PARTY' :'Willkommen zu dieser Konfetti-Party.',
+            'REWARD_NOTI' : 'Du hast Konfetti erhalten.',
+            'PARTYADMIN_OPTIONS' : 'Party Admin Optionen',
+            'CREATE_COUPONS' : 'Konfetti Coupons erstellen',
+            'COUPON_COUNT' : 'Anzahl der Coupons:',
+            'COUPON_AMOUNT' : 'Konfetti pro Coupon:',
+            'CREATE_COUPON_TITLE' : 'Konfetti Coupons erstellen',
+            'CREATE_COUPON_SUBLINE' : 'die Coupons werden als PDF per eMail zugesandt',
+            'CREATE_COUPON_OK' : 'Die Coupons wurden erstellt. Bitte eMail Eingang prüfen.'
+   });
 
    $translateProvider.translations('ar', {
             'TAB_PARTIES' : 'حفلات',
@@ -535,7 +563,21 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'USELOCATION' : 'هل ترغب في إضافة موقعك الحالي ؟',
             'SELECT_LESS' : 'الرجاء تحديد أقل.',
             'CHECK_MEDIAITEMS' : 'يحتوي على عناصر وسائط إضافية (انظر أدناه)',
-            'KEEP_HEADLINE_SHORT' : 'محاولة للحفاظ على التوجه قصيرة'
+            'KEEP_HEADLINE_SHORT' : 'محاولة للحفاظ على التوجه قصيرة',
+            'INVALID_EMAIL' : 'رجاء قم بإدخال بريد الكتروني صحيح.',
+            'EMAIL_OK' : 'شكر. البريد الإلكتروني الخاص بك الحصول على تخزين ومزيد من المعلومات إرسالها إلى عنوان الخاص بك.',
+            'EMAIL_NEEDED' : 'تحتاج إلى تعيين البريد الإلكتروني الخاص بك لإنشاء القسائم.',
+            'EMAIL_INFO' : 'تعيين البريد الإلكتروني للنسخ الاحتياطي وهامة الإعلانات:',
+            'SAVE' : 'حفظ',
+            'WELCOME_PARTY' :'مرحبا بكم في هذا الحزب حلويات.',
+            'REWARD_NOTI' : 'كنت حصلت على مكافأة.',
+            'PARTYADMIN_OPTIONS' : 'خيارات مسؤول الحزب',
+            'CREATE_COUPONS' : 'إنشاء كوبونات النثار',
+            'COUPON_COUNT' : 'عدد القسائم:',
+            'COUPON_AMOUNT' : 'حلويات في القسيمة:',
+            'CREATE_COUPON_TITLE' : 'إنشاء كوبونات النثار',
+            'CREATE_COUPON_SUBLINE' : 'سوف تتلقى رسالة بريد إلكتروني مع وثيقة للطباعة',
+            'CREATE_COUPON_OK' : 'القسائم الخاصة بك حصلت بإنشائه. تحقق من بريدك الالكتروني.'
    });
 
   $translateProvider.preferredLanguage("en");

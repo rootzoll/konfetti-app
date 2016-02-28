@@ -1,5 +1,6 @@
 package de.konfetti.controller;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +9,11 @@ import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.ClientAction;
+import de.konfetti.data.Party;
 import de.konfetti.data.User;
 import de.konfetti.service.AccountingService;
 import de.konfetti.service.ClientService;
+import de.konfetti.service.PartyService;
 import de.konfetti.service.UserService;
 import de.konfetti.service.exception.AccountingTools;
 import de.konfetti.utils.EMailManager;
@@ -40,15 +43,17 @@ public class UserController {
     private final UserService userService;
     private final ClientService clientService;
     private final AccountingService accountingService;
+    private final PartyService partyService;
 
     @Autowired
     private JavaMailSender javaMailSender;
     
     @Autowired
-    public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService) {
+    public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService, final PartyService partyService) {
         this.userService = userService;
         this.clientService = clientService;
         this.accountingService = accountingService;
+        this.partyService = partyService;
     }
 
     //---------------------------------------------------
@@ -108,13 +113,21 @@ public class UserController {
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     		if (!client.getUserId().equals(userExisting.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userExisting.getId()+")");
     	
+    		// B) check if email got changed
+    		if ((userInput.geteMail()!=null) && (!userInput.geteMail().equals(userExisting.geteMail()))) {
+    			// TODO create backup code and send per eMail
+    			// TODO multiple language eMail text
+    			userExisting.seteMail(userInput.geteMail());
+    			EMailManager.getInstance().sendMail(javaMailSender, userInput.geteMail(), "Your Konfetti eMail Setup", "Thanks for connecting your eMail with the Konfetti App", null);
+    		}
+    		
         	// transfer selective values from input to existing user
         	userExisting.seteMail(userInput.geteMail());
         	userExisting.setImageMediaID(userInput.getImageMediaID());
         	userExisting.setName(userInput.getName());
         	userExisting.setPushActive(userInput.getPushActive());
         	userExisting.setPushSystem(userInput.getPushSystem());    	
-        	userExisting.setSpokenLangs(userInput.getSpokenLangs());  
+        	userExisting.setSpokenLangs(userInput.getSpokenLangs()); 
     		
     	} else {
     		
@@ -136,7 +149,68 @@ public class UserController {
 		public List<ClientAction> actions;
 		public String feedbackHtml;
 	}
-    
+
+    @SuppressWarnings("deprecation")
+	@CrossOrigin(origins = "*")
+    @RequestMapping(value="/coupons/{partyId}", method = RequestMethod.GET, produces = "application/json") 
+    public Boolean generateCodes(@PathVariable Long partyId, 
+    		@RequestParam(value="count", defaultValue="0") Integer count,
+    		@RequestParam(value="amount", defaultValue="0") Integer amount,
+    		@RequestParam(value="email", defaultValue="") String email,
+    		@RequestParam(value="locale", defaultValue="en") String locale, 
+    		HttpServletRequest httpRequest) throws Exception {
+    	
+    	String mailConf = Helper.getPropValues("spring.mail.host");
+    	if ((mailConf==null) || (mailConf.trim().length()==0)) throw new Exception("eMail is not configured in application.properties - cannot generate/send coupons");
+    	
+    	if (count<=0) throw new Exception("must be more than 0 coupons");
+    	if (amount<=0) throw new Exception("must be more than 0 per coupon");
+    	
+    	// get user from HTTP request
+    	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+    	if (client==null) throw new Exception("invalid/missing client on request");
+    	User user = userService.findById(client.getUserId());
+    	if (user==null) throw new Exception("missing user with id("+client.getUserId()+")");
+    	
+    	// check if party exists
+    	Party party = partyService.findById(partyId);
+    	if (party==null) throw new Exception("party does not exist");
+    	
+    	// check if user is admin for party
+    	if (!Helper.contains(user.getAdminOnParties(), party.getId())) throw new Exception("user needs to be admin on party");
+    	
+    	// check if user has set email
+    	if (email.trim().length()==0) email = user.geteMail();
+    	if ((email==null) || (email.trim().length()<4)) throw new Exception("user needs to have a valid email on account");
+    	
+    	// generate codes
+    	// TODO generate unique number codes
+    	// TODO persist codes
+    	List<String> codes = new ArrayList<String>();
+    	int no = 1000;
+    	for (int i=0; i<count; i++) {
+    		no++;
+    		codes.add("code"+no);
+    	}
+    	
+    	// URL max 8KB
+    	String urlStr = "";
+    	for (String code : codes) {
+    		urlStr += (","+code);
+		}
+    	urlStr = "http://localhost:2342/generate?template="+URLEncoder.encode("coupon-master-template.html")+"&codes=" +URLEncoder.encode(urlStr.substring(1));
+    	if (urlStr.length()>(6*1024)) LOGGER.warn("the URL to generate the codes is >6KB - limit is 8KB - may become critical");
+    	if (urlStr.length()>(8*1024)) throw new Exception("the URL to generate the codes is >8KB - thats bigger than URL GET data can be with NodeJS");
+    	
+    	LOGGER.info("URL to generate Coupons: "+urlStr);
+    	
+    	if (!EMailManager.getInstance().sendMail(javaMailSender, email.trim(), "Konfetti Coupons "+System.currentTimeMillis(), "Print out the PDF attached and spread the love :)", urlStr)) {
+    		throw new Exception("Was not able to send eMail with Coupons to "+user.geteMail());
+    	};
+    	
+    	return true;
+    }
+	
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/redeem/{code}", method = RequestMethod.GET, produces = "application/json") 
     public RedeemResponse redeemCode(@PathVariable String code, @RequestParam(value="locale", defaultValue="en") String locale, HttpServletRequest httpRequest) throws Exception {
