@@ -3,6 +3,7 @@ package de.konfetti.controller;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -39,6 +40,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+    
+    private static Random randomGenerator = new Random();
 	
     private final UserService userService;
     private final ClientService clientService;

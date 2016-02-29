@@ -5,4 +5,4 @@ cd couponGenerator
 npm install
 node src/index.js &
 cd ..
-echo "COUPON GENERATOR STARTED ON PORT 3000"
+echo "COUPON GENERATOR STARTED ON PORT 2342"
