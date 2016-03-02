@@ -23,7 +23,10 @@ public class BaseService {
     
     protected MessageRepository messageRepository;
    
-
+    protected CodeRepository codeRepository;
+    
+    protected KonfettiTransactionRepository konfettiTransactionRepository;
+    
     public BaseService() {
     }
 

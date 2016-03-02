@@ -36,6 +36,21 @@
             </td>
         </tr>
 
+        <!-- Payback of Upvate Konfetti -->
+        <tr ng-if="(notification.type===3)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;">
+                <i style="color: darkgray;" class="icon ion-android-alert before-big" style="color:red;"></i>
+            </td>
+            <td width="*" style="vertical-align: middle;color:red;">
+                <div>
+                    {{ 'NOTIFICATION_PAYBACK' | translate }} (+{{notification.ref}} Konfetti)
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
+        </tr>
+
         <!-- Review FAIL -->
         <tr ng-if="(notification.type===4)">
             <td width="45" style="vertical-align: middle; padding-left: 10px;">
@@ -83,6 +98,19 @@
             <td width="*" style="vertical-align: middle;">
                 <div>
                     {{ 'REWARD_NOTI' | translate }}
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
+        </tr>
+
+        <!-- A task you supported got done -->
+        <tr ng-if="(notification.type===8)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-android-contacts before-big"></i></td>
+            <td width="*" style="vertical-align: middle;">
+                <div>
+                    {{ 'NOTIFICATION_SUPPORTWIN' | translate }}
                 </div>
             </td>
             <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">

@@ -4,6 +4,8 @@ import java.util.List;
 
 import de.konfetti.data.Account;
 import de.konfetti.data.AccountRepository;
+import de.konfetti.data.KonfettiTransaction;
+import de.konfetti.data.KonfettiTransactionRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +20,9 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
     }
 
     @Autowired
-    public AccountingServiceImpl(AccountRepository accountRepository) {
+    public AccountingServiceImpl(AccountRepository accountRepository, KonfettiTransactionRepository konfettiTransactionRepository) {
         this.accountRepository = accountRepository;
+        this.konfettiTransactionRepository = konfettiTransactionRepository;
     }
 
 	@Override
@@ -45,8 +48,17 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return true;
 	}
 
+	/**
+	 * 
+	 * @param transactionType --> use FINALS from KonfettiTransaction
+	 * @param fromAccountName
+	 * @param toAccountName
+	 * @param amount
+	 * @return
+	 * @throws Exception
+	 */
 	@Override
-	public synchronized boolean transfereBetweenAccounts(String fromAccountName, String toAccountName, long amount) throws Exception {
+	public synchronized boolean transfereBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception {
 		
 		if (amount<=0) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> invalid amount");
 		
@@ -61,19 +73,28 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		if (from.getBalance()<amount) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> from account has too low blanance of "+from.getName());
 		
 
-		// transfere amount
+		// transfer amount
 		from.removeBalance(amount);
 		to.addBalance(amount);
 		
 		// persist
 		accountRepository.saveAndFlush(from);
 		accountRepository.save(to);
-
+		
+		// store transaction
+		KonfettiTransaction konfettiTransaction = new KonfettiTransaction();
+		konfettiTransaction.setType(transactionType);
+		konfettiTransaction.setTimestamp(System.currentTimeMillis());
+		konfettiTransaction.setFromAccount(fromAccountName);
+		konfettiTransaction.setToAccount(toAccountName);
+		konfettiTransaction.setAmount(amount);
+		konfettiTransaction = this.konfettiTransactionRepository.saveAndFlush(konfettiTransaction);
+		
 		return true;
 	}
 
 	@Override
-	public synchronized Long addBalanceToAccount(String accountName, long amount) throws Exception {
+	public synchronized Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception {
 		
 		// check input
 		if (amount<=0) throw new Exception("addBalanceToAccount("+accountName+","+amount+") -> invalid amount");
@@ -85,11 +106,19 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		// add amount and persist
 		account.addBalance(amount);
 		accountRepository.saveAndFlush(account);
+		
+		// store transaction
+		KonfettiTransaction konfettiTransaction = new KonfettiTransaction();
+		konfettiTransaction.setType(transactionType);
+		konfettiTransaction.setTimestamp(System.currentTimeMillis());
+		konfettiTransaction.setToAccount(accountName);
+		konfettiTransaction.setAmount(amount);
+		konfettiTransaction = this.konfettiTransactionRepository.saveAndFlush(konfettiTransaction);
+		
 		return account.getBalance();
 	}
 
-	@Override
-	public synchronized Long removeBalanceFromAccount(String accountName, long amount) throws Exception {
+	public synchronized Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception {
 		
 		// check input
 		if (amount<=0) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") -> invalid amount");

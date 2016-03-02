@@ -319,7 +319,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'COUPON_AMOUNT' : 'Konfetti per Coupon:',
             'CREATE_COUPON_TITLE' : 'Create Konfetti Coupons',
             'CREATE_COUPON_SUBLINE' : 'you will get an email with a PDF to print out',
-            'CREATE_COUPON_OK' : 'Your coupons got created. Check your email.'
+            'CREATE_COUPON_OK' : 'Your coupons got created. Check your email.',
+            'NOTIFICATION_PAYBACK' : 'A task you supported got canceled = payback.',
+            'NOTIFICATION_SUPPORTWIN' : 'A task you supported got done.',
+            'INFO_REWARD' : 'Your reward for this task',
+            'INFO_SUPPORT' : 'Your support for this task',
+            'SELECT_LANG' : 'Please select languages you speak.'
    });
 
    $translateProvider.translations('de', {
@@ -448,7 +453,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'COUPON_AMOUNT' : 'Konfetti pro Coupon:',
             'CREATE_COUPON_TITLE' : 'Konfetti Coupons erstellen',
             'CREATE_COUPON_SUBLINE' : 'die Coupons werden als PDF per eMail zugesandt',
-            'CREATE_COUPON_OK' : 'Die Coupons wurden erstellt. Bitte eMail Eingang prüfen.'
+            'CREATE_COUPON_OK' : 'Die Coupons wurden erstellt. Bitte eMail Eingang prüfen.',
+            'NOTIFICATION_PAYBACK' : 'Eine Aufgabe die Du unterstützt hattest wurde abgebrochen = Zurückzahlung.',
+            'NOTIFICATION_SUPPORTWIN' : 'Eine Aufgabe die Du unterstüzt hast wurde erledigt.',
+            'INFO_REWARD' : 'Du hast für diese Aufgabe erhalten',
+            'INFO_SUPPORT' : 'Du hast diese Aufgabe unterstützt',
+            'SELECT_LANG' : 'Bitte Sprache auswählen.'
    });
 
    $translateProvider.translations('ar', {
@@ -577,7 +587,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'COUPON_AMOUNT' : 'حلويات في القسيمة:',
             'CREATE_COUPON_TITLE' : 'إنشاء كوبونات النثار',
             'CREATE_COUPON_SUBLINE' : 'سوف تتلقى رسالة بريد إلكتروني مع وثيقة للطباعة',
-            'CREATE_COUPON_OK' : 'القسائم الخاصة بك حصلت بإنشائه. تحقق من بريدك الالكتروني.'
+            'CREATE_COUPON_OK' : 'القسائم الخاصة بك حصلت بإنشائه. تحقق من بريدك الالكتروني.',
+            'NOTIFICATION_PAYBACK' : 'والمهمة التي دعمت حصلت على إلغاء = الاسترداد.',
+            'NOTIFICATION_SUPPORTWIN' : 'والمهمة التي دعمت حصلت على القيام به.',
+            'INFO_REWARD' : 'كنت حصلت على مكافأة من هذا الطلب مع',
+            'INFO_SUPPORT' : 'كنت دعم هذه المهمة',
+            'SELECT_LANG' : 'الرجاء تحديد اللغات التي يتكلم .'
    });
 
   $translateProvider.preferredLanguage("en");

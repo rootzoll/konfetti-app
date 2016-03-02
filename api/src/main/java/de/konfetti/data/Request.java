@@ -68,6 +68,15 @@ public class Request {
 	@Transient // --> just for delivery
 	private MediaItem titleMultiLang;
 	
+	@Transient // --> the amount a single user supported the request
+	private Long konfettiAmountSupport = 0l;
+	
+	@Transient // --> the amount a single user got rewarded by the request
+	private Long konfettiAmountReward = 0l;
+	
+	/*
+	 * Methods
+	 */
 	
     public MediaItem getTitleMultiLang() {
 		return titleMultiLang;
@@ -197,4 +206,20 @@ public class Request {
 		this.imageMediaID = imageMediaID;
 	}
 
+	public Long getKonfettiAmountSupport() {
+		return konfettiAmountSupport;
+	}
+
+	public void setKonfettiAmountSupport(Long konfettiAmountSupport) {
+		this.konfettiAmountSupport = konfettiAmountSupport;
+	}
+
+	public Long getKonfettiAmountReward() {
+		return konfettiAmountReward;
+	}
+
+	public void setKonfettiAmountReward(Long konfettiAmountReward) {
+		this.konfettiAmountReward = konfettiAmountReward;
+	}
+	
 }

@@ -88,11 +88,10 @@ public class NotificationServiceImpl extends BaseService implements Notification
 			if (notification.getTimeStamp()>sinceTimestamp) {
 				result.add(notification);
 			} else {
-				if (deleteOlder) delete(notification.getId());
+				if ((deleteOlder) && (!notification.needsManualDeletion())) delete(notification.getId());
 			}
 		}
 		return result;
 	}
-
     
 }

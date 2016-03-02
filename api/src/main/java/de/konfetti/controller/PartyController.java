@@ -2,6 +2,7 @@ package de.konfetti.controller;
 
 import de.konfetti.data.Chat;
 import de.konfetti.data.Client;
+import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.MediaItem;
 import de.konfetti.data.Notification;
 import de.konfetti.data.Party;
@@ -11,12 +12,13 @@ import de.konfetti.data.mediaitem.MultiLang;
 import de.konfetti.service.AccountingService;
 import de.konfetti.service.ChatService;
 import de.konfetti.service.ClientService;
+import de.konfetti.service.KonfettiTransactionService;
 import de.konfetti.service.MediaService;
 import de.konfetti.service.NotificationService;
 import de.konfetti.service.PartyService;
 import de.konfetti.service.RequestService;
 import de.konfetti.service.UserService;
-import de.konfetti.service.exception.AccountingTools;
+import de.konfetti.utils.AccountingTools;
 import de.konfetti.utils.AutoTranslator;
 import de.konfetti.utils.Helper;
 import de.konfetti.websocket.CommandMessage;
@@ -65,6 +67,8 @@ public class PartyController {
     
     private final MediaService mediaService;
     
+    private final KonfettiTransactionService konfettiTransactionService;
+    
     @Autowired
     private SimpMessagingTemplate webSocket;
     
@@ -77,7 +81,8 @@ public class PartyController {
     		final AccountingService accountingService, 
     		final UserService userService,
     		final ChatService chatService,
-    		final MediaService mediaService
+    		final MediaService mediaService,
+    		final KonfettiTransactionService konfettiTransactionService
     		) {
     	
         this.partyService = partyService;
@@ -88,6 +93,7 @@ public class PartyController {
         this.userService = userService;
         this.chatService = chatService;
         this.mediaService = mediaService;
+        this.konfettiTransactionService = konfettiTransactionService;
        
     }
 
@@ -148,7 +154,7 @@ public class PartyController {
     					if ((r.getUserId().equals(user.getId())) || (r.getState().equals(Request.STATE_DONE)) || (r.getState().equals(Request.STATE_PROCESSING)) || (r.getState().equals(Request.STATE_OPEN))) {
     						filteredRequests.add(r);
     					}
-    				}	
+    				}
             		requests = filteredRequests;
         		}
         	
@@ -310,7 +316,7 @@ public class PartyController {
             				LOGGER.info("Transfer Welcome-Konfetti("+party.getWelcomeBalance()+") on Party("+party.getId()+") to User("+client.getUserId()+") with accountName("+accountName+")");
             				
             				try {
-            				userBalance = accountingService.addBalanceToAccount(accountName, party.getWelcomeBalance());
+            				userBalance = accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_USERWELCOME, accountName, party.getWelcomeBalance());
             				} catch (Exception e) {
             					e.printStackTrace();
             				}
@@ -478,7 +484,7 @@ public class PartyController {
     	// transfer balance to request account
     	accountingService.createAccount(AccountingTools.getAccountNameFromRequest(persistent.getId()));
     	if (request.getKonfettiCount()>0) {
-    		accountingService.transfereBetweenAccounts(AccountingTools.getAccountNameFromUserAndParty(client.getUserId(),partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
+    		accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_TASKCREATION, AccountingTools.getAccountNameFromUserAndParty(client.getUserId(),partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
     	}
     	
     	// publish info about update on public channel
@@ -526,10 +532,22 @@ public class PartyController {
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
 
-    	// TODO implement
-    	LOGGER.warn("TODO: Implement payback of upvote konfetti when request is still open.");
+    	// delete
+    	Request result = requestService.delete(request.getId());
     	
-        return requestService.delete(request.getId());
+    	// payback of upvote konfetti when request is still open
+    	if (!Request.STATE_DONE.equals(request.getState())) {
+        	List<KonfettiTransaction> allPayIns = konfettiTransactionService.getAllTransactionsToAccount(AccountingTools.getAccountNameFromRequest(requestId));	
+        	for (KonfettiTransaction payIn : allPayIns) {
+				if ((payIn.getType()==KonfettiTransaction.TYPE_TASKSUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
+					// make payback
+					accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_TASKSUPPORT, AccountingTools.getAccountNameFromRequest(requestId), payIn.getFromAccount(), payIn.getAmount());
+					notificationService.create(Notification.TYPE_PAYBACK, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), payIn.getAmount());
+				}
+			}
+    	}
+    	
+        return result;
     }
 
     @CrossOrigin(origins = "*")
@@ -551,14 +569,18 @@ public class PartyController {
         	List<Chat> relevantChats = new ArrayList<Chat>();
         	for (Chat chat : chats) {
         		if (!chat.chatContainsMessages()) continue;
-        		if ((chat.getHostId().equals(client.getUserId())) || (userIsPartyAdmin)) {
-        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
+        		if (chat.getHostId().equals(client.getUserId())) {
+        			chat = ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
         			relevantChats.add(chat);
         		} else
         		if (Helper.contains(chat.getMembers(), client.getUserId())) {
-        			ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId(), client.getUserId());
+        			chat = ChatController.setChatPartnerInfoOn(userService, chat, chat.getHostId(), client.getUserId());
         			relevantChats.add(chat);
-        		}
+        		} else 
+        		if (userIsPartyAdmin) {
+        			chat = ChatController.setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
+        			relevantChats.add(chat);	
+        		} 
 			}
         	request.setChats(relevantChats);
         	
@@ -567,13 +589,39 @@ public class PartyController {
         	if (infos==null) infos = new ArrayList<MediaItem>();
         	request.setInfo(infos);
         	
+        	
+        	// add info about support to the request from this user
+        	long konfettiAmountSupport = 0l;
+        	List<KonfettiTransaction> allTransactionsToRequest = konfettiTransactionService.getAllTransactionsToAccountSinceTS(AccountingTools.getAccountNameFromRequest(request.getId()), request.getTime());
+        	for (KonfettiTransaction konfettiTransaction : allTransactionsToRequest) {
+				if (AccountingTools.getUserIdFromAccountName(konfettiTransaction.getFromAccount()).equals(user.getId())) {
+					konfettiAmountSupport += konfettiTransaction.getAmount();
+				}
+			}
+        	request.setKonfettiAmountSupport(konfettiAmountSupport);
+        	
+        	// add info about rewards from the request to user
+        	long konfettiAmountReward = 0l;
+        	if (request.getState().equals(Request.STATE_DONE)) {
+        		String accountName = AccountingTools.getAccountNameFromRequest(request.getId());
+            	List<KonfettiTransaction> allTransactionsFromRequest = konfettiTransactionService.getAllTransactionsFromAccountSinceTS(accountName, request.getTime());
+            	for (KonfettiTransaction konfettiTransaction : allTransactionsFromRequest) {
+            		if (konfettiTransaction.getType()!=KonfettiTransaction.TYPE_TASKREWARD) continue;
+            		if (konfettiTransaction.getFromAccount()==null) {
+            			LOGGER.warn("NULL fromAdress on transaction("+konfettiTransaction.getId()+") on request("+request.getId()+") ... why?!?");
+            			continue;
+            		}
+    				if (user.getId().equals(AccountingTools.getUserIdFromAccountName(konfettiTransaction.getToAccount()))) {
+    					konfettiAmountReward  += konfettiTransaction.getAmount();
+    				}
+    			}	
+        	}
+        	request.setKonfettiAmountReward(konfettiAmountReward);        	
+        	
         	// UPVOTE (optional when request parameter set)
         	if (upvoteAmount>0l) {
         		
         		LOGGER.info("Upvoting request("+requestId+") with amount("+upvoteAmount+") ...");
-        		
-        		// get user/client from request
-        		if (client==null) throw new Exception("no valid client info on request - need for upvote");
         		
         		// check if user has enough balance
         		String userAccountname = AccountingTools.getAccountNameFromUserAndParty(client.getUserId(), partyId);
@@ -582,7 +630,7 @@ public class PartyController {
         		if (userBalance<upvoteAmount) throw new Exception("user("+client.getId()+") has not enough balance to upvote on party("+partyId+") - is("+userBalance+") needed("+upvoteAmount+")");
         		
         		// transfer amount
-        		if (!accountingService.transfereBetweenAccounts(userAccountname, AccountingTools.getAccountNameFromRequest(requestId), upvoteAmount)) {
+        		if (!accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_TASKSUPPORT, userAccountname, AccountingTools.getAccountNameFromRequest(requestId), upvoteAmount)) {
         			throw new Exception("was not able to transfer upvote amount("+upvoteAmount+") from("+userAccountname+") to("+AccountingTools.getAccountNameFromRequest(requestId)+")");
         		}
         		
@@ -604,7 +652,6 @@ public class PartyController {
         	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));  
         	
         } else {
-        	
         	LOGGER.warn("PartyController getRequest("+requestId+") --> NULL");
         }
         
@@ -750,7 +797,7 @@ public class PartyController {
                 	rewardPerPerson = (long) Math.floor((requestBalance*1d) / (ids.size()*1d));
                 	if (((rewardPerPerson*ids.size())>requestBalance) || (rewardPerPerson<=0)) throw new Exception("reward("+requestBalance+") is not splitting up correctly to "+ids.size()+" --> "+rewardPerPerson);
             	
-                   	// transfere reward to users
+                   	// transfer reward to users
                 	for (Long rewardId : ids) {
                 		LOGGER.info("making transfere reward to userId("+rewardId+") ...");
                 		if (rewardId==null) {
@@ -762,21 +809,22 @@ public class PartyController {
     						continue;
     					}
     					final String rewardeeAccountName = AccountingTools.getAccountNameFromUserAndParty(rewardId, request.getPartyId());
-    					if (!accountingService.transfereBetweenAccounts(requestAccountName, rewardeeAccountName, rewardPerPerson)) {
+    					if (!accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_TASKREWARD, requestAccountName, rewardeeAccountName, rewardPerPerson)) {
     						LOGGER.error("FAIL payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
     					} else {
     						LOGGER.info("OK payout reward("+rewardPerPerson+") from("+requestAccountName+") to "+rewardeeAccountName);
-    		        		// send notification to author
-    		        		notificationService.create(Notification.TYPE_REWARD_GOT, request.getUserId(), request.getPartyId(), request.getId());
-    						
-    						// TODO
-    		            	LOGGER.warn("TODO: Implement send notification to rewardee");
+    						// send notification to author
+    		        		notificationService.create(Notification.TYPE_REWARD_GOT, rewardId, request.getPartyId(), request.getId());
     					}
                 	}
                 	
-                	// TODO: write payout history 
-                	
-                	// TODO: notification to all supporters of request about finish
+                	// notification to all supporters of request about finish
+                    List<KonfettiTransaction> allPayIns = konfettiTransactionService.getAllTransactionsToAccount(AccountingTools.getAccountNameFromRequest(requestId));	
+                    for (KonfettiTransaction payIn : allPayIns) {
+            			if ((payIn.getType()==KonfettiTransaction.TYPE_TASKSUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
+            				notificationService.create(Notification.TYPE_SUPPORT_WIN, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), request.getId());
+            			}
+            		}
             	
             	}
             	
@@ -784,6 +832,12 @@ public class PartyController {
             	request.setState(Request.STATE_DONE);
             	requestService.update(request);
             	LOGGER.info("request("+requestId+") set STATE to "+Request.STATE_DONE);
+            	
+            	// publish info about update on public channel
+            	CommandMessage msg = new CommandMessage();
+            	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);
+            	msg.setData("{\"party\":"+request.getPartyId()+", \"request\":"+request.getId()+" ,\"state\":\""+request.getState()+"\"}");
+            	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));  
             	
             } else
         		

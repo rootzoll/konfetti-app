@@ -169,6 +169,20 @@
 
               <hr style="width: 90%">
 
+              <!-- ADDITIONAL INFO TEXTS ON TASK -->
+
+              <div ng-show="(request.state=='done') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;">
+                  {{ 'INFO_REWARD' | translate }} {{request.konfettiAmountReward}} {{ 'KONFETTI' | translate }}.
+              </div>
+
+              <div ng-show="(request.konfettiAmountSupport>0)" style="margin: 8px;width:100%;">
+                  {{ 'INFO_SUPPORT' | translate }} {{request.konfettiAmountSupport}} {{ 'KONFETTI' | translate }}.
+              </div>
+
+              <div ng-show="(request.state==='review') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;">
+                  {{ 'CHECK_MEDIAITEMS' | translate }}
+              </div>
+
               <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
               <div ng-show="(!userIsAuthor) && (request.state==='open')" style="width:100%">
                   <div style="width:100%">
@@ -219,7 +233,6 @@
 
               <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
               <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-                      <div ng-show="(request.state==='review') && (request.mediaItemIds.length>0)" style="width:100%" class="animationPulsateSimple">{{ 'CHECK_MEDIAITEMS' | translate }}</div>
                       <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                           <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
                               {{ 'REQUESTAPPROVE' | translate }}
@@ -231,7 +244,7 @@
                               <span ng-show="(request.state==='open')">{{ 'REQUESTREJECT_AFTER' | translate }}</span>
                           </button>
                       </div>
-                      <div ng-show="isAdmin" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <div ng-show="(isAdmin) && (!userIsAuthor)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                           <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
                               {{ 'REQUESTDELETE' | translate }}
                           </button>

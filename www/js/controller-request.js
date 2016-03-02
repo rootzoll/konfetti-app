@@ -214,6 +214,7 @@ angular.module('starter.controller.request', [])
                 ApiService.upvoteRequest($rootScope.party.id, request.id, request.konfettiAdd, function(){
                     // WIN -> update sort
                     request.konfettiCount += request.konfettiAdd;
+                    request.konfettiAmountSupport += request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 }, function(){
@@ -828,6 +829,11 @@ angular.module('starter.controller.request', [])
                   }).then(function(res) {});
               });
           });
+          return;
+      }
+
+      if ($scope.profile.spokenLangs.length==0) {
+          KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LANG');
           return;
       }
 

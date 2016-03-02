@@ -16,12 +16,9 @@ public interface AccountingService {
 	
 	boolean deleteAccount(String accountName) throws Exception;
 	
-	boolean transfereBetweenAccounts(String fromAccountName, String toAccountName, long amount) throws Exception;
+	boolean transfereBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception;
 	
 	// returns the resulting account balance
-	Long addBalanceToAccount(String accountName, long amount) throws Exception;
-	
-	// returns the resulting account balance
-	Long removeBalanceFromAccount(String accountName, long amount) throws Exception;
+	Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception;
 	
 }

@@ -177,18 +177,18 @@ public class ChatController {
     	return chat;
     }
     
-    public static void setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId, Long selfId) {
+    public static Chat setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId, Long selfId) {
     	User user = userService.findById(chatPartnerUserId);
     	if (user==null) {
     		LOGGER.warn("Cannot set ChatPartnerInfo for user("+chatPartnerUserId+") - NOT FOUND");
-    		return;
+    		return chat;
     	}
     	chat.setChatPartnerId(user.getId());
     	chat.setChatPartnerName(user.getName());
     	if ((user.getImageMediaID()!=null) && (user.getImageMediaID()>0)) chat.setChatPartnerImageMediaID(user.getImageMediaID());
     	if ((user.getSpokenLangs()!=null) && (user.getSpokenLangs().length>0)) chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
     	chat.setUnreadMessage(!chat.hasUserSeenLatestMessage(selfId));
-    	//LOGGER.info("user("+selfId+") has unread message on chat("+chat.getId()+") --> "+chat.isUnreadMessage());
+    	return chat;
     }
     
     //---------------------------------------------------

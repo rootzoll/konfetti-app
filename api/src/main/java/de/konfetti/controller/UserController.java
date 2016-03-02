@@ -3,20 +3,20 @@ package de.konfetti.controller;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.ClientAction;
+import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.Party;
 import de.konfetti.data.User;
 import de.konfetti.service.AccountingService;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.PartyService;
 import de.konfetti.service.UserService;
-import de.konfetti.service.exception.AccountingTools;
+import de.konfetti.utils.AccountingTools;
 import de.konfetti.utils.EMailManager;
 import de.konfetti.utils.Helper;
 
@@ -40,9 +40,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class UserController {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
-    
-    private static Random randomGenerator = new Random();
-	
+    	
     private final UserService userService;
     private final ClientService clientService;
     private final AccountingService accountingService;
@@ -310,7 +308,7 @@ public class UserController {
 
 		final String userAccountName = AccountingTools.getAccountNameFromUserAndParty(user.getId(), partyId);
 		Long konfettiBefore = this.accountingService.getBalanceOfAccount(userAccountName);
-		Long konfettiAfter = this.accountingService.addBalanceToAccount(userAccountName, konfettiAmount);
+		Long konfettiAfter = this.accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_COUPON, userAccountName, konfettiAmount);
 		
 		if (konfettiBefore.equals(konfettiAfter)) throw new Exception("adding amount failed");
 		

@@ -38,6 +38,9 @@ angular.module('starter.controller.dash', [])
         $scope.showNotifications = false;
         $scope.updatesOnParty = false;
 
+        $scope.lastPartyRefreshID = 0;
+        $scope.lastPartyRefreshStart = 0;
+
         // sorting options
         $scope.sortSet = [
             {sort:'most', display:'most'},
@@ -203,6 +206,12 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+            // support done --> go to request page
+            if (noti.type==8) {
+                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                return;
+            }
+
         };
 
         // when user taps the delete button on a notification
@@ -285,6 +294,20 @@ angular.module('starter.controller.dash', [])
 
         // when user pressed the reload button
         $scope.reloadPartyList = function() {
+
+            // prevent double refresh clicks
+            if ($scope.partyList.length>0) {
+                var actualParty = $scope.partyList[$scope.actualPartyIndex].id;
+                var actualTS = new Date().getTime();
+                var diff = actualTS - $scope.lastPartyRefreshStart;
+                if ((diff<2000) && (actualParty==$scope.lastPartyRefreshID)) {
+                    console.log("no update - there needs to be a 2sec pause on update in same party");
+                    return;
+                }
+                $scope.lastPartyRefreshID = actualParty;
+                $scope.lastPartyRefreshStart = new Date().getTime();
+            }
+
             focusPartyId = $rootScope.party.id;
             $scope.partyList = [];
             $scope.actualPartyIndex = 0;
@@ -351,7 +374,7 @@ angular.module('starter.controller.dash', [])
         // action to refresh dash data
         $scope.action = function() {
 
-            // show spinner
+            // show loading spinner
             $scope.loadingParty = true;
 
             // reset party data in view
@@ -405,7 +428,7 @@ angular.module('starter.controller.dash', [])
                     var data = JSON.parse(message.data);
                     var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
                     if (data.party==visiblePartyId) {
-                        if ((data.state!="review") || ($scope.isReviewerForThisParty))
+                        if ((data.state!="review") || ($scope.isReviewerForThisParty) || ($scope.isAdminForThisParty))
                         $timeout(function(){
                             if (typeof data.konfetti != "undefined") {
                                 // check if konfetti amount is different
