@@ -584,9 +584,16 @@ public class PartyController {
 			}
         	request.setChats(relevantChats);
         	
-        	// add media items to request // TODO
+        	// add media items to request
         	List<MediaItem> infos = null;
         	if (infos==null) infos = new ArrayList<MediaItem>();
+        	Long[] mediaIDs = request.getMediaItemIds();
+        	if ((mediaIDs!=null) && (mediaIDs.length>0)) {
+        		for (int i=0; i<mediaIDs.length; i++) {
+        			MediaItem item = mediaService.findById(mediaIDs[i]);
+        			infos.add(item);
+        		}
+        	}
         	request.setInfo(infos);
         	
         	
