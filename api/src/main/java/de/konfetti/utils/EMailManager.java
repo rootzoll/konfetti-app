@@ -1,5 +1,6 @@
 package de.konfetti.utils;
 
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -47,7 +48,6 @@ public class EMailManager {
      */
 	public boolean sendMail(JavaMailSender javaMailSender, String toAddress, String subjectText, String bodyText, String urlAttachment) {
     	
-		
 		String fromAddress = Helper.getPropValues("konfetti.sendFromMailAddress");
 		String replyAddress = Helper.getPropValues("konfetti.replyToMailAddress");
 		if ((fromAddress==null) || (fromAddress.trim().length()==0) || fromAddress.trim().equals("test@test.de")) {
@@ -77,6 +77,9 @@ public class EMailManager {
             e.printStackTrace();
         } catch (MalformedURLException e) {
         	LOGGER.warn("EMailManager - FAIL sending eMail to("+toAddress+") attachementURL("+urlAttachment+"): "+e.getMessage());
+        	e.printStackTrace();
+        } catch (Exception e) {
+        	LOGGER.warn("EMailManager - FAIL sending eMail to("+toAddress+") attachementURL("+urlAttachment+") mailserver("+Helper.getPropValues("spring.mail.host")+":"+Helper.getPropValues("spring.mail.port")+"): "+e.getMessage());
         	e.printStackTrace();
         }
         return false;
