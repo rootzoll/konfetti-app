@@ -9,11 +9,13 @@ import javax.validation.Valid;
 
 import de.konfetti.data.Client;
 import de.konfetti.data.ClientAction;
+import de.konfetti.data.Code;
 import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.Party;
 import de.konfetti.data.User;
 import de.konfetti.service.AccountingService;
 import de.konfetti.service.ClientService;
+import de.konfetti.service.CodeService;
 import de.konfetti.service.PartyService;
 import de.konfetti.service.UserService;
 import de.konfetti.utils.AccountingTools;
@@ -45,16 +47,18 @@ public class UserController {
     private final ClientService clientService;
     private final AccountingService accountingService;
     private final PartyService partyService;
+    private final CodeService codeService;
 
     @Autowired
     private JavaMailSender javaMailSender;
     
     @Autowired
-    public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService, final PartyService partyService) {
+    public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService, final PartyService partyService, final CodeService codeService) {
         this.userService = userService;
         this.clientService = clientService;
         this.accountingService = accountingService;
         this.partyService = partyService;
+        this.codeService = codeService;
     }
 
     //---------------------------------------------------
@@ -163,7 +167,9 @@ public class UserController {
     	
     	String mailConf = Helper.getPropValues("spring.mail.host");
     	if ((mailConf==null) || (mailConf.trim().length()==0)) {
-    		if ("test".equals(Helper.getPropValues("spring.profiles.active"))) {
+    		String runningProfile = Helper.getPropValues("spring.profiles.active");
+    		LOGGER.info("Running Profile: "+runningProfile);
+    		if ("test".equals(runningProfile)) {
     			mailConf=null;
     			LOGGER.warn("running without mail config - see application.properties");
     		} else {
@@ -192,13 +198,11 @@ public class UserController {
     	if ((email==null) || (email.trim().length()<4)) throw new Exception("user needs to have a valid email on account");
     	
     	// generate codes
-    	// TODO generate unique number codes
-    	// TODO persist codes
     	List<String> codes = new ArrayList<String>();
-    	int no = 1000;
     	for (int i=0; i<count; i++) {
-    		no++;
-    		codes.add("code"+no);
+    		Code code = this.codeService.createKonfettiCoupon(partyId, client.getUserId(), new Long(amount));
+    		System.out.println("Generated CouponCode: "+code.getCode());
+    		codes.add(code.getCode());
     	}
     	
     	// URL max 8KB
@@ -206,13 +210,13 @@ public class UserController {
     	for (String code : codes) {
     		urlStr += (","+code);
 		}
-    	urlStr = "http://localhost:2342/generate?template="+URLEncoder.encode("coupon-master-template.html")+"&codes=" +URLEncoder.encode(urlStr.substring(1));
+    	urlStr = "http://localhost:2342/generate?template="+URLEncoder.encode("coupon-master-template.html")+"&amount="+amount+"&codes=" +URLEncoder.encode(urlStr.substring(1));
     	if (urlStr.length()>(6*1024)) LOGGER.warn("the URL to generate the codes is >6KB - limit is 8KB - may become critical");
     	if (urlStr.length()>(8*1024)) throw new Exception("the URL to generate the codes is >8KB - thats bigger than URL GET data can be with NodeJS");
     	
     	LOGGER.info("URL to generate Coupons: "+urlStr);
     	
-    	if (!EMailManager.getInstance().sendMail(javaMailSender, email.trim(), "Konfetti Coupons "+System.currentTimeMillis(), "Print out the PDF attached and spread the love :)", urlStr)) {
+    	if ((mailConf!=null) && (!EMailManager.getInstance().sendMail(javaMailSender, email.trim(), "Konfetti Coupons "+System.currentTimeMillis(), "Print out the PDF attached and spread the love :)", urlStr))) {
     		throw new Exception("Was not able to send eMail with Coupons to "+user.geteMail());
     	};
     	
@@ -236,41 +240,89 @@ public class UserController {
     	
     	result.actions = new ArrayList<ClientAction>();
     	
-    	// TODO: implement code data base - work with fixed cheat codes for now
+    	// try to redeemcode
+    	Code coupon = this.codeService.redeemByCode(code);
     	
-    	// add 100 Konfetto #1
-    	if (code.equals("1")) {
-    		result.actions = addKonfettiOnParty(user, 1l, 100l, result.actions);
-    		result.feedbackHtml = "Plus 100 konfetti on party #1.";
-    	} else
-    	// upgrade user to admin of party #1
-    	if (code.equals("111")) {
-    		result.actions = makeUserAdminOnParty(user, 1l, result.actions);
-    		result.feedbackHtml = "You are now AMIN on party #1";
-    	} else
-    	
-    	// upgrade user to reviewer of party #1
-    	if (code.equals("11")) {
-    		result.actions = makeUserReviewerOnParty(user, 1l, result.actions);
-    		result.feedbackHtml = "You are now REVIEWER on party #1";
-    	} else
-    	
-        // add 100 Konfetto #2
-    	if (code.equals("2")) {
-    		result.actions = addKonfettiOnParty(user, 2l, 100l, result.actions);
-        	result.feedbackHtml = "Plus 100 konfetti on party #2.";
-        } else
+    	// just if backend is running on in test mode allow cheat codes  
+    	if ("test".equals(Helper.getPropValues("spring.profiles.active"))) {
     		
-    	// upgrade user to admin of party #2
-    	if (code.equals("222")) {
-    		result.actions = makeUserAdminOnParty(user, 2l, result.actions);
-    		result.feedbackHtml = "You are now AMIN on party #2";
-    	} else
+    		// --> creating coupons that are not in the database for testing
+    		
+        	// add 100 Konfetto #1
+        	if (code.equals("1")) {
+        		coupon = new Code();
+        		coupon.setAmount(100l);
+        		coupon.setPartyID(1l);
+        		coupon.setUserID(0l);
+        		coupon.setCode("1");
+        		coupon.setActionType(Code.ACTION_TYPE_KONFETTI);
+        	} else
+        	// upgrade user to admin of party #1
+        	if (code.equals("111")) {
+        		coupon = new Code();
+        		coupon.setPartyID(1l);
+        		coupon.setCode("111");
+        		coupon.setActionType(Code.ACTION_TYPE_ADMIN);
+        	} else
+        	
+        	// upgrade user to reviewer of party #1
+        	if (code.equals("11")) {
+        		coupon = new Code();
+        		coupon.setPartyID(1l);
+        		coupon.setCode("11");
+        		coupon.setActionType(Code.ACTION_TYPE_REVIEWER);
+        	} else
+        	
+            // add 100 Konfetto #2
+        	if (code.equals("2")) {
+        		coupon = new Code();
+        		coupon.setAmount(100l);
+        		coupon.setPartyID(2l);
+        		coupon.setUserID(0l);
+        		coupon.setCode("2");
+        		coupon.setActionType(Code.ACTION_TYPE_KONFETTI);
+            } else
+        		
+        	// upgrade user to admin of party #2
+        	if (code.equals("222")) {
+        		coupon = new Code();
+        		coupon.setPartyID(2l);
+        		coupon.setCode("222");
+        		coupon.setActionType(Code.ACTION_TYPE_ADMIN);
+        	} else
+        	
+        	// upgrade user to reviewer of party #2
+        	if (code.equals("22")) {
+        		coupon = new Code();
+        		coupon.setPartyID(2l);
+        		coupon.setCode("22");
+        		coupon.setActionType(Code.ACTION_TYPE_REVIEWER);
+        	}
+    	}
     	
-    	// upgrade user to reviewer of party #2
-    	if (code.equals("22")) {
-    		result.actions = makeUserReviewerOnParty(user, 2l, result.actions);
-    		result.feedbackHtml = "You are now REVIEWER on party #2";
+    	if (coupon!=null) {
+    		
+    		// redeem konfetti
+    		if (Code.ACTION_TYPE_KONFETTI==coupon.getActionType()) {
+        		result.actions = addKonfettiOnParty(user, coupon.getPartyID(), coupon.getAmount(), result.actions);
+        		// TODO: multi lang
+        		result.feedbackHtml = "You got now "+coupon.getAmount()+" konfetti to create a task with or upvote other ideas.";
+    		} else
+    			
+        	// promote user to reviewer
+        	if (Code.ACTION_TYPE_REVIEWER==coupon.getActionType()) {
+        		result.actions = makeUserReviewerOnParty(user, coupon.getPartyID(), result.actions);
+        		// TODO: multi lang
+        		result.feedbackHtml = "You are now REVIEWER on the following party.";
+        	} else
+        		
+            // promote user to admin
+            if (Code.ACTION_TYPE_ADMIN==coupon.getActionType()) {
+        		result.actions = makeUserAdminOnParty(user, coupon.getPartyID(), result.actions);
+        		// TODO: multi lang
+        		result.feedbackHtml = "You are now ADMIN on the following party.";        			
+            }
+    		
     	} else
     	
     	// CODE NOT KNOWN

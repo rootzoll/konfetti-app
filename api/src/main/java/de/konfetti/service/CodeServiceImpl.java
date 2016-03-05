@@ -51,9 +51,9 @@ public class CodeServiceImpl extends BaseService implements CodeService {
 	}
 
 	@Override
-	public Code redeemByCode(String code) throws Exception {
+	public Code redeemByCode(String code) {
 		Code codeObject = findByCode(code); 
-		if (codeObject==null) throw new Exception("no code found with '"+code+"'");
+		if (codeObject==null) return null;
 		this.codeRepository.delete(codeObject.getId());
 		return codeObject;
 	}

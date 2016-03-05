@@ -10,6 +10,6 @@ public interface CodeService {
     
     Code createReviewCode(Long partyID);
 
-    // throws exception if code is not valid
-    Code redeemByCode(String code) throws Exception;
+    // returns null if code is not valid
+    Code redeemByCode(String code);
 }
