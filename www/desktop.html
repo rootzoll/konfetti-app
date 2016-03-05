@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Simulating Konfetti App</title>
+    <title>Simulating Konfetti App - 123</title>
     <style>
         html,
         body {
@@ -20,9 +20,16 @@
             }
         }
     </style>
+    <script>
+        // redirect for mobile
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|BB|PlayBook|IEMobile|Windows Phone|Kindle|Silk|Opera Mini/i.test(navigator.userAgent)) {
+            alert("this is a simulation of the konfetti app - on every call you start as a fresh user.");
+            location.href = '/index.html';
+        }
+    </script>
 </head>
-<body style="text-align: center; height: 100%;">
-    <iframe src="index.html" class="middleCenter" style=" min-height: 600px; background-image: url('./img/confetti.jpg'); margin-top: 10px;">
+<body style="text-align: center; height: 100%; margin-top: 2px;">
+    <iframe src="index.html" class="middleCenter" style=" min-height: 600px; background-image: url('./img/confetti.jpg'); margin-top: 2px;">
     </iframe>
     <div class="middleCenter" style="width: 330px; min-height: 60px; background-color: lightyellow; margin-top: 6px;
     border-style: solid;padding: 6px; font-size: 9px; font-family: 'Helvetica'">

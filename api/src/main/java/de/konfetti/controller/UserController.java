@@ -162,7 +162,14 @@ public class UserController {
     		HttpServletRequest httpRequest) throws Exception {
     	
     	String mailConf = Helper.getPropValues("spring.mail.host");
-    	if ((mailConf==null) || (mailConf.trim().length()==0)) throw new Exception("eMail is not configured in application.properties - cannot generate/send coupons");
+    	if ((mailConf==null) || (mailConf.trim().length()==0)) {
+    		if ("test".equals(Helper.getPropValues("spring.profiles.active"))) {
+    			mailConf=null;
+    			LOGGER.warn("running without mail config - see application.properties");
+    		} else {
+        		throw new Exception("eMail is not configured in application.properties - cannot generate/send coupons");	
+    		}
+    	}
     	
     	if (count<=0) throw new Exception("must be more than 0 coupons");
     	if (amount<=0) throw new Exception("must be more than 0 per coupon");
