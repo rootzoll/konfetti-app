@@ -2,7 +2,7 @@
 
 Its an app for neighborhood building thru a community todo list and a playful in-app currency called konfetti.
 
-Android Alpha-Release APK: ['DOWNLOAD'] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-05032016.apk?raw=true)
+Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-05032016.apk?raw=true)
 
 ## Concept Notes
 
