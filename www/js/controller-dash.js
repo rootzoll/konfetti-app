@@ -41,6 +41,8 @@ angular.module('starter.controller.dash', [])
         $scope.lastPartyRefreshID = 0;
         $scope.lastPartyRefreshStart = 0;
 
+        $scope.checkedAccount = false;
+
         // sorting options
         $scope.sortSet = [
             {sort:'most', display:'most'},
@@ -417,6 +419,34 @@ angular.module('starter.controller.dash', [])
                     });
                 }
                 return;
+            } else {
+                // check if account is still valid and if maybe server had reset
+                if (!$scope.checkedAccount) {
+                    ApiService.readAccount(AppContext.getAccount(), function(account){
+                        // WIN
+                        if ((account==null) || (account.id==0)) {
+                            account.clientId = "";
+                            AppContext.setAccount(account);
+                            // TODO ionic optional dialog multi lang
+                            alert("The server was reset - starting as a fresh user.");
+                            $log.info("FAIL - no account");
+                            $scope.state = "INTERNETFAIL";
+                            $timeout($scope.action, 5000);
+                            return;
+                        } else {
+                            alert("OK ACCOUNT: "+JSON.stringify(account));
+                            // refreshing local account with account from server
+                            $scope.checkedAccount = true;
+                            //AppContext.setAccount(account);
+                        }
+                    }, function() {
+                        // FAIL
+                        $log.info("FAIL - no account");
+                        $scope.state = "INTERNETFAIL";
+                        $timeout($scope.action, 5000);
+                        return;
+                    });
+                }
             }
 
             // make sure websocket is connected & listen on incoming

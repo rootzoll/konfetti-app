@@ -92,7 +92,15 @@ public class UserController {
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
     		
     		// A) check that user is himself
-    		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+    		Client client;
+    		try {
+    			client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+    		} catch (Exception e) {
+    			LOGGER.warn("Exception on readUser (get client): "+e.getMessage());
+    			user = new User();
+    			user.setId(0l); // 0 --> signal, that client auth failed
+    			return user;
+    		}
     		if (!client.getUserId().equals(user.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userId+")");
     	
     	} else {

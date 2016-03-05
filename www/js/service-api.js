@@ -56,6 +56,21 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, fail);
 
             },
+            readAccount: function(accountObj, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/'+accountObj.id;
+                // WIN
+                var successCallback = function(response) {
+                    response.data.clientId = accountObj.clientId;
+                    response.data.clientSecret = accountObj.clientSecret;
+                    win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
             // build the public URL for media
             getImageUrlFromMediaItem: function(mediaItemID) {
                 return activeServerUrl+"/media/"+mediaItemID+"/image";
