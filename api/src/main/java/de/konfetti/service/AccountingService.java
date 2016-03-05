@@ -1,5 +1,7 @@
 package de.konfetti.service;
 
+import de.konfetti.data.Account;
+
 /*
  * abstract layer to a simple accounting service ... mapping account names (strings) to a balance and allowing transactions between accounts
  */
@@ -20,5 +22,7 @@ public interface AccountingService {
 	
 	// returns the resulting account balance
 	Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception;
+
+	Account findAccountByName(String name);
 	
 }

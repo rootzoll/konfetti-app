@@ -1,11 +1,6 @@
 package de.konfetti.service;
 
-import de.konfetti.data.Account;
-import de.konfetti.data.AccountRepository;
-import de.konfetti.data.MediaRepository;
-import de.konfetti.data.PartyRepository;
-import de.konfetti.data.Request;
-import de.konfetti.data.RequestRepository;
+import de.konfetti.data.*;
 
 import de.konfetti.service.exception.ServiceException;
 
@@ -19,6 +14,8 @@ import javax.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static de.konfetti.utils.Helper.nonnull;
 
 @Service
 @Validated
@@ -38,6 +35,8 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     @Override
     public Request create(@NotNull Request request) {
 
+        getPartyOrThrowError(request.getPartyId());
+
         Long requestId = request.getId();
         if (requestId != null && requestId > 0) {
             throw new ServiceException(
@@ -51,7 +50,20 @@ public class RequestServiceImpl extends BaseService implements RequestService {
 
     @Override
     public Request update(@NotNull Request request) {
-        return requestRepository.saveAndFlush(request);
+        nonnull(request);
+
+        Party dbParty = getPartyOrThrowError(request.getPartyId());
+
+        Request dbRequest = getRequestOrThrowError(dbParty.getId(), request.getId());
+
+        // update the fields TODO: could be done with entityManager merge??
+        dbRequest.setTitle(request.getTitle());
+        dbRequest.setImageMediaID(request.getImageMediaID());
+        dbRequest.setTime(request.getTime());
+        dbRequest.setKonfettiAdd(request.getKonfettiAdd());
+        dbRequest.setKonfettiCount(request.getKonfettiCount());
+
+        return requestRepository.saveAndFlush(dbRequest);
     }
 
     @Override

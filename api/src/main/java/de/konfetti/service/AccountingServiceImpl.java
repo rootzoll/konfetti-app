@@ -27,7 +27,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 	@Override
 	public Long getBalanceOfAccount(String accountName) {
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) return null;
 		return account.getBalance();
 	}
@@ -41,7 +41,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 	@Override
 	public synchronized boolean deleteAccount(String accountName) throws Exception {
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("deleteAccount("+accountName+") --> account does not exist");
 		accountRepository.delete(account.getId());
 		accountRepository.flush();
@@ -62,8 +62,8 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		
 		if (amount<=0) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> invalid amount");
 		
-		Account from = getAccountByName(fromAccountName);
-		Account to = getAccountByName(toAccountName);
+		Account from = accountRepository.findByName(fromAccountName);
+		Account to = accountRepository.findByName(toAccountName);
 		
 		// check accounts exist
 		if (from==null) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> from account does not exist");
@@ -100,7 +100,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		if (amount<=0) throw new Exception("addBalanceToAccount("+accountName+","+amount+") -> invalid amount");
 		
 		// get account
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("addBalanceToAccount("+accountName+","+amount+") --> account does not exist");
 		
 		// add amount and persist
@@ -118,13 +118,18 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return account.getBalance();
 	}
 
+	@Override
+	public Account findAccountByName(String name) {
+		return accountRepository.findByName(name);
+	}
+
 	public synchronized Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception {
 		
 		// check input
 		if (amount<=0) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") -> invalid amount");
 		
 		// get account
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("removeBalanceToAccount("+accountName+","+amount+") --> account does not exist");
 		
 		// add amount and persist
@@ -132,17 +137,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		accountRepository.saveAndFlush(account);
 		return account.getBalance();
 	}
-	
-	private Account getAccountByName(String accountName) {
-		// TODO: improve performance by search index for production
-		if (accountName==null) return null;
-		List<Account> all = getAllAccounts();
-		for (Account account : all) {
-			if (account.getName().equals(accountName)) return account;
-		}
-		return null;
-	}
-	
+
 	private List<Account> getAllAccounts() {
 		 return accountRepository.findAll();
 	}

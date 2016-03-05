@@ -36,7 +36,7 @@ public class Code {
     private String code;
     
     // what kind of action is behind this 
-    private Integer actionType = ACTION_TYPE_KONFETTI;
+    private int actionType = ACTION_TYPE_KONFETTI;
     
     // amount of konfetti (when actionType => 0)
     private Long amount;
@@ -95,7 +95,7 @@ public class Code {
 		this.code = code;
 	}
 
-	public Integer getActionType() {
+	public int getActionType() {
 		return actionType;
 	}
 

@@ -1,6 +1,7 @@
 package de.konfetti.service;
 
 import de.konfetti.data.Party;
+import org.springframework.data.repository.query.Param;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -16,4 +17,6 @@ public interface PartyService {
     List<Party> getAllParties();
 
     Party findById(long partyId);
+
+    Party findByName(@Param("name") String name);
 }

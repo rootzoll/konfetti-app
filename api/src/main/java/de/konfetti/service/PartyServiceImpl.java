@@ -69,5 +69,10 @@ public class PartyServiceImpl extends BaseService implements PartyService {
         return partyRepository.findOne(partyId);
     }
 
+    @Override
+    public Party findByName(String name) {
+        return (Party) partyRepository.findByName(name);
+    }
+
 
 }
