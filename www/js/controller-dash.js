@@ -434,10 +434,12 @@ angular.module('starter.controller.dash', [])
                             $timeout($scope.action, 5000);
                             return;
                         } else {
-                            alert("OK ACCOUNT: "+JSON.stringify(account));
+                            //alert("OK ACCOUNT: "+JSON.stringify(account));
                             // refreshing local account with account from server
                             $scope.checkedAccount = true;
-                            //AppContext.setAccount(account);
+                            AppContext.setAccount(account);
+                            $timeout($scope.action, 5000);
+                            return;
                         }
                     }, function() {
                         // FAIL
@@ -446,6 +448,7 @@ angular.module('starter.controller.dash', [])
                         $timeout($scope.action, 5000);
                         return;
                     });
+                    return;
                 }
             }
 
