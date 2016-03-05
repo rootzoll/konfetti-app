@@ -86,8 +86,13 @@ public class UserController {
     public User readUser(@PathVariable Long userId, HttpServletRequest httpRequest) throws Exception {
     	
         User user = userService.findById(userId);
-        if (user==null) throw new Exception("NOT FOUND user("+userId+")");
-    	
+        if (user==null) {
+			LOGGER.warn("NOT FOUND user("+userId+")");
+			user = new User();
+			user.setId(0l); // 0 --> signal, that client auth failed
+			return user;
+        }
+    
     	// check if user is allowed to read
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
     		
