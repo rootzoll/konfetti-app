@@ -15,6 +15,7 @@ public class MediaItem {
 	public static final String TYPE_MULTILANG = "MediaItemMultiLang";
 	public static final String TYPE_LOCATION = "Location";
 	public static final String TYPE_IMAGE = "Image";
+	public static final String TYPE_DATE = "Date";
 	
 	public static final Integer REVIEWED_PUBLIC = 0;
 	public static final Integer REVIEWED_PRIVATE = 1;

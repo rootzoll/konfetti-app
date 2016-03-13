@@ -1,7 +1,8 @@
 <div style="padding: 8px;
     border-top-width: 1px;
     border-top-color: lightgrey;
-    border-top-style: solid;">
+    border-top-style: solid;
+    margin-top: -1px;">
 
     <div ng-show="loading">
         ...
@@ -31,6 +32,11 @@
                     <div ng-if="mediaItemData.type=='Location'" style="white-space: normal;">
                         <iframe width="300" height="200" frameborder="0" style="border:0"
                                 ng-src="{{getMapUrl()}}" allowfullscreen></iframe>
+                    </div>
+
+                    <!-- DATE -->
+                    <div ng-if="mediaItemData.type=='Date'" style="white-space: normal; font-weight: bold">
+                        <i class="icon ion-clock" style="color: #565656; font-weight: bold; font-size: 110%;"></i>&nbsp;{{ mediaItemData.data | date : 'short' }}
                     </div>
 
                 </td>

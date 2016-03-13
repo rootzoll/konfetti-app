@@ -1,0 +1,12 @@
+<div style="text-align: center;">
+    <p>
+        {{ 'ZIPCODE' | translate }}<br>
+        <input maxlength="10" type="text" ng-model="popScope.zipCode" style="width:25%; margin-left: auto; margin-right: auto;    background-color: lightgray;">
+    </p>
+    <p>
+        {{ 'COUNTRY' | translate }}<br>
+        <select ng-model="popScope.country">
+            <option value="germany">{{ 'COUNTRY_GERMANY' | translate }}</option>
+        </select>
+    </p>
+</div>

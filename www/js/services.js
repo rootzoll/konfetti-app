@@ -117,7 +117,88 @@ angular.module('starter.services', [])
         };
  })
 
-.factory('KonfettiToolbox', function($log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService) {
+.factory('KonfettiToolbox', function($rootScope, $log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService, $cordovaGeolocation) {
+
+        var methodShowIonicAlertWith18nText = function(i18nKeyTitle, i18nKeyText, win) {
+            $translate(i18nKeyTitle).then(function (TITLE) {
+                $translate(i18nKeyText).then(function (TEXT) {
+                    $ionicPopup.alert({
+                        title: TITLE,
+                        template: TEXT
+                    }).then(function(res) {
+                        if ((typeof win != "undefined") && (win!=null)) win();
+                    });
+                });
+            });
+        };
+
+        var methodGetFallbackLocationBySelection = function(win, fail) {
+            $translate("GPSFALLBACK_TITLE").then(function (TITLE) {
+                $translate("GPSFALLBACK_SUB").then(function (SUB) {
+                    $translate("GPSFALLBACK_GPS").then(function (GPS) {
+                        $translate("OK").then(function (OK) {
+                            $rootScope.popScope = {
+                                zipCode: "",
+                                country: "germany"
+                            };
+                            $ionicPopup.show({
+                                templateUrl: './templates/pop-gpsfallback.html',
+                                title: TITLE,
+                                subTitle: SUB,
+                                scope: $rootScope,
+                                buttons: [
+                                    {
+                                        text: GPS,
+                                        onTap: function (e) {
+                                            fail();
+                                        }
+                                    },
+                                    {
+                                        text: OK,
+                                        type: 'button-positive',
+                                        onTap: function (e) {
+                                            if (($rootScope.popScope.zipCode.trim().length == 0) && (ApiService.runningDevelopmentEnv())) {
+
+                                                // WORK WITH FAKE TEST DATA ON DEVELOPMENT
+                                                $rootScope.lat = 52.52;
+                                                $rootScope.lon = 13.13;
+                                                $rootScope.gps = 'win';
+                                                win($rootScope.lat, $rootScope.lon);
+
+                                            } else {
+
+                                                // TRY TO RESOLVE ZIP CODE TO GPS
+                                                if ($rootScope.popScope.zipCode.trim().length > 2) {
+                                                    $rootScope.popScope.zipCode = $rootScope.popScope.zipCode.trim();
+                                                    ApiService.getGPSfromZIP($rootScope.popScope.zipCode, $rootScope.popScope.country, function (lat, lon) {
+                                                        // WIN
+                                                        $rootScope.lat = lat;
+                                                        $rootScope.lon = lon;
+                                                        $rootScope.gps = 'win';
+                                                        win(lat, lon);
+                                                    }, function () {
+                                                        // FAIL
+                                                        methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_FAIL', function () {
+                                                            methodGetFallbackLocationBySelection(win, fail);
+                                                        });
+                                                    })
+                                                } else {
+                                                    // ON EMPTY INPUT
+                                                    methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_NEEDED', function () {
+                                                        methodGetFallbackLocationBySelection(win, fail);
+                                                    });
+                                                }
+                                            }
+
+                                        }
+                                    }
+                                ]
+                            });
+                        });
+                    });
+                });
+            });
+        };
 
         return {
             filterRequestsByState: function(requestArray, state) {
@@ -145,16 +226,34 @@ angular.module('starter.services', [])
                 }
                 return resultArray;
             },
-            showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText) {
-                $translate(i18nKeyTitle).then(function (TITLE) {
-                    $translate(i18nKeyText).then(function (TEXT) {
-                        $ionicPopup.alert({
-                            title: TITLE,
-                            template: TEXT
-                        }).then(function(res) {
-                        });                    
-                    });
-                });                   
+            showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText, win) {
+                methodShowIonicAlertWith18nText(i18nKeyTitle, i18nKeyText, win);
+            },
+           getFallbackLocationBySelection : function(win, fail) {
+               methodGetFallbackLocationBySelection(win, fail);
+           },
+           updateGPS : function() {
+               /*
+                * START GEOLOCATION
+                * http://ngcordova.com/docs/plugins/geolocation/
+                */
+               var posOptions = {timeout: 30000, enableHighAccuracy: false};
+               if (ApiService.runningDevelopmentEnv()) posOptions.timeout = 1000;
+               $rootScope.gps  = 'wait';
+               $rootScope.lat  = 0;
+               $rootScope.lon = 0;
+               $cordovaGeolocation
+                   .getCurrentPosition(posOptions)
+                   .then(function (position) {
+                       $rootScope.lat  = position.coords.latitude;
+                       $rootScope.lon = position.coords.longitude;
+                       $rootScope.gps  = 'win';
+                       $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+                   }, function(err) {
+                       // error
+                       $log.info("GPS ERROR");
+                       $rootScope.gps  = 'fail';
+                   });
            },
            processCode : function(isRedeemCouponBool) {
 

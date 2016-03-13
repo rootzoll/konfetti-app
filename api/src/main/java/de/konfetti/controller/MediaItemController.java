@@ -81,6 +81,7 @@ public class MediaItemController {
     	if (MediaItem.TYPE_MULTILANG.equals(template.getType())) typeIsSupported = true;
     	if (MediaItem.TYPE_IMAGE.equals(template.getType())) typeIsSupported = true;
     	if (MediaItem.TYPE_LOCATION.equals(template.getType())) typeIsSupported = true;
+    	if (MediaItem.TYPE_DATE.equals(template.getType())) typeIsSupported = true;
     	if (!typeIsSupported) throw new Exception("type("+template.getType()+") is not supported as media item");
     	
     	// MULTI-LANG auto translation

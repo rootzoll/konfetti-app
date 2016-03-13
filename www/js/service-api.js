@@ -240,6 +240,16 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/party/'+partyId+'/request/'+requestId;
                 // WIN
                 var successCallback = function(response) {
+
+                    // prepare all media items
+                    if ((typeof response.data.info != "undefined") && (response.data.info!=null) && (response.data.info.length>0)) {
+                        for (var i=0; i < response.data.info.length; i++) {
+                            if (response.data.info[i].type=="Date") {
+                                response.data.info[i].data = new Date(response.data.info[i].data.substr(1,response.data.info[i].data.length-2));
+                            }
+                        }
+                    }
+
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);
@@ -253,6 +263,9 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/media/'+itemId;
                 // WIN
                 var successCallback = function(response) {
+                    if (response.data.type=="Date") {
+                        response.data.data = new Date(response.data.data.substr(1,response.data.data.length-2));
+                    }
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);
@@ -427,6 +440,35 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
             },
+            postDateMediaItemOnRequest: function(requestId, dateObj, win, fail) {
+
+                var mediaObj = {
+                    type : 'Date',
+                    data : JSON.stringify(dateObj)
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+                // WIN
+                var successCallback = function(response) {
+                    if (requestId>0) {
+                        // add media item to request
+                        var config2 = getBasicHttpHeaderConfig();
+                        config2.method = 'GET';
+                        config2.url = activeServerUrl+'/party/action/request/'+requestId+"?action=addMedia&json="+response.data.id;
+                        var orgResponse = response;
+                        $http(config2).then(function(){
+                            win(orgResponse.data);
+                        }, fail);
+                    } else {
+                        win(response.data);
+                    }
+                };
+                $http(config).then(successCallback, fail);
+            },
             rewardRequest: function(requestId, arrayOfRewardGetterUserIds, win, fail) {
 
                 var json = JSON.stringify(arrayOfRewardGetterUserIds);
@@ -515,7 +557,6 @@ angular.module('starter.api', [])
             },
             redeemCode: function(codeStr, langCode, win, fail) {
 
-                // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
                 config.url = activeServerUrl+'/account/redeem/'+codeStr;
@@ -525,6 +566,21 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
 
+            },
+            getGPSfromZIP: function(zipcode, country, win, fail) {
+
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/zip2gps/'+country+"/"+zipcode;
+                // WIN
+                var successCallback = function(response) {
+                    if (response.data.resultCode == 0) {
+                        win(response.data.lat, response.data.lon);
+                    } else {
+                        fail();
+                    }
+                };
+                $http(config).then(successCallback, fail);
             }
 
         };

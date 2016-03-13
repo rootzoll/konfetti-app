@@ -426,10 +426,12 @@ angular.module('starter.controller.request', [])
           $translate("TEXT").then(function (TEXT) {
               $translate("IMAGE").then(function (IMAGE) {
                   $translate("LOCATION").then(function (LOCATION) {
+                      $translate("DATE").then(function (DATE) {
                       $scope.mediaChoosePopup = $ionicPopup.show({
                           template: '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoText()"><i class="icon ion-document-text"></i>&nbsp;'+TEXT+'</button><br>'+
                           '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoImage()"><i class="icon ion-image"></i>&nbsp;'+IMAGE+'</button><br>'+
-                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoLocation()"><i class="icon ion-map"></i>&nbsp;'+LOCATION+'</button>',
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoLocation()"><i class="icon ion-map"></i>&nbsp;'+LOCATION+'</button>'+
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoDate()"><i class="icon ion-clock"></i>&nbsp;'+DATE+'</button>',
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
@@ -438,6 +440,7 @@ angular.module('starter.controller.request', [])
                   });
               });
           });
+      });
       });
   };
 
@@ -568,6 +571,8 @@ angular.module('starter.controller.request', [])
 
   };
 
+
+
   $scope.saveLocationMediaItem = function(lat, lon) {
 
       console.log("saveLocationMediaItem("+lat+","+lon+")");
@@ -585,6 +590,37 @@ angular.module('starter.controller.request', [])
           KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
 
+  };
+
+  $scope.addInfoDate = function() {
+            $scope.mediaChoosePopup.close();
+            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
+                $translate("ADDDATE_SUB").then(function (TEXT) {
+                    $ionicPopup.prompt({
+                        title: HEADLINE,
+                        template: TEXT,
+                        inputType: 'datetime-local'
+                    }).then(function(res) {
+                        var jsonDate = JSON.stringify(res).trim();
+                        if ((typeof jsonDate!="undefined") && (jsonDate.length>2)) {
+                             $ionicLoading.show({
+                             template: '<img src="img/spinner.gif" />'
+                             });
+                            ApiService.postDateMediaItemOnRequest($scope.request.id, res, function(mediaitem) {
+                                // WIN
+                                $ionicLoading.hide();
+                                mediaitem.data = new Date(mediaitem.data.substr(1,mediaitem.data.length-2));
+                                $scope.addMediaItem(mediaitem);
+                                $ionicScrollDelegate.scrollBottom(true);
+                            }, function() {
+                                // FAIL
+                                $ionicLoading.hide();
+                                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                            });
+                        }
+                    });
+                });
+            });
   };
 
   $scope.addMediaItem = function(mediaitem) {

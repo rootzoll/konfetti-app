@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.dash', 'starter.controller.request', 'starter.controller.account', 'starter.services', 'starter.api', 'ngCordova', 'pascalprecht.translate'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox) {
   $ionicPlatform.ready(function() {
 
     $rootScope.initDone = false;
@@ -131,38 +131,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             setLocale("en");
         }
 
-    $rootScope.lat  = 0;
-    $rootScope.lon = 0;
-
     /*
-     * START GEOLOCATION
-     * http://ngcordova.com/docs/plugins/geolocation/
+     * Start GPS
      */
-    var posOptions = {timeout: 10000, enableHighAccuracy: false};
-    if (ApiService.runningDevelopmentEnv()) posOptions.timeout = 1000;
-    $rootScope.gps  = 'wait';
+
     $rootScope.lat  = 0;
     $rootScope.lon = 0;
-      $cordovaGeolocation
-          .getCurrentPosition(posOptions)
-          .then(function (position) {
-              $rootScope.lat  = position.coords.latitude;
-              $rootScope.lon = position.coords.longitude;
-              $rootScope.gps  = 'win';
-              $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
-          }, function(err) {
-              // error
-
-              if (!ApiService.runningDevelopmentEnv()) alert("GPS ERROR ---> FOR TESTING RUNNING WITH FAKE COORDINATES ---> REMOVE LATER");
-              $rootScope.lat  = 52.52;
-              $rootScope.lon = 13.13;
-              $rootScope.gps  = 'win';
-
-              /* TODO enable again later on
-              $log.info("GPS ERROR");
-              $rootScope.gps  = 'fail';
-              */
-          });
+    KonfettiToolbox.updateGPS();
 
     /*
      * App Context
@@ -324,7 +299,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'NOTIFICATION_SUPPORTWIN' : 'A task you supported got done.',
             'INFO_REWARD' : 'Your reward for this task',
             'INFO_SUPPORT' : 'Your support for this task',
-            'SELECT_LANG' : 'Please select languages you speak.'
+            'SELECT_LANG' : 'Please select languages you speak.',
+            'GPSFALLBACK_TITLE' : 'Where is your neighboorhood?',
+            'GPSFALLBACK_SUB' : 'please lets us know your zipcode and country',
+            'ZIPCODE' : 'Zipcode:',
+            'COUNTRY' : 'Country:',
+            'COUNTRY_GERMANY' : 'Germany',
+            'GPSFALLBACK_GPS' : 'Try GPS again',
+            'GPSFALLBACK_FAIL' : 'Sorry, was not able to process zip code. Check internet connection.',
+            'GPSFALLBACK_NEEDED' : 'Please enter a zip code.',
+            'DATE' : 'date',
+            'ADDDATE_TITLE' : 'Add Time & Date',
+            'ADDDATE_SUB' : 'set a date and a one word description',
+            'ADDDATE_DESCRIPTION' : 'description'
    });
 
    $translateProvider.translations('de', {
@@ -458,7 +445,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'NOTIFICATION_SUPPORTWIN' : 'Eine Aufgabe die Du unterstüzt hast wurde erledigt.',
             'INFO_REWARD' : 'Du hast für diese Aufgabe erhalten',
             'INFO_SUPPORT' : 'Du hast diese Aufgabe unterstützt',
-            'SELECT_LANG' : 'Bitte Sprache auswählen.'
+            'SELECT_LANG' : 'Bitte Sprache auswählen.',
+            'GPSFALLBACK_TITLE' : 'Wo befindet sich deine Nachbarschaft?',
+            'GPSFALLBACK_SUB' : 'Bitte nenne uns Postleizahl und Land',
+            'ZIPCODE' : 'Postleitzahl:',
+            'COUNTRY' : 'Land:',
+            'COUNTRY_GERMANY' : 'Deutschland',
+            'GPSFALLBACK_GPS' : 'Versuch GPS',
+            'GPSFALLBACK_FAIL' : 'Die Postleitzahl konnte nicht verarbeitet werden. Besteht Internetverbindung?',
+            'GPSFALLBACK_NEEDED' : 'Bitte Postleitzahl eingaben.',
+            'DATE' : 'Datum & Zeit',
+            'ADDDATE_TITLE' : 'Datum & Zeit',
+            'ADDDATE_SUB' : 'und bitte kurze Terminbeschreibung hinzufügen',
+            'ADDDATE_DESCRIPTION' : 'Beschreibung'
    });
 
    $translateProvider.translations('ar', {
@@ -592,7 +591,19 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'NOTIFICATION_SUPPORTWIN' : 'والمهمة التي دعمت حصلت على القيام به.',
             'INFO_REWARD' : 'كنت حصلت على مكافأة من هذا الطلب مع',
             'INFO_SUPPORT' : 'كنت دعم هذه المهمة',
-            'SELECT_LANG' : 'الرجاء تحديد اللغات التي يتكلم .'
+            'SELECT_LANG' : 'الرجاء تحديد اللغات التي يتكلم .',
+            'GPSFALLBACK_TITLE' : 'أين هو منطقتكم؟',
+            'GPSFALLBACK_SUB' : 'يرجى يتيح لنا أن نعرف الرمز البريدي الخاص بك والبلاد',
+            'ZIPCODE' : 'الرمز البريدي:',
+            'COUNTRY' : 'بلد:',
+            'COUNTRY_GERMANY' : 'ألمانيا',
+            'GPSFALLBACK_GPS' : 'محاولة لتحديد المواقع',
+            'GPSFALLBACK_FAIL' : 'عذرا، لم يكن قادرا على معالجة الرمز البريدي. تحقق من اتصال الإنترنت.',
+            'GPSFALLBACK_NEEDED' : 'الرجاء إدخال الرمز البريدي.',
+            'DATE' : 'تاريخ',
+            'ADDDATE_TITLE' : 'إضافة الوقت والتاريخ',
+            'ADDDATE_SUB' : 'تحديد موعد ووصف كلمة واحدة',
+            'ADDDATE_DESCRIPTION' : 'وصف'
    });
 
   $translateProvider.preferredLanguage("en");

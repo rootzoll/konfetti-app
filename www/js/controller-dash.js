@@ -358,9 +358,7 @@ angular.module('starter.controller.dash', [])
             $scope.userId = AppContext.getAccount().id;
             $scope.controllerInitDone = true;
             $scope.action();
-            console.dir($rootScope);
             $timeout(function(){
-                console.dir($rootScope);
                 $rootScope.setActualLangOnSelector();
             },100);
         });
@@ -511,6 +509,14 @@ angular.module('starter.controller.dash', [])
             //$rootScope.gps = 'fail';
             if ($scope.gps==='fail') {
                 $scope.state = "GPSFAIL";
+                KonfettiToolbox.getFallbackLocationBySelection(function(lat, lon) {
+                    // WIN
+                    $scope.action();
+                }, function() {
+                    // FAIL
+                    KonfettiToolbox.updateGPS();
+                    $scope.action();
+                });
                 return;
             }
 

@@ -1,8 +1,11 @@
 package de.konfetti.controller;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -235,7 +238,52 @@ public class UserController {
     	
     	return true;
     }
+    
+    class ResponseZip2Gps {
+    	public int resultCode = 0;
+    	public double lat = 0d;
+    	public double lon = 0d;
+    }
 	
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/zip2gps/{country}/{code}", method = RequestMethod.GET, produces = "application/json") 
+    public ResponseZip2Gps redeemCode(@PathVariable String country, @PathVariable String code) throws Exception {
+    	ResponseZip2Gps result = new ResponseZip2Gps();
+    	result.resultCode = -1;
+    	try {
+    		System.out.println("ZIP2GPS country("+country+") zip("+code+") -->");
+    		Scanner scanner = new Scanner(new URL("https://maps.googleapis.com/maps/api/geocode/json?address="+code+","+country).openStream(), "UTF-8");
+    		String json = scanner.useDelimiter("\\A").next();
+    		scanner.close();
+    		int i = json.indexOf("\"location\" : {");
+    		int e = 0;
+    		if (i>0) {
+    			i+=14;
+    			json = json.substring(i);
+    			i = json.indexOf("\"lat\" : ");
+    			if (i>0) {
+    				i+=8;
+    				e = json.indexOf(",", i);
+    				String latStr = json.substring(i,e).trim();
+    				System.out.println("LAT("+latStr+")");
+    				result.lat = Double.parseDouble(latStr);
+    			}
+    			i = json.indexOf("\"lng\" : ");
+    			if (i>0) {
+    				i+=8;
+    				e = json.indexOf("}", i);
+    				String lngStr = json.substring(i,e).trim();
+    				System.out.println("LNG("+lngStr+")");
+    				result.lon = Double.parseDouble(lngStr);
+    			}
+    			result.resultCode = 0;
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
+    	return result;
+    }
+    	    
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/redeem/{code}", method = RequestMethod.GET, produces = "application/json") 
     public RedeemResponse redeemCode(@PathVariable String code, @RequestParam(value="locale", defaultValue="en") String locale, HttpServletRequest httpRequest) throws Exception {
