@@ -12,4 +12,6 @@ public interface UserService {
     
     User findByClientId(long clientId);
 
+	User findByMail(String mail);
+
 }

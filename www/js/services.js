@@ -27,7 +27,8 @@ angular.module('starter.services', [])
       localState : {
         introScreenShown: false,
         imageData: null,
-        lastPartyUpdates: {}
+        lastPartyUpdates: {},
+        lastPosition : null
       }
   };
 
@@ -62,15 +63,6 @@ angular.module('starter.services', [])
         this.persistContext();
     },
     loadContext: function(win) {
-
-        // turn off
-        if (typeof window.device == "undefined") {
-            console.warn("RESETTING THE ACCOUNT PERSISTENCE");
-            isReady = true;
-            win();
-            return;
-        }
-
         var jsonStr = window.localStorage.getItem("appContext");
         if ((typeof jsonStr != "undefined") && (jsonStr!=null)) appContext = JSON.parse(jsonStr);
         isReady = true;
@@ -82,6 +74,10 @@ angular.module('starter.services', [])
     },
     getRunningOS: function() {
         return (typeof window.device != "undefined") ? window.device.platform : "browser";
+    },
+    isRunningOnDesktopComputer: function() {
+        // TODO differ between mobile and desktop browser in more detail later
+        return typeof window.device == "undefined";
     }
   };
 })
@@ -175,6 +171,14 @@ angular.module('starter.services', [])
                                                         $rootScope.lat = lat;
                                                         $rootScope.lon = lon;
                                                         $rootScope.gps = 'win';
+                                                        var newPosition = {
+                                                            ts: Date.now(),
+                                                            lat: lat,
+                                                            lon: lon
+                                                        };
+                                                        var localState = AppContext.getLocalState();
+                                                        localState.lastPosition = newPosition;
+                                                        AppContext.setLocalState(localState);
                                                         win(lat, lon);
                                                     }, function () {
                                                         // FAIL
@@ -237,7 +241,7 @@ angular.module('starter.services', [])
                 * START GEOLOCATION
                 * http://ngcordova.com/docs/plugins/geolocation/
                 */
-               var posOptions = {timeout: 30000, enableHighAccuracy: false};
+               var posOptions = {timeout: 14000, enableHighAccuracy: false};
                if (ApiService.runningDevelopmentEnv()) posOptions.timeout = 1000;
                $rootScope.gps  = 'wait';
                $rootScope.lat  = 0;
@@ -248,11 +252,30 @@ angular.module('starter.services', [])
                        $rootScope.lat  = position.coords.latitude;
                        $rootScope.lon = position.coords.longitude;
                        $rootScope.gps  = 'win';
+                       var newPosition = {
+                           ts: Date.now(),
+                           lat: position.coords.latitude,
+                           lon: position.coords.longitude
+                       };
+                       var localState = AppContext.getLocalState();
+                       localState.lastPosition = newPosition;
+                       AppContext.setLocalState(localState);
                        $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
                    }, function(err) {
                        // error
-                       $log.info("GPS ERROR");
-                       $rootScope.gps  = 'fail';
+
+                       // no live GPS - try to use last one
+                       var localState = AppContext.getLocalState();
+                       if ((localState.lastPosition!=null) && (typeof localState.lastPosition.ts != "undefined")) {
+                           $log.info("no live GPS ... using last position lat("+localState.lastPosition.lat+") lon("+localState.lastPosition.lon+")");
+                           $rootScope.lat  = localState.lastPosition.lat;
+                           $rootScope.lon = localState.lastPosition.lon;
+                           $rootScope.gps  = 'win';
+                       } else {
+                           $log.info("GPS ERROR");
+                           $rootScope.gps  = 'fail';
+                       }
+
                    });
            },
            processCode : function(isRedeemCouponBool) {

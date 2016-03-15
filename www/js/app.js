@@ -311,7 +311,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DATE' : 'date',
             'ADDDATE_TITLE' : 'Add Time & Date',
             'ADDDATE_SUB' : 'set a date and a one word description',
-            'ADDDATE_DESCRIPTION' : 'description'
+            'ADDDATE_DESCRIPTION' : 'description',
+            'LOGIN_WELCOME' : 'Welcome to Konfetti App',
+            'LOGIN_STEP1' : 'Because you are running on a browser you need to login. Please register with email and password if this is your first time.',
+            'LOGINBUTTON_REGISTER' : 'Register new Account',
+            'LOGINBUTTON_LOGIN' : 'Login',
+            'LOGINBUTTON_LOGINFORGOT' : 'I forgot my password',
+            'LOGIN_INFO' : 'please login in',
+            'REGISTER_INFO' : 'please register',
+            'EMAIL' : 'email',
+            'PASSWORD' : 'password',
+            'RECOVER_TITLE' : 'Password Recovery',
+            'RECOVER_EXPLAIN' : 'Enter the eMail you used for registering and we will send you a new password.',
+            'RECOVER_BUTTON' : 'Reset Password',
+            'RECOVER_WIN' : 'OK. Please check your email inbox for new password.',
+            'RECOVER_FAIL' : 'Was not able to reset password. Please check email and internet connection.',
+            'LOGIN_FAIL' : 'Was not able to login. Please check email, password and internet connection.',
+            'REGISTER_FAIL' : 'Was not able to register. Please check email, password and internet connection.',
+            'REGISTER_FAILMAIL' : 'The email is already in use. If you forgot the password, try to reset.'
    });
 
    $translateProvider.translations('de', {
@@ -457,7 +474,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DATE' : 'Datum & Zeit',
             'ADDDATE_TITLE' : 'Datum & Zeit',
             'ADDDATE_SUB' : 'und bitte kurze Terminbeschreibung hinzufügen',
-            'ADDDATE_DESCRIPTION' : 'Beschreibung'
+            'ADDDATE_DESCRIPTION' : 'Beschreibung',
+            'LOGIN_WELCOME' : 'Willkommen zur Konfetti App',
+            'LOGIN_STEP1' : 'Da die App auf einem Browser aufgerufen wird, ist ein Login nötig. Bist du zum ersten mal hier, bitte registrier dich mit eMail und Passwort.',
+            'LOGINBUTTON_REGISTER' : 'Neu-Registrierung',
+            'LOGINBUTTON_LOGIN' : 'Login',
+            'LOGINBUTTON_LOGINFORGOT' : 'Ich habe mein Passwort vergessen.',
+            'LOGIN_INFO' : 'Bitte einloggen:',
+            'REGISTER_INFO' : 'Bitte registrien:',
+            'EMAIL' : 'eMail',
+            'PASSWORD' : 'Passwort',
+            'RECOVER_TITLE' : 'Passwort Vergessen',
+            'RECOVER_EXPLAIN' : 'Bitte eMail eingeben, welche bei er Registrierung verwendet wurde. Es wird dann ein neues Passwort versandt.',
+            'RECOVER_BUTTON' : 'Neues Passwort anfordern',
+            'RECOVER_WIN' : 'OK. Es wurde dir ein neues Passwort zugesandt.',
+            'RECOVER_FAIL' : 'Zurücksetzen des Passworts war nicht möglich. Bitte eMail Adresse und Internetverbindung prüfen.',
+            'LOGIN_FAIL' : 'Login fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.',
+            'REGISTER_FAIL' : 'Registrierung fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.',
+            'REGISTER_FAILMAIL' : 'eMail ist bereits in Verwendung. If you forgot the password, try to reset.'
    });
 
    $translateProvider.translations('ar', {
@@ -603,7 +637,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'DATE' : 'تاريخ',
             'ADDDATE_TITLE' : 'إضافة الوقت والتاريخ',
             'ADDDATE_SUB' : 'تحديد موعد ووصف كلمة واحدة',
-            'ADDDATE_DESCRIPTION' : 'وصف'
+            'ADDDATE_DESCRIPTION' : 'وصف',
+            'LOGIN_WELCOME' : 'مرحبا بكم في النثار التطبيقات',
+            'LOGIN_STEP1' : 'لأنك تعمل على متصفح تحتاج إلى تسجيل الدخول. للتسجيل الرجاء البريد الإلكتروني وكلمة المرور إذا كانت هذه هي المرة الأولى.',
+            'LOGINBUTTON_REGISTER' : 'تسجيل حساب جديد',
+            'LOGINBUTTON_LOGIN' : 'تسجيل الدخول',
+            'LOGINBUTTON_LOGINFORGOT' : 'لقد نسيت كلمة المرور',
+            'LOGIN_INFO' : 'يرجى تسجيل الدخول في:',
+            'REGISTER_INFO' : 'الرجاء التسجيل:',
+            'EMAIL' : 'البريد الإلكتروني',
+            'PASSWORD' : 'كلمه السر',
+            'RECOVER_TITLE' : 'استعادة كلمة السر',
+            'RECOVER_EXPLAIN' : 'أدخل البريد الإلكتروني الذي استخدمته للتسجيل، وسوف نرسل لك كلمة مرور جديدة.',
+            'RECOVER_BUTTON' : 'اعادة تعيين كلمة السر',
+            'RECOVER_WIN' : 'حسنا. يرجى التحقق من بريدك الالكتروني لكلمة مرور جديدة.',
+            'RECOVER_FAIL' : 'لم يكن قادرا على إعادة تعيين كلمة المرور. يرجى التحقق من البريد الإلكتروني والاتصال بشبكة الانترنت.',
+            'LOGIN_FAIL' : 'لم يكن قادرا على تسجيل الدخول. يرجى التحقق من البريد الإلكتروني وكلمة السر والاتصال بشبكة الانترنت.',
+            'REGISTER_FAIL' : 'لم يكن قادرا على تسجيل. يرجى التحقق من البريد الإلكتروني وكلمة السر والاتصال بشبكة الانترنت.',
+            'REGISTER_FAILMAIL' : 'البريد الإلكتروني قيد الاستخدام بالفعل. إذا كنت قد نسيت كلمة المرور، في محاولة لإعادة تعيين.'
    });
 
   $translateProvider.preferredLanguage("en");

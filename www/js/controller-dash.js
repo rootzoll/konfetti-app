@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading) {
 
         /*
          * get state parameter of controller
@@ -43,6 +43,8 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkedAccount = false;
 
+        $scope.showDeleteAccount = ApiService.runningDevelopmentEnv();
+
         // sorting options
         $scope.sortSet = [
             {sort:'most', display:'most'},
@@ -82,6 +84,94 @@ angular.module('starter.controller.dash', [])
         // redeem button
         $scope.onButtonCoupon = function() {
             KonfettiToolbox.processCode(true);
+        };
+
+        $scope.buttonLoginRegister = function() {
+            $scope.state = "LOGIN_REGISTER";
+        };
+
+        $scope.buttonLoginRegisterFinal = function(mail,pass) {
+
+            // TODO: better feedback on unvalid input
+            if (typeof mail == "undefined") return;
+            if (typeof pass == "undefined") return;
+
+            $ionicLoading.show({
+                template: '<img src="img/spinner.gif" />'
+            });
+            ApiService.createAccount(mail, pass, function(account) {
+                // WIN
+                $ionicLoading.hide();
+                AppContext.setAccount(account);
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
+                    $scope.state = "INIT";
+                    $scope.action();
+                });
+            }, function(errorcode) {
+                // FAIL
+                $ionicLoading.hide();
+                if ((typeof errorcode != "undefined") || (errorcode==1)) {
+                    // email already in use
+                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
+                        $scope.state = "LOGIN_START";
+                    });
+                } else {
+                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
+                }
+            });
+        };
+
+        $scope.buttonLoginLogin = function() {
+            $scope.state = "LOGIN_LOGIN";
+        };
+
+        $scope.buttonLoginLoginFinal = function(mail,pass) {
+
+            // TODO: better feedback on unvalid input
+            if (typeof mail == "undefined") return;
+            if (typeof pass == "undefined") return;
+
+            $ionicLoading.show({
+                template: '<img src="img/spinner.gif" />'
+            });
+            ApiService.login(mail, pass, function(account) {
+                // WIN
+                $ionicLoading.hide();
+                AppContext.setAccount(account);
+                $scope.state = "INIT";
+                $scope.action();
+            }, function() {
+                // FAIL
+                $ionicLoading.hide();
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
+                });
+            });
+        };
+
+        $scope.buttonLoginRecover = function() {
+            $scope.state = "LOGIN_RECOVER";
+        };
+
+        $scope.buttonLoginRecoverFinal = function(mail) {
+
+            // TODO: better feedback on unvalid input
+            if (typeof mail == "undefined") return;
+
+            $ionicLoading.show({
+                template: '<img src="img/spinner.gif" />'
+            });
+            ApiService.recoverPassword(mail, function() {
+                // WIN
+                $ionicLoading.hide();
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
+                    $scope.state = "LOGIN_LOGIN";
+                });
+            }, function() {
+                // FAIL
+                $ionicLoading.hide();
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_FAIL', function(){
+                });
+            });
         };
 
         // sort the open requests based on points
@@ -171,6 +261,11 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         };
 
+        // back to login start, when on register, login or recover screen
+        $scope.loginBack = function() {
+            $scope.state = "LOGIN_START";
+        };
+
         // when user wants to create a new request
         $scope.onNewRequest = function() {
             $state.go('tab.request-detail', {id: 0, area: 'top'});
@@ -214,6 +309,11 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+        };
+
+        $scope.resetAccount = function() {
+            localStorage.clear();
+            location.reload();
         };
 
         // when user taps the delete button on a notification
@@ -391,6 +491,13 @@ angular.module('starter.controller.dash', [])
                 $timeout($scope.action, 300);
                 return;
             }
+
+            // display login on browsers
+            if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
+            if ((AppContext.isRunningOnDesktopComputer()) && (AppContext.getAccount().clientId.length===0)) {
+                $scope.state = "LOGIN_START";
+                return;
+            }
             
             // display intro message
             if (!AppContext.getLocalState().introScreenShown) {
@@ -404,7 +511,7 @@ angular.module('starter.controller.dash', [])
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
                     $scope.state = "ACCOUNTWAIT";
-                    ApiService.createAccount(function(account){
+                    ApiService.createAccount(null, null, function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
                         AppContext.setAccount(account);

@@ -43,6 +43,7 @@ public class UserServiceImpl extends BaseService implements UserService {
 
 	@Override
 	public User findByClientId(long clientId) {
+		// TODO improve performance
 		Long clientID = new Long(clientId);
 		List<User> all = userRepository.findAll();
 		for (User user : all) {
@@ -54,6 +55,17 @@ public class UserServiceImpl extends BaseService implements UserService {
 	@Override
 	public User update(User user) {
 		return userRepository.saveAndFlush(user);
+	}
+
+	@Override
+	public User findByMail(String mail) {
+		if (mail==null) return null;
+		// TODO improve performance
+		List<User> all = userRepository.findAll();
+		for (User user : all) {
+			if (mail.equals(user.geteMail())) return user;
+		}
+		return null;
 	}
     
 }

@@ -8,7 +8,7 @@ angular.module('starter.api', [])
         var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
         // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
-        var activeServerUrl = apiUrlBaseDevServer;
+        var activeServerUrl = apiUrlBaseLocalhost;
 
         var getBasicHttpHeaderConfig = function() {
             var account = AppContext.getAccount();
@@ -27,14 +27,21 @@ angular.module('starter.api', [])
             runningDevelopmentEnv: function () {
                 return activeServerUrl==apiUrlBaseLocalhost;
             },
-            createAccount: function(win, fail) {
+            createAccount: function(mail, pass, win, fail) {
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'POST';
                 config.url = activeServerUrl+'/account';
+                if ((typeof mail != "undefined") && (typeof pass != "undefined") && (mail!=null) && (pass!=null)) {
+                    config.url = config.url + "?mail="+encodeURIComponent(mail)+"&pass="+encodeURIComponent(pass);
+                }
                 // WIN
                 var successCallback = function(response) {
+                    if (response.data.id<0) {
+                        fail(-response.data.id);
+                        return;
+                    }
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);
@@ -66,6 +73,34 @@ angular.module('starter.api', [])
                 var successCallback = function(response) {
                     response.data.clientId = accountObj.clientId;
                     response.data.clientSecret = accountObj.clientSecret;
+                    win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
+            login: function(mail, pass, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/login?mail='+encodeURIComponent(mail)+'&pass='+encodeURIComponent(pass);
+                // WIN
+                var successCallback = function(response) {
+                    AppContext.setAccount(response.data);
+                    win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
+            recoverPassword: function(mail, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/recover?mail='+encodeURIComponent(mail);
+                // WIN
+                var successCallback = function(response) {
+                    AppContext.setAccount(response.data);
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);

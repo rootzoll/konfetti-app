@@ -18,8 +18,11 @@ public class User {
     // self written name (nick or real)
     private String name;
     
-    // email -> good for admins and reviewers
+    // email
     private String eMail;
+    
+    // password
+    private String password;
     
     // image of user 
     private Long imageMediaID;
@@ -169,6 +172,14 @@ public class User {
 
 	public void seteMail(String eMail) {
 		this.eMail = eMail;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
     
 }

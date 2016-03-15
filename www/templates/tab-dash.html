@@ -4,6 +4,12 @@
         <button on-tap="reloadPartyList()" ng-show="!loadingParty" ng-class="{animationPulsateSimple: updatesOnParty}" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i ng-class="{red: updatesOnParty}" id="reloadIcon" class="icon ion-loop"></i>
         </button>
+        <button on-tap="resetAccount()" ng-if="showDeleteAccount" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="deleteAccount" class="icon ion-trash-a"></i>
+        </button>
+        <button on-tap="loginBack()" ng-show="(state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER')" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="loginBack" class="icon ion-arrow-left-c"></i>
+        </button>
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
@@ -17,7 +23,7 @@
     top: 40px;
     position: absolute;
     width: 100%;
-    height: 110px;" ng-hide="(state==='INTRO')">
+    height: 110px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER'))">
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 8px;">
             <div style="width:100%;padding:8px">
@@ -61,6 +67,98 @@
     </div>
 
   <ion-content>
+
+      <div ng-show="(state==='LOGIN_START')" class="card" style="text-align: center; margin-top: 16px;">
+          <div class="item item-divider">
+              {{ 'LOGIN_WELCOME' | translate }}
+          </div>
+          <div class="item item-text-wrap">
+              <ion-list>
+                  <ion-item>
+                      {{ 'LOGIN_STEP1' | translate }}<br>
+                  </ion-item>
+              </ion-list>
+          </div>
+          <div class="item item-divider">
+              <button class="button button-positive" on-tap="buttonLoginRegister()">
+                  {{ 'LOGINBUTTON_REGISTER' | translate }}
+              </button>
+              <button class="button button-positive" on-tap="buttonLoginLogin()">
+                  {{ 'LOGINBUTTON_LOGIN' | translate }}
+              </button>
+              <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 10px; color: #387EF5;">
+                  {{ 'LOGINBUTTON_LOGINFORGOT' | translate }}
+              </div>
+          </div>
+      </div>
+
+      <div ng-show="(state==='LOGIN_REGISTER')" class="card" style="text-align: center; margin-top: 16px;">
+          <div class="item item-divider">
+              {{ 'REGISTER_INFO' | translate }}
+          </div>
+          <div class="item item-text-wrap">
+              <div class="list list-inset" style="margin-top: 0px;">
+                  <label class="item item-input" style="padding-left: 0px;">
+                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                  </label>
+                  <label class="item item-input" style="padding-left: 0px;">
+                      <input ng-model="loginPassword" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                  </label>
+              </div>
+          </div>
+          <div class="item item-divider">
+              <button class="button button-positive" on-tap="buttonLoginRegisterFinal(loginEmail, loginPassword)">
+                  {{ 'LOGINBUTTON_REGISTER' | translate }}
+              </button>
+          </div>
+      </div>
+
+      <div ng-show="(state==='LOGIN_LOGIN')" class="card" style="text-align: center; margin-top: 16px;">
+          <div class="item item-divider">
+              {{ 'LOGIN_INFO' | translate }}
+          </div>
+          <div class="item item-text-wrap">
+              <div class="list list-inset"  style="margin-top: 0px;">
+                  <label class="item item-input" style="padding-left: 0px;">
+                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                  </label>
+                  <label class="item item-input" style="padding-left: 0px;">
+                      <input ng-model="loginPassword" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                  </label>
+              </div>
+          </div>
+          <div class="item item-divider">
+              <button class="button button-positive" on-tap="buttonLoginLoginFinal(loginEmail, loginPassword)">
+                  {{ 'LOGINBUTTON_LOGIN' | translate }}
+              </button>
+              <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 10px; color: #387EF5;">
+                  {{ 'LOGINBUTTON_LOGINFORGOT' | translate }}
+              </div>
+          </div>
+      </div>
+
+      <div ng-show="(state==='LOGIN_RECOVER')" class="card" style="text-align: center; margin-top: 16px;">
+          <div class="item item-divider">
+              {{ 'RECOVER_TITLE' | translate }}
+          </div>
+          <div class="item item-text-wrap">
+              <ion-list>
+                  <ion-item>
+                      {{ 'RECOVER_EXPLAIN' | translate }}
+                  </ion-item>
+              </ion-list>
+              <div class="list list-inset"  style="margin-top: 0px;">
+                  <label class="item item-input" style="padding-left: 0px;">
+                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                  </label>
+              </div>
+          </div>
+          <div class="item item-divider">
+              <button class="button button-positive" on-tap="buttonLoginRecoverFinal(loginEmail)">
+                  {{ 'RECOVER_BUTTON' | translate }}
+              </button>
+          </div>
+      </div>
 
       <div ng-show="(state==='INTRO')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">

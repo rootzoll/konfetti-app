@@ -1,8 +1,9 @@
 package de.konfetti.controller;
 
-import java.io.InputStream;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -51,17 +52,32 @@ public class UserController {
     private final AccountingService accountingService;
     private final PartyService partyService;
     private final CodeService codeService;
+    
+    private MessageDigest md5Digest; 
+    private String passwordSalt;
 
     @Autowired
     private JavaMailSender javaMailSender;
     
     @Autowired
     public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService, final PartyService partyService, final CodeService codeService) {
-        this.userService = userService;
+        
+    	this.userService = userService;
         this.clientService = clientService;
         this.accountingService = accountingService;
         this.partyService = partyService;
         this.codeService = codeService;
+        
+        try {
+			md5Digest = MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+        
+        this.passwordSalt = Helper.getPropValues("security.passwordsalt");
+        if ((this.passwordSalt==null) || (this.passwordSalt.trim().length()==0)) throw new RuntimeException("security.passwordsalt is not set in application.properties");
+        this.passwordSalt  = this.passwordSalt.trim();
     }
 
     //---------------------------------------------------
@@ -70,10 +86,39 @@ public class UserController {
     
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public User createUser() {
+    public User createUser(@RequestParam(value="mail", defaultValue="") String email, @RequestParam(value="pass", defaultValue="") String pass) throws Exception {
+    	
+    	boolean createWithCredentials = false;
+    	if ((email!=null) || (email.length()>1)) {
+    		
+    		// check if credentials are available
+    		if ((pass==null) || (pass.trim().length()==0)) { throw new Exception("password needs to be set");} 
+    		pass = pass.trim();
+    		createWithCredentials = true;
+    		
+        	// if email is set - check if email exists on other account
+    		if (userService.findByMail(email)!=null) {
+    			User errorUser = new User();
+    			errorUser.setId(-1l);
+    			return errorUser;
+    		}
+    		
+    	}
     	
     	// create new user
     	User user = userService.create();
+    	
+    	if (createWithCredentials) {
+        	user.seteMail(email.toLowerCase());
+        	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+        	user.setPassword(passMD5);	
+        	userService.update(user);
+        	LOGGER.info("Create new User with eMail("+email+") and passwordhash("+passMD5+")");
+        	// TODO --> email multi lang
+        	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
+        		LOGGER.warn("was not able to send eMail on account creation to("+email+")");
+        	}
+    	}
     	
     	// create new client
     	Client client = clientService.create(user.getId());
@@ -118,6 +163,65 @@ public class UserController {
     	}
     	
         return user;
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/login", method = RequestMethod.GET, produces = "application/json")
+    public User login(@RequestParam(value="mail", defaultValue="") String email, @RequestParam(value="pass", defaultValue="") String pass) throws Exception {
+    	
+    	// check user and input data
+        User user = userService.findByMail(email.toLowerCase());
+        if (user==null) {
+        	LOGGER.warn("LOGIN FAIL: user not found with mail("+email+")");
+        	throw new Exception("User and/or Passwort not valid.");
+        }
+        if ((pass==null) || (pass.trim().length()==0)) {
+        	LOGGER.warn("LOGIN FAIL: password is null or zero length");
+        	throw new Exception("User and/or Passwort not valid.");
+        }
+        pass = pass.trim();
+        
+        // check password
+    	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+    	if (!passMD5.equals(user.getPassword())) {
+        	LOGGER.warn("LOGIN FAIL: given passwordMD5("+passMD5+") is not passwordMD5 on user ("+user.getPassword()+")");
+    		throw new Exception("User and/or Passwort not valid.");
+    	}
+   	
+    	// create new client for session
+    	Client client = clientService.create(user.getId());
+    	
+    	// set client data on user and return
+    	user.setClientId(client.getId());
+    	user.setClientSecret(client.getSecret());
+    		
+    	return user;
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/recover", method = RequestMethod.GET, produces = "application/json")
+    public User recover(@RequestParam(value="mail", defaultValue="") String email) throws Exception {
+    	
+    	// check user and input data
+        User user = userService.findByMail(email.toLowerCase());
+        if (user==null) {
+        	LOGGER.warn("RECOVER FAIL: user not found with mail("+email+")");
+        	throw new Exception("mail not found");
+        }
+        
+        // reset password
+        String pass = Code.generadeCodeNumber()+"";
+    	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+    	user.setPassword(passMD5);
+    	userService.update(user);
+   	
+    	// send by email
+    	// TODO --> email multi lang
+    	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Password Reset", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
+    		LOGGER.warn("was not able to send eMail on account creation to("+email+")");
+    	}
+    	
+    	return user;
     }
     
     @CrossOrigin(origins = "*")

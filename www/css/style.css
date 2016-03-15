@@ -258,3 +258,7 @@ div.popup-body span {
     color: red;
 }
 
+#deleteAccount:before {
+    font-size: 25px;
+}
+
