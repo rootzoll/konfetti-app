@@ -130,10 +130,8 @@ angular.module('starter.controller.dash', [])
                 AppContext.setAccount(account);
                 $scope.loginPassword = "";
                 $scope.addLogoutNotification();
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
-                    $scope.state = "INIT";
-                    $scope.action();
-                });
+                $scope.state = "INIT";
+                $scope.action();
             }, function(errorcode) {
                 // FAIL
                 $ionicLoading.hide();
