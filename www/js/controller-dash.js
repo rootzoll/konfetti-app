@@ -29,6 +29,9 @@ angular.module('starter.controller.dash', [])
         $scope.partyList = [];
         $scope.actualPartyIndex = 0;
 
+        // collector of notifications to be added to next load of party notifications
+        $scope.globalNotifications = [];
+
         $scope.requestsReview = [];
         $scope.requestsPosted = [];
         $scope.requestsInteraction = [];
@@ -43,7 +46,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkedAccount = false;
 
-        $scope.showDeleteAccount = ApiService.runningDevelopmentEnv();
+        $scope.showLogOutOption = !AppContext.isRunningWithinApp();
 
         // sorting options
         $scope.sortSet = [
@@ -90,19 +93,43 @@ angular.module('starter.controller.dash', [])
             $scope.state = "LOGIN_REGISTER";
         };
 
+        $scope.addLogoutNotification = function() {
+            var notification = {
+                id : -1,
+                userId : 0,
+                partyId : 0,
+                type : 9,
+                ref : null,
+                ts : Date.now()
+            };
+            $scope.globalNotifications.push(notification);
+        };
+
         $scope.buttonLoginRegisterFinal = function(mail,pass) {
 
-            // TODO: better feedback on unvalid input
-            if (typeof mail == "undefined") return;
+            if (typeof mail == "undefined") {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                $scope.loginPassword = "";
+                return;
+            }
             if (typeof pass == "undefined") return;
+
+            // password needs to be at least 8 chars long
+            if (pass.length<8) {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
+                $scope.loginPassword = "";
+                return;
+            }
 
             $ionicLoading.show({
                 template: '<img src="img/spinner.gif" />'
             });
-            ApiService.createAccount(mail, pass, function(account) {
+            ApiService.createAccount(mail, pass, AppContext.getAppLang(), function(account) {
                 // WIN
                 $ionicLoading.hide();
                 AppContext.setAccount(account);
+                $scope.loginPassword = "";
+                $scope.addLogoutNotification();
                 KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
                     $scope.state = "INIT";
                     $scope.action();
@@ -112,23 +139,30 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 if ((typeof errorcode != "undefined") || (errorcode==1)) {
                     // email already in use
+                    $scope.loginPassword = "";
+                    $scope.loginEmail = "";
                     KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
                         $scope.state = "LOGIN_START";
                     });
                 } else {
                     KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
+                    $scope.loginPassword = "";
                 }
             });
         };
 
         $scope.buttonLoginLogin = function() {
+            $scope.loginPassword = "";
             $scope.state = "LOGIN_LOGIN";
         };
 
         $scope.buttonLoginLoginFinal = function(mail,pass) {
 
-            // TODO: better feedback on unvalid input
-            if (typeof mail == "undefined") return;
+            if (typeof mail == "undefined") {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                $scope.loginPassword = "";
+                return;
+            }
             if (typeof pass == "undefined") return;
 
             $ionicLoading.show({
@@ -137,12 +171,15 @@ angular.module('starter.controller.dash', [])
             ApiService.login(mail, pass, function(account) {
                 // WIN
                 $ionicLoading.hide();
+                $scope.addLogoutNotification();
                 AppContext.setAccount(account);
+                $scope.loginPassword = "";
                 $scope.state = "INIT";
                 $scope.action();
             }, function() {
                 // FAIL
                 $ionicLoading.hide();
+                $scope.loginPassword = "";
                 KonfettiToolbox.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
                 });
             });
@@ -154,8 +191,10 @@ angular.module('starter.controller.dash', [])
 
         $scope.buttonLoginRecoverFinal = function(mail) {
 
-            // TODO: better feedback on unvalid input
-            if (typeof mail == "undefined") return;
+            if (typeof mail == "undefined") {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                return;
+            }
 
             $ionicLoading.show({
                 template: '<img src="img/spinner.gif" />'
@@ -309,6 +348,15 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+            // logout reminder --> flash option
+            if (noti.type==9) {
+                document.getElementById('deleteAccount').classList.add("animationPulsateSimple");
+                $timeout(function(){
+                    document.getElementById('deleteAccount').classList.remove("animationPulsateSimple");
+                },2000);
+                return;
+            }
+
         };
 
         $scope.resetAccount = function() {
@@ -316,27 +364,41 @@ angular.module('starter.controller.dash', [])
             location.reload();
         };
 
+        $scope.determineIfToShowNotificationPanel = function(){
+            // check if there is at least one notification with id>0 to display
+            $scope.showNotifications = false;
+            for (var i = 0; i < $scope.notifications.length; i++) {
+                if ($scope.notifications[i].id!=0) {
+                    $scope.showNotifications = true;
+                    break;
+                }
+            }
+        };
+
         // when user taps the delete button on a notification
         $scope.tapNotificationDelete = function($event, noti) {
             if ((typeof $event != "undefined") && ($event!=null)) $event.stopPropagation();
 
             document.getElementById('notification-'+noti.id).classList.add("animationFadeOut");
+            if (noti.id<0) {
+                $timeout(function(){
+                    document.getElementById('notification-'+noti.id).classList.add("hide");
+                    noti.id = 0;
+                    $scope.determineIfToShowNotificationPanel();
+                },1000);
+                return;
+            }
             ApiService.markNotificationAsRead( noti.id,
             function(){
                 // WIN
 
                 // set id = 0
                 // --> not displaying it anymore
-                noti.id = 0;
-
-                // check if there is at least one notification with id>0 to display
-                $scope.showNotifications = false;
-                for (var i = 0; i < $scope.notifications.length; i++) {
-                    if ($scope.notifications[i].id>0) {
-                        $scope.showNotifications = true;
-                        break;
-                    }
-                }
+                $timeout(function(){
+                    document.getElementById('notification-'+noti.id).classList.add("hide");
+                    noti.id = 0;
+                    $scope.determineIfToShowNotificationPanel();
+                },200);
 
             }, function(){
                 // FAIL
@@ -468,6 +530,7 @@ angular.module('starter.controller.dash', [])
             var state = AppContext.getLocalState();
             state.introScreenShown = true;
             AppContext.setLocalState(state);
+            $scope.state = "INIT";
             $scope.action();
         };
 
@@ -511,7 +574,7 @@ angular.module('starter.controller.dash', [])
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
                     $scope.state = "ACCOUNTWAIT";
-                    ApiService.createAccount(null, null, function(account){
+                    ApiService.createAccount(null, null, AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
                         AppContext.setAccount(account);
@@ -534,9 +597,7 @@ angular.module('starter.controller.dash', [])
                             AppContext.setAccount(account);
                             // TODO ionic optional dialog multi lang
                             alert("The server was reset - starting as a fresh user.");
-                            $log.info("FAIL - no account");
-                            $scope.state = "INTERNETFAIL";
-                            $timeout($scope.action, 5000);
+                            $scope.resetAccount();
                             return;
                         } else {
                             // refreshing local account with account from server
@@ -685,6 +746,8 @@ angular.module('starter.controller.dash', [])
                 $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');
                 $scope.requestsDone = KonfettiToolbox.filterRequestsByState(data.requests, 'done');
                 $scope.notifications = data.notifications;
+                $scope.notifications = $scope.notifications.concat($scope.globalNotifications);
+                $scope.globalNotifications = [];
                 $scope.loadingParty = false;
                 $scope.sortRequests();
                 $scope.state = "OK";

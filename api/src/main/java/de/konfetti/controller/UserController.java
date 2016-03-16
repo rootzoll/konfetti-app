@@ -2,8 +2,6 @@ package de.konfetti.controller;
 
 import java.net.URL;
 import java.net.URLEncoder;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -53,7 +51,6 @@ public class UserController {
     private final PartyService partyService;
     private final CodeService codeService;
     
-    private MessageDigest md5Digest; 
     private String passwordSalt;
 
     @Autowired
@@ -67,29 +64,25 @@ public class UserController {
         this.accountingService = accountingService;
         this.partyService = partyService;
         this.codeService = codeService;
-        
-        try {
-			md5Digest = MessageDigest.getInstance("MD5");
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-			throw new RuntimeException(e);
-		}
-        
+                
         this.passwordSalt = Helper.getPropValues("security.passwordsalt");
         if ((this.passwordSalt==null) || (this.passwordSalt.trim().length()==0)) throw new RuntimeException("security.passwordsalt is not set in application.properties");
         this.passwordSalt  = this.passwordSalt.trim();
     }
-
+    
     //---------------------------------------------------
     // USER Controller
     //---------------------------------------------------
     
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
-    public User createUser(@RequestParam(value="mail", defaultValue="") String email, @RequestParam(value="pass", defaultValue="") String pass) throws Exception {
+    public User createUser(
+    		@RequestParam(value="mail", defaultValue="") String email, 
+    		@RequestParam(value="pass", defaultValue="") String pass, 
+    		@RequestParam(value="locale", defaultValue="en") String locale ) throws Exception {
     	
     	boolean createWithCredentials = false;
-    	if ((email!=null) || (email.length()>1)) {
+    	if ((email!=null) && (email.length()>1)) {
     		
     		// check if credentials are available
     		if ((pass==null) || (pass.trim().length()==0)) { throw new Exception("password needs to be set");} 
@@ -110,15 +103,19 @@ public class UserController {
     	
     	if (createWithCredentials) {
         	user.seteMail(email.toLowerCase());
-        	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+        	String passMD5 = Helper.hashPassword(this.passwordSalt, pass);
         	user.setPassword(passMD5);	
-        	userService.update(user);
         	LOGGER.info("Create new User with eMail("+email+") and passwordhash("+passMD5+")");
-        	// TODO --> email multi lang
+           	// TODO --> email multi lang by lang set in user
         	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
         		LOGGER.warn("was not able to send eMail on account creation to("+email+")");
         	}
     	}
+    	
+    	// set default spoken lang
+    	String[] langs = {locale};
+    	user.setSpokenLangs(langs);
+    	userService.update(user);
     	
     	// create new client
     	Client client = clientService.create(user.getId());
@@ -126,6 +123,10 @@ public class UserController {
     	// set client data on user and return
     	user.setClientId(client.getId());
     	user.setClientSecret(client.getSecret());
+    	
+    	// keep password hash just on server side
+    	user.setPassword("");
+    	
         return user;
     }
 
@@ -162,6 +163,9 @@ public class UserController {
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
     	
+    	// keep password hash just on server side
+    	user.setPassword("");
+    	
         return user;
     }
     
@@ -182,7 +186,7 @@ public class UserController {
         pass = pass.trim();
         
         // check password
-    	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+    	String passMD5 = Helper.hashPassword(this.passwordSalt, pass);
     	if (!passMD5.equals(user.getPassword())) {
         	LOGGER.warn("LOGIN FAIL: given passwordMD5("+passMD5+") is not passwordMD5 on user ("+user.getPassword()+")");
     		throw new Exception("User and/or Passwort not valid.");
@@ -195,6 +199,9 @@ public class UserController {
     	user.setClientId(client.getId());
     	user.setClientSecret(client.getSecret());
     		
+    	// keep password hash just on server side
+    	user.setPassword("");
+    	
     	return user;
     }
     
@@ -211,15 +218,18 @@ public class UserController {
         
         // reset password
         String pass = Code.generadeCodeNumber()+"";
-    	String passMD5 = new String(md5Digest.digest((this.passwordSalt+pass).getBytes()));
+    	String passMD5 = Helper.hashPassword(this.passwordSalt, pass);
     	user.setPassword(passMD5);
     	userService.update(user);
    	
     	// send by email
-    	// TODO --> email multi lang
+    	// TODO --> email multi lang by lang set in user
     	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Password Reset", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
     		LOGGER.warn("was not able to send eMail on account creation to("+email+")");
     	}
+    	
+    	// keep password hash just on server side
+    	user.setPassword("");
     	
     	return user;
     }
@@ -266,6 +276,9 @@ public class UserController {
     	
     	// update user in persistence
     	userService.update(userExisting);
+    	
+    	// keep password hash just on server side
+    	userExisting.setPassword("");
     	
         return userExisting;
     }
@@ -470,21 +483,21 @@ public class UserController {
     		// redeem konfetti
     		if (Code.ACTION_TYPE_KONFETTI==coupon.getActionType()) {
         		result.actions = addKonfettiOnParty(user, coupon.getPartyID(), coupon.getAmount(), result.actions);
-        		// TODO: multi lang
+        	   	// TODO --> multi lang by lang set in user
         		result.feedbackHtml = "You got now "+coupon.getAmount()+" konfetti to create a task with or upvote other ideas.";
     		} else
     			
         	// promote user to reviewer
         	if (Code.ACTION_TYPE_REVIEWER==coupon.getActionType()) {
         		result.actions = makeUserReviewerOnParty(user, coupon.getPartyID(), result.actions);
-        		// TODO: multi lang
+        	   	// TODO --> multi lang by lang set in user
         		result.feedbackHtml = "You are now REVIEWER on the following party.";
         	} else
         		
             // promote user to admin
             if (Code.ACTION_TYPE_ADMIN==coupon.getActionType()) {
         		result.actions = makeUserAdminOnParty(user, coupon.getPartyID(), result.actions);
-        		// TODO: multi lang
+        	   	// TODO --> multi lang by lang set in user
         		result.feedbackHtml = "You are now ADMIN on the following party.";        			
             }
     		
@@ -492,6 +505,7 @@ public class UserController {
     	
     	// CODE NOT KNOWN
     	{
+    	   	// TODO --> multi lang by lang set in user
     		result.feedbackHtml = "Sorry. The code '"+code+"' is not known or unvalid.";
     	}	
     

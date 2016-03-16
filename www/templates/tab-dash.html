@@ -4,11 +4,11 @@
         <button on-tap="reloadPartyList()" ng-show="!loadingParty" ng-class="{animationPulsateSimple: updatesOnParty}" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i ng-class="{red: updatesOnParty}" id="reloadIcon" class="icon ion-loop"></i>
         </button>
-        <button on-tap="resetAccount()" ng-if="showDeleteAccount" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i id="deleteAccount" class="icon ion-trash-a"></i>
-        </button>
         <button on-tap="loginBack()" ng-show="(state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER')" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i id="loginBack" class="icon ion-arrow-left-c"></i>
+        </button>
+        <button on-tap="resetAccount()" ng-show="(showLogOutOption) && ((state=='OK')||(state=='INTERNETFAIL')||(state=='GPSWAIT'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+            <i id="deleteAccount" class="icon ion-log-out"></i>
         </button>
     </ion-nav-buttons>
 
@@ -68,6 +68,8 @@
 
   <ion-content>
 
+      <!-- LOGIN WELCOME SCREEN -->
+
       <div ng-show="(state==='LOGIN_START')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">
               {{ 'LOGIN_WELCOME' | translate }}
@@ -92,6 +94,8 @@
           </div>
       </div>
 
+      <!-- ACCOUNT REGISTER SCREEN -->
+
       <div ng-show="(state==='LOGIN_REGISTER')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">
               {{ 'REGISTER_INFO' | translate }}
@@ -112,6 +116,8 @@
               </button>
           </div>
       </div>
+
+      <!-- LOGIN SCREEN -->
 
       <div ng-show="(state==='LOGIN_LOGIN')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">
@@ -137,6 +143,8 @@
           </div>
       </div>
 
+      <!-- PASSWORD RECOVER SCREEN -->
+
       <div ng-show="(state==='LOGIN_RECOVER')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">
               {{ 'RECOVER_TITLE' | translate }}
@@ -159,6 +167,8 @@
               </button>
           </div>
       </div>
+
+      <!-- INTRO SCREEN -->
 
       <div ng-show="(state==='INTRO')" class="card" style="text-align: center; margin-top: 16px;">
           <div class="item item-divider">
@@ -183,6 +193,8 @@
               </button>
           </div>
       </div>
+
+      <!-- INFO SIGNALS -->
 
       <div style="height: 93px;"></div>
 

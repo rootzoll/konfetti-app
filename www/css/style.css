@@ -262,3 +262,7 @@ div.popup-body span {
     font-size: 25px;
 }
 
+.hide {
+    display:none;
+}
+

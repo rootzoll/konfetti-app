@@ -118,5 +118,18 @@
             </td>
         </tr>
 
+        <!-- Remind of Logout Option -->
+        <tr ng-if="(notification.type===9)">
+            <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-log-out before-big"></i></td>
+            <td width="*" style="vertical-align: middle;">
+                <div>
+                    {{ 'LOGOUT_REMINDER' | translate }}
+                </div>
+            </td>
+            <td width="30" style="vertical-align: middle;text-align: right; padding: 5px; padding-right: 6px; padding-left: 6px;padding-top: 7px;" on-tap="tapNotificationDelete($event, notification)">
+                <i style="color: darkgray;" class="icon ion-ios-close-outline before-big"></i>
+            </td>
+        </tr>
+
     </table>
 </a>

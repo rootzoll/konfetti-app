@@ -169,6 +169,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
    */
 
    $translateProvider.translations('en', {
+            'INIT' : '... loading ...',
             'TAB_PARTIES' : 'Parties',
             'TAB_REQUEST' : 'Task',
             'TAB_REQUEST_NEW' : 'New Task',
@@ -324,14 +325,18 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'RECOVER_TITLE' : 'Password Recovery',
             'RECOVER_EXPLAIN' : 'Enter the eMail you used for registering and we will send you a new password.',
             'RECOVER_BUTTON' : 'Reset Password',
-            'RECOVER_WIN' : 'OK. Please check your email inbox for new password.',
+            'RECOVER_WIN' : 'OK. Please check your email inbox for new password and keep it save.',
             'RECOVER_FAIL' : 'Was not able to reset password. Please check email and internet connection.',
             'LOGIN_FAIL' : 'Was not able to login. Please check email, password and internet connection.',
             'REGISTER_FAIL' : 'Was not able to register. Please check email, password and internet connection.',
-            'REGISTER_FAILMAIL' : 'The email is already in use. If you forgot the password, try to reset.'
+            'REGISTER_FAILMAIL' : 'The email is already in use. If you forgot the password, try to reset.',
+            'PASSWORD_LENGTH' : '8 characters minimum for password',
+            'EMAIL_VALID' : 'please enter a valid email as username',
+            'LOGOUT_REMINDER' : '= Logout when done.'
    });
 
    $translateProvider.translations('de', {
+            'INIT' : '... lade ...',
             'TAB_PARTIES' : 'Parties',
             'TAB_REQUEST' : 'Aufgabe',
             'TAB_REQUEST_NEW' : 'Neue Aufgabe',
@@ -491,10 +496,14 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'RECOVER_FAIL' : 'Zurücksetzen des Passworts war nicht möglich. Bitte eMail Adresse und Internetverbindung prüfen.',
             'LOGIN_FAIL' : 'Login fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.',
             'REGISTER_FAIL' : 'Registrierung fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.',
-            'REGISTER_FAILMAIL' : 'eMail ist bereits in Verwendung. If you forgot the password, try to reset.'
+            'REGISTER_FAILMAIL' : 'eMail ist bereits in Verwendung. If you forgot the password, try to reset.',
+            'PASSWORD_LENGTH' : 'Das Password benötigt mindestens 8 Zeichen.',
+            'EMAIL_VALID' : 'Bitte eine gültige eMail als Nutzername verwenden.',
+            'LOGOUT_REMINDER' : '= Logout wenn fertig'
    });
 
    $translateProvider.translations('ar', {
+            'INIT' : '... جار التحميل ...',
             'TAB_PARTIES' : 'حفلات',
             'TAB_REQUEST' : 'طلب',
             'TAB_REQUEST_NEW' : 'طلب',
@@ -654,7 +663,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'RECOVER_FAIL' : 'لم يكن قادرا على إعادة تعيين كلمة المرور. يرجى التحقق من البريد الإلكتروني والاتصال بشبكة الانترنت.',
             'LOGIN_FAIL' : 'لم يكن قادرا على تسجيل الدخول. يرجى التحقق من البريد الإلكتروني وكلمة السر والاتصال بشبكة الانترنت.',
             'REGISTER_FAIL' : 'لم يكن قادرا على تسجيل. يرجى التحقق من البريد الإلكتروني وكلمة السر والاتصال بشبكة الانترنت.',
-            'REGISTER_FAILMAIL' : 'البريد الإلكتروني قيد الاستخدام بالفعل. إذا كنت قد نسيت كلمة المرور، في محاولة لإعادة تعيين.'
+            'REGISTER_FAILMAIL' : 'البريد الإلكتروني قيد الاستخدام بالفعل. إذا كنت قد نسيت كلمة المرور، في محاولة لإعادة تعيين.',
+            'PASSWORD_LENGTH' : '8 أحرف الحد الأدنى لكلمة المرور',
+            'EMAIL_VALID' : 'يرجى إدخال عنوان بريد إلكتروني صالح كما اسم المستخدم',
+            'LOGOUT_REMINDER' : 'تسجيل الخروج عند الانتهاءك.'
    });
 
   $translateProvider.preferredLanguage("en");

@@ -27,14 +27,14 @@ angular.module('starter.api', [])
             runningDevelopmentEnv: function () {
                 return activeServerUrl==apiUrlBaseLocalhost;
             },
-            createAccount: function(mail, pass, win, fail) {
+            createAccount: function(mail, pass, locale, win, fail) {
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'POST';
                 config.url = activeServerUrl+'/account';
                 if ((typeof mail != "undefined") && (typeof pass != "undefined") && (mail!=null) && (pass!=null)) {
-                    config.url = config.url + "?mail="+encodeURIComponent(mail)+"&pass="+encodeURIComponent(pass);
+                    config.url = config.url + "?mail="+encodeURIComponent(mail)+"&pass="+encodeURIComponent(pass)+"&locale="+encodeURIComponent(locale);
                 }
                 // WIN
                 var successCallback = function(response) {

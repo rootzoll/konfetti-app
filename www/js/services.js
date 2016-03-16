@@ -78,6 +78,9 @@ angular.module('starter.services', [])
     isRunningOnDesktopComputer: function() {
         // TODO differ between mobile and desktop browser in more detail later
         return typeof window.device == "undefined";
+    },
+    isRunningWithinApp : function() {
+        return typeof window.device != "undefined";
     }
   };
 })

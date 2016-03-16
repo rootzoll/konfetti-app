@@ -1,6 +1,8 @@
 package de.konfetti.utils;
 
 import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +11,23 @@ import java.util.Properties;
 public class Helper {
 
 	private static Properties prop = null;
+	
+	
+    // static helper function to hash password
+    public static final String hashPassword(String salt, String pass) {
+        try {
+        	
+        	// get fresh instance
+			MessageDigest md5Digest = MessageDigest.getInstance("MD5");
+			
+			// hash to new string
+			return new String(md5Digest.digest((salt + pass).getBytes()));
+			
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+    }
 	
     public static <T> T nonnull(T value) {
         if (value == null) {

@@ -5,15 +5,16 @@ import javax.persistence.*;
 @Entity
 public class Notification {
 	
-	public static final Integer TYPE_MEDIAITEM_FULL = 0;
-	public static final Integer TYPE_MEDIAITEM_INFO = 1;
-	public static final Integer TYPE_REVIEW_OK 		= 2;
-	public static final Integer TYPE_PAYBACK 		= 3;
-	public static final Integer TYPE_REVIEW_FAIL 	= 4;
-	public static final Integer TYPE_CHAT_NEW 		= 5;
-	public static final Integer TYPE_PARTY_WELCOME 	= 6;
-	public static final Integer TYPE_REWARD_GOT 	= 7;
-	public static final Integer TYPE_SUPPORT_WIN 	= 8; // when a task you supported got done
+	public static final Integer TYPE_MEDIAITEM_FULL  = 0;
+	public static final Integer TYPE_MEDIAITEM_INFO  = 1;
+	public static final Integer TYPE_REVIEW_OK 		 = 2;
+	public static final Integer TYPE_PAYBACK 		 = 3;
+	public static final Integer TYPE_REVIEW_FAIL 	 = 4;
+	public static final Integer TYPE_CHAT_NEW 		 = 5;
+	public static final Integer TYPE_PARTY_WELCOME 	 = 6;
+	public static final Integer TYPE_REWARD_GOT 	 = 7;
+	public static final Integer TYPE_SUPPORT_WIN 	 = 8; // when a task you supported got done
+	public static final Integer TYPE_LOGOUT_REMINDER = 9; 
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
