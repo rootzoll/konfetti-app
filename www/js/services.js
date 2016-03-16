@@ -80,7 +80,8 @@ angular.module('starter.services', [])
         return typeof window.device == "undefined";
     },
     isRunningWithinApp : function() {
-        return typeof cordova != "undefined";
+        var osRunning = ((typeof cordova != "undefined") && (typeof cordova.platformId  != "undefined")) ? cordova.platformId : "browser";
+        return osRunning!="browser";
     }
   };
 })
