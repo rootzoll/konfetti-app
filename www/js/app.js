@@ -55,11 +55,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
 
     // setting selected lang in view to setting
     // should be called on every view enter
+    $rootScope.select = {actualLang: 'en'};
     $rootScope.setActualLangOnSelector = function() {
-          $rootScope.actualLangSelect = $rootScope.langSet[0];
+          $rootScope.select.actualLang = $rootScope.langSet[0];
           for (i = 0; i < $rootScope.langSet.length; i++) {
               if ($rootScope.langSet[i].code===AppContext.getAppLang()) {
-                  $rootScope.actualLangSelect = $rootScope.langSet[i];
+                  $rootScope.select.actualLang = $rootScope.langSet[i];
                   break;
               }
           }
@@ -89,26 +90,30 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
         } else {
             $log.info("already running lang(" + lang + ") ... no need to switch");
         }
-
+        $rootScope.setActualLangOnSelector();
     };
+
+    var isLangSupported = function(lang) {
+        for (var i=0; i < $rootScope.langSet.length; i++) {
+            var availableLang = $rootScope.langSet[i];
+            if (availableLang.code == lang) {
+                return true;
+            }
+        }
+        return false;
+    };
+
     if (AppContext.getRunningOS()!="browser") {
         $cordovaGlobalization.getLocaleName().then(
             function (result) {
                 // WIN
                 if (!gotLang) {
+
                     gotLang = true;
 
                     // check available lang
                     var lang = result.value.substr(0, 2);
-                    var langOK = false;
-                    for (var i=0; i < $rootScope.langSet.length; i++) {
-                        var availableLang = $rootScope.langSet[i];
-                        if (availableLang.code == lang) {
-                            langOk = true;
-                            break;
-                        }
-                    }
-                    if (!langOK) {
+                    if (!isLangSupported(lang)) {
                         $log.warn("lang '" + lang + "' not available ... using 'en'");
                         lang = "en";
                     }
@@ -127,8 +132,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
         );
 
         } else {
-            $log.warn("TODO: On browser check lang setting differently");
-            setLocale("en");
+            //On browser check lang setting differently
+            var lang = navigator.language;
+            if (!isLangSupported(lang)) {
+                $log.warn("lang '" + lang + "' not available ... using 'en'");
+                lang = "en";
+            }
+            setLocale(lang);
         }
 
     /*
@@ -332,7 +342,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'REGISTER_FAILMAIL' : 'The email is already in use. If you forgot the password, try to reset.',
             'PASSWORD_LENGTH' : '8 characters minimum for password',
             'EMAIL_VALID' : 'please enter a valid email as username',
-            'LOGOUT_REMINDER' : '= Logout when done.'
+            'LOGOUT_REMINDER' : '= Logout when done.',
+            'SWITCH_ACCOUNT' : 'Switch Konfetti Account',
+            'SWITCH_CONFIRM' : 'If you havent backuped this account yet, you can lose ALL YOUR KONFETTI. Are you sure to switch to another account?',
+            'SWITCH_INFO' : 'Switch to an old account:'
    });
 
    $translateProvider.translations('de', {
@@ -499,7 +512,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'REGISTER_FAILMAIL' : 'eMail ist bereits in Verwendung. If you forgot the password, try to reset.',
             'PASSWORD_LENGTH' : 'Das Password benötigt mindestens 8 Zeichen.',
             'EMAIL_VALID' : 'Bitte eine gültige eMail als Nutzername verwenden.',
-            'LOGOUT_REMINDER' : '= Logout wenn fertig'
+            'LOGOUT_REMINDER' : '= Logout wenn fertig',
+            'SWITCH_ACCOUNT' : 'Konfetti Konto wechseln',
+            'SWITCH_CONFIRM' : 'Wenn für das aktuelle Konto noch kein Backup besteht, können ALLE KONFETTI VERLOHREN gehen. Soll wirklich zu einem anderen Konto gewechselt werden?',
+            'SWITCH_INFO' : 'Um zu einem alten Konto zu wechseln:'
    });
 
    $translateProvider.translations('ar', {
@@ -666,7 +682,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'REGISTER_FAILMAIL' : 'البريد الإلكتروني قيد الاستخدام بالفعل. إذا كنت قد نسيت كلمة المرور، في محاولة لإعادة تعيين.',
             'PASSWORD_LENGTH' : '8 أحرف الحد الأدنى لكلمة المرور',
             'EMAIL_VALID' : 'يرجى إدخال عنوان بريد إلكتروني صالح كما اسم المستخدم',
-            'LOGOUT_REMINDER' : 'تسجيل الخروج عند الانتهاءك.'
+            'LOGOUT_REMINDER' : 'تسجيل الخروج عند الانتهاءك.',
+            'SWITCH_ACCOUNT' : 'بدل الحساب',
+            'SWITCH_CONFIRM' : 'إذا لم تكن مدعومة من هذا الحساب حتى الآن، يمكنك أن تفقد كل ما تبذلونه من الورق الملون. هل أنت متأكد من التبديل إلى حساب آخر؟',
+            'SWITCH_INFO' : 'التبديل إلى الحساب القديم:'
    });
 
   $translateProvider.preferredLanguage("en");

@@ -80,7 +80,7 @@ angular.module('starter.services', [])
         return typeof window.device == "undefined";
     },
     isRunningWithinApp : function() {
-        return typeof window.device != "undefined";
+        return typeof cordova != "undefined";
     }
   };
 })
@@ -141,7 +141,7 @@ angular.module('starter.services', [])
                                 country: "germany"
                             };
                             $ionicPopup.show({
-                                templateUrl: './templates/pop-gpsfallback.html',
+                                templateUrl: './templates/pop-GpsFallback.html',
                                 title: TITLE,
                                 subTitle: SUB,
                                 scope: $rootScope,

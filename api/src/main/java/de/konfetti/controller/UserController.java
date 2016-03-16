@@ -249,11 +249,15 @@ public class UserController {
     		if (!client.getUserId().equals(userExisting.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userExisting.getId()+")");
     	
     		// B) check if email got changed
+    		boolean firstTimeMailSet = (userExisting.geteMail()==null) || (userExisting.geteMail().trim().length()==0);
     		if ((userInput.geteMail()!=null) && (!userInput.geteMail().equals(userExisting.geteMail()))) {
-    			// TODO create backup code and send per eMail
-    			// TODO multiple language eMail text
     			userExisting.seteMail(userInput.geteMail());
-    			EMailManager.getInstance().sendMail(javaMailSender, userInput.geteMail(), "Your Konfetti eMail Setup", "Thanks for connecting your eMail with the Konfetti App", null);
+    			String pass = Code.generadeCodeNumber()+"";
+    			userExisting.setPassword(Helper.hashPassword(this.passwordSalt, pass));
+    			if (firstTimeMailSet) {
+    				// TODO multiple language eMail text by lang in user object - use same text as on account created with email
+        			EMailManager.getInstance().sendMail(javaMailSender, userInput.geteMail(), "Konfetti Account Created", "username: "+userExisting.geteMail()+"\npass: "+pass+"\n\nkeep email or write password down", null);	
+    			}
     		}
     		
         	// transfer selective values from input to existing user

@@ -11,6 +11,8 @@ angular.module('starter.controller.dash', [])
         if ((typeof $stateParams.id!="undefined") && ($stateParams.id!=0)) {
             focusPartyId = $stateParams.id;
         }
+
+        $rootScope.resetAccount = false;
         
         /*
          * prepare local scope
@@ -55,6 +57,11 @@ angular.module('starter.controller.dash', [])
         ];
         $scope.actualSorting = $scope.sortSet[0].sort;
 
+        $scope.login = {
+            Email: "",
+            Password: ""
+        };
+
 
          /*
          * controller logic
@@ -90,7 +97,10 @@ angular.module('starter.controller.dash', [])
         };
 
         $scope.buttonLoginRegister = function() {
-            $scope.state = "LOGIN_REGISTER";
+            $timeout(function(){
+                $scope.login.Password = "";
+                $scope.state = "LOGIN_REGISTER";
+            },10);
         };
 
         $scope.addLogoutNotification = function() {
@@ -109,7 +119,7 @@ angular.module('starter.controller.dash', [])
 
             if (typeof mail == "undefined") {
                 KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
                 return;
             }
             if (typeof pass == "undefined") return;
@@ -117,7 +127,7 @@ angular.module('starter.controller.dash', [])
             // password needs to be at least 8 chars long
             if (pass.length<8) {
                 KonfettiToolbox.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
                 return;
             }
 
@@ -128,7 +138,8 @@ angular.module('starter.controller.dash', [])
                 // WIN
                 $ionicLoading.hide();
                 AppContext.setAccount(account);
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
+                $rootScope.resetAccount = false;
                 $scope.addLogoutNotification();
                 $scope.state = "INIT";
                 $scope.action();
@@ -137,28 +148,30 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 if ((typeof errorcode != "undefined") || (errorcode==1)) {
                     // email already in use
-                    $scope.loginPassword = "";
+                    $scope.login.Password = "";
                     $scope.loginEmail = "";
                     KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
                         $scope.state = "LOGIN_START";
                     });
                 } else {
                     KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
-                    $scope.loginPassword = "";
+                    $scope.login.Password = "";
                 }
             });
         };
 
         $scope.buttonLoginLogin = function() {
-            $scope.loginPassword = "";
-            $scope.state = "LOGIN_LOGIN";
+            $timeout(function(){
+                $scope.login.Password = "";
+                $scope.state = "LOGIN_LOGIN";
+            },10);
         };
 
         $scope.buttonLoginLoginFinal = function(mail,pass) {
 
             if (typeof mail == "undefined") {
                 KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
                 return;
             }
             if (typeof pass == "undefined") return;
@@ -171,13 +184,14 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 $scope.addLogoutNotification();
                 AppContext.setAccount(account);
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
+                $rootScope.resetAccount = false;
                 $scope.state = "INIT";
                 $scope.action();
             }, function() {
                 // FAIL
                 $ionicLoading.hide();
-                $scope.loginPassword = "";
+                $scope.login.Password = "";
                 KonfettiToolbox.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
                 });
             });
@@ -280,6 +294,7 @@ angular.module('starter.controller.dash', [])
         // overwriting rootScope
         $scope.selectedLang = function(selected) {
             $rootScope.selectedLang(selected);
+            $rootScope.setActualLangOnSelector();
             $scope.updateSortOptions();
             $scope.action();
         };
@@ -515,12 +530,16 @@ angular.module('starter.controller.dash', [])
 
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
+
+            // reset account on enter when flag is set
+            if ($rootScope.resetAccount) {
+                AppContext.setAccount({clientId:""});
+                localStorage.clear();
+            }
+
             $scope.userId = AppContext.getAccount().id;
             $scope.controllerInitDone = true;
             $scope.action();
-            $timeout(function(){
-                $rootScope.setActualLangOnSelector();
-            },100);
         });
 
         // the OK button on the intro/welcome screen
@@ -555,7 +574,7 @@ angular.module('starter.controller.dash', [])
 
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
-            if ((AppContext.isRunningOnDesktopComputer()) && (AppContext.getAccount().clientId.length===0)) {
+            if (((!AppContext.isRunningWithinApp || ($rootScope.resetAccount))) && (AppContext.getAccount().clientId.length===0)) {
                 $scope.state = "LOGIN_START";
                 return;
             }

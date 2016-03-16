@@ -91,11 +91,19 @@ angular.module('starter.controller.account', [])
   };
 
   $scope.storeMail = function(mail) {
+
       if (typeof mail == "undefined") {
           KonfettiToolbox.showIonicAlertWith18nText('INFO', 'INVALID_EMAIL');
           return;
       }
+
       var updatedAccount = AppContext.getAccount();
+
+      if (mail==updatedAccount.eMail) {
+          console.log("email havent changed - ignore");
+          return;
+      }
+
       updatedAccount.eMail = mail;
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
@@ -110,6 +118,24 @@ angular.module('starter.controller.account', [])
         $ionicLoading.hide();
         KonfettiToolbox.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
       });
+  };
+
+  $scope.onButtonSwitchAccount = function() {
+
+      $translate("INFO").then(function (TITLE) {
+          $translate("SWITCH_CONFIRM").then(function (SUBLINE) {
+              $ionicPopup.confirm({
+                  title: TITLE,
+                  template: SUBLINE
+              }).then(function(res) {
+                  if(res) {
+                      $rootScope.resetAccount = true;
+                      $state.go('tab.dash', {id: 0});
+                  }
+              });
+          });
+      });
+
   };
 
 });

@@ -14,7 +14,7 @@
 
     <ion-nav-buttons side="secondary">
         <!-- lang select gets handled on root scope level -->
-        <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
+        <select ng-model="select.actualLang" ng-options='lang.display for lang in langSet' ng-change='selectedLang(select.actualLang)'></select>
     </ion-nav-buttons>
 
     <div class="padding" style="
@@ -103,15 +103,15 @@
           <div class="item item-text-wrap">
               <div class="list list-inset" style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
                   </label>
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="loginPassword" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
                   </label>
               </div>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginRegisterFinal(loginEmail, loginPassword)">
+              <button class="button button-positive" on-tap="buttonLoginRegisterFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
           </div>
@@ -126,15 +126,15 @@
           <div class="item item-text-wrap">
               <div class="list list-inset"  style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
                   </label>
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="loginPassword" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
                   </label>
               </div>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginLoginFinal(loginEmail, loginPassword)">
+              <button class="button button-positive" on-tap="buttonLoginLoginFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
               <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 10px; color: #387EF5;">
@@ -157,12 +157,12 @@
               </ion-list>
               <div class="list list-inset"  style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="loginEmail" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
                   </label>
               </div>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginRecoverFinal(loginEmail)">
+              <button class="button button-positive" on-tap="buttonLoginRecoverFinal(login.Email)">
                   {{ 'RECOVER_BUTTON' | translate }}
               </button>
           </div>

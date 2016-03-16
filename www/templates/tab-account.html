@@ -2,7 +2,7 @@
 
     <ion-nav-buttons side="secondary">
         <!-- lang select gets handled on root scope level -->
-        <select ng-model="actualLangSelect" ng-options='lang.display for lang in langSet' ng-change='selectedLang(actualLangSelect)'></select>
+        <select ng-model="select.actualLang" ng-options='lang.display for lang in langSet' ng-change='selectedLang(select.actualLang)'></select>
     </ion-nav-buttons>
 
     <ion-content style="background-color: lightgrey;">
@@ -68,6 +68,15 @@
               <button class="button button-small" on-tap="storeMail(email)">
                   <!-- TODO add button trigger when user hits enter on eMail input -->
                   {{ 'SAVE' | translate }}
+              </button>
+          </div>
+
+          <div style="padding-top: 16px; padding-bottom: 16px">
+              <div style="margin-bottom: 8px;">
+                {{ 'SWITCH_INFO' | translate }}
+              </div>
+              <button on-tap="onButtonSwitchAccount()" class="button button-small icon-left ion-shuffle" style="border-radius: 6px">
+                  {{ 'SWITCH_ACCOUNT' | translate }}
               </button>
           </div>
 
