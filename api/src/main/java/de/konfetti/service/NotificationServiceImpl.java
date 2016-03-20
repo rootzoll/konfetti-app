@@ -39,7 +39,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
         Notification persited = notificationRepository.saveAndFlush(notification);
         
         // return to caller
-		LOGGER.info("Notification("+persited.getId()+") CREATED"); 
+		LOGGER.debug("Notification("+persited.getId()+") CREATED"); 
         return persited;
         
     }
@@ -47,7 +47,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
     @Override
     public Notification findById(long notiId) {
     	
-		LOGGER.info("Notification("+notiId+") READ"); 
+		LOGGER.debug("Notification("+notiId+") READ"); 
     	
     	// gets the one with the given id
         return notificationRepository.findOne(notiId);

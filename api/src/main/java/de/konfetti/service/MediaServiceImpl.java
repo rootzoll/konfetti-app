@@ -25,21 +25,21 @@ public class MediaServiceImpl extends BaseService implements MediaService {
     public MediaItem create(MediaItem  item) {
     	
         MediaItem persited = mediaRepository.saveAndFlush(item);
-        LOGGER.info("MediaItem("+persited.getId()+") CREATED"); 
+        LOGGER.debug("MediaItem("+persited.getId()+") CREATED"); 
         return persited;
         
     }
 
     @Override
     public MediaItem  findById(long id) {
-		LOGGER.info("MediaItem("+id+") READ"); 
+		LOGGER.debug("MediaItem("+id+") READ"); 
         return mediaRepository.findOne(id);
     
     }
 
 	@Override
 	public void update(MediaItem item) {
-		LOGGER.info("MediaItem("+item.getId()+") UPDATED"); 
+		LOGGER.debug("MediaItem("+item.getId()+") UPDATED"); 
 		mediaRepository.saveAndFlush(item);
 	}
     

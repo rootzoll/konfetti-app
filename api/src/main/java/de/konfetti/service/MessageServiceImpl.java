@@ -28,14 +28,14 @@ public class MessageServiceImpl extends BaseService implements MessageService {
     public Message create(Message item) {
     	
         Message persited = messageRepository.saveAndFlush(item);
-        LOGGER.info("Message("+persited.getId()+") CREATED"); 
+        LOGGER.debug("Message("+persited.getId()+") CREATED"); 
         return persited;
         
     }
 
     @Override
     public Message findById(long id) {
-		LOGGER.info("Message("+id+") READ"); 
+		LOGGER.debug("Message("+id+") READ"); 
         return messageRepository.findOne(id);
     
     }
