@@ -117,5 +117,22 @@ public class NotificationServiceImpl extends BaseService implements Notification
 		notificationRepository.saveAndFlush(notification);
 		
 	}
+
+	@Override
+	public void deleteByTypeAndReference(Integer type, Long referenceValue) {
+		
+		List<Notification> allNotifications = getAllPossiblePushNotifications();
+		for (Notification notification : allNotifications) {
+			//LOGGER.info("type("+notification.getType()+") ref("+notification.getRef()+")");
+			if (type.equals(notification.getType()) && referenceValue.equals(notification.getRef())) {
+				LOGGER.info("deleteByTypeAndReference("+type+","+referenceValue+"): Deleting Notification("+notification.getId()+")");
+				delete(notification.getId());
+				return;
+			}
+		}
+		
+		LOGGER.info("deleteByTypeAndReference("+type+","+referenceValue+"): not found");
+		
+	}
     
 }

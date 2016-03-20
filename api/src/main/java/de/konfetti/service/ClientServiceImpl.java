@@ -43,7 +43,7 @@ public class ClientServiceImpl extends BaseService implements ClientService {
     @Override
     public Client findById(long id) {
     	
-		LOGGER.info("Client("+id+") READ"); 
+		LOGGER.debug("Client("+id+") READ"); 
     	
     	// gets the one with the given id
         return clientRepository.findOne(id);

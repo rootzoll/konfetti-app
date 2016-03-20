@@ -142,6 +142,13 @@ public class PartyController {
         		boolean userIsPartyAdmin = Helper.contains(user.getAdminOnParties(), party.getId());
         		boolean userIsPartyReviewer = Helper.contains(user.getReviewerOnParties(), party.getId());
         	
+        		// update activity on user
+        		if (!user.wasUserActiveInLastMinutes(1)) {
+        			LOGGER.info("Updating ActivityTS of user("+user.getId()+")");
+        			user.setLastActivityTS(System.currentTimeMillis());
+        			userService.update(user);
+        		}
+        		
         		List<Request> requests = requestService.getAllPartyRequests(partyId);
         		List<Notification> notifications = notificationService.getAllNotificationsSince(client.getUserId(), partyId, lastTs, true);
         		if (requests==null) requests = new ArrayList<Request>();
@@ -285,6 +292,13 @@ public class PartyController {
     				}
     			}
     			
+        		// update activity on user
+        		if (!user.wasUserActiveInLastMinutes(1)) {
+        			LOGGER.info("Updating ActivityTS of user("+user.getId()+")");
+        			user.setLastActivityTS(System.currentTimeMillis());
+        			userService.update(user);
+        		}
+    			
     			// for all parties
     			for (final Party party : resultParties) {
 				
@@ -327,11 +341,11 @@ public class PartyController {
             			LOGGER.info("NOTIFICATION Welcome Paty ("+party.getId()+")");
         				notificationService.create(Notification.TYPE_PARTY_WELCOME, user.getId(), party.getId(), 0l);
             			
-        				LOGGER.info("userBalance("+userBalance+")");
+        				LOGGER.debug("userBalance("+userBalance+")");
 
             		} else {
             			
-            			LOGGER.info("user known on party");
+            			LOGGER.debug("user known on party");
             			
             		}
             		party.setKonfettiCount(userBalance);
@@ -535,6 +549,9 @@ public class PartyController {
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
 
+		// delete any waiting notification finding a reviewer
+    	if (Request.STATE_REVIEW.equals(request.getState())) notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+    	
     	// delete
     	Request result = requestService.delete(request.getId());
     	
@@ -712,7 +729,9 @@ public class PartyController {
         	if (action.equals(Request.STATE_OPEN)) {
         		
         		// check if pre-state is valid
-        		if ((!request.getState().equals(Request.STATE_REVIEW)) && (!request.getState().equals(Request.STATE_PROCESSING))) throw new Exception("request("+requestId+") with state("+request.getState()+") CANNOT set to '"+Request.STATE_OPEN+"'");
+        		boolean fromReview = request.getState().equals(Request.STATE_REVIEW);
+        		boolean fromProcessing = request.getState().equals(Request.STATE_PROCESSING);
+        		if ((!fromReview) && (!fromProcessing)) throw new Exception("request("+requestId+") with state("+request.getState()+") CANNOT set to '"+Request.STATE_OPEN+"'");
         		
         		// check if admin or reviewer
         		if ((!userIsPartyAdmin) && (!userIsPartyReviewer)) {
@@ -725,8 +744,15 @@ public class PartyController {
         		requestService.update(request);
         		LOGGER.info("request("+requestId+") set STATE to "+Request.STATE_OPEN);
         		
-        		// send notification to author
-        		notificationService.create(Notification.TYPE_REVIEW_OK, request.getUserId(), request.getPartyId(), request.getId());
+        		
+        		if (fromReview) {
+        			
+        			// send notification to author
+        			notificationService.create(Notification.TYPE_REVIEW_OK, request.getUserId(), request.getPartyId(), request.getId());
+        		
+        			// delete any waiting notification finding a reviewer
+        			notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+        		}
         		
             	// publish info about update on public channel
             	CommandMessage msg = new CommandMessage();
@@ -766,12 +792,15 @@ public class PartyController {
             	msg.setData("{\"party\":"+request.getPartyId()+", \"request\":"+request.getId()+" ,\"state\":\""+request.getState()+"\"}");
             	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));        		
         		
+    			// delete any waiting notification finding a reviewer
+    			notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+            	
         		// send notification to author
         		notificationService.create(Notification.TYPE_REVIEW_FAIL, request.getUserId(), request.getPartyId(), request.getId());
         		
         	} else
         		
-            // set rejected (by admin and author)
+            // do reward
             if (action.equals("reward")) {
       
             	// needed json data

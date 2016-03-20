@@ -39,6 +39,9 @@ public class User {
     // IDs of parties the user has reviewer privileges on
     private Long[] reviewerOnParties = {};
     
+    // time stamp when the user last was online (not more precise 1 minute)
+    private Long lastActivityTS = 0l;
+    
     /*
      * PUSH MESSAGING
      */
@@ -180,6 +183,21 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Long getLastActivityTS() {
+		return lastActivityTS;
+	}
+
+	public void setLastActivityTS(Long lastActivityTS) {
+		this.lastActivityTS = lastActivityTS;
+	}
+	
+	public boolean wasUserActiveInLastMinutes(int minutes) {
+		long minutesSinceLastActivity = Math.round((System.currentTimeMillis() - this.lastActivityTS) / (60d*1000d));
+		boolean wasUserActiveInLastMinutes = ((minutesSinceLastActivity==0) || (minutes>=minutesSinceLastActivity));
+		//System.out.println("wasUserActiveInLastMinutes("+minutes+") : User("+this.id+") lastActivity old ("+minutesSinceLastActivity+")min <= "+minutes+" --> "+wasUserActiveInLastMinutes);
+		return wasUserActiveInLastMinutes;
 	}
     
 }

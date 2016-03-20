@@ -41,9 +41,6 @@ public class NotifierBackgroundTask {
 	private static final String PUSHTYPE_NOTPOSSIBLE = "not-possible";
 	private static final String PUSHTYPE_FAIL = "fail";
 	private static final String PUSHTYPE_EMAIL = "email";
-	private static final String PUSHTYPE_IOS = "ios";
-	private static final String PUSHTYPE_ANDROID = "android";
-	private static final String PUSHTYPE_BROWSER = "browser";
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(NotifierBackgroundTask.class);
 	
@@ -310,6 +307,21 @@ public class NotifierBackgroundTask {
 	 */
     private boolean userNotFeelingSpammedYet(Notification notification) {
 
+    	/*
+    	 * Check if user was active recently
+    	 */
+    	
+		User user = userService.findById(notification.getUserId());
+		if (user.wasUserActiveInLastMinutes(3)) {
+			LOGGER.info("User("+user.getId()+") was/is active on App ... wait with push.");
+			return false;
+		}
+    	
+    	
+    	/*
+    	 *  Check Pushes send ..
+    	 */
+    	
     	ValueWrapper inCache = spamBlockerPerUserCache.get(notification.getUserId());
     	
     	// if no notification recently --> go ahead

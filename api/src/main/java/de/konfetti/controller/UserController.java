@@ -115,6 +115,7 @@ public class UserController {
     	// set default spoken lang
     	String[] langs = {locale};
     	user.setSpokenLangs(langs);
+    	user.setLastActivityTS(System.currentTimeMillis());
     	userService.update(user);
     	
     	// create new client
@@ -155,8 +156,16 @@ public class UserController {
     			user.setId(0l); // 0 --> signal, that client auth failed
     			return user;
     		}
+    		
     		if (!client.getUserId().equals(user.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userId+")");
-    	
+    		
+    		// update activity on user
+    		if (!user.wasUserActiveInLastMinutes(1)) {
+    			LOGGER.info("Updating ActivityTS of user("+user.getId()+")");
+    			user.setLastActivityTS(System.currentTimeMillis());
+    			userService.update(user);
+    		}
+    		
     	} else {
     		
     		// B) check for trusted application with administrator privilege
@@ -192,6 +201,14 @@ public class UserController {
     		throw new Exception("User and/or Passwort not valid.");
     	}
    	
+    	
+		// update activity on user
+		if (!user.wasUserActiveInLastMinutes(1)) {
+			LOGGER.info("Updating ActivityTS of user("+user.getId()+")");
+			user.setLastActivityTS(System.currentTimeMillis());
+			userService.update(user);
+		}
+    	
     	// create new client for session
     	Client client = clientService.create(user.getId());
     	
@@ -267,6 +284,7 @@ public class UserController {
         	userExisting.setPushActive(userInput.getPushActive());
         	userExisting.setPushSystem(userInput.getPushSystem());    	
         	userExisting.setSpokenLangs(userInput.getSpokenLangs()); 
+    		userExisting.setLastActivityTS(System.currentTimeMillis());
     		
     	} else {
     		

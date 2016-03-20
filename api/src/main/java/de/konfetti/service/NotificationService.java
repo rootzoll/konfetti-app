@@ -21,5 +21,7 @@ public interface NotificationService {
     List<Notification> getAllPossiblePushNotifications();
     
     void setNotificationAsPushProcessed(Long id);
+
+	void deleteByTypeAndReference(Integer type, Long referenceValue);
     
 }
