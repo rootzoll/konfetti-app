@@ -24,9 +24,6 @@ angular.module('starter.api', [])
         };
 
         return {
-            runningDevelopmentEnv: function () {
-                return activeServerUrl==apiUrlBaseLocalhost;
-            },
             createAccount: function(mail, pass, locale, win, fail) {
 
                 // CONFIG
@@ -91,6 +88,9 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
 
+            },
+            runningDevelopmentEnv: function () {
+                return activeServerUrl==apiUrlBaseLocalhost;
             },
             recoverPassword: function(mail, win, fail) {
 

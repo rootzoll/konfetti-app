@@ -32,6 +32,13 @@ angular.module('starter.services', [])
       }
   };
 
+  var loadContext = function() {
+      var jsonStr = window.localStorage.getItem("appContext");
+      if ((typeof jsonStr != "undefined") && (jsonStr!=null)) appContext = JSON.parse(jsonStr);
+      isReady = true;
+  };
+  loadContext();
+
   return {
     isReady: function() {
         return isReady;
@@ -43,6 +50,7 @@ angular.module('starter.services', [])
         return (appContext.appLang === 'ar') ? 'rtl' : 'ltr';
     },
     setAppLang: function(value) {
+      if (!isReady)
       appContext.appLang = value;
       this.persistContext();
     },
@@ -63,9 +71,7 @@ angular.module('starter.services', [])
         this.persistContext();
     },
     loadContext: function(win) {
-        var jsonStr = window.localStorage.getItem("appContext");
-        if ((typeof jsonStr != "undefined") && (jsonStr!=null)) appContext = JSON.parse(jsonStr);
-        isReady = true;
+        loadContext();
         win();
     },
     persistContext: function() {
@@ -253,6 +259,11 @@ angular.module('starter.services', [])
                $cordovaGeolocation
                    .getCurrentPosition(posOptions)
                    .then(function (position) {
+
+                       /*
+                        * Got Real GPS
+                        */
+
                        $rootScope.lat  = position.coords.latitude;
                        $rootScope.lon = position.coords.longitude;
                        $rootScope.gps  = 'win';
@@ -265,8 +276,13 @@ angular.module('starter.services', [])
                        localState.lastPosition = newPosition;
                        AppContext.setLocalState(localState);
                        $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+
+
                    }, function(err) {
-                       // error
+
+                       /*
+                        * No LIVE GPS
+                        */
 
                        // no live GPS - try to use last one
                        var localState = AppContext.getLocalState();
@@ -276,8 +292,21 @@ angular.module('starter.services', [])
                            $rootScope.lon = localState.lastPosition.lon;
                            $rootScope.gps  = 'win';
                        } else {
-                           $log.info("GPS ERROR");
-                           $rootScope.gps  = 'fail';
+
+                           if (!ApiService.runningDevelopmentEnv()) {
+
+                               $log.info("GPS ERROR");
+                               $rootScope.gps  = 'fail';
+
+                           } else {
+
+                               $rootScope.lat  = 52.5;
+                               $rootScope.lon = 13.5;
+                               $rootScope.gps  = 'win';
+                               console.log("DEV Use Fake-GPS ...");
+
+                           }
+
                        }
 
                    });

@@ -575,8 +575,13 @@ angular.module('starter.controller.dash', [])
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
             if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (AppContext.getAccount().clientId.length===0)) {
-                $scope.state = "LOGIN_START";
-                return;
+
+                if (!ApiService.runningDevelopmentEnv()) {
+                    $scope.state = "LOGIN_START";
+                    return;
+                } else {
+                    console.log("DEV Auto-Skip REGISTER/LOGIN SCREEN");
+                }
             }
             
             // display intro message
