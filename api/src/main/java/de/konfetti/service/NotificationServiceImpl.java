@@ -72,7 +72,7 @@ public class NotificationServiceImpl extends BaseService implements Notification
 		List<Notification> all = getAllNotifications();
 		List<Notification> result = new ArrayList<Notification>();
 		for (Notification notification : all) {
-			if ((notification.getPartyId().equals(partyId)) && (notification.getUserId().equals(userId))) result.add(notification);
+			if ((notification.getPartyId().equals(partyId)) && (notification.getUserId()!=null) && (notification.getUserId().equals(userId))) result.add(notification);
 		}
 		return result;
 	}
@@ -92,6 +92,30 @@ public class NotificationServiceImpl extends BaseService implements Notification
 			}
 		}
 		return result;
+	}
+
+	@Override
+	public List<Notification> getAllPossiblePushNotifications() {
+		
+		// TODO: improve performance !!
+
+		List<Notification> allNotifications= getAllNotifications();
+		List<Notification> result = new ArrayList<Notification>();
+		for (Notification notification : allNotifications) {
+			if (!notification.getHigherPushDone()) {
+				result.add(notification);
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public void setNotificationAsPushProcessed(Long id) {
+		
+		Notification notification = findById(id);
+		notification.setHigherPushDone(true);
+		notificationRepository.saveAndFlush(notification);
+		
 	}
     
 }

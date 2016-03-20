@@ -1,7 +1,5 @@
 package de.konfetti.utils;
 
-import java.io.InputStream;
-import java.util.Properties;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -84,7 +82,7 @@ public class AutoTranslator {
 				result.put(toLangCode, langData);
 				
 			} catch (Exception e) {
-			    e.printStackTrace();
+			    LOGGER.warn("FAIL translate: "+e.getMessage());
 			}
 			
 		}

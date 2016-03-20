@@ -487,6 +487,9 @@ public class PartyController {
     		accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_TASKCREATION, AccountingTools.getAccountNameFromUserAndParty(client.getUserId(),partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
     	}
     	
+    	// store notification
+    	notificationService.create(Notification.TYPE_REVIEW_WAITING, null, party.getId(), request.getId());
+    	
     	// publish info about update on public channel
     	CommandMessage msg = new CommandMessage();
     	msg.setCommand(CommandMessage.COMMAND_PARTYUPADTE);

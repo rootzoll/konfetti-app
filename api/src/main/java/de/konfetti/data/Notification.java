@@ -15,6 +15,7 @@ public class Notification {
 	public static final Integer TYPE_REWARD_GOT 	 = 7;
 	public static final Integer TYPE_SUPPORT_WIN 	 = 8; // when a task you supported got done
 	public static final Integer TYPE_LOGOUT_REMINDER = 9; 
+	public static final Integer TYPE_REVIEW_WAITING  = 10;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +35,8 @@ public class Notification {
     
     // time stamp of creation
     private Long ts;
+    
+    private Boolean higherPushDone;
     
     /*
      * METHODS 
@@ -90,6 +93,15 @@ public class Notification {
 
 	public void setTimeStamp(Long ts) {
 		this.ts = ts;
+	}
+	
+	public boolean getHigherPushDone() {
+		if (higherPushDone==null) return false;
+		return higherPushDone;
+	}
+
+	public void setHigherPushDone(Boolean higherPushDone) {
+		this.higherPushDone = higherPushDone;
 	}
 }
 

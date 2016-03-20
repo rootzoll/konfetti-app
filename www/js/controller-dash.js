@@ -574,9 +574,6 @@ angular.module('starter.controller.dash', [])
 
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
-            //alert(!AppContext.isRunningWithinApp());
-            //alert($rootScope.resetAccount);
-            //alert(AppContext.getAccount().clientId.length===0);
             if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (AppContext.getAccount().clientId.length===0)) {
                 $scope.state = "LOGIN_START";
                 return;

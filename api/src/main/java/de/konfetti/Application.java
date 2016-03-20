@@ -6,12 +6,14 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import de.konfetti.utils.Helper;
 
 @SpringBootApplication
 @Configuration
 @EnableConfigurationProperties
+@EnableScheduling
 public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {

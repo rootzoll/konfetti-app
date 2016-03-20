@@ -18,4 +18,8 @@ public interface NotificationService {
     
     List<Notification> getAllNotificationsSince(Long userId, Long partyId, Long sinceTimestamp, boolean deleteOlder);
     
+    List<Notification> getAllPossiblePushNotifications();
+    
+    void setNotificationAsPushProcessed(Long id);
+    
 }
