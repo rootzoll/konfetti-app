@@ -47,6 +47,11 @@ public class EMailManager {
      */
 	public boolean sendMail(JavaMailSender javaMailSender, String toAddress, String subjectText, String bodyText, String urlAttachment) {
     	
+		if ((toAddress==null) || (toAddress.trim().length()<=3)) {
+			LOGGER.warn("failed sending email because toAdrress("+toAddress+") is unvalid");
+			return false;
+		}
+		
 		String fromAddress = Helper.getPropValues("konfetti.sendFromMailAddress");
 		String replyAddress = Helper.getPropValues("konfetti.replyToMailAddress");
 		if ((fromAddress==null) || (fromAddress.trim().length()==0) || fromAddress.trim().equals("test@test.de")) {

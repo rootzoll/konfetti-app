@@ -283,7 +283,7 @@ public class UserController {
     			if (PushManager.getInstance().isAvaliable()) {
     				PushManager.getInstance().sendNotification(
     						PushManager.mapUserPlatform(userInput.getPushSystem()), 
-    						userExisting.getPushID(), 
+    						userInput.getPushID(), 
     						"Welcome. If something happens in your neighborhood, Konfetti will send you Push-Updates.", 
     						null, 
     						null, 
