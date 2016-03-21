@@ -265,7 +265,7 @@ public class ChatController {
     
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{chatId}/message/{messageId}", method = RequestMethod.GET, produces = "application/json")
-    public Message acctionMessage(@PathVariable Long chatId, @PathVariable Long messageId, HttpServletRequest httpRequest) throws Exception {
+    public Message actionMessage(@PathVariable Long chatId, @PathVariable Long messageId, HttpServletRequest httpRequest) throws Exception {
         
     	// try to load message and chat
     	Chat chat = chatService.findById(chatId);

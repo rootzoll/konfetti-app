@@ -150,6 +150,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
     KonfettiToolbox.updateGPS();
 
     /*
+     * Push Notification --> https://documentation.onesignal.com/docs/phonegap-sdk-installation
+     */
+
+    if ((typeof window.plugins != "undefined") && (typeof window.plugins.OneSignal != "undefined")) {
+
+        try {
+
+            if ((AppContext.getAppConfig().oneSignalAppId.trim().length>0) && (AppContext.getAppConfig().googleProjectNumber.trim().length>0)) {
+
+                var notificationOpenedCallback = function(jsonData) {
+                    alert('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+                };
+
+                window.plugins.OneSignal.init(
+                    AppContext.getAppConfig().oneSignalAppId,
+                    {googleProjectNumber: AppContext.getAppConfig().googleProjectNumber},
+                    notificationOpenedCallback
+                );
+
+                // Show an alert box if a notification comes in when the user is in your app.
+                window.plugins.OneSignal.enableInAppAlertNotification(true);
+
+                // getting the push id
+                window.plugins.OneSignal.getIds(function(ids){
+                    AppContext.updatePushIds(ids);
+                });
+
+            } else {
+              console.log("OneSignal-Plugin found, but missing Push Config under services.js");
+            }
+
+        } catch (e) {
+            alert("exception: "+JSON.stringify(e));
+        }
+
+    }
+
+    /*
      * App Context
      */
     try {

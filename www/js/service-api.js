@@ -2,13 +2,11 @@ angular.module('starter.api', [])
 
     .factory('ApiService', function($log, $timeout, AppContext, $http) {
 
-        // the possible API servers for app
-        var apiUrlBaseLocalhost  = "http://localhost:9000/konfetti/api";
-        var apiUrlBaseDevServer  = "http://fourcores2016.cloudapp.net:9000/konfetti/api";
-        var apiUrlBaseProdServer = "https://konfetti-prod.testserver.de/konfetti/api";
+        /*
+         * BACKEND API URL CONFIG ----> services.js
+         */
 
-        // SET HERE THE SERVER YOU WANT TO TALK TO FOM THE OPTIONS ABOVE
-        var activeServerUrl = apiUrlBaseDevServer;
+        var activeServerUrl =  AppContext.getAppConfig().apiUrl;
 
         var getBasicHttpHeaderConfig = function() {
             var account = AppContext.getAccount();
@@ -90,7 +88,7 @@ angular.module('starter.api', [])
 
             },
             runningDevelopmentEnv: function () {
-                return activeServerUrl==apiUrlBaseLocalhost;
+                return AppContext.isRunningDevelopmentEnv();
             },
             recoverPassword: function(mail, win, fail) {
 
