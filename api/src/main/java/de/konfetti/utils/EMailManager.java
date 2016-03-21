@@ -1,6 +1,5 @@
 package de.konfetti.utils;
 
-import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 

@@ -23,6 +23,7 @@ import de.konfetti.service.UserService;
 import de.konfetti.utils.AccountingTools;
 import de.konfetti.utils.EMailManager;
 import de.konfetti.utils.Helper;
+import de.konfetti.utils.PushManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -127,7 +128,7 @@ public class UserController {
     	
     	// keep password hash just on server side
     	user.setPassword("");
-    	
+ 
         return user;
     }
 
@@ -277,12 +278,27 @@ public class UserController {
     			}
     		}
     		
+    		// send initial welcome push message
+    		if ((userExisting.getPushID()==null) && (userInput.getPushID()!=null)) {
+    			if (PushManager.getInstance().isAvaliable()) {
+    				PushManager.getInstance().sendNotification(
+    						PushManager.mapUserPlatform(userInput.getPushSystem()), 
+    						userExisting.getPushID(), 
+    						"Welcome. If something happens in your neighborhood, Konfetti will send you Push-Updates.", 
+    						null, 
+    						null, 
+    						0l
+    				);
+    			}
+    		}
+    		
         	// transfer selective values from input to existing user
         	userExisting.seteMail(userInput.geteMail());
         	userExisting.setImageMediaID(userInput.getImageMediaID());
         	userExisting.setName(userInput.getName());
         	userExisting.setPushActive(userInput.getPushActive());
-        	userExisting.setPushSystem(userInput.getPushSystem());    	
+        	userExisting.setPushSystem(userInput.getPushSystem());
+        	userExisting.setPushID(userInput.getPushID());
         	userExisting.setSpokenLangs(userInput.getSpokenLangs()); 
     		userExisting.setLastActivityTS(System.currentTimeMillis());
     		

@@ -62,8 +62,7 @@ angular.module('starter.controller.dash', [])
             Password: ""
         };
 
-
-         /*
+        /*
          * controller logic
          */       
         
@@ -708,6 +707,50 @@ angular.module('starter.controller.dash', [])
                     $scope.action();
                 });
                 return;
+            }
+
+            if ($scope.state === "PUSHWAIT") {
+                $timeout($scope.action, 300);
+                return;
+            }
+
+            // check if pushID needs to be updates on user account
+            var localPushIds = AppContext.getLocalState().pushIDs;
+            if ((typeof localPushIds != "undefined") && (localPushIds!=null)) {
+
+                //alert("GOT LOCAL PUSH - CHECK ACCOUNT");
+
+                var accountPushId = AppContext.getAccount().pushID;
+                if ((typeof accountPushId == "undefined") || (accountPushId!=localPushIds.userId)) {
+
+                    //alert("UPDATE PUSH: "+localPushIds.userId);
+
+                    // update PUSHID local
+                    var account = AppContext.getAccount();
+                    account.pushActive = true;
+                    account.pushSystem = AppContext.getRunningOS();
+                    account.pushID = localPushIds.userId;
+                    AppContext.setAccount(account);
+
+                    // update Account on server
+                    ApiService.updateAccount(account, function(){
+                        // WIN
+                        //alert("WIN PUSH");
+                        $scope.state = "PUSHOK";
+                        $scope.action();
+                    }, function(){
+                        // FAIL
+                        //alert("FAIL PUSH");
+                        $scope.state = "PUSHOK";
+                        $scope.action();
+                    });
+                    $scope.state = "PUSHWAIT";
+                    return;
+                } else {
+                    //alert("PUSH IS UP TO DATE");
+                }
+            } else {
+                //alert("NO LOCAL PUSH DATA");
             }
 
             // load party list (just once when app starts)
