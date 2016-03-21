@@ -56,23 +56,8 @@ public class PushManager {
 			  String additionalLanguage = "";
 			  if ((locale!=null) && (messageLocale!=null)) additionalLanguage = ", \""+locale+"\": \""+messageLocale+"\"";
 			  String json = "{\"app_id\": \""+this.appID+"\",\"include_player_ids\":[\""+userPushID+"\"],\"data\": {\"notification\": \""+notificationID+"\"},\"contents\": {\"en\": \""+messageEnglish+"\""+additionalLanguage+"}}";
-			
-			  /*
-			  PostMethod post = new PostMethod("http://jakarata.apache.org/");
-			
-		        NameValuePair[] data = {
-		          new NameValuePair("user", "joe"),
-		          new NameValuePair("password", "bloggs")
-		        };
-		        post.setRequestBody(data);
-		        // execute method and handle any error responses.
-		        ...
-		        InputStream in = post.getResponseBodyAsStream();
-		        // handle response.
-		         * */
-		        
-		        
-			  
+
+	
 			  /*
 			   * HTTP REQUEST --> ONESIGNAL REST API 
 			   */

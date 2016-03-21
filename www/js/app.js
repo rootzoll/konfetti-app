@@ -159,8 +159,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
 
             if ((AppContext.getAppConfig().oneSignalAppId.trim().length>0) && (AppContext.getAppConfig().googleProjectNumber.trim().length>0)) {
 
+                /*
+                 * TODO: react more detailed to push notifications in app
+                 * EXAMPLE DATA: {"message":"...", "additionalData":{"notification":999},"isActive":false}
+                 */
+
                 var notificationOpenedCallback = function(jsonData) {
-                    alert('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+                    //alert('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
                 };
 
                 window.plugins.OneSignal.init(

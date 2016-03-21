@@ -24,6 +24,7 @@ import de.konfetti.data.User;
 import de.konfetti.service.NotificationService;
 import de.konfetti.service.UserService;
 import de.konfetti.utils.EMailManager;
+import de.konfetti.utils.PushManager;
 
 /*
  * A task that is scheduled to check in short periods 
@@ -41,6 +42,7 @@ public class NotifierBackgroundTask {
 	private static final String PUSHTYPE_NOTPOSSIBLE = "not-possible";
 	private static final String PUSHTYPE_FAIL = "fail";
 	private static final String PUSHTYPE_EMAIL = "email";
+	private static final String PUSHTYPE_PUSH = "push";
 	
     private static final Logger LOGGER = LoggerFactory.getLogger(NotifierBackgroundTask.class);
 	
@@ -180,14 +182,24 @@ public class NotifierBackgroundTask {
           						
         					}
         					
-        					// delete from notificatons 
-        					
-        				// not supported push
-        				} else {
-        					
-        					LOGGER.warn(" -> SEND TO PUSH: "+typeOfPush);
-        					
-        				}        				
+            				// do push notification
+            				} else if (PUSHTYPE_PUSH.equals(typeOfPush)) {	
+            					
+            					LOGGER.info(" -> SEND PUSH");
+            					sendPushPush(notification);
+            					
+         						LOGGER.info(" -> OK - PUSH SEND BY EMAIL");
+        						markNotificationAsPushed(notification, typeOfPush);
+        						
+        						// remember last notification to user for short period of time
+        						this.spamBlockerPerUserCache.put(notification.getUserId(), notification);
+            					
+            				// not supported push
+            				} else {
+            					
+            					LOGGER.warn(" -> SEND TO PUSH: "+typeOfPush);
+            					
+            				}        				
         				
         			} else {
             			LOGGER.info(" -> USER UNDER SPAM PROTECTION - DELAYING PUSH");
@@ -347,7 +359,16 @@ public class NotifierBackgroundTask {
 		
 		User user = userService.findById(notification.getUserId());
 		
-		if (user.getPushActive()) LOGGER.warn("TODO: user("+user.getId()+") has push ACTIVE but not IMPLEMENTED yet");
+		// check for push notification
+		if ((user.getPushActive()) && (PushManager.getInstance().isAvaliable())) {
+			
+			// just push the following notifications
+			if (Notification.TYPE_REVIEW_WAITING.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (Notification.TYPE_REVIEW_OK.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (Notification.TYPE_CHAT_NEW.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (Notification.TYPE_REWARD_GOT.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (Notification.TYPE_SUPPORT_WIN.equals(notification.getType())) return PUSHTYPE_PUSH;
+		}
 		
 		// check for eMail
 		if ((user.geteMail()==null) || (user.geteMail().trim().length()<4)) {
@@ -365,13 +386,33 @@ public class NotifierBackgroundTask {
 		User user = userService.findById(notification.getUserId());
 		
 		// TODO multi lang --- see user setting
-		if (EMailManager.getInstance().sendMail(javaMailSender, user.geteMail(), "Check Konfetti App", "You got updates.", null)) {
+		if (EMailManager.getInstance().sendMail(javaMailSender, user.geteMail(), "[konfetti] new events in your neighborhood", "Open Konfetti App so see more :D", null)) {
 			LOGGER.info("OK - PUSH SEND BY EMAIL ("+user.geteMail()+")");
 			return true;
 		} else {
 			LOGGER.warn("FAIL - PUSH SEND BY EMAIL ("+user.geteMail()+")");
 			return false;
 		}		
+	}
+	
+	/*
+	 * sending push by push
+	 */
+	private boolean sendPushPush(Notification notification) {
+		
+		User user = userService.findById(notification.getUserId());
+		
+		// TODO multi lang --- see user setting
+		PushManager.getInstance().sendNotification(
+				PushManager.PLATFORM_ANDROID, 
+				user.getPushID(), 
+				"new events in your neighborhood", 
+				null, // locale 
+				null, // localeMessage
+				notification.getId());
+		LOGGER.info("OK - PUSH SEND BY PUSH ("+user.getPushID()+")");
+	
+		return true;
 	}
 		
 }
