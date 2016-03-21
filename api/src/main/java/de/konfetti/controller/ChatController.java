@@ -1,7 +1,10 @@
 package de.konfetti.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -16,6 +19,7 @@ import de.konfetti.service.ClientService;
 import de.konfetti.service.MessageService;
 import de.konfetti.service.RequestService;
 import de.konfetti.service.UserService;
+import de.konfetti.utils.PushManager;
 import de.konfetti.websocket.CommandMessage;
 
 import org.slf4j.Logger;
@@ -199,6 +203,7 @@ public class ChatController {
     @RequestMapping(value="/{chatId}/message", method = RequestMethod.POST, produces = "application/json")
     public Message addMessage(@PathVariable Long chatId, @RequestBody @Valid final Message template, HttpServletRequest httpRequest) throws Exception {
     	
+    	Set<Long> receivers = null;
     	long messageTS = System.currentTimeMillis();
     	
     	Chat chat = chatService.findById(chatId);
@@ -230,6 +235,12 @@ public class ChatController {
         	} else {
         		LOGGER.warn("strange: messageTS <= lastTSofUser");
         	}
+        	
+        	// C) prepare list of receivers of this message
+    		receivers = new HashSet<Long>();
+    		receivers.addAll(Arrays.asList(chat.getMembers()));
+    		receivers.add(chat.getHostId());
+    		receivers.remove(client.getUserId());
     		
     	} else {
     		
@@ -259,6 +270,41 @@ public class ChatController {
 		jsonArray += (chat.getHostId() + "]");
     	msg.setData("{\"party\":"+chat.getPartyId()+", \"users\":"+jsonArray+"}");
     	webSocket.convertAndSend("/out/updates", GSON.toJson(msg));  
+    	
+    	// send push notification if possible
+    	if (PushManager.getInstance().isAvaliable()) {
+    		LOGGER.info("PushMessage Alert");
+    		if (receivers!=null) {
+    			for (Long userID : receivers) {
+    				LOGGER.info("PUSHTO("+userID+")");
+    				User receiver = userService.findById(userID);
+    				if (receiver!=null) {
+    					if (receiver.getPushActive()) {
+    						LOGGER.info(" - WIN - DOING PUSH ...");
+    						
+    						// TODO multilang - see user
+    	    				PushManager.getInstance().sendNotification(
+    	    						PushManager.PLATFORM_ANDROID, 
+    	    						receiver.getPushID(), 
+    	    						"new chat message for you", 
+    	    						null, //locale, 
+    	    						null, //messageLocale, 
+    	    						-1l);
+    	    				LOGGER.info(" - PUSH DONE :D");
+    						
+    					} else {
+    						LOGGER.info(" - FAIL - NO PUSH");
+    					}
+    				} else {
+    					LOGGER.warn("PUSH RECEIVER id("+userID+") NOT FOUND");
+    				}
+				}
+    		} else {
+    			LOGGER.info("No Receivers on chat ?!? - no push");
+    		}
+     	} else {
+    		LOGGER.info("PushMessage not configured");
+    	}
     	
         return message;
     }
