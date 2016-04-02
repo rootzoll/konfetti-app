@@ -47,7 +47,8 @@ public class ControllerSecurityHelper {
 		// make settings based on password
 		if (allowedPassword!=null) {
 			enforcePassword = true;
-			LOGGER.info("- OK ADMIN ACCESS PER PASSWORD ACTIVATED (see config file)");
+			enforceCheckIP = false;
+			LOGGER.info("- OK ADMIN ACCESS PER PASSWORD ACTIVATED (see config file) - IP SECURITY OFF");
 		} else {
 			LOGGER.info("(no ADMIN PASSWORD set in PROPERTIES FILE)");
 		}
@@ -56,7 +57,6 @@ public class ControllerSecurityHelper {
 	}
 	
 	// if throws an Exception ==> security check failed
-	@SuppressWarnings("unused")
 	public static void checkAdminLevelSecurity(HttpServletRequest req) throws Exception {
 		
 		if (!doneInit) doInit();
