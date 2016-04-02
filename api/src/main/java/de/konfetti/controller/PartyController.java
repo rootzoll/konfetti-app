@@ -98,6 +98,32 @@ public class PartyController {
     }
 
     //---------------------------------------------------
+    // DASHBOARD Info
+    //---------------------------------------------------
+    
+    public class DashBoardInfo {
+    	public Long numberOfKonfetti = -1l;
+    	public Long numberOfUsers = -1l;
+    	public Long numberOfTasks = -1l;
+    	public Long numberOfParties = -1l;
+    }
+    
+    @CrossOrigin(origins = "*")
+    @RequestMapping(value="/dashboard", method = RequestMethod.GET)
+    public DashBoardInfo getDashBaordInfo(HttpServletRequest request) throws Exception  {
+    	
+    	ControllerSecurityHelper.checkAdminLevelSecurity(request);
+    	DashBoardInfo info = new DashBoardInfo();
+    	
+    	info.numberOfUsers = userService.getNumberOfActiveUsers();
+    	info.numberOfParties = partyService.getNumberOfParties();
+    	info.numberOfTasks = requestService.getNumberOfRequests();
+    	info.numberOfKonfetti = accountingService.getAllKonfettiBalance();
+    	
+    	return info;
+    }
+    
+    //---------------------------------------------------
     // PARTY Controller
     //---------------------------------------------------
 
@@ -119,7 +145,19 @@ public class PartyController {
     @RequestMapping(value="/{partyId}", method = RequestMethod.DELETE) 
     public boolean deleteParty(@PathVariable long partyId, HttpServletRequest request) throws Exception {
     	ControllerSecurityHelper.checkAdminLevelSecurity(request);
+    	
+    	/* real delete needs to delete also all connected data
         partyService.delete(partyId);
+        */
+    	
+    	/*
+    	 * just deactiavte for now
+    	 */
+    	
+    	Party party = partyService.findById(partyId);
+    	party.setVisibility(Party.VISIBILITY_DEACTIVATED);
+    	partyService.update(party);
+    	
         return true;
     }
 

@@ -6,9 +6,7 @@ import de.konfetti.data.MediaRepository;
 import de.konfetti.data.PartyRepository;
 import de.konfetti.data.Request;
 import de.konfetti.data.RequestRepository;
-
 import de.konfetti.service.exception.ServiceException;
-
 import de.konfetti.utils.AccountingTools;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -115,4 +113,10 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     private List<Request> getAll() {
     	return requestRepository.findAll();
     }
+
+	// TODO improve performance
+	@Override
+	public Long getNumberOfRequests() {
+		return (long) requestRepository.findAll().size();
+	}
 }

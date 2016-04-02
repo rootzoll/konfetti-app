@@ -4,16 +4,14 @@ import java.io.ByteArrayInputStream;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
+ 
 import de.konfetti.data.Client;
 import de.konfetti.data.MediaItem;
-import de.konfetti.data.User;
 import de.konfetti.data.mediaitem.MultiLang;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.MediaService;
 import de.konfetti.service.UserService;
 import de.konfetti.utils.AutoTranslator;
-import de.konfetti.utils.Helper;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

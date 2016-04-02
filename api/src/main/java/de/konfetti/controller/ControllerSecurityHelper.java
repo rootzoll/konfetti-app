@@ -7,10 +7,13 @@ import org.slf4j.LoggerFactory;
 
 import de.konfetti.data.Client;
 import de.konfetti.service.ClientService;
+import de.konfetti.utils.Helper;
 
 public class ControllerSecurityHelper {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSecurityHelper.class);
+	
+	private static boolean doneInit = false;
 	
 	/*
 	 * ADMIN-LEVEL
@@ -18,17 +21,45 @@ public class ControllerSecurityHelper {
 	 */
 	
 	// 1. IP-Security
-	private static final boolean enforceCheckIP = true;
-	private static final String[] allowedIPs = {"127.0.0.1"};
+	private static boolean enforceCheckIP = true;
+	private static String[] allowedIPs = {"127.0.0.1"};
 	
 	// 2. PASSWORD-Security
-	private static final boolean enforcePassword = false;
-	private static final String  allowedPassword = "";
+	private static boolean enforcePassword = false;
+	private static String  allowedPassword = null;
+
 	
+	private static void doInit() {
+		
+		LOGGER.info("Doing INIT ControllerSecurityHelper ...");
+		
+		// try to load password from properties file
+		allowedPassword = Helper.getPropValues("konfetti.adminPassword");
+		if (allowedPassword!=null) {
+			allowedPassword = allowedPassword.trim();
+			if (allowedPassword.length()<4) {
+				LOGGER.warn("PASSWORD IN PROPERTIES FILE IS TOO SHORT -> NO PASSWORD ADMIN ACCESS");
+				allowedPassword = null;
+			}
+			if (allowedPassword.length()==0) allowedPassword = null;
+		}
+		
+		// make settings based on password
+		if (allowedPassword!=null) {
+			enforcePassword = true;
+			LOGGER.info("- OK ADMIN ACCESS PER PASSWORD ACTIVATED (see config file)");
+		} else {
+			LOGGER.info("(no ADMIN PASSWORD set in PROPERTIES FILE)");
+		}
+		
+		doneInit = true;
+	}
 	
 	// if throws an Exception ==> security check failed
 	@SuppressWarnings("unused")
 	public static void checkAdminLevelSecurity(HttpServletRequest req) throws Exception {
+		
+		if (!doneInit) doInit();
 		
 		// detect no security
 		if ((!enforceCheckIP) && (!enforcePassword)) {
@@ -55,8 +86,9 @@ public class ControllerSecurityHelper {
 		// check PASSWORD security
 		if (enforcePassword) {
 			
+			// TODO: ACTIVATE ON RELEASE
 			// when password is used - HTTPS is mandatory
-			if (!req.isSecure()) throw new Exception("ControllerSecurityHelper: HTTPS is needed when password security is used from IP("+req.getRemoteAddr()+")");
+			// if (!req.isSecure()) throw new Exception("ControllerSecurityHelper: HTTPS is needed when password security is used from IP("+req.getRemoteAddr()+")");
 			
 			// get password from HTTP header
 			String requestingPassword = req.getHeader("X-ADMIN-PASSWORD"); 
@@ -64,7 +96,12 @@ public class ControllerSecurityHelper {
 			
 			// check if given password is valid
 			boolean correctPassword = ((allowedPassword!=null) && (allowedPassword.equals(requestingPassword)));
-			if (!correctPassword) throw new Exception("ControllerSecurityHelper: Requesting Password("+requestingPassword+") is not correct for ADMIN-LEVEL SECURITY from IP("+req.getRemoteAddr()+")");
+			if (!correctPassword) {
+				try {
+					Thread.sleep(300);
+				} catch (Exception e) {}
+				throw new Exception("FAIL-PASSWORD: ControllerSecurityHelper: Requesting Password("+requestingPassword+") is not correct for ADMIN-LEVEL SECURITY from IP("+req.getRemoteAddr()+")");
+			}
 			
 		}
 		
@@ -72,7 +109,8 @@ public class ControllerSecurityHelper {
 		
 	public static Client getClientFromRequestWhileCheckAuth(HttpServletRequest req, ClientService clientService) throws Exception {
 		
-
+		if (!doneInit) doInit();
+		
 		// get user credentials from HTTP header
 		String clientId = req.getHeader("X-CLIENT-ID"); 
 		String clientSecret = req.getHeader("X-CLIENT-SECRET"); 

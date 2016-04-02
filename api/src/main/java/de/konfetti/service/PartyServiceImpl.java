@@ -3,11 +3,14 @@ package de.konfetti.service;
 import de.konfetti.data.Party;
 import de.konfetti.data.PartyRepository;
 import de.konfetti.service.exception.ServiceException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static de.konfetti.utils.Helper.nonnull;
@@ -61,13 +64,25 @@ public class PartyServiceImpl extends BaseService implements PartyService {
 
     @Override
     public List<Party> getAllParties() {
-        return partyRepository.findAll();
+        List<Party> parties = partyRepository.findAll();
+        // filter out deactivated parties
+        List<Party> result = new ArrayList<Party>();
+        for (Party party : parties) {
+			if (party.getVisibility()>=0) result.add(party);
+		}
+        return result;
     }
 
     @Override
     public Party findById(long partyId) {
         return partyRepository.findOne(partyId);
     }
+
+    // TODO improve performance
+	@Override
+	public Long getNumberOfParties() {
+		return (long) partyRepository.findAll().size();
+	}
 
 
 }

@@ -76,6 +76,13 @@ public class UserController {
     //---------------------------------------------------
     
     @CrossOrigin(origins = "*")
+    @RequestMapping(method = RequestMethod.GET, produces = "application/json")
+    public List<User> getAllUsers(HttpServletRequest httpRequest) throws Exception {
+    	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
+        return userService.getAllUsers();
+    }
+    
+    @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public User createUser(
     		@RequestParam(value="mail", defaultValue="") String email, 

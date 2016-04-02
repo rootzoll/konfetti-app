@@ -3,6 +3,7 @@ package de.konfetti.service;
 import de.konfetti.data.Party;
 
 import javax.validation.constraints.NotNull;
+
 import java.util.List;
 
 public interface PartyService {
@@ -16,4 +17,6 @@ public interface PartyService {
     List<Party> getAllParties();
 
     Party findById(long partyId);
+
+	Long getNumberOfParties();
 }

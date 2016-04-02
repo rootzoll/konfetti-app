@@ -1,3 +1,5 @@
+www/backend/node_modules/
+www/backend/src/components/
 platforms/
 plugins/
 .idea/

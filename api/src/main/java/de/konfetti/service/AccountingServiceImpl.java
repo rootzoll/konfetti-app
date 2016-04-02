@@ -146,5 +146,15 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	private List<Account> getAllAccounts() {
 		 return accountRepository.findAll();
 	}
+
+	@Override
+	public Long getAllKonfettiBalance() {
+		long count = 0l;
+		List<Account> accounts = accountRepository.findAll();
+		for (Account account : accounts) {
+			count += account.getBalance();
+		}
+		return count;
+	}
     
 }

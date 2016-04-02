@@ -18,7 +18,7 @@ public class Application extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
     	
-    	String propertyFileVersionNeeded = "3";
+    	String propertyFileVersionNeeded = "4";
     	String propertyFileVersion = Helper.getPropValues("konfetti.propertiesVersion");
     	if (!propertyFileVersionNeeded.equals(propertyFileVersion)) {
     		throw new RuntimeException("Properties files 'src/main/resources/application.properties' seems out of date - verson is("+propertyFileVersion+") needed("+propertyFileVersionNeeded+")- compare properties with latest from github.");

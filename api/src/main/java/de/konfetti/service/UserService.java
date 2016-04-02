@@ -19,4 +19,8 @@ public interface UserService {
 	List<User> getAllUsersAdminOnParty(Long partyID);
 
 	List<User> getAllUsersReviewerOnParty(Long partyID);
+
+	Long getNumberOfActiveUsers();
+
+	List<User> getAllUsers();
 }

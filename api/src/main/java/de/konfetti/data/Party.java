@@ -13,9 +13,11 @@ public class Party {
     // 0 = default - for everybody to see
 	public static final int VISIBILITY_PUBLIC = 0;
     // 1 = can be found but is asking for invitation code
-	public static final int VISIBILITY_HIDDEN = 1;
+	public static final int VISIBILITY_PRIVATE = 1;
     // 2 = cannot be found, just enter with invitation code
-	public static final int VISIBILITY_PRIVATE = 2;
+	public static final int VISIBILITY_HIDDEN = 2;
+    // -1 = deactivated
+	public static final int VISIBILITY_DEACTIVATED = -1;
 	
 	/*
 	 * FINAL REVIEW LEVEL VALUES
@@ -25,8 +27,8 @@ public class Party {
 	public static final int REVIEWLEVEL_NONE = 0;	
     // 1 = full review of all public posts
 	public static final int REVIEWLEVEL_EVERYTHING = 1;
-    // 2 = just review request, follow up public info on request no review
-	public static final int REVIEWLEVEL_REQUESTS = 2;
+    // 2 = just review the initial task, follow up public info on request no review
+	public static final int REVIEWLEVEL_TASKS = 2;
 	
 
     @Id
