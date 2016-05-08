@@ -826,6 +826,20 @@ angular.module('starter.controller.dash', [])
                 $scope.updatesOnParty = false;
                 $scope.showNotifications = ($scope.notifications.length>0);
                 $rootScope.initDone = true;
+                
+                // rain konfetti if there is a konfetti reward notification
+                try {
+                	if ((typeof data.notifications != "undefined") && (data.notifications.length > 0)) {
+                		for (var n=0; n<data.notifications.length; n++) {
+                			if ((typeof data.notifications[n] != "undefined") && (data.notifications[n].type==7)) {
+                				RainAnimation.makeItRainKonfetti(2);
+                			}
+                		}
+                	}
+                } catch (e) {
+                	alert("FAIL on checking for reward notification");
+                }
+                
             },function(code){
                 // FAIL
                 $scope.loadingParty = false;

@@ -929,6 +929,9 @@ angular.module('starter.controller.request', [])
                   });
               });
           }
+          
+          RainAnimation.makeItRainKonfetti(2);
+          
       }, function() {
           // FAIL
           $ionicLoading.hide();
