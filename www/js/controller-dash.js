@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation) {
 
         /*
          * get state parameter of controller
@@ -457,6 +457,12 @@ angular.module('starter.controller.dash', [])
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                     $scope.sortRequests(request.id);
+                    try {
+                    	RainAnimation.makeItRainKonfetti(2);
+                    } catch (e) {
+                        console.log("konfetti animation failed: "+JSON.stringify(e));
+                        console.dir(e);
+                    }
                 }, function(){
                     // FAIL -> put konfetti back
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
