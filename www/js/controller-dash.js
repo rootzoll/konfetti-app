@@ -594,6 +594,7 @@ angular.module('starter.controller.dash', [])
                 $scope.state = "INTRO";
                 // show intro part of view
                 // --> button press AppContext.getLocalState.introScreenShown = true
+                RainAnimation.makeItRainKonfetti(2);
                 return;
             }
 
