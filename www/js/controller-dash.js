@@ -459,7 +459,7 @@ angular.module('starter.controller.dash', [])
                     $scope.sortRequests(request.id);
                     try {
                         rainKonfetti(1);
-                    } catch (Exception e) {
+                    } catch (e) {
                         alert("konfetti animation failed: "+JSON.stringify(e));
                         console.dir(e);
                     }
