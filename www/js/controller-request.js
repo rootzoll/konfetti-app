@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -217,6 +217,12 @@ angular.module('starter.controller.request', [])
                     request.konfettiAmountSupport += request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
+                    try {
+                    	RainAnimation.makeItRainKonfetti(2);
+                    } catch (e) {
+                        console.log("konfetti animation failed: "+JSON.stringify(e));
+                        console.dir(e);
+                    }
                 }, function(){
                     // FAIL -> put konfetti back
                     $rootScope.party.konfettiCount -= request.konfettiAdd;
