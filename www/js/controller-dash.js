@@ -457,6 +457,12 @@ angular.module('starter.controller.dash', [])
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                     $scope.sortRequests(request.id);
+                    try {
+                        rainKonfetti(1);
+                    } catch (Exception e) {
+                        alert("konfetti animation failed: "+JSON.stringify(e));
+                        console.dir(e);
+                    }
                 }, function(){
                     // FAIL -> put konfetti back
                     document.getElementById('openRequestCard'+request.id).classList.remove("pulse");
