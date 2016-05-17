@@ -2,6 +2,10 @@
 
 Its an app for neighborhood building thru a community todo list and a playful in-app currency called konfetti.
 
+Check out our prototype of the app: http://test.konfettiapp.de
+
+Get updates and more infos on our facebook-page: https://www.facebook.com/konfetti4change
+
 Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-08052016.apk?raw=true)
 
 ## Concept Notes
@@ -45,7 +49,6 @@ For programmers: christian@geektank.de
 
 If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
 
-We like to meet at the Migration Hub Berlin but will also be around at the ['Civil Society 4.0'](http://www.hkw.de/en/programm/projekte/2016/civil_society_4_0/civil_society_4_0_start.php) event on 3rd of March 2016 at HKW in Berlin.
 
 ## Building App from Source
 
