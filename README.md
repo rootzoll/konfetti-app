@@ -2,11 +2,7 @@
 
 Its an app for neighborhood building thru a community todo list and a playful in-app currency called konfetti.
 
-Check out our prototype of the app: http://test.konfettiapp.de
-
 Get updates and more infos on our facebook-page: https://www.facebook.com/konfetti4change
-
-Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-08052016.apk?raw=true)
 
 ## Concept Notes
 
@@ -24,6 +20,12 @@ The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange can 
 - refugee2neighbor
 
 ... you get the idea :D
+
+## Prototype
+
+Live demo of our prototype of the app: http://test.konfettiapp.de
+
+Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-08052016.apk?raw=true)
 
 ## Contact
 
