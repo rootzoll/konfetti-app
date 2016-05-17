@@ -23,7 +23,7 @@ The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange can 
 
 ## Prototype
 
-Live demo of our prototype of the app: http://test.konfettiapp.de
+Live demo of the app (prototype test-server): http://test.konfettiapp.de
 
 Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-08052016.apk?raw=true)
 
