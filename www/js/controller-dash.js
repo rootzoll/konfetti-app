@@ -557,7 +557,7 @@ angular.module('starter.controller.dash', [])
         };
 
         // action to refresh dash data
-        $scope.action = function() {
+        $scope.action = function() {        	
 
             // show loading spinner
             $scope.loadingParty = true;

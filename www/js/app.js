@@ -82,7 +82,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
     var setLocale = function(lang) {
 
         // check if changed
-        if (AppContext.getAppLang() != lang) {
+        if (AppContext.getAppLang() == "") {
             $log.info("switching to lang(" + lang + ")");
             AppContext.setAppLang(lang);
             $translate.use(AppContext.getAppLang());
@@ -104,6 +104,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
     };
 
     if (AppContext.getRunningOS()!="browser") {
+    	
+    	// running as app
         $cordovaGlobalization.getLocaleName().then(
             function (result) {
                 // WIN
@@ -128,6 +130,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             function (err) {
                 // FAIL
                 $log.info("cordovaGlobalization: FAIL " + err);
+                setLocale("en");
             }
         );
 

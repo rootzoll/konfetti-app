@@ -12,7 +12,9 @@ angular.module('starter.services', [])
 
   var appConfig = {
 
-      /* APP BACKEND SERVER ---> SET ONE FROM THE ABOVE */
+      /* APP BACKEND SERVER ---> SET ONE FROM THE ABOVE 
+       * !!! ON GIT CHECKIN: SET DEVELOPMENT SERVER !!! 
+       * */
       apiUrl: apiUrlDevelopmentServer,
 
       /* PUSH NOTIFICATION */
@@ -28,7 +30,7 @@ angular.module('starter.services', [])
   // everything else put into rootScope
   var appContext = {
       version: 1,
-      appLang : "en",
+      appLang : "", // with empty string signaling that it should be set to device lang on first start
       account : {
           id : 0,
           clientSecret : "",
@@ -76,7 +78,6 @@ angular.module('starter.services', [])
         return (appContext.appLang === 'ar') ? 'rtl' : 'ltr';
     },
     setAppLang: function(value) {
-      if (!isReady)
       appContext.appLang = value;
       this.persistContext();
     },
