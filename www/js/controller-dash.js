@@ -64,7 +64,7 @@ angular.module('starter.controller.dash', [])
 
         /*
          * controller logic
-         */       
+         */      
         
         // update displayed text on sort options based on actual lang
         $scope.updateSortOptions = function() {
@@ -580,13 +580,8 @@ angular.module('starter.controller.dash', [])
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
             if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (AppContext.getAccount().clientId.length===0)) {
-
-                if (!ApiService.runningDevelopmentEnv()) {
-                    $scope.state = "LOGIN_START";
-                    return;
-                } else {
-                    console.log("DEV Auto-Skip REGISTER/LOGIN SCREEN");
-                }
+            	$scope.state = "LOGIN_START";
+                return;
             }
             
             // display intro message
@@ -602,6 +597,7 @@ angular.module('starter.controller.dash', [])
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
                     $scope.state = "ACCOUNTWAIT";
+                    ALERT("GO CREATE ACCOUNT");
                     ApiService.createAccount(null, null, AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
@@ -642,6 +638,8 @@ angular.module('starter.controller.dash', [])
                         return;
                     });
                     return;
+                } else {
+                	console.log("OK  scope.checkedAccount == true");
                 }
             }
 

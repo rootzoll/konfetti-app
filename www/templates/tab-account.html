@@ -2,7 +2,11 @@
 
     <ion-nav-buttons side="secondary">
         <!-- lang select gets handled on root scope level -->
-        <select ng-model="select.actualLang" ng-options='lang.display for lang in langSet' ng-change='selectedLang(select.actualLang)'></select>
+        <select 
+        ng-model="select.actualLang" 
+        ng-options='lang.display for lang in langSet' 
+        ng-change='selectedLang(select.actualLang)'
+        style="margin-top: 8px;margin-right: 3px;"></select>
     </ion-nav-buttons>
 
     <ion-content style="background-color: lightgrey;">

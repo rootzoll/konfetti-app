@@ -14,7 +14,11 @@
 
     <ion-nav-buttons side="secondary">
         <!-- lang select gets handled on root scope level -->
-        <select ng-model="select.actualLang" ng-options='lang.display for lang in langSet' ng-change='selectedLang(select.actualLang)'></select>
+        <select 
+        ng-model="select.actualLang" 
+        ng-options='lang.display for lang in langSet' 
+        ng-change='selectedLang(select.actualLang)'
+        style="margin-top: 8px;margin-right: 3px;"></select>
     </ion-nav-buttons>
 
     <div class="padding" style="
@@ -30,13 +34,20 @@
                 <table style="width: 100%;direction: ltr;">
                     <tr>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
-                            <button on-tap="buttonPartyPrev()" class="button button-light icon ion-arrow-left-b fixed-ltr"></button>
+                            <button 
+                            on-tap="buttonPartyPrev()" 
+                            class="button button-light icon ion-arrow-left-b fixed-ltr"
+                            style="border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
+                            ></button>
                         </td>
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
                             <div ng-hide="loadingParty" style="min-height: 70px;">
 
-                                <div style="text-align: center; font-size: 200%;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
-                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
+                                <div style="text-align: center; font-size: 150%;">
+                                	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
+									<a class="button button-small button-icon icon icon-small ion-paper-airplane konfetti-send"></a>
+                                </div>
+                                <div style="font-weight: bold; font-size: 125%; direction: ltr;">{{party.name}}</div>
                                 <div style="direction: ltr;">
                                     ({{party.meters | distance}})
                                     <i class="icon ion-ios-information-outline" style="padding: 1px;"></i>
@@ -45,8 +56,7 @@
                                 </div>
 
                             </div>
-                            <div ng-show="loadingParty" style="min-height: 70px;">
-                                <br>
+                            <div ng-show="loadingParty" style="min-height: 86px; padding-top: 20px">
                                 <ion-spinner icon="android"></ion-spinner>
                                 <div ng-show="(state==='')">
                                     {{ 'INITACCOUNT' | translate }}
@@ -57,7 +67,11 @@
                             </div>
                         </td>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
-                            <button on-tap="buttonPartyPrev()" class="button button-light icon ion-arrow-right-b fixed-ltr"></button>
+                            <button 
+                            on-tap="buttonPartyPrev()" 
+                            class="button button-light icon ion-arrow-right-b fixed-ltr"
+                                                        style="border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
+                            ></button>
                         </td>
                     </tr>
                 </table>
@@ -271,7 +285,7 @@
 
       <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;">
+      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;margin-top: 10px;">
            <div class="item item-text-wrap" style="font-weight: bold;">
                {{ 'NOCONTENT' | translate }}
            </div>

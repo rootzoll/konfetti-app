@@ -1,5 +1,9 @@
 /* Empty. Add your own CSS if you like */
 
+.padding {
+	padding: 6px;
+}
+
 .ng-cloak { display:none; }
 
 .sp-rtl {
@@ -264,5 +268,11 @@ div.popup-body span {
 
 .hide {
     display:none;
+}
+
+.konfetti-send:before {
+	margin-top: 1px !important;
+	font-size: 23px !important;
+	margin-left: -7px;
 }
 

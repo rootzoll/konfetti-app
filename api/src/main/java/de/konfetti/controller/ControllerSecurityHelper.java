@@ -38,8 +38,7 @@ public class ControllerSecurityHelper {
 		if (allowedPassword!=null) {
 			allowedPassword = allowedPassword.trim();
 			if (allowedPassword.length()<4) {
-				LOGGER.warn("PASSWORD IN PROPERTIES FILE IS TOO SHORT -> NO PASSWORD ADMIN ACCESS");
-				allowedPassword = null;
+				LOGGER.warn("PASSWORD IN PROPERTIES FILE IS TOO SHORT -> PLEASE CHOOSE LONGER ONE");
 			}
 			if (allowedPassword.length()==0) allowedPassword = null;
 		}
