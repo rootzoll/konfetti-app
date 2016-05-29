@@ -1,0 +1,34 @@
+<div style="text-align:center;">
+	
+	<hr style="margin-top:16px; margin-bottom:16px;"/>
+	
+	<h4 style="margin-bottom:3px;">
+		{{partyinfo_youhavekonfetti}}
+	</h4>
+	
+	<button ng-click="getKonfetti()" class="button button-small button-positive">
+  		<i class="icon ion-cash"></i> {{ 'COUPONREDEEM' | translate }}
+	</button>
+	
+	<button ng-click="sendKonfetti()" class="button button-small button-positive">
+  		<i class="icon ion-paper-airplane"></i> {{ 'SENDKONFETTI' | translate }}
+	</button>
+	
+	<div style="width: 80%; margin: auto;">
+		{{partyinfo_youcanspendkonfetti}}
+	</div>
+	
+	<hr style="margin-top:16px; margin-bottom:16px;"/>
+	
+	<div style="width: 80%; margin: auto; font-weight: bold;">
+		 {{ 'PARTYMANAGEDBY' | translate }}
+	</div>
+	<div>
+	{{party.detailText}}<br>
+	<a on-click="tapOnPartyContact()" href="#" class="positive">
+		{{party.contact}}
+	</a>		
+	</div>
+
+	<hr style="margin-top:21px;"/>
+</div>

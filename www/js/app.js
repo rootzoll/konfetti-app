@@ -5,7 +5,19 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.dash', 'starter.controller.request', 'starter.controller.account', 'starter.services', 'starter.api', 'ngCordova', 'pascalprecht.translate'])
+angular.module('starter', [
+							'ionic', 
+							'starter.controllers', 
+							'starter.controller.dash', 
+							'starter.controller.request', 
+							'starter.controller.account', 
+							'starter.services', 
+							'starter.api', 
+							'starter.appcontext', 
+							'starter.rainanimation',
+							'starter.konfettitoolbox',
+							'ngCordova', 
+							'pascalprecht.translate'])
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox) {
   $ionicPlatform.ready(function() {
@@ -233,7 +245,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'KONFETTI' : 'confetti',
             'KONFETTI-APP' : 'Konfetti App',
             'PARTYINFO_TITLE': 'Party Info',
-            'PARTYINFO_SUB': 'editorial responsibility',
+            'PARTYINFO_SUB': 'confetti & editorial responsibility',
             'POSTSORT_MOST': 'top confetti',
             'POSTSORT_NEW': 'newest entry',
             'DASHHEADER_REVIEW': 'Please Review',
@@ -391,7 +403,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'LOGOUT_REMINDER' : '= Logout when done.',
             'SWITCH_ACCOUNT' : 'Switch Konfetti Account',
             'SWITCH_CONFIRM' : 'If you havent backuped this account yet, you can lose ALL YOUR KONFETTI. Are you sure to switch to another account?',
-            'SWITCH_INFO' : 'Switch to an old account:'
+            'SWITCH_INFO' : 'Switch to an old account:',
+            'COUPONREDEEM' : 'Redeem Coupon',
+            'SENDKONFETTI' : 'Send Confetti',
+            'PARTYMANAGEDBY' : 'This party is managed by:',   
+            'YOUHAVEKONFETTI' : 'You have XXXX confetti on this party.',      
+            'KONFETTISENDNOTICE' : 'XXXX confetti can be send because you earned it doing a task.'        
+   
    });
 
    $translateProvider.translations('de', {
@@ -403,7 +421,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
             'PARTYINFO_TITLE': 'Party Info',
-            'PARTYINFO_SUB': 'inhaltlich verantwortlich',
+            'PARTYINFO_SUB': 'Konfetti & Impressum',
             'POSTSORT_MOST': 'top konfetti',
             'POSTSORT_NEW': 'neuste posts',
             'DASHHEADER_REVIEW': 'Bitte Prüfen',
@@ -561,7 +579,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'LOGOUT_REMINDER' : '= Logout wenn fertig',
             'SWITCH_ACCOUNT' : 'Konfetti Konto wechseln',
             'SWITCH_CONFIRM' : 'Wenn für das aktuelle Konto noch kein Backup besteht, können ALLE KONFETTI VERLOHREN gehen. Soll wirklich zu einem anderen Konto gewechselt werden?',
-            'SWITCH_INFO' : 'Um zu einem alten Konto zu wechseln:'
+            'SWITCH_INFO' : 'Um zu einem alten Konto zu wechseln:',
+            'COUPONREDEEM' : 'Gutschein einlösen',
+            'SENDKONFETTI' : 'Konfetti senden',
+            'PARTYMANAGEDBY' : 'Diese Party wird verwaltet von:',   
+            'YOUHAVEKONFETTI' : 'Du hast XXXX Konfetti auf dieser Party.',      
+            'KONFETTISENDNOTICE' : 'XXXX Konfetti können versendet werden, da diese durch die Erfüllung einer Aufgabe verdient wurden.'        
    });
 
    $translateProvider.translations('ar', {
@@ -573,7 +596,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'KONFETTI' : 'حلويات',
             'KONFETTI-APP' : 'حلويات',
             'PARTYINFO_TITLE': 'منظم',
-            'PARTYINFO_SUB': 'المسؤولية التحريرية',
+            'PARTYINFO_SUB': 'حلويات و اتصالات',
             'POSTSORT_MOST': 'شعبية',
             'POSTSORT_NEW': 'جديد',
             'DASHHEADER_REVIEW': 'مراجعة',
@@ -731,7 +754,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.controller.d
             'LOGOUT_REMINDER' : 'تسجيل الخروج عند الانتهاءك.',
             'SWITCH_ACCOUNT' : 'بدل الحساب',
             'SWITCH_CONFIRM' : 'إذا لم تكن مدعومة من هذا الحساب حتى الآن، يمكنك أن تفقد كل ما تبذلونه من الورق الملون. هل أنت متأكد من التبديل إلى حساب آخر؟',
-            'SWITCH_INFO' : 'التبديل إلى الحساب القديم:'
+            'SWITCH_INFO' : 'التبديل إلى الحساب القديم:',
+            'COUPONREDEEM' : 'استبدال القسيمة',
+            'SENDKONFETTI' : 'إرسال النثار',
+            'PARTYMANAGEDBY' : 'وتمكن هذا الحزب من قبل:',   
+            'YOUHAVEKONFETTI' : 'لديك XXXX حلويات على هذا الحزب.',      
+            'KONFETTISENDNOTICE' : 'حلويات XXXX يمكن أن ترسل لأنك كسبت به مهمة.'   
    });
 
   $translateProvider.preferredLanguage("en");

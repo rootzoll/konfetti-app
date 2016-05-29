@@ -94,12 +94,32 @@ angular.module('starter.controller.dash', [])
         $scope.onButtonCoupon = function() {
             KonfettiToolbox.processCode(true);
         };
+        
+        $scope.getKonfetti = function() {
+        	$scope.partyPopUp.close();
+        	$scope.onButtonCoupon();
+        };
 
         $scope.buttonLoginRegister = function() {
             $timeout(function(){
                 $scope.login.Password = "";
                 $scope.state = "LOGIN_REGISTER";
             },10);
+        };
+        
+        $scope.tapOnPartyContact = function() {
+        	if ($rootScope.party.contact.lastIndexOf('http', 0) === 0) {
+               	// open link in browser
+               	window.open($rootScope.party.contact, "_system");
+            } else
+            if ($rootScope.party.contact.lastIndexOf('mailto:', 0) === 0) {
+            	// open email client
+            	window.open($rootScope.party.contact, "_system");
+            } else
+            {
+            	// assume its an email and open mail client
+            	window.open("mailto:"+$rootScope.party.contact, "_system");
+            }
         };
 
         $scope.addLogoutNotification = function() {
@@ -499,38 +519,34 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         };
 
+		// send confetti to an email address
+		$scope.sendKonfetti = function() {
+			alert("TODO: send Konfetti");
+		};
+
         // pop up with more info in party
+        $scope.partyinfo_youhavekonfetti = "";
+        $scope.partyinfo_youcanspendkonfetti = "";        
         $scope.showPartyInfo = function() {
-            $translate("PARTYINFO_TITLE").then(function (TITLE) {
+          $translate("YOUHAVEKONFETTI").then(function (LINE1) {
+          	$scope.partyinfo_youhavekonfetti = LINE1.replace("XXXX", $scope.party.konfettiCount);
+            $translate("KONFETTISENDNOTICE").then(function (LINE2) {
+            	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", "????");; 
                 $translate("PARTYINFO_SUB").then(function (SUB) {
-                    // An elaborate, custom popup
-                    var myPopup = $ionicPopup.show({
-                        template: '<div style="text-align:center;"><h4>{{party.name}}</h4><br>{{party.detailText}}<br><br>{{party.contact}}</div>',
-                        title: TITLE,
+                    $scope.partyPopUp = $ionicPopup.show({
+                    	cssClass: 'bigPopup',
+                        templateUrl: 'templates/pop-partyinfo.html',
+                        title: $scope.party.name,
                         subTitle: SUB,
                         scope: $scope,
                         buttons: [
-                            {
-                                text: '<i class="icon ion-information-circled"></i>',
-                                type: 'button-positive',
-                                onTap: function(e) {
-                                    if ($rootScope.party.contact.lastIndexOf('http', 0) === 0) {
-                                        window.open($rootScope.party.contact, "_system");
-                                    } else
-                                    if ($rootScope.party.contact.lastIndexOf('mailto:', 0) === 0) {
-                                        window.open($rootScope.party.contact, "_system");
-                                    } else
-                                    {
-                                        window.open("mailto:"+$rootScope.party.contact, "_system");
-                                    }
-                                }
-                            },
                             { text: '<i class="icon ion-ios-close-outline"></i>' }
                         ]
                     });
                     myPopup.then(function(res) {});
                 });
             });
+          });
         };
 
         // event when user is (re-)entering the view
