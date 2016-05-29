@@ -49,6 +49,8 @@ angular.module('starter.controller.dash', [])
         $scope.checkedAccount = false;
 
         $scope.showLogOutOption = !AppContext.isRunningWithinApp();
+        
+        $scope.hasKonfettiToSpend = true;
 
         // sorting options
         $scope.sortSet = [

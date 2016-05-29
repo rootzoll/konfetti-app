@@ -242,7 +242,7 @@ angular.module('starter', [
             'TAB_REQUEST' : 'Task',
             'TAB_REQUEST_NEW' : 'New Task',
             'TAB_MORE' : 'More',
-            'KONFETTI' : 'confetti',
+            'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
             'PARTYINFO_TITLE': 'Party Info',
             'PARTYINFO_SUB': 'confetti & editorial responsibility',
@@ -408,8 +408,9 @@ angular.module('starter', [
             'SENDKONFETTI' : 'Send Confetti',
             'PARTYMANAGEDBY' : 'This party is managed by:',   
             'YOUHAVEKONFETTI' : 'You have XXXX confetti on this party.',      
-            'KONFETTISENDNOTICE' : 'XXXX confetti can be send because you earned it doing a task.'        
-   
+            'KONFETTISENDNOTICE' : 'XXXX confetti can be send because you earned it doing a task.',        
+            'PARTYINFO' : 'Party Info',  
+            'PARTYINFOANDSPEND' : 'Party Info and Send Konfetti'  
    });
 
    $translateProvider.translations('de', {
@@ -584,7 +585,9 @@ angular.module('starter', [
             'SENDKONFETTI' : 'Konfetti senden',
             'PARTYMANAGEDBY' : 'Diese Party wird verwaltet von:',   
             'YOUHAVEKONFETTI' : 'Du hast XXXX Konfetti auf dieser Party.',      
-            'KONFETTISENDNOTICE' : 'XXXX Konfetti können versendet werden, da diese durch die Erfüllung einer Aufgabe verdient wurden.'        
+            'KONFETTISENDNOTICE' : 'XXXX Konfetti können versendet werden, da diese durch die Erfüllung einer Aufgabe verdient wurden.',
+            'PARTYINFO' : 'Party-Info',  
+            'PARTYINFOANDSPEND' : 'Party-Info und Konfetti senden'       
    });
 
    $translateProvider.translations('ar', {
@@ -759,7 +762,9 @@ angular.module('starter', [
             'SENDKONFETTI' : 'إرسال النثار',
             'PARTYMANAGEDBY' : 'وتمكن هذا الحزب من قبل:',   
             'YOUHAVEKONFETTI' : 'لديك XXXX حلويات على هذا الحزب.',      
-            'KONFETTISENDNOTICE' : 'حلويات XXXX يمكن أن ترسل لأنك كسبت به مهمة.'   
+            'KONFETTISENDNOTICE' : 'حلويات XXXX يمكن أن ترسل لأنك كسبت به مهمة.',
+            'PARTYINFO' : 'معلومات على قائمة',  
+            'PARTYINFOANDSPEND' : 'معلومات على قائمة وترسل حلويات'     
    });
 
   $translateProvider.preferredLanguage("en");

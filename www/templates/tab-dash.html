@@ -43,16 +43,15 @@
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
                             <div ng-hide="loadingParty" style="min-height: 70px;">
 
-                                <div style="text-align: center; font-size: 150%;">
+                                <div style="text-align: center; font-size: 150%;padding-top: 3px;">
                                 	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
-									<a class="button button-small button-icon icon icon-small ion-paper-airplane konfetti-send"></a>
                                 </div>
-                                <div style="font-weight: bold; font-size: 125%; direction: ltr;">{{party.name}}</div>
+                                <div style="font-weight: bold; font-size: 100%; direction: ltr;padding-top:4px;">{{party.name}} <span style="font-weight: normal;">({{party.meters | distance}})</span></div>
                                 <div style="direction: ltr;">
-                                    ({{party.meters | distance}})
-                                    <i class="icon ion-ios-information-outline" style="padding: 1px;"></i>
-                                    <span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">REVIEWER</span>
-                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">ADMIN</span>
+                                    <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
+                                    <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
+                                	<span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;REVIEWER</span>
+                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;ADMIN</span>
                                 </div>
 
                             </div>
@@ -285,7 +284,7 @@
 
       <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;margin-top: 10px;">
+      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;margin-top: 10px;text-align: center;">
            <div class="item item-text-wrap" style="font-weight: bold;">
                {{ 'NOCONTENT' | translate }}
            </div>
