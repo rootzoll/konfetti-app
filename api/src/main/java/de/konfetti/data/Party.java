@@ -1,6 +1,7 @@
 package de.konfetti.data;
 
 import javax.persistence.*;
+
 import java.util.Set;
 
 @Entity
@@ -30,6 +31,17 @@ public class Party {
     // 2 = just review the initial task, follow up public info on request no review
 	public static final int REVIEWLEVEL_TASKS = 2;
 	
+	
+	/*
+	 * KONFETTI SEND MODE
+	 */
+	
+	// sending of konfetti to other users is disabled 
+	public static final int SENDKONFETTIMODE_DISABLED = 0;
+	// all konfetti can be send to other users/e-mails
+	public static final int SENDKONFETTIMODE_ALL = 1;
+	// just earned konfetti can be send to other users/e-mails	
+	public static final int SENDKONFETTIMODE_JUSTEARNED = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -77,6 +89,17 @@ public class Party {
     private Float lon;
     private Float lat;
     private int meters;
+    
+    /*
+     * SEND KONFETTI
+     * feature to send konfetti to other users
+     * for mode use SENDKONFETTIMODE_* (see above)
+     * if any value is set on white list its activated
+     * white list is a list of e-mail addresses only allowed to send to
+     */
+    
+    private Integer sendKonfettiMode;
+    private String[] sendKonfettiWhiteList;
 
     /*
      * TRANSIENT DATA
@@ -85,6 +108,8 @@ public class Party {
     
     @Transient // how many konfetti has calling user personally on this party
     private long konfettiCount;
+    @Transient // how many konfetti can be send if feature is enabled
+    private long sendKonfettiMaxAmount;
     @Transient // how many konfetti calling user earned total on this party
     private long konfettiTotal;
     @Transient // which ranking place the calling user has on this party   
@@ -226,5 +251,31 @@ public class Party {
 
 	public void setWelcomeBalance(long welcomeBalance) {
 		this.welcomeBalance = welcomeBalance;
+	}
+
+	public String[] getSendKonfettiWhiteList() {
+		if (sendKonfettiWhiteList==null) return new String[0];
+		return sendKonfettiWhiteList;
+	}
+
+	public void setSendKonfettiWhiteList(String[] sendKonfettiWhiteList) {
+		this.sendKonfettiWhiteList = sendKonfettiWhiteList;
+	}
+
+	public Integer getSendKonfettiMode() {
+		if (sendKonfettiMode==null) return SENDKONFETTIMODE_DISABLED;
+		return sendKonfettiMode;
+	}
+
+	public void setSendKonfettiMode(Integer sendKonfettiMode) {
+		this.sendKonfettiMode = sendKonfettiMode;
+	}
+
+	public long getSendKonfettiMaxAmount() {
+		return sendKonfettiMaxAmount;
+	}
+
+	public void setSendKonfettiMaxAmount(long sendKonfettiMaxAmount) {
+		this.sendKonfettiMaxAmount = sendKonfettiMaxAmount;
 	}
 }

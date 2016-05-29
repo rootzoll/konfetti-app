@@ -211,6 +211,22 @@ public class PartyController {
         		Long userBalance = accountingService.getBalanceOfAccount(userAccountName);
         		if (userBalance == null) userBalance = 0l; 
         		party.setKonfettiCount(userBalance);
+        		
+        		// set how many konfetti can be send id feature is enabled
+        		if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_DISABLED) {
+        			// is disabled - set to zero
+        			party.setSendKonfettiMaxAmount(0);
+        		} else if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_ALL) {
+        			// all konfetti can be spend
+        			party.setSendKonfettiMaxAmount(party.getKonfettiCount());
+        		} else if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_ALL) {
+        			// TODO just earned konfetti can be spend
+        			LOGGER.warn("TODO: implement how many earned konfetti the user can spend - setting zero for now");
+        			party.setSendKonfettiMaxAmount(0);
+        		} else {
+        			LOGGER.warn("Not implemented KonfettiSendMode of "+party.getSendKonfettiMode());
+        		}
+        		
         		party.setKonfettiTotal(-1l); // TODO: implement statistic later
         		party.setTopPosition(-1); // TODO: implement statistic later
         		
