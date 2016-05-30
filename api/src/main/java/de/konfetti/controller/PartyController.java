@@ -131,6 +131,7 @@ public class PartyController {
     @RequestMapping(method = RequestMethod.POST)
     public Party createParty(@RequestBody @Valid final Party party, HttpServletRequest request) throws Exception  {
     	ControllerSecurityHelper.checkAdminLevelSecurity(request);
+    	LOGGER.info("ADMIN: Creating PARTY("+party.getId()+")");
     	return partyService.create(party);
     }
 
@@ -138,6 +139,7 @@ public class PartyController {
     @RequestMapping(method = RequestMethod.PUT)
     public Party updateParty(@RequestBody @Valid final Party party, HttpServletRequest request) throws Exception {
     	ControllerSecurityHelper.checkAdminLevelSecurity(request);
+    	LOGGER.info("ADMIN: Updating PARTY("+party.getId()+")");
     	return partyService.update(party);
     }
 

@@ -10,7 +10,7 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
     $scope.geoMatchingEnabled = true;
     $scope.partyID = 0;
     $scope.saveButtonDisabled = "disabled";
-
+   
     $scope.freshParty = {
         id : 0,
         name : "",
@@ -22,7 +22,10 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
         welcomeBalance: 0,
         lat: 0.0,
         lon: 0.0,
-        meters: 0
+        meters: 0,
+        sendKonfettiMode : 0,
+        sendKonfettiWhiteList : 0,
+        sendKonfettiWhiteListCSV : ""
     };
 
     $scope.party = JSON.parse(JSON.stringify($scope.freshParty));
@@ -44,6 +47,20 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
         {id: 2, name: 'HIDDEN - can just be seen and joined by invitation code'}
     ];
 
+    $scope.spendOptions = [
+        {id: 0, name: 'DEACTIVATED - for everybody to see an join'},
+        {id: 2, name: 'JUST EARNED - only the konfetti someone earned doing a task can be transfered'},
+        {id: 1, name: 'ALL - all konfetti can be transfered between users'}
+    ];
+    
+    $scope.partyWhitelistArray2CSV = function() {
+    	if ((typeof $scope.party.sendKonfettiWhiteList != "undefined") && (typeof $scope.party.sendKonfettiWhiteList != null)) {
+       		$scope.party.sendKonfettiWhiteListCSV = $scope.party.sendKonfettiWhiteList.join(", ");
+       } else {
+       		alert("NO WL");
+       }
+    };
+
     if (typeof $stateParams.id != "undefined") {
 
         $scope.partyID = $stateParams.id;
@@ -53,6 +70,7 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
             KonfettiApi.loadParty($scope.partyID, function(party){
                 // WIN
                 $scope.party = party;
+                $scope.partyWhitelistArray2CSV();
             }, function(){
                 // FAIL
                 alert("FAIL load party "+$scope.partyID);
@@ -144,6 +162,15 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
             }
 
         }
+        
+        // convert konfetti spend whitelist CSV --> ARRAY
+        $scope.party.sendKonfettiWhiteListCSV = $scope.party.sendKonfettiWhiteListCSV.trim();
+        if ($scope.party.sendKonfettiWhiteListCSV.length>0) {
+        	$scope.party.sendKonfettiWhiteList = $scope.party.sendKonfettiWhiteListCSV.split(',');
+        	for (var i=0; i<$scope.party.sendKonfettiWhiteList.length; i++) {
+        		$scope.party.sendKonfettiWhiteList[i] = $scope.party.sendKonfettiWhiteList[i].trim();
+        	}
+        }
 
         return true;
     };
@@ -160,6 +187,7 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
             KonfettiApi.createParty($scope.party, function(party){
                 // WIN
                 $scope.party = party;
+                $scope.partyWhitelistArray2CSV();
                 $scope.saveButtonDisabled = "disabled";
                 KonfettiApi.modalAlert("The Party got created and is online.", function(){
                     KonfettiApi.modalAlert("Now create PARTY-ADMIN CODES and send with info material to the party editorial admin - see the new options at the top.");
@@ -176,6 +204,7 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
                 // WIN
                 KonfettiApi.modalAlert("OK. Updates stored in party.");
                 $scope.party = party;
+                $scope.partyWhitelistArray2CSV();
             }, function() {
                 // FAIL
                 KonfettiApi.modalAlert("FAIL. Was not able to update party.");

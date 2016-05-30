@@ -51,6 +51,8 @@ angular.module('starter.controller.dash', [])
         $scope.showLogOutOption = !AppContext.isRunningWithinApp();
         
         $scope.hasKonfettiToSpend = true;
+        $scope.amountKonfettiToSpend = 0;
+        $scope.sendKonfettiWhiteList = [];  
 
         // sorting options
         $scope.sortSet = [
@@ -533,7 +535,7 @@ angular.module('starter.controller.dash', [])
           $translate("YOUHAVEKONFETTI").then(function (LINE1) {
           	$scope.partyinfo_youhavekonfetti = LINE1.replace("XXXX", $scope.party.konfettiCount);
             $translate("KONFETTISENDNOTICE").then(function (LINE2) {
-            	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", "????");; 
+            	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", $scope.amountKonfettiToSpend); 
                 $translate("PARTYINFO_SUB").then(function (SUB) {
                     $scope.partyPopUp = $ionicPopup.show({
                     	cssClass: 'bigPopup',
@@ -842,6 +844,22 @@ angular.module('starter.controller.dash', [])
                 $scope.updatesOnParty = false;
                 $scope.showNotifications = ($scope.notifications.length>0);
                 $rootScope.initDone = true;
+
+                // spendable konfetti
+                $scope.hasKonfettiToSpend =  false;
+        		$scope.amountKonfettiToSpend = 0;    
+        		$scope.sendKonfettiWhiteList = [];                   
+                if (typeof data.sendKonfettiMode != "undefined") {
+                	
+        			if (data.sendKonfettiMode>0) {
+                		$scope.hasKonfettiToSpend =  true;
+        				$scope.amountKonfettiToSpend = data.sendKonfettiMaxAmount;
+        				$scope.sendKonfettiWhiteList = data.sendKonfettiWhiteList;
+        			}
+        			
+                } else {
+                	console.log("MISSING sendKonfettiMode on party data");
+         		}
                 
                 // rain konfetti if there is a konfetti reward notification
                 try {

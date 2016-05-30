@@ -99,7 +99,7 @@ public class Party {
      */
     
     private Integer sendKonfettiMode;
-    private String[] sendKonfettiWhiteList;
+    private String[] sendKonfettiWhiteList = {};
 
     /*
      * TRANSIENT DATA

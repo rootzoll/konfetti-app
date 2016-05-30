@@ -44,8 +44,18 @@
           </div>
           <div class="form-group">
                 <label>Type of Party</label>&nbsp;
-                <span style="font-size: 75%; color: darkgray; font-weight: normal">party is only visible if user is within area</span><br>
+                <span style="font-size: 75%; color: darkgray; font-weight: normal">how public or private should your group be?</span><br>
               <select name="party-visibility" id="party-visibility" ng-options="option.id as option.name for option in typeOptions" ng-model="party.visibility"></select>
+          </div>
+          <div class="form-group">
+                <label>Spending Konfetti</label>&nbsp;
+                <span style="font-size: 75%; color: darkgray; font-weight: normal">should konfetti be transferable from user to user?</span><br>
+              <select name="party-konfettispend" id="party-konfettispend" ng-options="option.id as option.name for option in spendOptions" ng-model="party.sendKonfettiMode"></select>
+          </div>
+          <div class="form-group" ng-show="(party.sendKonfettiMode!=0)">
+              	<label style="75%">Whitelist</label>&nbsp;
+              	<span style="font-size: 75%; color: darkgray; font-weight: normal">only this users/emails can receive konfetti (device by comma, empty = no whitelist)</span>
+              	<textarea id="party-spendlist" ng-model="party.sendKonfettiWhiteListCSV" class="form-control"></textarea>
           </div>
           <div ng-show="(party.visibility!=2)" class="form-group" style="margin-bottom: 2px">
               <input type="checkbox" ng-model="geoMatchingEnabled">

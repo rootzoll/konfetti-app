@@ -22,7 +22,7 @@ public class ControllerSecurityHelper {
 	
 	// 1. IP-Security
 	private static boolean enforceCheckIP = true;
-	private static String[] allowedIPs = {"127.0.0.1"};
+	private static String[] allowedIPs = {"127.0.0.1","0:0:0:0:0:0:0:1"};
 	
 	// 2. PASSWORD-Security
 	private static boolean enforcePassword = false;
