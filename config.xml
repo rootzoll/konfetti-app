@@ -4,8 +4,8 @@
   <description>
         https://github.com/rootzoll/konfetti-app
     </description>
-  <author email="hi@ionicframework" href="http://ionicframework.com/">
-      Ionic Framework Team
+  <author email="christian@konfettiapp.de" href="http://konfettiapp.de">
+      Konfetti Team
     </author>
   <content src="index.html"/>
   <access origin="*"/>

@@ -1,5 +1,5 @@
-www/backend/node_modules/
-www/backend/src/components/
+backend/node_modules/
+backend/src/components/
 platforms/
 plugins/
 .idea/
