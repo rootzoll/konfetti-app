@@ -525,7 +525,7 @@ angular.module('starter.controller.dash', [])
 
 		// send confetti to an email address
 		$scope.sendKonfetti = function() {
-			alert("TODO: send Konfetti");
+			KonfettiToolbox.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
 		};
 
         // pop up with more info in party
@@ -547,7 +547,8 @@ angular.module('starter.controller.dash', [])
                             { text: '<i class="icon ion-ios-close-outline"></i>' }
                         ]
                     });
-                    myPopup.then(function(res) {});
+                    // on close
+                    $scope.partyPopUp.then(function(res) {});
                 });
             });
           });

@@ -275,42 +275,46 @@ angular.module('starter.konfettitoolbox', [])
                 });
            	},
             
-        	sendKonfetti : function(maxSendAmount, listOfGreenAddresses) {
-
+        	sendKonfetti : function(partyID, maxSendAmount, listOfGreenAddresses) {
                 $translate("SENDKONFETTI").then(function (TITLE) {
+                	alert("TODO: SENDKONFETTI_SUB !!! LANG");
                     $translate("SENDKONFETTI_SUB").then(function (SUB) {
-                        $ionicPopup.prompt({ // --> KEIN PROMPT, da Amount + recever !!
-                            title: TITLE,
-                            template: PROMPTTEXT,
-                            inputType: 'mail',
-                            inputPlaceholder: ''
-                        }).then(function(res) {
-                            if (typeof res != "undefined") {
-                                if (res.length==0) return;
-                                $ionicLoading.show({
-                                    template: '<img src="img/spinner.gif" />'
-                                });
-                                alert("TODO: ApiService --> sendKonfetti to "+res);
-                               
-                         
-                         		/*
-                                ApiService.redeemCode(res, AppContext.getAppLang(), function(result){
-                                    // WIN
-                                    $ionicLoading.hide();
-                                    feedbackOnCode(result);
-                                }, function(){
-                                    // FAIL
-                                    $ionicLoading.hide();
-                                    $translate("INTERNETPROBLEM").then(function (text) {
-                                        feedbackOnCode(text);
-                                    });
-                                });
-                                */
-                
-                            }
-                        });
-                    });
-                });
-     		}         
+                    	alert("B");
+                    $translate("CANCEL").then(function (CANCEL) {
+                    	alert("C");
+                        $translate("OK").then(function (OK) {
+                        	alert("D");
+                            $rootScope.popScope = {
+                                zipCode: "",
+                                country: "germany"
+                            };
+                            $ionicPopup.show({
+                                templateUrl: './templates/pop-spendkonfetti.html',
+                                title: TITLE,
+                                subTitle: SUB,
+                                scope: $rootScope,
+                                buttons: [
+                                    {
+                                        text: CANCEL,
+                                        onTap: function (e) {
+                                            //fail();
+                                        }
+                                    },
+                                    {
+                                        text: OK,
+                                        type: 'button-positive',
+                                        onTap: function (e) {
+                                        	alert("TODO: OK");
+                                        	// $rootScope.popScope.zipCode
+  
+                                        }
+                                    }
+                                ]
+                            }); // END ionic pop
+                        }); // END translate OK
+                    });	// END translate CANCEL
+                    });// END translate SUB
+                }); // END translate TITLE
+     		} // END sendKonfetti         
 	};
 });
