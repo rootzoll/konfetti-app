@@ -411,7 +411,9 @@ angular.module('starter', [
             'KONFETTISENDNOTICE' : 'XXXX confetti can be send because you earned it doing a task.',        
             'PARTYINFO' : 'Party Info',  
             'PARTYINFOANDSPEND' : 'Party Info and Send Konfetti',
-            'SENDINGKONFETTIDIASABLED' : 'On this party konfetti cannot be send to user users directly.'
+            'SENDINGKONFETTIDIASABLED' : 'On this party konfetti cannot be send to user users directly.',
+            'SENDKONFETTI_SUB_ALL' : 'send konfetti to every email address',
+            'SENDKONFETTI_SUB_LIST' : 'send konfetti to one of accepting emails'           
    });
 
    $translateProvider.translations('de', {
@@ -589,7 +591,9 @@ angular.module('starter', [
             'KONFETTISENDNOTICE' : 'XXXX Konfetti können versendet werden, da diese durch die Erfüllung einer Aufgabe verdient wurden.',
             'PARTYINFO' : 'Party-Info',  
             'PARTYINFOANDSPEND' : 'Party-Info und Konfetti senden',
-            'SENDINGKONFETTIDIASABLED' : 'Auf dieser Party kann Konfetti nicht direkt an andere Nutzer gesendet werden.'       
+            'SENDINGKONFETTIDIASABLED' : 'Auf dieser Party kann Konfetti nicht direkt an andere Nutzer gesendet werden.',
+            'SENDKONFETTI_SUB_ALL' : 'sende Konfetti an jede beliebige eMail-Adresse',
+            'SENDKONFETTI_SUB_LIST' : 'sende Konfetti an ausgewählte Empfänger'       
    });
 
    $translateProvider.translations('ar', {
@@ -767,7 +771,9 @@ angular.module('starter', [
             'KONFETTISENDNOTICE' : 'حلويات XXXX يمكن أن ترسل لأنك كسبت به مهمة.',
             'PARTYINFO' : 'معلومات على قائمة',  
             'PARTYINFOANDSPEND' : 'معلومات على قائمة وترسل حلويات',
-            'SENDINGKONFETTIDIASABLED' : 'على هذا الحزب لا يمكن أن ترسل حلويات للمستخدمين المستخدم مباشرة.'    
+            'SENDINGKONFETTIDIASABLED' : 'على هذا الحزب لا يمكن أن ترسل حلويات للمستخدمين المستخدم مباشرة.',
+            'SENDKONFETTI_SUB_ALL' : 'إرسال قصاصات من الورق إلى كل عنوان بريد إلكتروني',
+            'SENDKONFETTI_SUB_LIST' : 'إرسال قصاصات من الورق إلى واحد من قبول رسائل البريد الإلكتروني'   
    });
 
   $translateProvider.preferredLanguage("en");

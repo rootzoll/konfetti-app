@@ -1,28 +1,10 @@
-<ion-list>
-    <label class="item item-input item-select">
-        <div class="input-label" style="font-size: 12px;">
-            {{ 'COUPON_COUNT' | translate }}
-        </div>
-        <select ng-model="coupons.count">
-            <option value="1">1</option>
-            <option value="5">5</option>
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-        </select>
-    </label>
-    <label class="item item-input item-select">
-        <div class="input-label" style="font-size: 12px;">
-            {{ 'COUPON_AMOUNT' | translate }}
-        </div>
-        <select ng-model="coupons.amount">
-            <option value="10">10</option>
-            <option value="10">50</option>
-            <option value="100">100</option>
-            <option value="200">200</option>
-            <option value="500">500</option>
-            <option value="1000">1000</option>
-        </select>
-    </label>
-</ion-list>
+<div style="margin-top: -20px;">
+  <label class="item item-input item-stacked-label" style="border-width: 0px; width: 94%;">
+    <span class="input-label">Amount of Konfetti</span>
+    <input ng-model="popScope.sendAmount" type="number" placeholder="0" min="1" max="{{party.sendKonfettiMaxAmount}}" style="width:100%">
+  </label>
+  <label class="item item-input item-stacked-label" style="border-width: 0px; width: 94%;">
+    <span class="input-label">To User/eMail</span>
+    <input ng-model="popScope.sendMail" type="email" placeholder="users@email" style="width:100%">
+  </label>
+</div>

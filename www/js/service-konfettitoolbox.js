@@ -277,19 +277,17 @@ angular.module('starter.konfettitoolbox', [])
             
         	sendKonfetti : function(partyID, maxSendAmount, listOfGreenAddresses) {
                 $translate("SENDKONFETTI").then(function (TITLE) {
-                	alert("TODO: SENDKONFETTI_SUB !!! LANG");
-                    $translate("SENDKONFETTI_SUB").then(function (SUB) {
-                    	alert("B");
+                	var translateKey = "SENDKONFETTI_SUB_ALL";
+                	if ((typeof  listOfGreenAddresses != "undefined") && (listOfGreenAddresses!=null) && ( listOfGreenAddresses.length>0)) translateKey = "SENDKONFETTI_SUB_LIST";
+                    $translate(translateKey).then(function (SUB) {
                     $translate("CANCEL").then(function (CANCEL) {
-                    	alert("C");
                         $translate("OK").then(function (OK) {
-                        	alert("D");
                             $rootScope.popScope = {
-                                zipCode: "",
-                                country: "germany"
+                                sendAmount: 1,
+                                sendMail: ""
                             };
-                            $ionicPopup.show({
-                                templateUrl: './templates/pop-spendkonfetti.html',
+                            var sendPop = $ionicPopup.show({
+                                templateUrl: './templates/pop-sendkonfetti.html',
                                 title: TITLE,
                                 subTitle: SUB,
                                 scope: $rootScope,
@@ -297,20 +295,24 @@ angular.module('starter.konfettitoolbox', [])
                                     {
                                         text: CANCEL,
                                         onTap: function (e) {
-                                            //fail();
                                         }
                                     },
                                     {
                                         text: OK,
                                         type: 'button-positive',
                                         onTap: function (e) {
-                                        	alert("TODO: OK");
-                                        	// $rootScope.popScope.zipCode
-  
+                                        	 if ((typeof $rootScope.popScope.sendMail == "undefined") || ($rootScope.popScope.sendMail.length==0)) {
+                                        		alert("eMail is not valid");
+                                        		return false;
+                                        	}
+                                        	alert("TODO SEND TO SERVER: ("+$rootScope.popScope.sendAmount+"/"+$rootScope.popScope.sendMail+")");
+                                        	return true;
                                         }
                                     }
                                 ]
                             }); // END ionic pop
+                            
+                            sendPop.then(function(){sendPop.close();});
                         }); // END translate OK
                     });	// END translate CANCEL
                     });// END translate SUB
