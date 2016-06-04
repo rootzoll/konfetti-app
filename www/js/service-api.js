@@ -357,6 +357,20 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, fail);
 
             },
+            sendKonfetti: function(partyId, toAddress, sendAmount, lang, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.timeout = 60000;
+                config.url = activeServerUrl+'/account/send/'+partyId+'?&amount='+sendAmount+'&address='+encodeURIComponent(toAddress)+'&locale='+lang;
+                // WIN
+                var successCallback = function(response) {
+                    win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
             // post a request
             postRequest: function(requestObj, langCode, win, fail) {
 

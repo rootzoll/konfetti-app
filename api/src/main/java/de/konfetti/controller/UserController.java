@@ -3,6 +3,7 @@ package de.konfetti.controller;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.Party;
 import de.konfetti.data.User;
 import de.konfetti.service.AccountingService;
+import de.konfetti.service.AccountingServiceImpl;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.CodeService;
 import de.konfetti.service.PartyService;
@@ -400,6 +402,182 @@ public class UserController {
     	
     	return true;
     }
+    
+    class ResponseSendKonfetti {
+    	public int resultCode = 0;
+    	public boolean transferedToAccount = false;
+    	public String response = "OK";
+    }
+    
+ 	@CrossOrigin(origins = "*")
+    @RequestMapping(value="/send/{partyId}", method = RequestMethod.GET, produces = "application/json") 
+    public ResponseSendKonfetti sendKonfetti(@PathVariable Long partyId, 
+     		@RequestParam(value="address", defaultValue="") String address,
+     		@RequestParam(value="amount", defaultValue="0") Integer amount,
+     		@RequestParam(value="locale", defaultValue="en") String locale, 
+     		HttpServletRequest httpRequest) throws Exception {
+     	
+ 		LOGGER.info("*** SEND KONFETTI *** partyId("+partyId+") amount("+amount+") to("+address+")");
+ 		
+    	// get eMail config
+     	String mailConf = Helper.getPropValues("spring.mail.host");
+     	if ((mailConf==null) || (mailConf.trim().length()==0)) {
+     		String runningProfile = Helper.getPropValues("spring.profiles.active");
+     		if ("test".equals(runningProfile)) {
+     			mailConf=null;
+     			LOGGER.warn("running without mail config - see application.properties");
+     		} else {
+         		throw new Exception("eMail is not configured in application.properties - cannot generate/send coupons");	
+     		}
+     	}
+     	
+     	// check input data
+     	if (amount<=0) throw new Exception("must be more than 0 per coupon");
+     	if (address==null) throw new Exception("address is NULL"); 
+     	if (address.trim().length()<4) throw new Exception("email not valid");
+     	address = address.trim();
+     	address = address.toLowerCase();
+     	
+     	// get user from HTTP request
+     	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+     	if (client==null) throw new Exception("invalid/missing client on request");
+     	User user = userService.findById(client.getUserId());
+     	if (user==null) throw new Exception("missing user with id("+client.getUserId()+")");
+     	
+ 		LOGGER.info("- sending userID("+user.getId()+")");
+     	
+     	// check if party exists
+     	Party party = partyService.findById(partyId);
+     	if (party==null) throw new Exception("party does not exist");
+     	
+     	// check if party allows sending konfetti
+     	if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_DISABLED) {
+     		throw new Exception("party("+party.getId()+") is not allowing sending of konfetti");
+     	}
+     	
+     	// get users konfetti balance
+		final String accountName = AccountingTools.getAccountNameFromUserAndParty(client.getUserId(), party.getId());
+		Long userBalance = accountingService.getBalanceOfAccount(accountName);
+     	
+     	// check amount of sending
+		if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_JUSTEARNED) {
+			// TODO: implement send just earned limit
+			LOGGER.warn("TODO: Implement SEND JUST EARNED limit");
+		}
+		if (userBalance<=amount) {
+			throw new Exception("user fund too low - has ("+userBalance+") wants to send ("+amount+")");
+		}
+		
+		// check if sending to address is white listed
+		if (party.getSendKonfettiWhiteList().length>0) {
+			LOGGER.info("Whitelist activated for sending konfetti ...");
+			boolean toAddressIsInList = false;
+			for (int i=0; i<party.getSendKonfettiWhiteList().length; i++) {
+				String whiteAddress = party.getSendKonfettiWhiteList()[i];
+				if (whiteAddress==null) continue;
+				if (address.equals(whiteAddress.trim().toLowerCase())) {
+					toAddressIsInList = true;
+					break;
+				}
+			}
+			if (!toAddressIsInList) {
+				LOGGER.warn("BLOCKED - send to address ("+address+") is not part of whitelist");
+				throw new Exception("address is not part of white list");
+			} else {
+				LOGGER.info("OK - send to address is part of white list");
+			}
+		}
+		
+		// prepare result data
+		ResponseSendKonfetti result = new ResponseSendKonfetti();
+
+		// check if user with that address has already an account
+		User toUser = userService.findByMail(address);
+		if (toUser==null) {
+			
+			// receiver has no account
+			// GENERATE SINGLE COUPON and SEND BY EMAIL
+			LOGGER.info("GENERATE SINGLE COUPON and SEND BY EMAIL");
+			result.transferedToAccount = false;
+			
+			// generate coupon
+			Code code = this.codeService.createKonfettiCoupon(party.getId(), client.getUserId(), new Long(amount));
+			if (code==null) throw new Exception("Was not able to generate coupon for transfering konfetti.");
+			LOGGER.info("- generated single coupon with code: "+code.getCode());
+			
+			// remove amount from users balance
+			Long newBalance = accountingService.removeBalanceFromAccount(KonfettiTransaction.TYPE_COUPON, accountName, amount);
+			if (newBalance.equals(userBalance)) {
+				throw new Exception ("Was not able to remove sended konfetti from account("+accountName+")");
+			}
+			
+			// send coupon by eMail
+	    	if ((mailConf!=null) && (EMailManager.getInstance().sendMail(javaMailSender, address, "Received "+amount+" Konfetti from "+System.currentTimeMillis(), "Open app and redeem coupon code: '"+code.getCode(), null))) {
+				LOGGER.info("- email with coupon send to: "+address);
+	    	} else {
+	    		accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_PAYBACK, accountName, amount);
+	    		throw new Exception("Was not able to send eMail with coupon code to "+user.geteMail()+" - check address and server email config");
+	    	}		
+			
+		} else {
+			
+			// receiver has account
+			// TRANSFERE BETWEEN ACCOUNT and SEND NOTIFICATION
+			LOGGER.info("TRANSFERE BETWEEN ACCOUNT and SEND NOTIFICATION");
+			result.transferedToAccount = true;
+			
+			// check if other user is already active on party
+			Long[] activeParties = user.getActiveOnParties();
+			if (!Arrays.asList(activeParties).contains(party.getId())) {
+				// invite user to party
+				activeParties = Helper.append(activeParties, party.getId()); 
+				user.setActiveOnParties(activeParties);
+				userService.update(user);	
+			}
+			
+			// transfer konfetti
+			String toAccountName = AccountingTools.getAccountNameFromUserAndParty(toUser.getId(), party.getId());
+			if (!accountingService.transfereBetweenAccounts(KonfettiTransaction.TYPE_SENDBYUSER, accountName, toAccountName, amount)) {
+				throw new Exception("Was not able to transfere amount("+amount+") from("+accountName+") to("+toAccountName+")");
+			}
+			
+			// send notification receiver (email as fallback)
+			boolean sendNotification = false;
+    		if ((toUser.getPushID()!=null) && (PushManager.getInstance().isAvaliable())) {
+  
+    			// push notification
+    			if (PushManager.getInstance().sendNotification(
+    					PushManager.mapUserPlatform(toUser.getPushSystem()), 
+    					toUser.getPushID(), 
+    					"You received "+amount+" Konfetti on Party '"+party.getName()+"'", 
+    					null, 
+    					null, 
+    					0l
+    			)) {
+    				LOGGER.info("- push notification send to");
+    				sendNotification = true;
+    			} else {
+    				LOGGER.warn("was not able to send push notification to uuserId("+user.getId()+")");
+    			}
+  
+    		}
+    		
+    		if (!sendNotification) {
+    			
+    			// eMail
+    	    	if ((mailConf!=null) && (EMailManager.getInstance().sendMail(javaMailSender, address, "Received "+amount+" Konfetti ("+System.currentTimeMillis()+")", "Open app and check party '"+party.getName()+"' :)", null))) {
+    	    		LOGGER.info("- eMail with Info notification send to: "+address);
+    	    	} else {
+    	    		LOGGER.error("Was not able to send eMail with Notification about received konfetti to "+user.geteMail()+" - check address and server email config");
+    	    	}
+    			
+    		}
+    		
+		}
+     	
+		LOGGER.info("OK SENDING KONFETTI");
+     	return result;
+     }
     
     class ResponseZip2Gps {
     	public int resultCode = 0;

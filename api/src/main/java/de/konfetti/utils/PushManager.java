@@ -39,7 +39,7 @@ public class PushManager {
 		if (this.basicAuth.trim().length()==0) return false;
 		return true;
 	}
-	
+		
 	public boolean sendNotification(int platformUSEFINALS, String userPushID, String messageEnglish, String locale, String messageLocale, Long notificationID) {
 		
 		if (!isAvaliable()) {

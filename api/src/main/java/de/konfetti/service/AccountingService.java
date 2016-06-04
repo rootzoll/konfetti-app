@@ -21,6 +21,9 @@ public interface AccountingService {
 	// returns the resulting account balance
 	Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception;
 
+	// returns the resulting account balance
+	Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception;
+	
 	Long getAllKonfettiBalance();
 	
 }

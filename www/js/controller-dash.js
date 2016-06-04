@@ -525,6 +525,7 @@ angular.module('starter.controller.dash', [])
 
 		// send confetti to an email address
 		$scope.sendKonfetti = function() {
+			$scope.partyPopUp.close();
 			KonfettiToolbox.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
 		};
 

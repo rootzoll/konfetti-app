@@ -302,10 +302,27 @@ angular.module('starter.konfettitoolbox', [])
                                         type: 'button-positive',
                                         onTap: function (e) {
                                         	 if ((typeof $rootScope.popScope.sendMail == "undefined") || ($rootScope.popScope.sendMail.length==0)) {
+                                        		// TODO i18n
                                         		alert("eMail is not valid");
+                                        		e.preventDefault();
                                         		return false;
                                         	}
-                                        	alert("TODO SEND TO SERVER: ("+$rootScope.popScope.sendAmount+"/"+$rootScope.popScope.sendMail+")");
+                                        	
+                                        	$ionicLoading.show({
+                                    			template: '<img src="img/spinner.gif" />'
+                                			});
+                                        	ApiService.sendKonfetti(partyID, $rootScope.popScope.sendMail, $rootScope.popScope.sendAmount, AppContext.getAppLang(), function(){
+                                        		// WIN
+                                        		$ionicLoading.hide();
+                                        		// TODO i18n
+                                        		alert("SENDING OK");
+                                        	}, function(){
+                                        		// FAIL
+                                        		$ionicLoading.hide();
+                                        		// TODO i18n
+                                        		alert("SENDING FAIL");
+                                        	});
+                                        
                                         	return true;
                                         }
                                     }

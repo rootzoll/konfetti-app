@@ -125,7 +125,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		
 		// get account
 		Account account = getAccountByName(accountName);
-		if (account==null) throw new Exception("removeBalanceToAccount("+accountName+","+amount+") --> account does not exist");
+		if (account==null) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") --> account does not exist");
 		
 		// add amount and persist
 		account.removeBalance(amount);

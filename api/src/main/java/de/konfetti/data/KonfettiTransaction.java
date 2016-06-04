@@ -14,6 +14,7 @@ public class KonfettiTransaction {
 	public static final int TYPE_USERWELCOME = 4;
 	public static final int TYPE_COUPON = 5;
 	public static final int TYPE_PAYBACK = 6;
+	public static final int TYPE_SENDBYUSER = 7;
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
