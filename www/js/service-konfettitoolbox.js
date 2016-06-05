@@ -301,26 +301,40 @@ angular.module('starter.konfettitoolbox', [])
                                         text: OK,
                                         type: 'button-positive',
                                         onTap: function (e) {
+                                        	 
+                                        	 // check valid email
                                         	 if ((typeof $rootScope.popScope.sendMail == "undefined") || ($rootScope.popScope.sendMail.length==0)) {
-                                        		// TODO i18n
-                                        		alert("eMail is not valid");
-                                        		e.preventDefault();
+     											methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILUNVALID");
                                         		return false;
                                         	}
                                         	
+                                        	$rootScope.popScope.sendMail = $rootScope.popScope.sendMail.toLowerCase();
+                                        	if ((typeof listOfGreenAddresses != "undefined") && (listOfGreenAddresses.length>0)) {
+                                        		var isListed = false;
+                                        		for (var i=0; i<listOfGreenAddresses.length; i++) {
+                                        			var listedMail = listOfGreenAddresses[i].toLowerCase();
+                                        			if ($rootScope.popScope.sendMail==listedMail) {
+                                        				isListed = true;
+                                        				break;
+                                        			}
+                                        		}
+                                        		if (!isListed) {
+                                        			methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILNOTALLOWED");
+                                        			return false;
+                                        		}
+                                        	}
+
                                         	$ionicLoading.show({
                                     			template: '<img src="img/spinner.gif" />'
                                 			});
                                         	ApiService.sendKonfetti(partyID, $rootScope.popScope.sendMail, $rootScope.popScope.sendAmount, AppContext.getAppLang(), function(){
                                         		// WIN
                                         		$ionicLoading.hide();
-                                        		// TODO i18n
-                                        		alert("SENDING OK");
+                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDOK");
                                         	}, function(){
                                         		// FAIL
                                         		$ionicLoading.hide();
-                                        		// TODO i18n
-                                        		alert("SENDING FAIL");
+                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDFAILED");
                                         	});
                                         
                                         	return true;

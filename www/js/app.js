@@ -413,7 +413,11 @@ angular.module('starter', [
             'PARTYINFOANDSPEND' : 'Party Info and Send Konfetti',
             'SENDINGKONFETTIDIASABLED' : 'On this party konfetti cannot be send to user users directly.',
             'SENDKONFETTI_SUB_ALL' : 'send konfetti to every email address',
-            'SENDKONFETTI_SUB_LIST' : 'send konfetti to one of accepting emails'           
+            'SENDKONFETTI_SUB_LIST' : 'send konfetti to one of accepting emails',
+            'EMAILUNVALID' : 'please enter a valid e-mail address to send to',
+            'EMAILNOTALLOWED' : 'this e-mail is not allowed to be send to',
+            'SENDOK' : 'The konfetti has been send.',
+            'SENDFAILED' : 'Sorry was not able to send konfetti.'               
    });
 
    $translateProvider.translations('de', {
@@ -593,7 +597,11 @@ angular.module('starter', [
             'PARTYINFOANDSPEND' : 'Party-Info und Konfetti senden',
             'SENDINGKONFETTIDIASABLED' : 'Auf dieser Party kann Konfetti nicht direkt an andere Nutzer gesendet werden.',
             'SENDKONFETTI_SUB_ALL' : 'sende Konfetti an jede beliebige eMail-Adresse',
-            'SENDKONFETTI_SUB_LIST' : 'sende Konfetti an ausgewählte Empfänger'       
+            'SENDKONFETTI_SUB_LIST' : 'sende Konfetti an ausgewählte Empfänger',
+            'EMAILUNVALID' : 'bitte eine gültige eMail Adresse eingeben',
+            'EMAILNOTALLOWED' : 'An diese eMail Adressee kann leider kein Konfetti gesendet werden.',
+            'SENDOK' : 'Konfetti wurde versand.',
+            'SENDFAILED' : 'Es war leider nicht möglich Konfetti zu versenden.'        
    });
 
    $translateProvider.translations('ar', {
@@ -773,7 +781,11 @@ angular.module('starter', [
             'PARTYINFOANDSPEND' : 'معلومات على قائمة وترسل حلويات',
             'SENDINGKONFETTIDIASABLED' : 'على هذا الحزب لا يمكن أن ترسل حلويات للمستخدمين المستخدم مباشرة.',
             'SENDKONFETTI_SUB_ALL' : 'إرسال قصاصات من الورق إلى كل عنوان بريد إلكتروني',
-            'SENDKONFETTI_SUB_LIST' : 'إرسال قصاصات من الورق إلى واحد من قبول رسائل البريد الإلكتروني'   
+            'SENDKONFETTI_SUB_LIST' : 'إرسال قصاصات من الورق إلى واحد من قبول رسائل البريد الإلكتروني',
+            'EMAILUNVALID' : 'يرجى إدخال عنوان بريد إلكتروني صالح لإرسالها إلى',
+            'EMAILNOTALLOWED' : 'هذا غير مسموح به البريد الإلكتروني ليتم إرسالها إلى',
+            'SENDOK' : 'تم ارسال حلويات.',
+            'SENDFAILED' : 'وآسف لم يتمكن من إرسال قصاصات من الورق.'  
    });
 
   $translateProvider.preferredLanguage("en");
