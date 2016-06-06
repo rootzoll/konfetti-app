@@ -9,7 +9,7 @@ function KonfettiApi($http, $uibModal) {
 
     // SET WHICH SERVER SHOULD BE ACTIVE
 
-    var apiUrl = apiUrlDevelopmentServer;
+    var apiUrl = apiUrlDevelopmentServer; // choose from above
 
     // SECURITY TESTING
     if (apiUrlProductionServer.indexOf("https")!=0) {
