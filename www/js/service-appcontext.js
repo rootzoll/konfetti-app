@@ -15,7 +15,7 @@ angular.module('starter.appcontext', [])
       /* APP BACKEND SERVER ---> SET ONE FROM THE ABOVE 
        * !!! ON GIT CHECKIN: SET DEVELOPMENT SERVER !!! 
        * */
-      apiUrl: apiUrlLocalDevelopment,
+      apiUrl: apiUrlDevelopmentServer,
 
       /* PUSH NOTIFICATION */
       oneSignalAppId : "",
