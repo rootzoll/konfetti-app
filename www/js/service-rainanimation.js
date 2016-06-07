@@ -333,27 +333,39 @@ angular.module('starter.rainanimation', [])
             ConfettiRibbon.bounds = new Vector2(canvasWidth, canvasHeight);
         };
         this.start = function() {
-            this.stop();
-            var context = this;
-            this.update();
+            try {
+            	this.stop();
+            	var context = this;
+            	this.update();
+            } catch (e) {
+            	alert("Exception on service-rainanimation: this.start: "+JSON.stringify(e));
+            } 
         };
         this.stop = function() {
-            cAF(this.interval);
+        	try {
+            	cAF(this.interval);
+            } catch (e) {
+            	alert("Exception on service-rainanimation: this.stop: "+JSON.stringify(e));
+            } 
         };
         this.update = function() {
-            var i = 0;
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            for (i = 0; i < confettiPaperCount; i++) {
-                confettiPapers[i].Update(duration);
-                confettiPapers[i].Draw(context);
-            }
-            for (i = 0; i < confettiRibbonCount; i++) {
-                confettiRibbons[i].Update(duration);
-                confettiRibbons[i].Draw(context);
-            }
-            this.interval = rAF(function() {
-                confetti.update();
-            });
+        	try {
+            	var i = 0;
+            	context.clearRect(0, 0, canvas.width, canvas.height);
+            	for (i = 0; i < confettiPaperCount; i++) {
+                	confettiPapers[i].Update(duration);
+                	confettiPapers[i].Draw(context);
+            	}
+            	for (i = 0; i < confettiRibbonCount; i++) {
+                	confettiRibbons[i].Update(duration);
+                	confettiRibbons[i].Draw(context);
+            	}
+            	this.interval = rAF(function() {
+                	confetti.update();
+            	});
+            } catch (e) {
+            	alert("Exception on service-rainanimation: this.update: "+JSON.stringify(e));
+            }  	
         };
 	};
 		
@@ -366,26 +378,36 @@ angular.module('starter.rainanimation', [])
         	// call this method to trigger the konfetti rain animation
             makeItRainKonfetti: function(durationInSeconds) {
             	
-            	// make sure animation is just running once
-    			if (isRaining) {
-    				return;
-    			}
-    			isRaining = true;
+            	try {
+            	
+            		// make sure animation is just running once
+    				if (isRaining) {
+    					return;
+    				}
+    				isRaining = true;
             		
-            	// show canvas and start animation
-    			document.getElementById("confetti").style.display = "initial";
-    			document.getElementById("confetti").className = "fadein";
-    			confetti.start();
-				
-    			// set timer when animation should fade out
-    			$timeout(function() {
-        			document.getElementById("confetti").className = "fadeout";
-        			$timeout(function() {
-            			document.getElementById("confetti").style.display = "none";
-            			confetti.stop();
-            			isRaining = false;
-        			}, 500);
-    			}, durationInSeconds * 1000);
+            		// show canvas and start animation
+    				document.getElementById("confetti").style.display = "initial";
+    				document.getElementById("confetti").className = "fadein";
+    				confetti.start();
+    							
+    				// set timer when animation should fade out
+    				$timeout(function() {
+    					try {
+        					document.getElementById("confetti").className = "fadeout";
+        					$timeout(function() {
+            					document.getElementById("confetti").style.display = "none";
+            					confetti.stop();
+            					isRaining = false;
+        					}, 500);
+        				} catch (e) {
+        					alert("Exception on service-rainanimation: makeItRainKonfetti-2: "+JSON.stringify(e));
+        				}	
+    				}, durationInSeconds * 1000);
+            	
+            	} catch (e) {
+            		alert("Exception on service-rainanimation: makeItRainKonfetti-1: "+JSON.stringify(e));
+            	} 
             	
                 return;
             }

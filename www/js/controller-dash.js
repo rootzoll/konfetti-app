@@ -45,6 +45,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.lastPartyRefreshID = 0;
         $scope.lastPartyRefreshStart = 0;
+        $scope.continueFlag = false;
 
         $scope.checkedAccount = false;
 
@@ -484,7 +485,7 @@ angular.module('starter.controller.dash', [])
                     try {
                     	RainAnimation.makeItRainKonfetti(2);
                     } catch (e) {
-                        console.log("konfetti animation failed: "+JSON.stringify(e));
+                        alert("konfetti animation failed: "+JSON.stringify(e));
                         console.dir(e);
                     }
                 }, function(){
@@ -611,7 +612,11 @@ angular.module('starter.controller.dash', [])
                 $scope.state = "INTRO";
                 // show intro part of view
                 // --> button press AppContext.getLocalState.introScreenShown = true
-                RainAnimation.makeItRainKonfetti(2);
+                RainAnimation.makeItRainKonfetti(1.5);
+                $scope.continueFlag = false;
+                $timeout(function() {
+                	$scope.continueFlag = true;
+                },3000);
                 return;
             }
 

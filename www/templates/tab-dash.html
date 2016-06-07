@@ -201,7 +201,7 @@
               </ion-list>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonIntroScreenOK()">
+              <button class="button" ng-class="{'button-positive' : continueFlag}" on-tap="buttonIntroScreenOK()">
                   {{ 'INTRO_LETSGO' | translate }}
               </button>
           </div>
