@@ -646,9 +646,9 @@ angular.module('starter.controller.dash', [])
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
                             AppContext.setAccount(account);
-                            // TODO ionic optional dialog multi lang
-                            alert("The server was reset - starting as a fresh user.");
-                            $scope.resetAccount();
+                            methodShowIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
+                            	$scope.resetAccount();
+                            });
                             return;
                         } else {
                             // refreshing local account with account from server

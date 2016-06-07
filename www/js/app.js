@@ -245,8 +245,8 @@ angular.module('starter', [
             'KONFETTI' : 'Konfetti',
             'KONFETTI-APP' : 'Konfetti App',
             'PARTYINFO_TITLE': 'Party Info',
-            'PARTYINFO_SUB': 'confetti & editorial responsibility',
-            'POSTSORT_MOST': 'top confetti',
+            'PARTYINFO_SUB': 'konfetti & editorial responsibility',
+            'POSTSORT_MOST': 'top konfetti',
             'POSTSORT_NEW': 'newest entry',
             'DASHHEADER_REVIEW': 'Please Review',
             'DASHHEADER_POSTED': 'You Posted',
@@ -288,7 +288,7 @@ angular.module('starter', [
             'PAUSECHAT' : 'Pause Chat',
             'NEEDSGPS'  : 'turn on location',
             'NEEDSINTERNET'  : 'needs internet connection',
-            'LOWKONFETTI'  : 'You have too little confetti to open a task.',
+            'LOWKONFETTI'  : 'You have too little konfetti to open a task.',
             'MINKONFETTI'  : 'Minimal amount needed',
             'CONTACT' : 'Contact',
             'HELPOUT' : 'help out and earn up to',
@@ -305,7 +305,7 @@ angular.module('starter', [
             'INTRO_STEP2B' : 'by taking care of tasks or by donating.',
             'INTRO_STEP3A' : 'Use Konfetti',
             'INTRO_STEP3B' : 'to post tasks to community or to up vote existing tasks.',
-            'INTRO_LETSGO' : 'Show confetti parties in my area.',
+            'INTRO_LETSGO' : 'Show konfetti parties in my area.',
             'CREATENEW'    : 'create new',
             'REDEEM_MAGIC_SUB' : 'activate features, add privileges ..',
             'REDEEM_COUPON_SUB' : 'Please enter the code number of your coupon:',
@@ -407,8 +407,8 @@ angular.module('starter', [
             'COUPONREDEEM' : 'Redeem Coupon',
             'SENDKONFETTI' : 'Send Confetti',
             'PARTYMANAGEDBY' : 'This party is managed by:',   
-            'YOUHAVEKONFETTI' : 'You have XXXX confetti on this party.',      
-            'KONFETTISENDNOTICE' : 'XXXX confetti can be send because you earned it doing a task.',        
+            'YOUHAVEKONFETTI' : 'You have XXXX konfetti on this party.',      
+            'KONFETTISENDNOTICE' : 'XXXX konfetti can be send because you earned it doing a task.',        
             'PARTYINFO' : 'Party Info',  
             'PARTYINFOANDSPEND' : 'Party Info and Send Konfetti',
             'SENDINGKONFETTIDIASABLED' : 'On this party konfetti cannot be send to user users directly.',
@@ -417,7 +417,11 @@ angular.module('starter', [
             'EMAILUNVALID' : 'please enter a valid e-mail address to send to',
             'EMAILNOTALLOWED' : 'this e-mail is not allowed to be send to',
             'SENDOK' : 'The konfetti has been send.',
-            'SENDFAILED' : 'Sorry was not able to send konfetti.'               
+            'SENDFAILED' : 'Sorry was not able to send konfetti.',
+            'TITLE_IMPORTANT' : 'Important',
+            'RESETTING_SERVER' : 'The server was reset - starting as a fresh user.',
+            'LOGINBUTTON_REGISTERFORGOT' : 'Lets register as a new user.',
+            'LOGINBUTTON_LOGINLOGIN' : 'I already have an account.'      
    });
 
    $translateProvider.translations('de', {
@@ -601,7 +605,11 @@ angular.module('starter', [
             'EMAILUNVALID' : 'bitte eine gültige eMail Adresse eingeben',
             'EMAILNOTALLOWED' : 'An diese eMail Adressee kann leider kein Konfetti gesendet werden.',
             'SENDOK' : 'Konfetti wurde versand.',
-            'SENDFAILED' : 'Es war leider nicht möglich Konfetti zu versenden.'        
+            'SENDFAILED' : 'Es war leider nicht möglich Konfetti zu versenden.',
+            'TITLE_IMPORTANT' : 'Wichtig',
+            'RESETTING_SERVER' : 'Der Server wurde zurückgesetzt. Du beginnst nochmal als neuer Nutzer.',
+            'LOGINBUTTON_REGISTERFORGOT' : 'Als neuer Nutzer anmelden.',
+            'LOGINBUTTON_LOGINLOGIN' : 'Ich habe bereits einen Nutzernamen.'           
    });
 
    $translateProvider.translations('ar', {
@@ -785,7 +793,11 @@ angular.module('starter', [
             'EMAILUNVALID' : 'يرجى إدخال عنوان بريد إلكتروني صالح لإرسالها إلى',
             'EMAILNOTALLOWED' : 'هذا غير مسموح به البريد الإلكتروني ليتم إرسالها إلى',
             'SENDOK' : 'تم ارسال حلويات.',
-            'SENDFAILED' : 'وآسف لم يتمكن من إرسال قصاصات من الورق.'  
+            'SENDFAILED' : 'وآسف لم يتمكن من إرسال قصاصات من الورق.',
+            'TITLE_IMPORTANT' : 'مهم',
+            'RESETTING_SERVER' : 'تم إعادة تعيين الخادم - بدءا كمستخدم جديد.',
+            'LOGINBUTTON_REGISTERFORGOT' : 'دعونا تسجيل كمستخدم جديد.',
+            'LOGINBUTTON_LOGINLOGIN' : 'لدي حساب بالفعل.'
    });
 
   $translateProvider.preferredLanguage("en");
