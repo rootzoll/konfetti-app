@@ -116,15 +116,17 @@
           <div class="item item-text-wrap">
               <div class="list list-inset" style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
+                      onkeydown="if(event.keyCode==13)document.getElementById('registerpassword').focus();" >
                   </label>
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input id="registerpassword" ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
+                      onkeydown="if(event.keyCode==13){document.getElementById('registerpassword').blur();document.getElementById('registerbutton').click();}">
                   </label>
               </div>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginRegisterFinal(login.Email, login.Password)">
+              <button id="registerbutton" class="button button-positive" ng-click="buttonLoginRegisterFinal(login.Email, login.Password)" >
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
               <div on-tap="buttonLoginLogin()" style="text-align: center; font-weight: normal; padding-top: 16px; color: #387EF5;">
@@ -142,15 +144,17 @@
           <div class="item item-text-wrap">
               <div class="list list-inset"  style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
+                      onkeydown="if(event.keyCode==13)document.getElementById('loginpassword').focus();" >
                   </label>
                   <label class="item item-input" style="padding-left: 0px;">
-                      <input ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;">
+                      <input id="loginpassword" ng-model="login.Password" type="password" placeholder="{{ 'PASSWORD' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
+                      onkeydown="if(event.keyCode==13){document.getElementById('loginpassword').blur();document.getElementById('loginbutton').click();}" >
                   </label>
               </div>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginLoginFinal(login.Email, login.Password)">
+              <button id="loginbutton" class="button button-positive" ng-click="buttonLoginLoginFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
               <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 16px; color: #387EF5;">

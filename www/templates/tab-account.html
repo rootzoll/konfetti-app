@@ -67,10 +67,10 @@
 
           <div class="item item-input-inset" style="border-top-width: 0px;">
               <label class="item-input-wrapper">
-                  <input type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email">
+                  <input ID="accountemail" type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email" 
+                  onkeydown="if(event.keyCode==13){document.getElementById('accountemail').click();document.getElementById('emailsave').click();}" >
               </label>
-              <button class="button button-small" on-tap="storeMail(email)">
-                  <!-- TODO add button trigger when user hits enter on eMail input -->
+              <button id="emailsave" class="button button-small" ng-click="storeMail(email)">
                   {{ 'SAVE' | translate }}
               </button>
           </div>

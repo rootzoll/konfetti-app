@@ -22,6 +22,10 @@ angular.module('starter.controller.account', [])
 
       $scope.email = AppContext.getAccount().eMail;
   });
+  
+  $scope.keyUpEmailInput = function(e) {
+  	console.dir(e);
+  };
 
   $scope.settings = {
     enablePush: true,
