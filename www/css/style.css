@@ -288,3 +288,7 @@ div.popup-body span {
 	width: 90%;
 }
 
+.completeInvisible {
+	opacity: 0;
+}
+

@@ -48,7 +48,7 @@
               <table ng-show="(confetti.max>=confetti.min)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
-                      	  <i style="position:relative;top:-4px;left:+55px;" class="icon ion-plus-circled positive"></i>
+                      	  <i ng-class="{'completeInvisible': (request.imageMediaID!=null)}" style="position:relative;top:-4px;left:+55px;" class="icon ion-plus-circled positive"></i>
                           <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
