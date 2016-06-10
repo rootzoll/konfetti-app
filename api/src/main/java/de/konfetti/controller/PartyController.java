@@ -221,10 +221,9 @@ public class PartyController {
         		} else if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_ALL) {
         			// all konfetti can be spend
         			party.setSendKonfettiMaxAmount(party.getKonfettiCount());
-        		} else if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_ALL) {
-        			// TODO just earned konfetti can be spend
-        			LOGGER.warn("TODO: implement how many earned konfetti the user can spend - setting zero for now");
-        			party.setSendKonfettiMaxAmount(0);
+        		} else if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_JUSTEARNED) {
+        			// just earned konfetti can be spend
+        			party.setSendKonfettiMaxAmount(this.accountingService.getBalanceEarnedOfAccount(userAccountName));
         		} else {
         			LOGGER.warn("Not implemented KonfettiSendMode of "+party.getSendKonfettiMode());
         		}
@@ -311,8 +310,8 @@ public class PartyController {
         		LOGGER.info("party("+party.getId()+") with meterrange("+party.getMeters()+") has distance to user of meters("+distanceMeters+")");
         		
         		// check if user GPS is within party area or party is global
-        		LOGGER.warn("TODO: Fix this geo filter later ... now just show every party"); // TODO fix
-        		if ((distanceMeters <= party.getMeters()) || (party.getMeters() >= 0)) { // || (party.getMeters()==0)) {
+        		LOGGER.warn("TODO: Fix this geo filter later ... now just show every party");
+        		if ((distanceMeters <= party.getMeters()) || (party.getMeters()==0)) {
         			
         			LOGGER.info("--> IN");
         			
@@ -506,7 +505,8 @@ public class PartyController {
     		request.setState(Request.STATE_OPEN);
     	} else {
     		request.setState(Request.STATE_REVIEW);
-    		if (user.getPushActive()) LOGGER.warn("TODO: push info to review admin"); // TODO
+    		// TODO push info to review admin
+    		if (user.getPushActive()) LOGGER.warn("TODO: push info to review admin");
     	}
     	
     	// update fields in user and persist
@@ -963,7 +963,7 @@ public class PartyController {
             	chatService.update(chat);
             	LOGGER.info("chat("+chatId+") on request("+requestId+") muted ");
             		
-            	// TODO
+            	// TODO Implement send notification to muted chat user or add info as chat message
             	LOGGER.warn("TODO: Implement send notification to muted chat user or add info as chat message");
             		
             } else
@@ -1022,7 +1022,7 @@ public class PartyController {
                 	requestService.update(request);
                 	LOGGER.info("mediaItem("+mediaId+") add to request("+requestId+")");
                 		
-                	// TODO
+                	// TODO Implement send notification to reviewer if media item still needs review
                 	LOGGER.warn("TODO: Implement send notification to reviewer if media item still needs review");
                 		
             } else

@@ -17,7 +17,6 @@ import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.Party;
 import de.konfetti.data.User;
 import de.konfetti.service.AccountingService;
-import de.konfetti.service.AccountingServiceImpl;
 import de.konfetti.service.ClientService;
 import de.konfetti.service.CodeService;
 import de.konfetti.service.PartyService;
@@ -629,7 +628,8 @@ public class UserController {
     public RedeemResponse redeemCode(@PathVariable String code, @RequestParam(value="locale", defaultValue="en") String locale, HttpServletRequest httpRequest) throws Exception {
     	    	
     	if (code==null) throw new Exception("code is not valid");
-    	if (!locale.equals("en")) LOGGER.warn("TODO: implement reedem code feedback in locale '"+locale+"'"); // TODO
+    	 // TODO implement reedem code feedback in locale
+    	if (!locale.equals("en")) LOGGER.warn("TODO: implement reedem code feedback in locale '"+locale+"'");
     	
     	// get user from HTTP request
     	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);

@@ -15,7 +15,7 @@ angular.module('starter.appcontext', [])
       /* APP BACKEND SERVER ---> SET ONE FROM THE ABOVE 
        * !!! ON GIT CHECKIN: SET DEVELOPMENT SERVER !!! 
        * */
-      apiUrl: apiUrlDevelopmentServer,
+      apiUrl: apiUrlLocalDevelopment,
 
       /* PUSH NOTIFICATION */
       oneSignalAppId : "",
@@ -109,7 +109,6 @@ angular.module('starter.appcontext', [])
         return (typeof window.device != "undefined") ? window.device.platform : "browser";
     },
     isRunningOnDesktopComputer: function() {
-        // TODO differ between mobile and desktop browser in more detail later
         return typeof window.device == "undefined";
     },
     isRunningWithinApp : function() {
