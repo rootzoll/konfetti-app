@@ -460,8 +460,10 @@ public class UserController {
      	
      	// check amount of sending
 		if (party.getSendKonfettiMode()==Party.SENDKONFETTIMODE_JUSTEARNED) {
-			// TODO: implement send just earned limit
-			LOGGER.warn("TODO: Implement SEND JUST EARNED limit");
+			
+			long userEarnedBalance = this.accountingService.getBalanceEarnedOfAccount(accountName);
+			if (amount>userEarnedBalance) throw new Exception("user earned fund too low - has ("+userBalance+") of that earned("+userEarnedBalance+")wants to send ("+amount+")");
+			
 		}
 		if (userBalance<=amount) {
 			throw new Exception("user fund too low - has ("+userBalance+") wants to send ("+amount+")");
