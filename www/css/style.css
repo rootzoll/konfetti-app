@@ -237,6 +237,26 @@ div.popup-body span {
     100% { width:21px;height: 21px;  opacity: 0.0}
 }
 
+.animationPulsateOpacity{
+    -webkit-animation-name: pulsateOpacity;
+    -webkit-animation-duration: 1s;
+    -webkit-animation-timing-function: ease-in-out;
+    -webkit-animation-iteration-count: infinite;
+}
+@-webkit-keyframes pulsateOpacity {
+    0% { opacity: 0.0}
+    10% { opacity: .20}
+    20% { opacity: .40 }
+    30% { opacity: .60 }
+    40% { opacity: .80 }
+    50% { opacity: 1.0}
+    60% { opacity: .80}
+    70% { opacity: .60}
+    80% { opacity: .40}
+    90% { opacity: .20}
+    100% {opacity: 0.0}
+}
+
 .animationPulsateSimple{
     -webkit-animation-name: pulsateSimple;
     -webkit-animation-duration: 2s;

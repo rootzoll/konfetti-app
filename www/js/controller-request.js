@@ -15,6 +15,9 @@ angular.module('starter.controller.request', [])
 
   $scope.noticeTextId = "";
   $scope.noticeColor = "";
+  
+  $scope.pulsateNameInput = false;
+  $scope.pulsateHeadlineInput = false;
 
   $scope.mediaChoosePopup = null;
 
@@ -852,27 +855,43 @@ angular.module('starter.controller.request', [])
   $scope.submitRequest = function() {
 
       if ($scope.profile.name.length===0) {
-          $translate("IMPORTANT").then(function (HEADLINE) {
+		if ($scope.pulsateNameInput) {
+			$translate("IMPORTANT").then(function (HEADLINE) {
               $translate("ENTERNAME").then(function (TEXT) {
                   $ionicPopup.alert({
                       title: HEADLINE,
                       template: TEXT
                   }).then(function(res) {});
-              });
+             });
           });
-          return;
+		} else {
+			$scope.pulsateNameInput = true;
+			$timeout(function(){
+				$scope.pulsateNameInput = false;
+			},1500);
+		}      	
+        return;
       }
 
       if ($scope.headline.temp.length<4) {
-          $translate("IMPORTANT").then(function (HEADLINE) {
+      	
+      	if (($scope.headline.temp.length>0) || ($scope.pulsateHeadlineInput)) {
+      		$translate("IMPORTANT").then(function (HEADLINE) {
               $translate("ENTERREQUEST").then(function (TEXT) {
                   $ionicPopup.alert({
                       title: HEADLINE,
                       template: TEXT
                   }).then(function(res) {});
               });
-          });
-          return;
+          });	
+      	} else {
+     		$scope.pulsateHeadlineInput = true;
+			$timeout(function(){
+				$scope.pulsateHeadlineInput = false;
+			},1500);
+      	}
+      
+        return;
       }
 
       if ($scope.profile.spokenLangs.length==0) {

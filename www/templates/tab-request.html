@@ -52,8 +52,8 @@
                           <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
-                          <div>
-                              <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;">
+                          <div> 
+                              <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
                                       <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
@@ -68,7 +68,7 @@
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <div class="item item-input-inset" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
+                          <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateHeadlineInput}" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
                               <label class="item-input-wrapper">
                                   <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
                               </label>
