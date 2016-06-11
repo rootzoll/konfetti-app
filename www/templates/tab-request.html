@@ -219,9 +219,9 @@
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
-                  <div ng-show="(request.state==='open')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestProcess()" class="button icon-left ion-pause button-energized" style="border-radius: 6px">
-                          {{ 'REQUESTPROCESS' | translate }}
+                  <div ng-show="(request.state==='open')" style="width:100%; padding-top: 8px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized" style="border-radius: 6px">
+                          <span style="font-weight: bold;">{{ 'REQUESTPROCESS' | translate }}</span>
                       </button>
                   </div>
                   <div ng-show="(request.state==='processing')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
@@ -229,9 +229,9 @@
                           {{ 'REQUESTREOPEN' | translate }}
                       </button>
                   </div>
-                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
-                          {{ 'REQUESTDELETE' | translate }}
+                  <div style="width:100%; padding-top: 8px; padding-bottom: 8px;">
+                      <button on-tap="buttonRequestDelete()" class="button button-small icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                          <span style="font-weight: bold;">{{ 'REQUESTDELETE' | translate }}</span>
                       </button>
                   </div>
               </div>
