@@ -62,12 +62,19 @@ angular.module('starter.controllers', [])
        $scope.loadingText = "";
        ApiService.loadChat($stateParams.id, function(chatData) {
            $scope.chat = chatData;
-           // TODO: make sure that message array is ordered
+
+           // make sure messages are sorted by timestamp
+           $scope.chat.messages.sort(function(a, b){
+				if (a.time==b.time) return 0;
+				return (a.time>b.time) ? 1 : -1;
+		   });
+
            $scope.loading = false;
            if (($scope.chat.messages.length>0) && ($scope.chat.messages.length>$scope.messages.length)) {
                $scope.messages = [];
                $scope.loadChatsItem(0);
            }
+           
        }, function(errorCode) {
            if (showErrorAlert) {
            $translate("IMPORTANT").then(function (HEADLINE) {

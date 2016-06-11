@@ -256,6 +256,7 @@ angular.module('starter.controller.request', [])
                             // WIN
                             $ionicLoading.hide();
                             AppContext.setAccount(updatedAccount);
+                            // now that we got a name - call this method again
                             $scope.startChat();
                         },function(){
                             // FAIL
