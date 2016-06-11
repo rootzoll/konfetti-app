@@ -646,7 +646,7 @@ angular.module('starter.controller.dash', [])
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
                             AppContext.setAccount(account);
-                            KonfettiToolbox.methodShowIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
+                            KonfettiToolbox.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
                             	$scope.resetAccount();
                             });
                             return;

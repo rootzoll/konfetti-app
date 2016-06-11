@@ -1,6 +1,7 @@
 angular.module('starter.konfettitoolbox', [])
 .factory('KonfettiToolbox', function($rootScope, $log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService, $cordovaGeolocation) {
 
+		// local def --> on service is called --> showIonicAlertWith18nText
         var methodShowIonicAlertWith18nText = function(i18nKeyTitle, i18nKeyText, win) {
             $translate(i18nKeyTitle).then(function (TITLE) {
                 $translate(i18nKeyText).then(function (TEXT) {
