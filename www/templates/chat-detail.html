@@ -23,7 +23,7 @@
               <!-- chat bubble from app user-->
               <div ng-show="message.isUser" style="width: 100%">
                   <div class="list card" style="background-color: lightcyan; margin:10px; margin-left: 30%;">
-                      <div mediaitem itemid="{{message.itemId}}"></div>
+                      <div mediaitem itemid="{{message.itemId}}" cache="true"></div>
                   </div>
               </div>
               <!-- chat bubble from counter part-->
@@ -33,7 +33,7 @@
                           <td width="15"><i class="icon ion-ios-person-outline"></i></td>
                           <td width="*">
                               <div class="list card"  style="background-color: lightyellow;  margin:10px; ">
-                                <div mediaitem itemid="{{message.itemId}}"></div>
+                                <div mediaitem itemid="{{message.itemId}}" cache="true"></div>
                               </div>
                           </td>
                           <td width="10%"></td>

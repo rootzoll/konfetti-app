@@ -84,6 +84,7 @@ angular.module('starter')
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 
+                var useCache = ((typeof $attributes.cache !="undefined") && ($attributes.cache==="true"));
                 $scope.loading = true;
                 $scope.itemid = $attributes.itemid;
                 $scope.mediaItemData = null;
@@ -126,7 +127,7 @@ angular.module('starter')
                     }, function(code) {
                         // FAIL
                         $scope.loading = false;
-                    });
+                    }, useCache);
                 }
 
             }

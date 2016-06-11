@@ -61,7 +61,9 @@ angular.module('starter.controllers', [])
        $scope.loading = true;
        $scope.loadingText = "";
        ApiService.loadChat($stateParams.id, function(chatData) {
+           
            $scope.chat = chatData;
+		   $scope.loading = false;
 
            // make sure messages are sorted by timestamp
            $scope.chat.messages.sort(function(a, b){
@@ -69,7 +71,7 @@ angular.module('starter.controllers', [])
 				return (a.time>b.time) ? 1 : -1;
 		   });
 
-           $scope.loading = false;
+		   // if chat got more messages than actual - start update
            if (($scope.chat.messages.length>0) && ($scope.chat.messages.length>$scope.messages.length)) {
                $scope.messages = [];
                $scope.loadChatsItem(0);
@@ -94,15 +96,15 @@ angular.module('starter.controllers', [])
    $scope.loadChatsItem = function(indexInArray) {
 
        $scope.loading = true;
-       //console.log("loadChatsItem("+indexInArray+")");
 
        // for now load ALL items on chat FROM SERVER
        // TODO: later cache items in perstent app context and make paging for loading from server
        var chatMessage = $scope.chat.messages[indexInArray];
        var idToLoad = chatMessage.itemId;
+       var useCache = true;
+       
        ApiService.loadMediaItem(idToLoad, function(loadedItem){
             // success
-           // TODO: cache item
            var appUserId = AppContext.getAccount().id;
            if (appUserId==="") appUserId = 1;
            chatMessage.isUser = (chatMessage.userId == appUserId);
@@ -115,7 +117,7 @@ angular.module('starter.controllers', [])
                $scope.loading = false;
                if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
            }
-       }, function(errorcode){});
+       }, function(errorcode){}, useCache);
    };
 
    $scope.sendChatMessage = function() {

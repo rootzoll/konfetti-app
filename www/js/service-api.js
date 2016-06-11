@@ -20,6 +20,11 @@ angular.module('starter.api', [])
             };
             return basicConfig;
         };
+        
+        // media item cache
+        // set: mediaItemCache[id] = obj1;
+        // get: (typeof mediaItemCache[id] != "undefined") ? mediaItemCache[id] : null;
+        var mediaItemCache = {};
 
         return {
             createAccount: function(mail, pass, locale, win, fail) {
@@ -288,7 +293,19 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, fail);
 
             },
-            loadMediaItem: function(itemId, win, fail){
+            loadMediaItem: function(itemId, win, fail, useCache){
+            	
+            	// check cache if activated media item
+            	if ((typeof useCache != "undefined") && (useCache)) {
+            		if (typeof mediaItemCache[itemId] != "undefined") {
+            			// found in cache --> call win
+            			//console.log("mediaitem("+itemId+") FROM cache");
+            			win(mediaItemCache[itemId]);
+            			return;
+            		}
+            	} else {
+            		//console.log("NO CACHE :"+useCache);
+            	}
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
@@ -296,9 +313,23 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/media/'+itemId;
                 // WIN
                 var successCallback = function(response) {
+                    
+                    // process incomings if needed
                     if (response.data.type=="Date") {
                         response.data.data = new Date(response.data.data.substr(1,response.data.data.length-2));
                     }
+                    
+                    // use for cache (if activated)
+                    if ((typeof useCache != "undefined") && (useCache)) {
+                    	if (mediaItemCache.length<100) {
+                    		//console.log("mediaitem("+response.data.id+") TO cache");
+                    		mediaItemCache[response.data.id] = response.data;	
+                    	} else {
+                    		console.log("WARNING mediaItemCache is almost 100 items, not caching anymore - TODO: implement cleanup");
+                    	}
+                    }
+                    
+                    // win callback
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);
