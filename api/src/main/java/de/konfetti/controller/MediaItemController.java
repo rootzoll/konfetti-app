@@ -37,13 +37,13 @@ public class MediaItemController {
 	
     private final ClientService clientService;
     private final MediaService mediaService;
-    private final UserService userService;
+    //private final UserService userService;
 
     @Autowired
     public MediaItemController(final ClientService clientService, final MediaService mediaService, final UserService userService) {
         this.clientService = clientService;
         this.mediaService = mediaService;
-        this.userService = userService;
+        //this.userService = userService;
     }
 
     //---------------------------------------------------
