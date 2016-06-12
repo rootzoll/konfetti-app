@@ -31,7 +31,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 	@Override
 	public Long getBalanceOfAccount(String accountName) {
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) return null;
 		return account.getBalance();
 	}
@@ -45,7 +45,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 	@Override
 	public synchronized boolean deleteAccount(String accountName) throws Exception {
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("deleteAccount("+accountName+") --> account does not exist");
 		accountRepository.delete(account.getId());
 		accountRepository.flush();
@@ -66,8 +66,8 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		
 		if (amount<=0) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> invalid amount");
 		
-		Account from = getAccountByName(fromAccountName);
-		Account to = getAccountByName(toAccountName);
+		Account from = accountRepository.findByName(fromAccountName);
+		Account to = accountRepository.findByName(toAccountName);
 		
 		// check accounts exist
 		if (from==null) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> from account does not exist");
@@ -104,7 +104,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		if (amount<=0) throw new Exception("addBalanceToAccount("+accountName+","+amount+") -> invalid amount");
 		
 		// get account
-		Account account = getAccountByName(accountName);
+		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("addBalanceToAccount("+accountName+","+amount+") --> account does not exist");
 		
 		// add amount and persist
@@ -122,31 +122,26 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return account.getBalance();
 	}
 
+	@Override
+	public Account findAccountByName(String name) {
+		return accountRepository.findByName(name);
+	}
+
 	public synchronized Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception {
 		
 		// check input
 		if (amount<=0) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") -> invalid amount");
 		
 		// get account
-		Account account = getAccountByName(accountName);
-		if (account==null) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") --> account does not exist");
+		Account account = accountRepository.findByName(accountName);
+		if (account==null) throw new Exception("removeBalanceToAccount("+accountName+","+amount+") --> account does not exist");
 		
 		// add amount and persist
 		account.removeBalance(amount);
 		accountRepository.saveAndFlush(account);
 		return account.getBalance();
 	}
-	
-	private Account getAccountByName(String accountName) {
-		// TODO: improve performance by search index for production
-		if (accountName==null) return null;
-		List<Account> all = getAllAccounts();
-		for (Account account : all) {
-			if (account.getName().equals(accountName)) return account;
-		}
-		return null;
-	}
-	
+
 	private List<Account> getAllAccounts() {
 		 return accountRepository.findAll();
 	}
@@ -163,73 +158,73 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 	@Override
 	public Long getBalanceEarnedOfAccount(String accountName) {
-		
+
 		// get all Transactions of Account
 		List<KonfettiTransaction> accountTransactions = this.getAllTransactionsOfAccount(accountName);
-	
+
 		// calculate inserted, earned and spend
 		CumulatedTransations cumulatedTransations = this.cumulateTransaction(accountTransactions, accountName);
-		
+
 		// first calculate all the spend konfetti against the inserted konfetti
 		long spendAfterInsertes = cumulatedTransations.spend - cumulatedTransations.inserted;
-		
+
 		// if there are still spend konfetti remove them from the earned konfetti
 		if (spendAfterInsertes>0l) cumulatedTransations.earned -= spendAfterInsertes;
-		
+
 		return cumulatedTransations.earned;
 	}
-	
+
 	public class CumulatedTransations {
 		public long earned = 0l;
 		public long inserted = 0l;
 		public long spend = 0l;
 	}
-	
+
 	public CumulatedTransations cumulateTransaction(List<KonfettiTransaction> accountTransactions, String accountName) {
-		
+
 		CumulatedTransations result = new CumulatedTransations();
-		
+
 		for (KonfettiTransaction konfettiTransaction : accountTransactions) {
-			
+
 			if (konfettiTransaction.getFromAccount().equals(accountName)) {
-				
+
 				if (konfettiTransaction.getAmount()>0l) {
 					result.spend += konfettiTransaction.getAmount();
 				} else {
 					LOGGER.warn("negative transaction send from user - check why #"+konfettiTransaction.getId());
 				}
-				
+
 			} else if (konfettiTransaction.getToAccount().equals(accountName)) {
-				
+
 				if (konfettiTransaction.getAmount()>0l) {
-					
+
 					// differ between konfetti earned doing a task and inserted
 					if (konfettiTransaction.getType()==KonfettiTransaction.TYPE_TASKREWARD) {
 						result.earned += konfettiTransaction.getAmount();
 					} else {
 						result.inserted += konfettiTransaction.getAmount();
 					}
-					
+
 				} else {
 					LOGGER.warn("negative transaction send to user - check why #"+konfettiTransaction.getId());
-				}	
-				
+				}
+
 			}
-			
+
 		}
-		
+
 		return result;
 	}
-	
+
 	private List<KonfettiTransaction> getAllTransactionsOfAccount(String accountName) {
 		// TODO improve performance when getting from persistence - just get all and filter is not a good way
 		List<KonfettiTransaction> allTransactions = this.konfettiTransactionRepository.findAll();
 		List<KonfettiTransaction> results = new Vector<KonfettiTransaction>();
 		for (KonfettiTransaction konfettiTransaction : allTransactions) {
 			if (konfettiTransaction.getFromAccount().equals(accountName)) results.add(konfettiTransaction);
-			if (konfettiTransaction.getToAccount().equals(accountName)) results.add(konfettiTransaction);			
+			if (konfettiTransaction.getToAccount().equals(accountName)) results.add(konfettiTransaction);
 		}
 		return results;
 	}
-    
+
 }

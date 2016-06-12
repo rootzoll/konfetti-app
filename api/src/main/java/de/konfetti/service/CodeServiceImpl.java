@@ -57,6 +57,11 @@ public class CodeServiceImpl extends BaseService implements CodeService {
 		this.codeRepository.delete(codeObject.getId());
 		return codeObject;
 	}
+
+	@Override
+	public Code findByCode(String code) {
+		return codeRepository.findByCode(code);
+	}
 	
 	private Code saveWithUniqueCode(Code code) {
 		Code result = null;
@@ -77,15 +82,6 @@ public class CodeServiceImpl extends BaseService implements CodeService {
 	private synchronized Code saveWhenCodeUnique(Code code) throws Exception {
 		if (findByCode(code.getCode())!=null) throw new Exception("code("+code.getCode()+") already in use");
 		return this.codeRepository.saveAndFlush(code);
-	}
-	
-	private Code findByCode(String code) {
-		
-		// TODO: improve performance later
-		
-		List<Code> allCodes = this.codeRepository.findAll();
-		for (Code oneCode : allCodes) if (oneCode.getCode().equals(code)) return oneCode;
-		return null;
 	}
 
     
