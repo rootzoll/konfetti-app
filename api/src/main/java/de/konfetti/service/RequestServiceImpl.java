@@ -83,36 +83,26 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     @Override
     public List<Request> getAllPartyRequests(@NotNull long partyId) {
     	
-    	// TODO: improve performance for production
-    	
-    	List<Request> all = getAll();
+    	List<Request> partyRequests = requestRepository.findByPartyId(partyId);
     	List<Request> result = new ArrayList<Request>();
     	
-    	List<Account> allAccounts = accountRepository.findAll();
-    	
-    	Long partyID = new Long(partyId);
-    	for (Request request : all) {
-			if (partyID.equals(request.getPartyId())) {
-				
-				// get account balance of request
-				Long requestBalance = 0l;
-				final String requestAccountName = AccountingTools.getAccountNameFromRequest(request.getId()); 
-				for (Account account : allAccounts) {
-					if (requestAccountName.equals(account.getName())) {
-						requestBalance = account.getBalance();
-						break;
-					}
-				}
-				request.setKonfettiCount(requestBalance);
-				
-				// get multi language media item
-				if (request.getTitleMultiLangRef()!=null) {
-					request.setTitleMultiLang(mediaRepository.findOne(request.getTitleMultiLangRef()));
-				}
-				
-				// add to result set
-				result.add(request);
-			}
+    	for (Request request : partyRequests) {
+            // get account balance of request
+            Long requestBalance = 0l;
+            final String requestAccountName = AccountingTools.getAccountNameFromRequest(request.getId());
+
+            Account account = accountRepository.findByName(requestAccountName);
+            requestBalance = account.getBalance();
+
+            request.setKonfettiCount(requestBalance);
+
+            // get multi language media item
+            if (request.getTitleMultiLangRef()!=null) {
+                request.setTitleMultiLang(mediaRepository.findOne(request.getTitleMultiLangRef()));
+            }
+
+            // add to result set
+            result.add(request);
 		}
     	
     	return result;
@@ -123,9 +113,6 @@ public class RequestServiceImpl extends BaseService implements RequestService {
         return requestRepository.findOne(requestId);
     }
     
-    private List<Request> getAll() {
-    	return requestRepository.findAll();
-    }
 
 	// TODO improve performance
 	@Override
