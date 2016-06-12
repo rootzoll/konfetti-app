@@ -83,11 +83,9 @@ public class PartyServiceImpl extends BaseService implements PartyService {
         return (Party) partyRepository.findByName(name);
     }
 
-    // TODO improve performance
     @Override
     public Long getNumberOfParties() {
-        return (long) partyRepository.findAll().size();
+        return (long) partyRepository.count();
     }
-
 
 }

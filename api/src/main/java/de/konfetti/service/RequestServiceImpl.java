@@ -114,9 +114,8 @@ public class RequestServiceImpl extends BaseService implements RequestService {
     }
     
 
-	// TODO improve performance
 	@Override
 	public Long getNumberOfRequests() {
-		return (long) requestRepository.findAll().size();
+		return (long) requestRepository.count();
 	}
 }

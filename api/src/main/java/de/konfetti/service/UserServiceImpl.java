@@ -43,7 +43,7 @@ public class UserServiceImpl extends BaseService implements UserService {
     
     }
 
-	// TODO improve performance
+	// TODO improve performance : how can this work if clientId is transient field and is not persited??
 	@Override
 	public User findByClientId(long clientId) {
 		Long clientID = new Long(clientId);
@@ -59,15 +59,9 @@ public class UserServiceImpl extends BaseService implements UserService {
 		return userRepository.saveAndFlush(user);
 	}
 
-	// TODO improve performance
 	@Override
 	public User findByMail(String mail) {
-		if (mail==null) return null;
-		List<User> all = userRepository.findAll();
-		for (User user : all) {
-			if (mail.equals(user.geteMail())) return user;
-		}
-		return null;
+		return userRepository.findByEMail(mail);
 	}
 
 	// TODO improve performance
