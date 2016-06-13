@@ -66,5 +66,29 @@ public class Message {
 	public void setChatId(Long chatId) {
 		this.chatId = chatId;
 	}
-	
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Message message = (Message) o;
+
+		if (id != null ? !id.equals(message.id) : message.id != null) return false;
+		if (chatId != null ? !chatId.equals(message.chatId) : message.chatId != null) return false;
+		if (time != null ? !time.equals(message.time) : message.time != null) return false;
+		if (userId != null ? !userId.equals(message.userId) : message.userId != null) return false;
+		return itemId != null ? itemId.equals(message.itemId) : message.itemId == null;
+
+	}
+
+	@Override
+	public int hashCode() {
+		int result = id != null ? id.hashCode() : 0;
+		result = 31 * result + (chatId != null ? chatId.hashCode() : 0);
+		result = 31 * result + (time != null ? time.hashCode() : 0);
+		result = 31 * result + (userId != null ? userId.hashCode() : 0);
+		result = 31 * result + (itemId != null ? itemId.hashCode() : 0);
+		return result;
+	}
 }

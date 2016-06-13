@@ -42,24 +42,12 @@ public class MessageServiceImpl extends BaseService implements MessageService {
 
 	@Override
 	public List<Message> getAllMessagesOfChat(long id) {
-		// TODO improve perfomance
-		Long ID = new Long(id);
-		List<Message> all = messageRepository.findAll();
-		List<Message> res = new ArrayList<Message>();
-		for (Message message : all) {
-			if (ID.equals(message.getChatId())) res.add(message);
-		}
-		return res;
+		return messageRepository.findByChatId(id);
 	}
 
 	@Override
 	public List<Message> getAllMessagesOfChatSince(long id, long ts) {
-		List<Message> all = getAllMessagesOfChat(id);
-		List<Message> res = new ArrayList<Message>();
-		for (Message message : all) {
-			if (message.getTime()>ts) res.add(message);
-		}
-		return res;
+		return messageRepository.findByChatIdAndTimeGreaterThan(id, ts);
 	}
     
 }
