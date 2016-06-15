@@ -1,16 +1,13 @@
 package de.konfetti.service;
 
 import de.konfetti.data.*;
-
 import de.konfetti.service.exception.ServiceException;
 import de.konfetti.utils.AccountingTools;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,6 +113,6 @@ public class RequestServiceImpl extends BaseService implements RequestService {
 
 	@Override
 	public Long getNumberOfRequests() {
-		return (long) requestRepository.count();
+		return requestRepository.count();
 	}
 }

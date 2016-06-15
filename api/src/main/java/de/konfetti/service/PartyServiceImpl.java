@@ -3,13 +3,11 @@ package de.konfetti.service;
 import de.konfetti.data.Party;
 import de.konfetti.data.PartyRepository;
 import de.konfetti.service.exception.ServiceException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -85,7 +83,7 @@ public class PartyServiceImpl extends BaseService implements PartyService {
 
     @Override
     public Long getNumberOfParties() {
-        return (long) partyRepository.count();
-    }
+		return partyRepository.count();
+	}
 
 }

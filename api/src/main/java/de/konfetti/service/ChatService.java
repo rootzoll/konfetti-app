@@ -1,18 +1,18 @@
 package de.konfetti.service;
 
-import java.util.List;
-
 import de.konfetti.data.Chat;
+
+import java.util.List;
 
 public interface ChatService {
 
     Chat create(Chat chat);
 
-    Chat findById(long id);
+	Chat findById(Long id);
 
-	List<Chat> getAllByRequestId(long id);
-	
-	List<Chat> getAllByUserAndParty(long userId, long partyId);
+	List<Chat> getAllByRequestId(Long id);
+
+	List<Chat> getAllByUserAndParty(Long userId, Long partyId);
 
 	Chat update(Chat chat);
     

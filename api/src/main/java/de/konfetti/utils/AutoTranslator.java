@@ -1,22 +1,18 @@
 package de.konfetti.utils;
 
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import de.konfetti.data.mediaitem.LangData;
-import de.konfetti.data.mediaitem.MultiLang;
-
 import com.google.api.GoogleAPI;
 import com.google.api.translate.Language;
 import com.google.api.translate.Translate;
+import de.konfetti.data.mediaitem.LangData;
+import de.konfetti.data.mediaitem.MultiLang;
+import lombok.extern.slf4j.Slf4j;
+
+import java.util.Set;
 
 
+@Slf4j
 public class AutoTranslator {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(AutoTranslator.class);
-	
 	/*
 	 * LANGUAGE CODES
 	 */
@@ -36,7 +32,7 @@ public class AutoTranslator {
 		
 		String ApiKey = Helper.getPropValues("googletranslate.apikey");
 		if (ApiKey==null) throw new RuntimeException("please set 'googletranslate.apikey' in 'application.properties'");
-		LOGGER.info("Got API-KEY: "+ApiKey);
+		log.info("Got API-KEY: " + ApiKey);
 		
 		// TODO: get API key from config not stored on GitHub
 		GoogleAPI.setHttpReferrer("http://www.konfettiapp.de/api");
@@ -74,7 +70,7 @@ public class AutoTranslator {
 				Language fromLang = getGoogleLanguageFromLangCode(langCode);
 				Language toLang = getGoogleLanguageFromLangCode(toLangCode);
 				String translatedText = Translate.DEFAULT.execute(text, fromLang, toLang);
-				LOGGER.info("Google Translate "+langCode+"->"+toLangCode+" text("+text+") --> ("+translatedText+")"); 
+				log.info("Google Translate " + langCode + "->" + toLangCode + " text(" + text + ") --> (" + translatedText + ")");
 				
 				LangData langData = new LangData();
 				langData.text = translatedText;
@@ -82,7 +78,7 @@ public class AutoTranslator {
 				result.put(toLangCode, langData);
 				
 			} catch (Exception e) {
-			    LOGGER.warn("FAIL translate: "+e.getMessage());
+				log.warn("FAIL translate: " + e.getMessage());
 			}
 			
 		}

@@ -1,38 +1,34 @@
 package de.konfetti.service;
 
-import java.util.List;
-import java.util.Vector;
-
 import de.konfetti.data.Account;
 import de.konfetti.data.AccountRepository;
 import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.KonfettiTransactionRepository;
-
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.List;
 
 // TODO: improve transactional security
+@Slf4j
 @Service
+@NoArgsConstructor
 public class AccountingServiceImpl extends BaseService implements AccountingService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingServiceImpl.class);
-	
-    public AccountingServiceImpl() {
-    }
-
-    @Autowired
-    public AccountingServiceImpl(AccountRepository accountRepository, KonfettiTransactionRepository konfettiTransactionRepository) {
-        this.accountRepository = accountRepository;
-        this.konfettiTransactionRepository = konfettiTransactionRepository;
-    }
+	@Autowired
+	public AccountingServiceImpl(AccountRepository accountRepository, KonfettiTransactionRepository konfettiTransactionRepository) {
+		this.accountRepository = accountRepository;
+		this.konfettiTransactionRepository = konfettiTransactionRepository;
+	}
 
 	@Override
 	public Long getBalanceOfAccount(String accountName) {
 		Account account = accountRepository.findByName(accountName);
-		if (account==null) return null;
+		if (account == null) {
+			return null;
+		}
 		return account.getBalance();
 	}
 
@@ -40,7 +36,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	public boolean createAccount(String accountName) throws Exception {
 		Account account = new Account();
 		account.setName(accountName);
-        return (accountRepository.saveAndFlush(account)!=null);
+		return (accountRepository.saveAndFlush(account) != null);
 	}
 
 	@Override
@@ -53,7 +49,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	}
 
 	/**
-	 * 
+	 *
 	 * @param transactionType --> use FINALS from KonfettiTransaction
 	 * @param fromAccountName
 	 * @param toAccountName
@@ -62,29 +58,33 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	 * @throws Exception
 	 */
 	@Override
-	public synchronized boolean transfereBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception {
-		
-		if (amount<=0) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> invalid amount");
-		
+	public synchronized boolean transferBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception {
+
+		if (amount <= 0)
+			throw new Exception("transferBetweenAccounts(" + fromAccountName + ", " + toAccountName + ", " + amount + ") --> invalid amount");
+
 		Account from = accountRepository.findByName(fromAccountName);
 		Account to = accountRepository.findByName(toAccountName);
-		
+
 		// check accounts exist
-		if (from==null) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> from account does not exist");
-		if (to==null) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> to account does not exist");
-		
+		if (from == null)
+			throw new Exception("transferBetweenAccounts(" + fromAccountName + ", " + toAccountName + ", " + amount + ") --> from account does not exist");
+		if (to == null)
+			throw new Exception("transferBetweenAccounts(" + fromAccountName + ", " + toAccountName + ", " + amount + ") --> to account does not exist");
+
 		// from account has enough balance
-		if (from.getBalance()<amount) throw new Exception("transfereBetweenAccounts("+fromAccountName+", "+toAccountName+", "+amount+") --> from account has too low blanance of "+from.getName());
-		
+		if (from.getBalance() < amount)
+			throw new Exception("transferBetweenAccounts(" + fromAccountName + ", " + toAccountName + ", " + amount + ") --> from account has too low blanance of " + from.getName());
+
 
 		// transfer amount
 		from.removeBalance(amount);
 		to.addBalance(amount);
-		
+
 		// persist
 		accountRepository.saveAndFlush(from);
 		accountRepository.save(to);
-		
+
 		// store transaction
 		KonfettiTransaction konfettiTransaction = new KonfettiTransaction();
 		konfettiTransaction.setType(transactionType);
@@ -93,24 +93,24 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		konfettiTransaction.setToAccount(toAccountName);
 		konfettiTransaction.setAmount(amount);
 		konfettiTransaction = this.konfettiTransactionRepository.saveAndFlush(konfettiTransaction);
-		
+
 		return true;
 	}
 
 	@Override
 	public synchronized Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception {
-		
+
 		// check input
 		if (amount<=0) throw new Exception("addBalanceToAccount("+accountName+","+amount+") -> invalid amount");
-		
+
 		// get account
 		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("addBalanceToAccount("+accountName+","+amount+") --> account does not exist");
-		
+
 		// add amount and persist
 		account.addBalance(amount);
 		accountRepository.saveAndFlush(account);
-		
+
 		// store transaction
 		KonfettiTransaction konfettiTransaction = new KonfettiTransaction();
 		konfettiTransaction.setType(transactionType);
@@ -118,7 +118,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		konfettiTransaction.setToAccount(accountName);
 		konfettiTransaction.setAmount(amount);
 		konfettiTransaction = this.konfettiTransactionRepository.saveAndFlush(konfettiTransaction);
-		
+
 		return account.getBalance();
 	}
 
@@ -128,14 +128,14 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	}
 
 	public synchronized Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception {
-		
+
 		// check input
 		if (amount<=0) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") -> invalid amount");
-		
+
 		// get account
 		Account account = accountRepository.findByName(accountName);
 		if (account==null) throw new Exception("removeBalanceToAccount("+accountName+","+amount+") --> account does not exist");
-		
+
 		// add amount and persist
 		account.removeBalance(amount);
 		accountRepository.saveAndFlush(account);
@@ -143,7 +143,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	}
 
 	private List<Account> getAllAccounts() {
-		 return accountRepository.findAll();
+		return accountRepository.findAll();
 	}
 
 	@Override
@@ -160,7 +160,8 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	public Long getBalanceEarnedOfAccount(String accountName) {
 
 		// get all Transactions of Account
-		List<KonfettiTransaction> accountTransactions = this.getAllTransactionsOfAccount(accountName);
+		List<KonfettiTransaction> accountTransactions =
+				konfettiTransactionRepository.findByFromAccountOrToAccount(accountName, accountName);
 
 		// calculate inserted, earned and spend
 		CumulatedTransations cumulatedTransations = this.cumulateTransaction(accountTransactions, accountName);
@@ -174,13 +175,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return cumulatedTransations.earned;
 	}
 
-	public class CumulatedTransations {
-		public long earned = 0l;
-		public long inserted = 0l;
-		public long spend = 0l;
-	}
-
-	public CumulatedTransations cumulateTransaction(List<KonfettiTransaction> accountTransactions, String accountName) {
+	private CumulatedTransations cumulateTransaction(List<KonfettiTransaction> accountTransactions, String accountName) {
 
 		CumulatedTransations result = new CumulatedTransations();
 
@@ -188,15 +183,15 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 
 			if (konfettiTransaction.getFromAccount().equals(accountName)) {
 
-				if (konfettiTransaction.getAmount()>0l) {
+				if (konfettiTransaction.getAmount() > 0L) {
 					result.spend += konfettiTransaction.getAmount();
 				} else {
-					LOGGER.warn("negative transaction send from user - check why #"+konfettiTransaction.getId());
+					log.warn("negative transaction send from user - check why #" + konfettiTransaction.getId());
 				}
 
 			} else if (konfettiTransaction.getToAccount().equals(accountName)) {
 
-				if (konfettiTransaction.getAmount()>0l) {
+				if (konfettiTransaction.getAmount() > 0L) {
 
 					// differ between konfetti earned doing a task and inserted
 					if (konfettiTransaction.getType()==KonfettiTransaction.TYPE_TASKREWARD) {
@@ -206,7 +201,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 					}
 
 				} else {
-					LOGGER.warn("negative transaction send to user - check why #"+konfettiTransaction.getId());
+					log.warn("negative transaction send to user - check why #" + konfettiTransaction.getId());
 				}
 
 			}
@@ -216,15 +211,10 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return result;
 	}
 
-	private List<KonfettiTransaction> getAllTransactionsOfAccount(String accountName) {
-		// TODO improve performance when getting from persistence - just get all and filter is not a good way
-		List<KonfettiTransaction> allTransactions = this.konfettiTransactionRepository.findAll();
-		List<KonfettiTransaction> results = new Vector<KonfettiTransaction>();
-		for (KonfettiTransaction konfettiTransaction : allTransactions) {
-			if (konfettiTransaction.getFromAccount().equals(accountName)) results.add(konfettiTransaction);
-			if (konfettiTransaction.getToAccount().equals(accountName)) results.add(konfettiTransaction);
-		}
-		return results;
+	private class CumulatedTransations {
+		long earned = 0l;
+		long inserted = 0l;
+		long spend = 0l;
 	}
 
 }

@@ -1,6 +1,11 @@
 package de.konfetti.data;
 
-import javax.persistence.*;
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 /*
  * special class just to externalize the accounting of all objects related to carry value
@@ -12,6 +17,7 @@ import javax.persistence.*;
  * the accounting should not be done on those objects - thats what the seperated accounting services are for
  * 
  */
+@Data
 @Entity
 public class Account {
 	
@@ -23,27 +29,7 @@ public class Account {
     private String name;
     
     // the actual balance of the account
-    private Long balance = 0l;
-      
-    /*
-     * METHODS 
-     */
-    
-    public Long getId() {
-		return id;
-	}
-    
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-    
-	public Long getBalance() {
-		return balance;
-	}
+	private Long balance = 0L;
 
 	public void addBalance(Long balance) {
 		this.balance = this.balance + balance;

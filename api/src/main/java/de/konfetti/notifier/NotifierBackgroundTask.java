@@ -1,12 +1,13 @@
 package de.konfetti.notifier;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.google.common.cache.CacheBuilder;
+import de.konfetti.data.Notification;
+import de.konfetti.data.User;
+import de.konfetti.service.NotificationService;
+import de.konfetti.service.UserService;
+import de.konfetti.utils.EMailManager;
+import de.konfetti.utils.PushManager;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.Cache.ValueWrapper;
@@ -17,14 +18,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.google.common.cache.CacheBuilder;
-
-import de.konfetti.data.Notification;
-import de.konfetti.data.User;
-import de.konfetti.service.NotificationService;
-import de.konfetti.service.UserService;
-import de.konfetti.utils.EMailManager;
-import de.konfetti.utils.PushManager;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 /*
  * A task that is scheduled to check in short periods 
@@ -35,6 +32,7 @@ import de.konfetti.utils.PushManager;
  * TODO: add push notification support - just email for now
  *
  */
+@Slf4j
 @Component
 public class NotifierBackgroundTask {
 
@@ -43,9 +41,7 @@ public class NotifierBackgroundTask {
 	private static final String PUSHTYPE_FAIL = "fail";
 	private static final String PUSHTYPE_EMAIL = "email";
 	private static final String PUSHTYPE_PUSH = "push";
-	
-    private static final Logger LOGGER = LoggerFactory.getLogger(NotifierBackgroundTask.class);
-	
+
 	private static long lastProcessingStart = 0l;
 	
     @Autowired
@@ -70,23 +66,23 @@ public class NotifierBackgroundTask {
      */
 	
 	private Cache processedNotificationsCache;
-    
-	@Bean
-	public CacheManager cacheManager() {
-		GuavaCacheManager guavaCacheManager =  new GuavaCacheManager();
-		guavaCacheManager.setCacheBuilder(CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES));
-		return guavaCacheManager;
+
+	public NotifierBackgroundTask() {
+		log.info("CONTRUCTOR BACKGROUNDTASK");
+		this.processedNotificationsCache = this.cacheManager().getCache("processedNotifications");
+		this.spamBlockerPerUserCache = this.cacheManager().getCache("spamBlockerPerUser");
+		this.randomGenerator = new Random();
 	}
 	
 	/*
 	 * Constructor
 	 */
-	
-	public NotifierBackgroundTask() {
-		LOGGER.info("CONTRUCTOR BACKGROUNDTASK");
-		this.processedNotificationsCache = this.cacheManager().getCache("processedNotifications");
-		this.spamBlockerPerUserCache = this.cacheManager().getCache("spamBlockerPerUser");
-		this.randomGenerator = new Random();
+
+	@Bean
+	public CacheManager cacheManager() {
+		GuavaCacheManager guavaCacheManager = new GuavaCacheManager();
+		guavaCacheManager.setCacheBuilder(CacheBuilder.newBuilder().expireAfterWrite(15, TimeUnit.MINUTES));
+		return guavaCacheManager;
 	}
     
 	/*
@@ -100,9 +96,9 @@ public class NotifierBackgroundTask {
     	
     	// prepare start
     	lastProcessingStart = System.currentTimeMillis();
-    	LOGGER.debug("Starting NotifierBackgroundTask loop ...");
-    
-    	// start notifier background task loop and catch all problems
+		log.debug("Starting NotifierBackgroundTask loop ...");
+
+		// start notifier background task loop and catch all problems
     	try {
     		
     		// do the actual work
@@ -110,14 +106,14 @@ public class NotifierBackgroundTask {
     		
         	// statistics
         	long timeSinceStartupInSeconds = (System.currentTimeMillis() - lastProcessingStart) / 1000l;
-        	LOGGER.info("Ended NotifierBackgroundTask loop in "+timeSinceStartupInSeconds+" seconds.");
-    		
-    	} catch (Exception e) {
-    		LOGGER.error("EXCEPTION on NotifierBackgroundTask loop: ", e);
-    		e.printStackTrace();
+			log.info("Ended NotifierBackgroundTask loop in " + timeSinceStartupInSeconds + " seconds.");
+
+		} catch (Exception e) {
+			log.error("EXCEPTION on NotifierBackgroundTask loop: ", e);
+			e.printStackTrace();
     	}
-    	
-    	LOGGER.info("");
+
+		log.info("");
 
     }
     
@@ -133,85 +129,85 @@ public class NotifierBackgroundTask {
     	
     	// TODO: get just pending notifications form database (at the moment all that are not deleted)
     	List<Notification> pendingNotifications = notificationService.getAllPossiblePushNotifications();
-    	LOGGER.info("--> PENDING NOTIFICATIONS: "+pendingNotifications.size());
-    	
-    	for (Notification notification : pendingNotifications) {
+		log.info("--> PENDING NOTIFICATIONS: " + pendingNotifications.size());
+
+		for (Notification notification : pendingNotifications) {
     		
 			// check if already handled since last restart
 			if (!wasNotificationAlreadyGivenHigherAttention(notification)) {
-    			
-		    	LOGGER.info("|");
-    			LOGGER.info(" -> PROCESSING NOTIFICATION("+notification.getId()+")");
-    			
-        		// decide if notification needs more attention from user
+
+				log.info("|");
+				log.info(" -> PROCESSING NOTIFICATION(" + notification.getId() + ")");
+
+				// decide if notification needs more attention from user
         		if (shouldNotificationGetHigherAttention(notification)) {
-    				
-        			LOGGER.info("--> needs higher attention");
-        			
-        			// to prevent spamming the user
+
+					log.info("--> needs higher attention");
+
+					// to prevent spamming the user
         			if (userNotFeelingSpammedYet(notification)) {
-            			
-        				LOGGER.info(" -> SEND PUSH TO USER");
-        				
-        				// decide if eMail or push notification
+
+						log.info(" -> SEND PUSH TO USER");
+
+						// decide if eMail or push notification
         				String typeOfPush = getTypeOfPushForUser(notification);
         				
         				// if not possible ok - see as done
         				if (PUSHTYPE_NOTPOSSIBLE.equals(typeOfPush)) {
-    						LOGGER.info(" -> OK - NOT POSSIBLE TO SEND ANY HIGHER PUSH TO USER");
-    						markNotificationAsPushed(notification, typeOfPush);
+							log.info(" -> OK - NOT POSSIBLE TO SEND ANY HIGHER PUSH TO USER");
+							markNotificationAsPushed(notification, typeOfPush);
         					return;
         				}
         				
         				// email push
         				if (PUSHTYPE_EMAIL.equals(typeOfPush)) {
-        					
-        					LOGGER.info(" -> SEND EMAIL");
-        					if (sendPushMail(notification)) {
-        						
-        						LOGGER.info(" -> OK - PUSH SEND BY EMAIL");
-        						markNotificationAsPushed(notification, typeOfPush);
+
+							log.info(" -> SEND EMAIL");
+							if (sendPushMail(notification)) {
+
+								log.info(" -> OK - PUSH SEND BY EMAIL");
+								markNotificationAsPushed(notification, typeOfPush);
         						
         						// remember last notification to user for short period of time
         						this.spamBlockerPerUserCache.put(notification.getUserId(), notification);
         					
         					} else {
-        						
-        						LOGGER.warn(" -> SEND NOT SUPPORTED PUSH: "+typeOfPush);
-          						markNotificationAsPushed(notification, PUSHTYPE_FAIL);
+
+								log.warn(" -> SEND NOT SUPPORTED PUSH: " + typeOfPush);
+								markNotificationAsPushed(notification, PUSHTYPE_FAIL);
           						
         					}
         					
             				// do push notification
-            				} else if (PUSHTYPE_PUSH.equals(typeOfPush)) {	
-            					
-            					LOGGER.info(" -> SEND PUSH");
-            					sendPushPush(notification);
-            					
-         						LOGGER.info(" -> OK - PUSH SEND BY EMAIL");
-        						markNotificationAsPushed(notification, typeOfPush);
+            				} else if (PUSHTYPE_PUSH.equals(typeOfPush)) {
+
+							log.info(" -> SEND PUSH");
+							sendPushPush(notification);
+
+							log.info(" -> OK - PUSH SEND BY EMAIL");
+							markNotificationAsPushed(notification, typeOfPush);
         						
         						// remember last notification to user for short period of time
         						this.spamBlockerPerUserCache.put(notification.getUserId(), notification);
             					
             				// not supported push
             				} else {
-            					
-            					LOGGER.warn(" -> SEND TO PUSH: "+typeOfPush);
-            					
-            				}        				
+
+							log.warn(" -> SEND TO PUSH: " + typeOfPush);
+
+						}
         				
         			} else {
-            			LOGGER.info(" -> USER UNDER SPAM PROTECTION - DELAYING PUSH");
-        			}
+						log.info(" -> USER UNDER SPAM PROTECTION - DELAYING PUSH");
+					}
     				
     			} else {
-        			LOGGER.info("--> IGNORE");
-    			}
+					log.info("--> IGNORE");
+				}
     			
     		} else {
-    			LOGGER.debug(" -> ALREADY PROCESSED");
-    		}
+				log.debug(" -> ALREADY PROCESSED");
+			}
     		
 		}
     	
@@ -223,7 +219,7 @@ public class NotifierBackgroundTask {
 	private boolean shouldNotificationGetHigherAttention(Notification notification) {
 
 		long oldInSeconds = (System.currentTimeMillis() - notification.getTimeStamp()) / 1000l;
-		LOGGER.info("Notification seconds("+oldInSeconds+") id("+notification.getId()+") party("+notification.getPartyId()+") user("+notification.getUserId()+") type("+notification.getType()+")");
+		log.info("Notification seconds(" + oldInSeconds + ") id(" + notification.getId() + ") party(" + notification.getPartyId() + ") user(" + notification.getUserId() + ") type(" + notification.getType() + ")");
 		
 		/*
 		 * SIMPLE HIGHER ATTENTION CASES
@@ -245,7 +241,7 @@ public class NotifierBackgroundTask {
 			// filter all that dont have email or push active
 			List<User> hasPush = new  ArrayList<User>();
 			for (User user : reviewer) {
-				if ((user.getPushActive()) || ((user.geteMail()!=null) && (user.geteMail().trim().length()>2))) {
+				if ((user.getPushActive()) || ((user.getEMail() != null) && (user.getEMail().trim().length() > 2))) {
 					hasPush.add(user);
 				}
 			}
@@ -253,7 +249,7 @@ public class NotifierBackgroundTask {
 			
 			// no reviewers --> close notification
 			if (reviewer.size()<=0) {
-				LOGGER.warn("Party("+notification.getPartyId()+") has no admin or reviewer to deliver notification to.");
+				log.warn("Party(" + notification.getPartyId() + ") has no admin or reviewer to deliver notification to.");
 				markNotificationAsPushed(notification, PUSHTYPE_IGNORE);
 				return false;
 			}
@@ -261,7 +257,7 @@ public class NotifierBackgroundTask {
 			// find take one by random and set as new user reference in notification
 			int randomIndex = this.randomGenerator.nextInt(reviewer.size());
 			Long randomReviewerId =  reviewer.get(randomIndex).getId();
-			LOGGER.debug("REVIEWER is user("+randomReviewerId+")");
+			log.debug("REVIEWER is user(" + randomReviewerId + ")");
 			notification.setUserId(randomReviewerId);
 			
 			return true;
@@ -287,8 +283,8 @@ public class NotifierBackgroundTask {
     		return notification.getHigherPushDone();
     	} else {
     		long oldInSeconds = (System.currentTimeMillis() - notification.getTimeStamp()) / 1000l;
-    		LOGGER.warn("Cache has different state than Notification("+notification.getId()+") type("+notification.getType()+") old("+oldInSeconds+")secs from persistence: "+cacheState.get());
-    		return true;
+			log.warn("Cache has different state than Notification(" + notification.getId() + ") type(" + notification.getType() + ") old(" + oldInSeconds + ")secs from persistence: " + cacheState.get());
+			return true;
     	}
 		
 	}
@@ -309,8 +305,8 @@ public class NotifierBackgroundTask {
     	} else {
     		
     		// delete
-    		LOGGER.info("Deleting notification("+notification.getId()+")");
-     		notificationService.delete(notification.getId());	
+			log.info("Deleting notification(" + notification.getId() + ")");
+			notificationService.delete(notification.getId());
     	}
     }
     
@@ -325,7 +321,7 @@ public class NotifierBackgroundTask {
     	
 		User user = userService.findById(notification.getUserId());
 		if (user.wasUserActiveInLastMinutes(3)) {
-			LOGGER.info("User("+user.getId()+") was/is active on App ... wait with push.");
+			log.info("User(" + user.getId() + ") was/is active on App ... wait with push.");
 			return false;
 		}
     	
@@ -343,12 +339,12 @@ public class NotifierBackgroundTask {
     	
     	// if there was a notification recently - ignore this one if same type
     	if (lastNotificationSendToUser.getType()==notification.getType()) {
-    		LOGGER.info("Notification is same type as send recently - IGNORE");
-    		markNotificationAsPushed(notification, PUSHTYPE_IGNORE);
+			log.info("Notification is same type as send recently - IGNORE");
+			markNotificationAsPushed(notification, PUSHTYPE_IGNORE);
     		return false;
     	}
 
-		LOGGER.info("User got push noti recently --- so skipping this time");
+		log.info("User got push noti recently --- so skipping this time");
 		return false;
 	}
     
@@ -371,7 +367,7 @@ public class NotifierBackgroundTask {
 		}
 		
 		// check for eMail
-		if ((user.geteMail()==null) || (user.geteMail().trim().length()<4)) {
+		if ((user.getEMail() == null) || (user.getEMail().trim().length() < 4)) {
 			return PUSHTYPE_NOTPOSSIBLE;
 		}
 	
@@ -386,11 +382,11 @@ public class NotifierBackgroundTask {
 		User user = userService.findById(notification.getUserId());
 		
 		// TODO multi lang --- see user setting
-		if (EMailManager.getInstance().sendMail(javaMailSender, user.geteMail(), "[konfetti] new events in your neighborhood", "Open Konfetti App so see more :D", null)) {
-			LOGGER.info("OK - PUSH SEND BY EMAIL ("+user.geteMail()+")");
+		if (EMailManager.getInstance().sendMail(javaMailSender, user.getEMail(), "[konfetti] new events in your neighborhood", "Open Konfetti App so see more :D", null)) {
+			log.info("OK - PUSH SEND BY EMAIL (" + user.getEMail() + ")");
 			return true;
 		} else {
-			LOGGER.warn("FAIL - PUSH SEND BY EMAIL ("+user.geteMail()+")");
+			log.warn("FAIL - PUSH SEND BY EMAIL (" + user.getEMail() + ")");
 			return false;
 		}		
 	}
@@ -410,7 +406,7 @@ public class NotifierBackgroundTask {
 				null, // locale 
 				null, // localeMessage
 				notification.getId());
-		LOGGER.info("OK - PUSH SEND BY PUSH ("+user.getPushID()+")");
+		log.info("OK - PUSH SEND BY PUSH (" + user.getPushID() + ")");
 	
 		return true;
 	}

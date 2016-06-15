@@ -1,26 +1,17 @@
 package de.konfetti.service;
 
-import java.util.List;
-
 import de.konfetti.data.Code;
 import de.konfetti.data.CodeRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class CodeServiceImpl extends BaseService implements CodeService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CodeServiceImpl.class);
-
-    public CodeServiceImpl() {
-    }
-
-    @Autowired
-    public CodeServiceImpl(CodeRepository codeRepository) {
+	@Autowired
+	public CodeServiceImpl(CodeRepository codeRepository) {
         this.codeRepository = codeRepository;
     }
 
@@ -72,10 +63,10 @@ public class CodeServiceImpl extends BaseService implements CodeService {
 				code.setCode(""+Code.generadeCodeNumber());
 				result = saveWhenCodeUnique(code);
 			} catch (Exception e) {
-				LOGGER.warn("Was not able to use code ... will try again");
+				log.warn("Was not able to use code ... will try again");
 			}
 		} while((result==null) && (count<100));
-		if (count>=100) LOGGER.error("Even afer 100 tries ... not unique code found.");
+		if (count >= 100) log.error("Even afer 100 tries ... not unique code found.");
 		return result;
 	}
 	

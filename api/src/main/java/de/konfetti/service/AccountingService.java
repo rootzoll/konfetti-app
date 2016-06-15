@@ -22,7 +22,7 @@ public interface AccountingService {
 
 	Account findAccountByName(String name);
 
-	boolean transfereBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception;
+	boolean transferBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception;
 
 	// returns the resulting account balance
 	Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception;

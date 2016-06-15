@@ -1,10 +1,6 @@
 package de.konfetti.controller;
 
-import java.io.ByteArrayInputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
- 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.konfetti.data.Client;
 import de.konfetti.data.MediaItem;
 import de.konfetti.data.mediaitem.MultiLang;
@@ -12,31 +8,25 @@ import de.konfetti.service.ClientService;
 import de.konfetti.service.MediaService;
 import de.konfetti.service.UserService;
 import de.konfetti.utils.AutoTranslator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.io.ByteArrayInputStream;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("konfetti/api/media")
 public class MediaItemController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MediaItemController.class);
-	
-    private final ClientService clientService;
-    private final MediaService mediaService;
+	private final ClientService clientService;
+	private final MediaService mediaService;
     //private final UserService userService;
 
     @Autowired
@@ -84,24 +74,24 @@ public class MediaItemController {
     	
     	// MULTI-LANG auto translation
     	if (MediaItem.TYPE_MULTILANG.equals(template.getType())) {
-    		LOGGER.info("Is MultiLang --> AUTOTRANSLATION");
-    		try {
+			log.info("Is MultiLang --> AUTOTRANSLATION");
+			try {
     			MultiLang multiLang = new ObjectMapper().readValue(template.getData(), MultiLang.class);
     			multiLang = AutoTranslator.getInstance().reTranslate(multiLang);
     			template.setData(new ObjectMapper().writeValueAsString(multiLang));
-    			LOGGER.info(template.getData());
-    		} catch (Exception e) {
+				log.info(template.getData());
+			} catch (Exception e) {
     			e.printStackTrace();
     			throw new Exception("MultiLang Data is not valid: "+e.getMessage());
     		}
     	} else {
-    		LOGGER.info("NOT MultiLang --> no special treatment needed");
-    	}
+			log.info("NOT MultiLang --> no special treatment needed");
+		}
     	  	    	
     	// create new user
     	MediaItem item = mediaService.create(template);
-    	LOGGER.info("OK mediaItem("+item.getId()+") created");
-        return item;
+		log.info("OK mediaItem(" + item.getId() + ") created");
+		return item;
     }
     
     @CrossOrigin(origins = "*")
@@ -134,9 +124,9 @@ public class MediaItemController {
     		
     	// get mime type
     	String mimeType = base64.substring(5, base64.indexOf(';'));
-    	LOGGER.info("READ IMAGE("+mediaId+") with MIMETYPE("+mimeType+")");
-    	
-    	// convert to binary
+		log.info("READ IMAGE(" + mediaId + ") with MIMETYPE(" + mimeType + ")");
+
+		// convert to binary
     	byte[] data = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64.substring(startIndex));
 
     	// return response

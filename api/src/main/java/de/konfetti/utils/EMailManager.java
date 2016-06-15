@@ -1,16 +1,14 @@
 package de.konfetti.utils;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 
 import javax.activation.URLDataSource;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 
 /*
@@ -22,13 +20,12 @@ import org.springframework.mail.javamail.MimeMessageHelper;
  * 
  * --> see application.properties file for configuration
  */
+@Slf4j
 public class EMailManager {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(EMailManager.class);
-		
-    private static EMailManager singletonInstance = null;
-    
-    // private constructor - Singleton
+	private static EMailManager singletonInstance = null;
+
+	// private constructor - Singleton
     private EMailManager() {}
     
     // Singleton Getter
@@ -48,14 +45,14 @@ public class EMailManager {
 	public boolean sendMail(JavaMailSender javaMailSender, String toAddress, String subjectText, String bodyText, String urlAttachment) {
     	
 		if ((toAddress==null) || (toAddress.trim().length()<=3)) {
-			LOGGER.warn("failed sending email because toAdrress("+toAddress+") is unvalid");
+			log.warn("failed sending email because toAdrress(" + toAddress + ") is unvalid");
 			return false;
 		}
 		
 		String fromAddress = Helper.getPropValues("konfetti.sendFromMailAddress");
 		String replyAddress = Helper.getPropValues("konfetti.replyToMailAddress");
 		if ((fromAddress==null) || (fromAddress.trim().length()==0) || fromAddress.trim().equals("test@test.de")) {
-			LOGGER.warn("eMail not configured in application.properties - skipping sending to "+toAddress);
+			log.warn("eMail not configured in application.properties - skipping sending to " + toAddress);
 			return false;
 		}
 		if (replyAddress==null) replyAddress = fromAddress;
@@ -65,8 +62,8 @@ public class EMailManager {
 		
 		MimeMessage mail = javaMailSender.createMimeMessage();
         try {
-        	LOGGER.info("EMailManager - sending eMail to("+toAddress+") ...");
-            MimeMessageHelper helper = new MimeMessageHelper(mail, true);
+			log.info("EMailManager - sending eMail to(" + toAddress + ") ...");
+			MimeMessageHelper helper = new MimeMessageHelper(mail, true);
             helper.setTo(toAddress);
             helper.setReplyTo(replyAddress);
             helper.setFrom(fromAddress);
@@ -74,17 +71,17 @@ public class EMailManager {
             helper.setText(bodyText);
     		if (urlAttachment!=null) helper.addAttachment("KonfettiCoupons.pdf", new URLDataSource(new URL(urlAttachment)));
             javaMailSender.send(mail);
-        	LOGGER.info("EMailManager - OK sending eMail to("+toAddress+")");
-            return true;
+			log.info("EMailManager - OK sending eMail to(" + toAddress + ")");
+			return true;
         } catch (MessagingException e) {
-        	LOGGER.warn("EMailManager - FAIL sending eMail to("+toAddress+"): "+e.getMessage());
-            e.printStackTrace();
+			log.warn("EMailManager - FAIL sending eMail to(" + toAddress + "): " + e.getMessage());
+			e.printStackTrace();
         } catch (MalformedURLException e) {
-        	LOGGER.warn("EMailManager - FAIL sending eMail to("+toAddress+") attachementURL("+urlAttachment+"): "+e.getMessage());
-        	e.printStackTrace();
+			log.warn("EMailManager - FAIL sending eMail to(" + toAddress + ") attachementURL(" + urlAttachment + "): " + e.getMessage());
+			e.printStackTrace();
         } catch (Exception e) {
-        	LOGGER.warn("EMailManager - FAIL sending eMail to("+toAddress+") attachementURL("+urlAttachment+") mailserver("+Helper.getPropValues("spring.mail.host")+":"+Helper.getPropValues("spring.mail.port")+"): "+e.getMessage());
-        	e.printStackTrace();
+			log.warn("EMailManager - FAIL sending eMail to(" + toAddress + ") attachementURL(" + urlAttachment + ") mailserver(" + Helper.getPropValues("spring.mail.host") + ":" + Helper.getPropValues("spring.mail.port") + "): " + e.getMessage());
+			e.printStackTrace();
         }
         return false;
 	}

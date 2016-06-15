@@ -9,8 +9,8 @@ public enum  RequestState {
 
     private String statusCode;
 
-    private RequestState(String s) {
-        statusCode = s;
+	RequestState(String s) {
+		statusCode = s;
     }
 
     public String getStatusCode() {

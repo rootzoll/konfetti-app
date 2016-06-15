@@ -22,7 +22,88 @@ THE SOFTWARE.
 */
 
 // JSON2 by Douglas Crockford (minified).
-var JSON;JSON||(JSON={}),function(){function str(a,b){var c,d,e,f,g=gap,h,i=b[a];i&&typeof i=="object"&&typeof i.toJSON=="function"&&(i=i.toJSON(a)),typeof rep=="function"&&(i=rep.call(b,a,i));switch(typeof i){case"string":return quote(i);case"number":return isFinite(i)?String(i):"null";case"boolean":case"null":return String(i);case"object":if(!i)return"null";gap+=indent,h=[];if(Object.prototype.toString.apply(i)==="[object Array]"){f=i.length;for(c=0;c<f;c+=1)h[c]=str(c,i)||"null";e=h.length===0?"[]":gap?"[\n"+gap+h.join(",\n"+gap)+"\n"+g+"]":"["+h.join(",")+"]",gap=g;return e}if(rep&&typeof rep=="object"){f=rep.length;for(c=0;c<f;c+=1)typeof rep[c]=="string"&&(d=rep[c],e=str(d,i),e&&h.push(quote(d)+(gap?": ":":")+e))}else for(d in i)Object.prototype.hasOwnProperty.call(i,d)&&(e=str(d,i),e&&h.push(quote(d)+(gap?": ":":")+e));e=h.length===0?"{}":gap?"{\n"+gap+h.join(",\n"+gap)+"\n"+g+"}":"{"+h.join(",")+"}",gap=g;return e}}function quote(a){escapable.lastIndex=0;return escapable.test(a)?'"'+a.replace(escapable,function(a){var b=meta[a];return typeof b=="string"?b:"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)})+'"':'"'+a+'"'}function f(a){return a<10?"0"+a:a}"use strict",typeof Date.prototype.toJSON!="function"&&(Date.prototype.toJSON=function(a){return isFinite(this.valueOf())?this.getUTCFullYear()+"-"+f(this.getUTCMonth()+1)+"-"+f(this.getUTCDate())+"T"+f(this.getUTCHours())+":"+f(this.getUTCMinutes())+":"+f(this.getUTCSeconds())+"Z":null},String.prototype.toJSON=Number.prototype.toJSON=Boolean.prototype.toJSON=function(a){return this.valueOf()});var cx=/[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,escapable=/[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g,gap,indent,meta={"\b":"\\b","\t":"\\t","\n":"\\n","\f":"\\f","\r":"\\r",'"':'\\"',"\\":"\\\\"},rep;typeof JSON.stringify!="function"&&(JSON.stringify=function(a,b,c){var d;gap="",indent="";if(typeof c=="number")for(d=0;d<c;d+=1)indent+=" ";else typeof c=="string"&&(indent=c);rep=b;if(!b||typeof b=="function"||typeof b=="object"&&typeof b.length=="number")return str("",{"":a});throw new Error("JSON.stringify")}),typeof JSON.parse!="function"&&(JSON.parse=function(text,reviver){function walk(a,b){var c,d,e=a[b];if(e&&typeof e=="object")for(c in e)Object.prototype.hasOwnProperty.call(e,c)&&(d=walk(e,c),d!==undefined?e[c]=d:delete e[c]);return reviver.call(a,b,e)}var j;text=String(text),cx.lastIndex=0,cx.test(text)&&(text=text.replace(cx,function(a){return"\\u"+("0000"+a.charCodeAt(0).toString(16)).slice(-4)}));if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g,"@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g,"]").replace(/(?:^|:|,)(?:\s*\[)+/g,""))){j=eval("("+text+")");return typeof reviver=="function"?walk({"":j},""):j}throw new SyntaxError("JSON.parse")})}()
+var JSON;
+JSON || (JSON = {}), function () {
+	function str(a, b) {
+		var c, d, e, f, g = gap, h, i = b[a];
+		i && typeof i == "object" && typeof i.toJSON == "function" && (i = i.toJSON(a)), typeof rep == "function" && (i = rep.call(b, a, i));
+		switch (typeof i) {
+			case"string":
+				return quote(i);
+			case"number":
+				return isFinite(i) ? String(i) : "null";
+			case"boolean":
+			case"null":
+				return String(i);
+			case"object":
+				if (!i)return "null";
+				gap += indent, h = [];
+				if (Object.prototype.toString.apply(i) === "[object Array]") {
+					f = i.length;
+					for (c = 0; c < f; c += 1)h[c] = str(c, i) || "null";
+					e = h.length === 0 ? "[]" : gap ? "[\n" + gap + h.join(",\n" + gap) + "\n" + g + "]" : "[" + h.join(",") + "]", gap = g;
+					return e
+				}
+				if (rep && typeof rep == "object") {
+					f = rep.length;
+					for (c = 0; c < f; c += 1)typeof rep[c] == "string" && (d = rep[c], e = str(d, i), e && h.push(quote(d) + (gap ? ": " : ":") + e))
+				} else for (d in i)Object.prototype.hasOwnProperty.call(i, d) && (e = str(d, i), e && h.push(quote(d) + (gap ? ": " : ":") + e));
+				e = h.length === 0 ? "{}" : gap ? "{\n" + gap + h.join(",\n" + gap) + "\n" + g + "}" : "{" + h.join(",") + "}", gap = g;
+				return e
+		}
+	}
+
+	function quote(a) {
+		escapable.lastIndex = 0;
+		return escapable.test(a) ? '"' + a.replace(escapable, function (a) {
+			var b = meta[a];
+			return typeof b == "string" ? b : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4)
+		}) + '"' : '"' + a + '"'
+	}
+
+	function f(a) {
+		return a < 10 ? "0" + a : a
+	}
+
+	"use strict", typeof Date.prototype.toJSON != "function" && (Date.prototype.toJSON = function (a) {
+		return isFinite(this.valueOf()) ? this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z" : null
+	}, String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function (a) {
+		return this.valueOf()
+	});
+	var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, gap, indent, meta = {
+		"\b": "\\b",
+		"\t": "\\t",
+		"\n": "\\n",
+		"\f": "\\f",
+		"\r": "\\r",
+		'"': '\\"',
+		"\\": "\\\\"
+	}, rep;
+	typeof JSON.stringify != "function" && (JSON.stringify = function (a, b, c) {
+		var d;
+		gap = "", indent = "";
+		if (typeof c == "number")for (d = 0; d < c; d += 1)indent += " "; else typeof c == "string" && (indent = c);
+		rep = b;
+		if (!b || typeof b == "function" || typeof b == "object" && typeof b.length == "number")return str("", {"": a});
+		throw new Error("JSON.stringify")
+	}), typeof JSON.parse != "function" && (JSON.parse = function (text, reviver) {
+		function walk(a, b) {
+			var c, d, e = a[b];
+			if (e && typeof e == "object")for (c in e)Object.prototype.hasOwnProperty.call(e, c) && (d = walk(e, c), d !== undefined ? e[c] = d : delete e[c]);
+			return reviver.call(a, b, e)
+		}
+
+		var j;
+		text = String(text), cx.lastIndex = 0, cx.test(text) && (text = text.replace(cx, function (a) {
+			return "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4)
+		}));
+		if (/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) {
+			j = eval("(" + text + ")");
+			return typeof reviver == "function" ? walk({"": j}, "") : j
+		}
+		throw new SyntaxError("JSON.parse")
+	})
+}();
 
 
 //     [*] Including lib/index.js
@@ -57,7 +138,7 @@ REventTarget.prototype.addEventListener = function (eventType, listener) {
     if(utils.arrIndexOf(arr, listener) === -1) {
         arr.push(listener);
     }
-    return;
+
 };
 
 REventTarget.prototype.removeEventListener = function (eventType, listener) {
@@ -74,7 +155,7 @@ REventTarget.prototype.removeEventListener = function (eventType, listener) {
         }
         return;
     }
-    return;
+
 };
 
 REventTarget.prototype.dispatchEvent = function (event) {
@@ -275,7 +356,7 @@ utils.countRTO = function (rtt) {
         rto = rtt + 200; // 200msec < rto <= 300msec
     }
     return rto;
-}
+};
 
 utils.log = function() {
     if (_window.console && console.log && console.log.apply) {
@@ -408,8 +489,8 @@ var JSONQuote = (JSON && JSON.stringify) || function(string) {
 // characters.
 var unroll_lookup = function(escapable) {
     var i;
-    var unrolled = {}
-    var c = []
+	var unrolled = {};
+	var c = [];
     for(i=0; i<65536; i++) {
         c.push( String.fromCharCode(i) );
     }
@@ -439,7 +520,7 @@ utils.quote = function(string) {
     return quoted.replace(extra_escapable, function(a) {
         return extra_lookup[a];
     });
-}
+};
 
 var _all_protocols = ['websocket',
                       'xdr-streaming',
@@ -479,7 +560,7 @@ utils.detectProtocols = function(probed, protocols_whitelist, info) {
                 maybe_push(protos);
             }
         }
-    }
+    };
 
     // 1. Websocket
     if (info.websocket !== false) {
@@ -510,7 +591,7 @@ utils.detectProtocols = function(probed, protocols_whitelist, info) {
         }
     }
     return protocols;
-}
+};
 //         [*] End of lib/utils.js
 
 
@@ -581,7 +662,7 @@ var trigger_unload_callbacks = function() {
     for(var ref in on_unload) {
         on_unload[ref]();
         delete on_unload[ref];
-    };
+    }
 };
 
 var unload_triggered = function() {
@@ -645,7 +726,8 @@ utils.createIframe = function (iframe_url, error_callback) {
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage(msg, origin);
             }
-        } catch (x) {};
+        } catch (x) {
+        }
     };
 
     iframe.src = iframe_url;
@@ -697,7 +779,8 @@ utils.createHtmlfile = function (iframe_url, error_callback) {
             if (iframe && iframe.contentWindow) {
                 iframe.contentWindow.postMessage(msg, origin);
             }
-        } catch (x) {};
+        } catch (x) {
+        }
     };
 
     doc.open();
@@ -739,12 +822,13 @@ AbstractXHRObject.prototype._start = function(method, url, payload, opts) {
 
     try {
         that.xhr = new XMLHttpRequest();
-    } catch(x) {};
-
-    if (!that.xhr) {
+    } catch (x) {
+    }
+	if (!that.xhr) {
         try {
             that.xhr = new _window.ActiveXObject('Microsoft.XMLHTTP');
-        } catch(x) {};
+        } catch (x) {
+        }
     }
     if (_window.ActiveXObject || _window.XDomainRequest) {
         // IE8 caches even POSTs
@@ -761,9 +845,8 @@ AbstractXHRObject.prototype._start = function(method, url, payload, opts) {
         that.emit('finish', 0, '');
         that._cleanup();
         return;
-    };
-
-    if (!opts || !opts.no_credentials) {
+    }
+	if (!opts || !opts.no_credentials) {
         // Mozilla docs says https://developer.mozilla.org/en/XMLHttpRequest :
         // "This never affects same-site requests."
         that.xhr.withCredentials = 'true';
@@ -784,8 +867,9 @@ AbstractXHRObject.prototype._start = function(method, url, payload, opts) {
                 try {
                     var status = x.status;
                     var text = x.responseText;
-                } catch (x) {};
-                // IE returns 1223 for 204: http://bugs.jquery.com/ticket/1450
+                } catch (x) {
+                }
+	            // IE returns 1223 for 204: http://bugs.jquery.com/ticket/1450
                 if (status === 1223) status = 204;
 
                 // IE does return readystate == 3 for 404 answers.
@@ -818,7 +902,8 @@ AbstractXHRObject.prototype._cleanup = function(abort) {
     if (abort) {
         try {
             that.xhr.abort();
-        } catch(x) {};
+        } catch (x) {
+        }
     }
     that.unload_ref = that.xhr = null;
 };
@@ -893,7 +978,8 @@ XDRObject.prototype._cleanup = function(abort) {
     if (abort) {
         try {
             that.xdr.abort();
-        } catch(x) {};
+        } catch (x) {
+        }
     }
     that.unload_ref = that.xdr = null;
 };
@@ -1978,7 +2064,7 @@ var InfoReceiverIframe = function(base_url) {
             _didMessage: fun
         };
         ifr.i_constructor(mock_ri, base_url, base_url);
-    }
+    };
     if(!_document.body) {
         utils.attachEvent('load', go);
     } else {
@@ -2017,7 +2103,7 @@ var createInfoReceiver = function(base_url) {
     default:
         // IE 7
         return new InfoReceiverFake();
-    };
+    }
 };
 
 
@@ -2060,7 +2146,7 @@ EventSourceIframeTransport.roundTrips = 3; // html, javascript, eventsource
 // w-iframe-eventsource
 var EventSourceTransport = FacadeJS['w-iframe-eventsource'] = function(ri, trans_url) {
     this.run(ri, trans_url, '/eventsource', EventSourceReceiver, utils.XHRLocalObject);
-}
+};
 EventSourceTransport.prototype = new AjaxBasedTransport();
 //         [*] End of lib/trans-iframe-eventsource.js
 

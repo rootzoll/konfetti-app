@@ -1,18 +1,15 @@
 package de.konfetti.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import de.konfetti.data.Client;
 import de.konfetti.service.ClientService;
 import de.konfetti.utils.Helper;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
+
+@Slf4j
 public class ControllerSecurityHelper {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(ControllerSecurityHelper.class);
-	
 	private static boolean doneInit = false;
 	
 	/*
@@ -30,15 +27,15 @@ public class ControllerSecurityHelper {
 
 	
 	private static void doInit() {
-		
-		LOGGER.info("Doing INIT ControllerSecurityHelper ...");
+
+		log.info("Doing INIT ControllerSecurityHelper ...");
 		
 		// try to load password from properties file
 		allowedPassword = Helper.getPropValues("konfetti.adminPassword");
 		if (allowedPassword!=null) {
 			allowedPassword = allowedPassword.trim();
 			if (allowedPassword.length()<4) {
-				LOGGER.warn("PASSWORD IN PROPERTIES FILE IS TOO SHORT -> PLEASE CHOOSE LONGER ONE");
+				log.warn("PASSWORD IN PROPERTIES FILE IS TOO SHORT -> PLEASE CHOOSE LONGER ONE");
 			}
 			if (allowedPassword.length()==0) allowedPassword = null;
 		}
@@ -47,9 +44,9 @@ public class ControllerSecurityHelper {
 		if (allowedPassword!=null) {
 			enforcePassword = true;
 			enforceCheckIP = false;
-			LOGGER.info("- OK ADMIN ACCESS PER PASSWORD ACTIVATED (see config file) - IP SECURITY OFF");
+			log.info("- OK ADMIN ACCESS PER PASSWORD ACTIVATED (see config file) - IP SECURITY OFF");
 		} else {
-			LOGGER.info("(no ADMIN PASSWORD set in PROPERTIES FILE)");
+			log.info("(no ADMIN PASSWORD set in PROPERTIES FILE)");
 		}
 		
 		doneInit = true;
@@ -123,27 +120,27 @@ public class ControllerSecurityHelper {
 		} catch (Exception e) {
 			throw new Exception("ControllerSecurityHelper: X-CLIENT-ID id no Number ("+clientId+"/"+clientSecret+") from IP("+req.getRemoteAddr()+")");
 		}
-		
-		LOGGER.info("clientId("+clientId+") clientSecret("+clientSecret+")");
+
+		log.info("clientId(" + clientId + ") clientSecret(" + clientSecret + ")");
 		
 		// check if client exists
 		Client client = clientService.findById(clientIdLong);
 		if (client==null) {
-			LOGGER.info("CLIENT NOT FOUND");
+			log.info("CLIENT NOT FOUND");
 			Thread.sleep(300); // security delay against brute force
 			throw new Exception("ControllerSecurityHelper: No client found with id ("+clientId+") from IP("+req.getRemoteAddr()+")");
 		}
 		
 		// check if client has correct secret
 		if (!clientSecret.equals(client.getSecret())) {
-			LOGGER.info("WRONG SECRET");
+			log.info("WRONG SECRET");
 			Thread.sleep(300); // security delay against brute force
 			throw new Exception("ControllerSecurityHelper: Client("+clientId+") wrong secretGiven("+clientSecret+") should be secretIs("+client.getSecret()+") from IP("+req.getRemoteAddr()+")");
 		}
 
 		// check HTTPS --> should be used to protect secret on transport
 		if (!req.isSecure()) {
-			LOGGER.warn("ControllerSecurityHelper: No HTTPS security ("+clientId+"/"+clientSecret+") from IP("+req.getRemoteAddr()+")");
+			log.warn("ControllerSecurityHelper: No HTTPS security (" + clientId + "/" + clientSecret + ") from IP(" + req.getRemoteAddr() + ")");
 		}
 		
 		return client;

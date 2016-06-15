@@ -1,12 +1,10 @@
 package de.konfetti.data;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
+import lombok.Data;
 
+import javax.persistence.*;
+
+@Data
 @Entity
 public class MediaItem {
 
@@ -37,58 +35,5 @@ public class MediaItem {
     // JSON or BASE64
     @Lob
     @Column(length = 1000000)
-    private String data = ""; 
-    
-    /*
-     * METHODS
-     */
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Integer getReviewed() {
-		return reviewed;
-	}
-
-	public void setReviewed(Integer reviewed) {
-		this.reviewed = reviewed;
-	}
-
-	public Long getLastUpdateTS() {
-		return lastUpdateTS;
-	}
-
-	public void setLastUpdateTS(Long lastUpdateTS) {
-		this.lastUpdateTS = lastUpdateTS;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getData() {
-		return data;
-	}
-
-	public void setData(String data) {
-		this.data = data;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-	
+	private String data = "";
 }

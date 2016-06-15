@@ -1,23 +1,20 @@
 package de.konfetti.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.konfetti.data.Notification;
 import de.konfetti.data.NotificationRepository;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
 @Service
 public class NotificationServiceImpl extends BaseService implements NotificationService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(NotificationServiceImpl.class);
-
-    public NotificationServiceImpl() {
-    }
+	public NotificationServiceImpl() {
+	}
 
     @Autowired
     public NotificationServiceImpl(NotificationRepository notificationRepository) {
@@ -39,17 +36,17 @@ public class NotificationServiceImpl extends BaseService implements Notification
         Notification persited = notificationRepository.saveAndFlush(notification);
         
         // return to caller
-		LOGGER.debug("Notification("+persited.getId()+") CREATED"); 
-        return persited;
+		log.debug("Notification(" + persited.getId() + ") CREATED");
+		return persited;
         
     }
 
     @Override
     public Notification findById(long notiId) {
-    	
-		LOGGER.debug("Notification("+notiId+") READ"); 
-    	
-    	// gets the one with the given id
+
+		log.debug("Notification(" + notiId + ") READ");
+
+		// gets the one with the given id
         return notificationRepository.findOne(notiId);
     
     }
@@ -125,13 +122,13 @@ public class NotificationServiceImpl extends BaseService implements Notification
 		for (Notification notification : allNotifications) {
 			//LOGGER.info("type("+notification.getType()+") ref("+notification.getRef()+")");
 			if (type.equals(notification.getType()) && referenceValue.equals(notification.getRef())) {
-				LOGGER.info("deleteByTypeAndReference("+type+","+referenceValue+"): Deleting Notification("+notification.getId()+")");
+				log.info("deleteByTypeAndReference(" + type + "," + referenceValue + "): Deleting Notification(" + notification.getId() + ")");
 				delete(notification.getId());
 				return;
 			}
 		}
-		
-		LOGGER.info("deleteByTypeAndReference("+type+","+referenceValue+"): not found");
+
+		log.info("deleteByTypeAndReference(" + type + "," + referenceValue + "): not found");
 		
 	}
     

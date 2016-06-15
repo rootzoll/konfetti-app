@@ -1,51 +1,28 @@
 package de.konfetti.controller;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import de.konfetti.data.*;
+import de.konfetti.service.*;
+import de.konfetti.utils.PushManager;
+import de.konfetti.websocket.CommandMessage;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.*;
 
-import de.konfetti.data.Chat;
-import de.konfetti.data.Client;
-import de.konfetti.data.Message;
-import de.konfetti.data.Request;
-import de.konfetti.data.User;
-import de.konfetti.service.ChatService;
-import de.konfetti.service.ClientService;
-import de.konfetti.service.MessageService;
-import de.konfetti.service.RequestService;
-import de.konfetti.service.UserService;
-import de.konfetti.utils.PushManager;
-import de.konfetti.websocket.CommandMessage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
+@Slf4j
 @CrossOrigin
 @RestController
 @RequestMapping("konfetti/api/chat")
 public class ChatController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChatController.class);
-    
-    private static final Gson GSON = new GsonBuilder().create();
-	
+	private static final Gson GSON = new GsonBuilder().create();
+
     private final UserService userService;
     private final ClientService clientService;
     private final ChatService chatService;
@@ -67,35 +44,51 @@ public class ChatController {
     //---------------------------------------------------
     // CHAT Controller
     //---------------------------------------------------
-    
-    @CrossOrigin(origins = "*")
+
+	public static Chat setChatPartnerInfoOn(UserService userService, Chat chat, Long chatPartnerUserId, Long selfId) {
+		User user = userService.findById(chatPartnerUserId);
+		if (user == null) {
+			log.warn("Cannot set ChatPartnerInfo for user(" + chatPartnerUserId + ") - NOT FOUND");
+			return chat;
+		}
+		chat.setChatPartnerId(user.getId());
+		chat.setChatPartnerName(user.getName());
+		if ((user.getImageMediaID() != null) && (user.getImageMediaID() > 0))
+			chat.setChatPartnerImageMediaID(user.getImageMediaID());
+		if ((user.getSpokenLangs() != null) && (user.getSpokenLangs().length > 0))
+			chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
+		chat.setUnreadMessage(!chat.hasUserSeenLatestMessage(selfId));
+		return chat;
+	}
+
+	@CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public Chat createChat(@RequestBody @Valid final Chat template, HttpServletRequest httpRequest) throws Exception {
-    	
+
     	// check if user is allowed to create
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
-    		
+
     		// A) check that chat is just hosted by user
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     		boolean userIsHost = (template.getHostId().equals(client.getUserId()));
     		if (!userIsHost) throw new Exception("user cannot create chat for other users");
-    	
+
         	// B) check if request is set and and set correct party id from request
         	if (template.getRequestId()==null) throw new Exception("request reference is not set");
         	Request request = requestService.findById(template.getRequestId());
         	if (request==null) throw new Exception("request("+template.getRequestId()+") not found");
         	template.setPartyId(request.getPartyId());
-    		
+
         	// C) check if request is open for chats (not done or processing)
         	if (Request.STATE_DONE.equals(request.getState())) throw new Exception("no chat possible on DONE request");
         	if (Request.STATE_PROCESSING.equals(request.getState())) throw new Exception("no chat possible on PROCESSING request");
-        	
+
     	} else {
-    		
+
     		// B) check for trusted application with administrator privilege
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
-    	
+
     	// security override on template
     	template.setId(null);
     	template.setMessages(new ArrayList<Message>());
@@ -106,26 +99,26 @@ public class ChatController {
 			User memberUser = userService.findById(memberId);
 			if (memberUser==null) throw new Exception("member("+memberId+") on new chat does NOT EXIST");
 		}
-    	    	
+
     	// create new user
     	Chat chat = chatService.create(template);
-    	
-    	// add transient chat partner info	
-    	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
+
+		// add transient chat partner info
+		if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
     		if (chat.getMembers().length==1) {
 				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], 0l);
 			} else {
-				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
+				log.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
 			}
     	}
-    
+
         return chat;
     }
     
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/{chatId}", method = RequestMethod.GET, produces = "application/json")
     public Chat getChat(@PathVariable Long chatId, @RequestParam(value="lastTS",defaultValue="0") Long lastTS, HttpServletRequest httpRequest) throws Exception {
-        
+
     	// try to load message and chat
     	Chat chat = chatService.findById(chatId);
     	if (chat==null) throw new Exception("chat("+chatId+") not found");
@@ -133,11 +126,11 @@ public class ChatController {
     	// load messages of chat
     	List<Message> messages = messageService.getAllMessagesOfChatSince(chat.getId(),lastTS);
     	chat.setMessages(messages);
-    	
+
     	// check if user is allowed to get data
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
-    		
-    		// A) check that user is host or member of chat
+
+			// A) check that user is host or member of chat
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
     		boolean userIsHost = (chat.getHostId().equals(client.getUserId()));
     		boolean userIsMember = false;
@@ -148,8 +141,8 @@ public class ChatController {
 				}
 			}
     		if ((!userIsHost) && (!userIsMember)) throw new Exception("not host or member on chat("+chatId+")");
-    		    		
-        	// B) find biggest message TS of delivered messages and remember
+
+			// B) find biggest message TS of delivered messages and remember
         	long biggestTS = 0l;
         	for (Message message : messages) {
     			if (message.getTime()>biggestTS) biggestTS = message.getTime();
@@ -158,41 +151,27 @@ public class ChatController {
         		chat.setLastTSforMember(client.getUserId(), biggestTS);
         		chatService.update(chat);
         	}
-        	
-    		// C) add transient chat partner info
+
+			// C) add transient chat partner info
     		if (userIsHost) {
     			// show member as chat partner
     			if (chat.getMembers().length==1) {
     				setChatPartnerInfoOn(userService, chat, chat.getMembers()[0], client.getUserId());
     			} else {
-    				LOGGER.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
-    			}
+					log.warn("Cannot set ChatPartnerInfo on chats with more than one member.");
+				}
     		} else {
     			// show host as chat partner
     			setChatPartnerInfoOn(userService, chat, chat.getHostId(), client.getUserId());
     		}
-        	
-    	} else {
-    		
-    		// B) check for trusted application with administrator privilege
+
+		} else {
+
+			// B) check for trusted application with administrator privilege
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
     	}
-    	
-    	return chat;
-    }
-    
-    public static Chat setChatPartnerInfoOn(UserService userService,Chat chat, Long chatPartnerUserId, Long selfId) {
-    	User user = userService.findById(chatPartnerUserId);
-    	if (user==null) {
-    		LOGGER.warn("Cannot set ChatPartnerInfo for user("+chatPartnerUserId+") - NOT FOUND");
-    		return chat;
-    	}
-    	chat.setChatPartnerId(user.getId());
-    	chat.setChatPartnerName(user.getName());
-    	if ((user.getImageMediaID()!=null) && (user.getImageMediaID()>0)) chat.setChatPartnerImageMediaID(user.getImageMediaID());
-    	if ((user.getSpokenLangs()!=null) && (user.getSpokenLangs().length>0)) chat.setChatPartnerSpokenLangs(user.getSpokenLangs());
-    	chat.setUnreadMessage(!chat.hasUserSeenLatestMessage(selfId));
-    	return chat;
+
+		return chat;
     }
     
     //---------------------------------------------------
@@ -233,8 +212,8 @@ public class ChatController {
         		chat.setLastTSforMember(client.getUserId(), messageTS);
         		chatService.update(chat);
         	} else {
-        		LOGGER.warn("strange: messageTS <= lastTSofUser");
-        	}
+				log.warn("strange: messageTS <= lastTSofUser");
+			}
         	
         	// C) prepare list of receivers of this message
     		receivers = new HashSet<Long>();
@@ -257,10 +236,10 @@ public class ChatController {
     	
     	// create new user
     	Message message = messageService.create(template);
-    	LOGGER.info("Message("+message.getId()+") CREATED on chat("+chatId+")");
-    	
-    	
-    	// publish info about new chat message public channel
+		log.info("Message(" + message.getId() + ") CREATED on chat(" + chatId + ")");
+
+
+		// publish info about new chat message public channel
     	CommandMessage msg = new CommandMessage();
     	msg.setCommand(CommandMessage.COMMAND_CHATUPADTE);
     	String jsonArray = "[";
@@ -273,16 +252,16 @@ public class ChatController {
     	
     	// send push notification if possible
     	if (PushManager.getInstance().isAvaliable()) {
-    		LOGGER.info("PushMessage Alert");
-    		if (receivers!=null) {
+			log.info("PushMessage Alert");
+			if (receivers!=null) {
     			for (Long userID : receivers) {
-    				LOGGER.info("PUSHTO("+userID+")");
-    				User receiver = userService.findById(userID);
+					log.info("PUSHTO(" + userID + ")");
+					User receiver = userService.findById(userID);
     				if (receiver!=null) {
     					if (receiver.getPushActive()) {
-    						LOGGER.info(" - WIN - DOING PUSH ...");
-    						
-    						// TODO multilang - see user
+							log.info(" - WIN - DOING PUSH ...");
+
+							// TODO multilang - see user
     	    				PushManager.getInstance().sendNotification(
     	    						PushManager.PLATFORM_ANDROID, 
     	    						receiver.getPushID(), 
@@ -290,21 +269,21 @@ public class ChatController {
     	    						null, //locale, 
     	    						null, //messageLocale, 
     	    						-1l);
-    	    				LOGGER.info(" - PUSH DONE :D");
-    						
-    					} else {
-    						LOGGER.info(" - FAIL - NO PUSH");
-    					}
+							log.info(" - PUSH DONE :D");
+
+						} else {
+							log.info(" - FAIL - NO PUSH");
+						}
     				} else {
-    					LOGGER.warn("PUSH RECEIVER id("+userID+") NOT FOUND");
-    				}
+						log.warn("PUSH RECEIVER id(" + userID + ") NOT FOUND");
+					}
 				}
     		} else {
-    			LOGGER.info("No Receivers on chat ?!? - no push");
-    		}
+				log.info("No Receivers on chat ?!? - no push");
+			}
      	} else {
-    		LOGGER.info("PushMessage not configured");
-    	}
+			log.info("PushMessage not configured");
+		}
     	
         return message;
     }

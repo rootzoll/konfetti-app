@@ -1,11 +1,13 @@
 package de.konfetti.data;
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Data
 public class Request {
 
 	// possible sates of an request
@@ -73,153 +75,4 @@ public class Request {
 	
 	@Transient // --> the amount a single user got rewarded by the request
 	private Long konfettiAmountReward = 0l;
-	
-	/*
-	 * Methods
-	 */
-	
-    public MediaItem getTitleMultiLang() {
-		return titleMultiLang;
-	}
-
-	public void setTitleMultiLang(MediaItem titleMultiLang) {
-		this.titleMultiLang = titleMultiLang;
-	}
-
-	public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public long getKonfettiCount() {
-        return konfettiCount;
-    }
-
-    public void setKonfettiCount(long konfettiCount) {
-        this.konfettiCount = konfettiCount;
-    }
-
-    public long getKonfettiAdd() {
-        return konfettiAdd;
-    }
-
-    public void setKonfettiAdd(long konfettiAdd) {
-        this.konfettiAdd = konfettiAdd;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-	public Long getTime() {
-		return time;
-	}
-
-	public void setTime(Long time) {
-		this.time = time;
-	}
-
-	public String getState() {
-		return state;
-	}
-
-	public void setState(String state) {
-		this.state = state;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(Long userId) {
-		this.userId = userId;
-	}
-
-	public Long getPartyId() {
-		return partyId;
-	}
-
-	public void setPartyId(Long partyId) {
-		this.partyId = partyId;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	public String[] getSpokenLangs() {
-		return spokenLangs;
-	}
-
-	public void setSpokenLangs(String[] spokenLangs) {
-		this.spokenLangs = spokenLangs;
-	}
-	
-    public List<Chat> getChats() {
-		return chats;
-	}
-
-	public void setChats(List<Chat> chats) {
-		this.chats = chats;
-	}
-
-	public List<MediaItem> getInfo() {
-		return info;
-	}
-
-	public void setInfo(List<MediaItem> info) {
-		this.info = info;
-	}
-	
-	public Long getTitleMultiLangRef() {
-		return titleMultiLangRef;
-	}
-
-	public void setTitleMultiLangRef(Long titleMultiLangRef) {
-		this.titleMultiLangRef = titleMultiLangRef;
-	}
-	
-	public Long[] getMediaItemIds() {
-		return mediaItemIds;
-	}
-
-	public void setMediaItemIds(Long[] mediaItemIds) {
-		this.mediaItemIds = mediaItemIds;
-	}
-
-	public Long getImageMediaID() {
-		return imageMediaID;
-	}
-
-	public void setImageMediaID(Long imageMediaID) {
-		this.imageMediaID = imageMediaID;
-	}
-
-	public Long getKonfettiAmountSupport() {
-		return konfettiAmountSupport;
-	}
-
-	public void setKonfettiAmountSupport(Long konfettiAmountSupport) {
-		this.konfettiAmountSupport = konfettiAmountSupport;
-	}
-
-	public Long getKonfettiAmountReward() {
-		return konfettiAmountReward;
-	}
-
-	public void setKonfettiAmountReward(Long konfettiAmountReward) {
-		this.konfettiAmountReward = konfettiAmountReward;
-	}
-	
 }

@@ -1,10 +1,12 @@
 package de.konfetti.data;
 
-import javax.persistence.*;
+import lombok.Data;
 
+import javax.persistence.*;
 import java.util.Set;
 
 @Entity
+@Data
 public class Party {
 
 	/*
@@ -120,146 +122,10 @@ public class Party {
     
 	@Transient // notification relevant for this party and user
     private Set<Notification> notifications;
-    
-    /*
-     * METHODS 
-     */
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Float getLon() {
-        return lon;
-    }
-
-    public void setLon(Float lon) {
-        this.lon = lon;
-    }
-
-    public Float getLat() {
-        return lat;
-    }
-
-    public void setLat(Float lat) {
-        this.lat = lat;
-    }
-
-    public int getMeters() {
-        return meters;
-    }
-
-    public void setMeters(int meters) {
-        this.meters = meters;
-    }
-
-    public long getKonfettiCount() {
-        return konfettiCount;
-    }
-
-    public void setKonfettiCount(long konfettiCount) {
-        this.konfettiCount = konfettiCount;
-    }
-
-    public long getKonfettiTotal() {
-        return konfettiTotal;
-    }
-
-    public void setKonfettiTotal(long konfettiTotal) {
-        this.konfettiTotal = konfettiTotal;
-    }
-
-    public int getTopPosition() {
-        return topPosition;
-    }
-
-    public void setTopPosition(int topClass) {
-        this.topPosition = topClass;
-    }
-
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-	public int getNewRequestMinKonfetti() {
-		return newRequestMinKonfetti;
-	}
-
-	public void setNewRequestMinKonfetti(int newRequestMinKonfetti) {
-		this.newRequestMinKonfetti = newRequestMinKonfetti;
-	}
-
-	public int getReviewLevel() {
-		return reviewLevel;
-	}
-
-	public void setReviewLevel(int reviewLevel) {
-		this.reviewLevel = reviewLevel;
-	}
-
-	public int getVisibility() {
-		return visibility;
-	}
-
-	public void setVisibility(int visibility) {
-		this.visibility = visibility;
-	}
-
-	public String getDetailText() {
-		return detailText;
-	}
-
-	public void setDetailText(String detailText) {
-		this.detailText = detailText;
-	}
-	
-    public Set<Request> getRequests() {
-		return requests;
-	}
-
-	public void setRequests(Set<Request> requests) {
-		this.requests = requests;
-	}
-
-	public Set<Notification> getNotifications() {
-		return notifications;
-	}
-
-	public void setNotifications(Set<Notification> notifications) {
-		this.notifications = notifications;
-	}
-
-	public long getWelcomeBalance() {
-		return welcomeBalance;
-	}
-
-	public void setWelcomeBalance(long welcomeBalance) {
-		this.welcomeBalance = welcomeBalance;
-	}
 
 	public String[] getSendKonfettiWhiteList() {
 		if (sendKonfettiWhiteList==null) return new String[0];
 		return sendKonfettiWhiteList;
-	}
-
-	public void setSendKonfettiWhiteList(String[] sendKonfettiWhiteList) {
-		this.sendKonfettiWhiteList = sendKonfettiWhiteList;
 	}
 
 	public Integer getSendKonfettiMode() {
@@ -267,15 +133,4 @@ public class Party {
 		return sendKonfettiMode;
 	}
 
-	public void setSendKonfettiMode(Integer sendKonfettiMode) {
-		this.sendKonfettiMode = sendKonfettiMode;
-	}
-
-	public long getSendKonfettiMaxAmount() {
-		return sendKonfettiMaxAmount;
-	}
-
-	public void setSendKonfettiMaxAmount(long sendKonfettiMaxAmount) {
-		this.sendKonfettiMaxAmount = sendKonfettiMaxAmount;
-	}
 }

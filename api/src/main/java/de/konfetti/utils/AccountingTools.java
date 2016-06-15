@@ -1,12 +1,10 @@
 package de.konfetti.utils;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class AccountingTools {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(AccountingTools.class);
-	
 	public static String getAccountNameFromUserAndParty(Long userId, Long partyID) {
 		return "u"+userId+"p"+partyID;
 	}
@@ -26,7 +24,7 @@ public class AccountingTools {
 			if (index>=1) {
 				result = Long.parseLong(accountName.substring(1, index));
 			} else {
-				LOGGER.warn("Was not able to find party delimiter in : "+accountName);
+				log.warn("Was not able to find party delimiter in : " + accountName);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

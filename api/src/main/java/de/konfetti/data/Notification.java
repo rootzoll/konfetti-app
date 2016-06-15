@@ -1,8 +1,14 @@
 package de.konfetti.data;
 
-import javax.persistence.*;
+import lombok.Data;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
 @Entity
+@Data
 public class Notification {
 	
 	public static final Integer TYPE_MEDIAITEM_FULL  = 0;
@@ -34,74 +40,17 @@ public class Notification {
     private Long ref;
     
     // time stamp of creation
-    private Long ts;
-    
-    private Boolean higherPushDone;
-    
+	private Long timeStamp;
+
+	private Boolean higherPushDone = Boolean.FALSE;
+
     /*
      * METHODS 
      */
     
 	public boolean needsManualDeletion() {
-		if (TYPE_REWARD_GOT.equals(this.type)) return true;
-		return false;
-	}
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getUserId() {
-        return this.userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-	public Long getPartyId() {
-		return partyId;
+		return TYPE_REWARD_GOT.equals(this.type);
 	}
 
-	public void setPartyId(Long partyId) {
-		this.partyId = partyId;
-	}
-
-	public Integer getType() {
-		return type;
-	}
-
-	public void setType(Integer type) {
-		this.type = type;
-	}
-
-	public Long getRef() {
-		return ref;
-	}
-
-	public void setRef(Long ref) {
-		this.ref = ref;
-	}
-
-	public Long getTimeStamp() {
-		return ts;
-	}
-
-	public void setTimeStamp(Long ts) {
-		this.ts = ts;
-	}
-	
-	public boolean getHigherPushDone() {
-		if (higherPushDone==null) return false;
-		return higherPushDone;
-	}
-
-	public void setHigherPushDone(Boolean higherPushDone) {
-		this.higherPushDone = higherPushDone;
-	}
 }
 
