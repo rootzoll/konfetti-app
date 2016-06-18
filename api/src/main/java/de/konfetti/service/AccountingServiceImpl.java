@@ -1,19 +1,19 @@
 package de.konfetti.service;
 
-import de.konfetti.data.Account;
-import de.konfetti.data.AccountRepository;
-import de.konfetti.data.KonfettiTransaction;
-import de.konfetti.data.KonfettiTransactionRepository;
+import de.konfetti.data.*;
+import de.konfetti.service.exception.ServiceException;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 // TODO: improve transactional security
 @Slf4j
 @Service
+@Transactional
 @NoArgsConstructor
 public class AccountingServiceImpl extends BaseService implements AccountingService {
 
@@ -42,23 +42,14 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	@Override
 	public synchronized boolean deleteAccount(String accountName) throws Exception {
 		Account account = accountRepository.findByName(accountName);
-		if (account==null) throw new Exception("deleteAccount("+accountName+") --> account does not exist");
+		if (account == null)
+			throw new ServiceException("deleteAccount(" + accountName + ") --> account does not exist");
 		accountRepository.delete(account.getId());
 		accountRepository.flush();
 		return true;
 	}
-
-	/**
-	 *
-	 * @param transactionType --> use FINALS from KonfettiTransaction
-	 * @param fromAccountName
-	 * @param toAccountName
-	 * @param amount
-	 * @return
-	 * @throws Exception
-	 */
 	@Override
-	public synchronized boolean transferBetweenAccounts(Integer transactionType, String fromAccountName, String toAccountName, long amount) throws Exception {
+	public synchronized boolean transferBetweenAccounts(TransactionType transactionType, String fromAccountName, String toAccountName, long amount) throws Exception {
 
 		if (amount <= 0)
 			throw new Exception("transferBetweenAccounts(" + fromAccountName + ", " + toAccountName + ", " + amount + ") --> invalid amount");
@@ -98,7 +89,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 	}
 
 	@Override
-	public synchronized Long addBalanceToAccount(Integer transactionType, String accountName, long amount) throws Exception {
+	public synchronized Long addBalanceToAccount(TransactionType transactionType, String accountName, long amount) throws Exception {
 
 		// check input
 		if (amount<=0) throw new Exception("addBalanceToAccount("+accountName+","+amount+") -> invalid amount");
@@ -127,7 +118,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 		return accountRepository.findByName(name);
 	}
 
-	public synchronized Long removeBalanceFromAccount(Integer transactionType, String accountName, long amount) throws Exception {
+	public synchronized Long removeBalanceFromAccount(TransactionType transactionType, String accountName, long amount) throws Exception {
 
 		// check input
 		if (amount<=0) throw new Exception("removeBalanceFromAccount("+accountName+","+amount+") -> invalid amount");
@@ -194,7 +185,7 @@ public class AccountingServiceImpl extends BaseService implements AccountingServ
 				if (konfettiTransaction.getAmount() > 0L) {
 
 					// differ between konfetti earned doing a task and inserted
-					if (konfettiTransaction.getType()==KonfettiTransaction.TYPE_TASKREWARD) {
+					if (konfettiTransaction.getType() == TransactionType.TASK_REWARD) {
 						result.earned += konfettiTransaction.getAmount();
 					} else {
 						result.inserted += konfettiTransaction.getAmount();

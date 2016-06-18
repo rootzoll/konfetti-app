@@ -1,14 +1,15 @@
 package de.konfetti.service;
 
-import java.util.List;
-
 import de.konfetti.data.KonfettiTransaction;
+import de.konfetti.data.TransactionType;
+
+import java.util.List;
 
 public interface KonfettiTransactionService {
 
-    KonfettiTransaction store(Integer type, String fromAccount, String toAmount, Long konfettiAmount, String additionalDataJSON);
-    
-    List<KonfettiTransaction> getAllTransactionsToAccount(String toAccount);
+	KonfettiTransaction store(TransactionType type, String fromAccount, String toAmount, Long konfettiAmount, String additionalDataJSON);
+
+	List<KonfettiTransaction> getAllTransactionsToAccount(String toAccount);
     
     List<KonfettiTransaction> getAllTransactionsFromAccount(String fromAccount);
 

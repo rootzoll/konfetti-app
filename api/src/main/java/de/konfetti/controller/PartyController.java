@@ -23,6 +23,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static de.konfetti.data.NotificationType.*;
+
 @Slf4j
 @CrossOrigin
 @RestController
@@ -164,7 +166,8 @@ public class PartyController {
 				}
 
 				List<Request> requests = requestService.getAllPartyRequests(partyId);
-				List<Notification> notifications = notificationService.getAllNotificationsSince(client.getUserId(), partyId, lastTs, true);
+				List<Notification> notifications = notificationService.getAllNotificationsSince(client.getUserId(), partyId, lastTs);
+				notificationService.deleteAllNotificationsOlderThan(client.getUserId(), partyId, lastTs); //todo: why??? (tino is asking)
 				if (requests == null) requests = new ArrayList<Request>();
 				if (notifications == null) notifications = new ArrayList<Notification>();
 
@@ -214,7 +217,7 @@ public class PartyController {
 						noti.setId(-System.currentTimeMillis());
 						noti.setPartyId(partyId);
 						noti.setRef(chat.getRequestId());
-						noti.setType(Notification.TYPE_CHAT_NEW);
+						noti.setType(NotificationType.CHAT_NEW);
 						noti.setUserId(client.getUserId());
 						noti.setTimeStamp(System.currentTimeMillis());
 						Set<Notification> notis = party.getNotifications();
@@ -361,7 +364,7 @@ public class PartyController {
 							log.info("Transfer Welcome-Konfetti(" + party.getWelcomeBalance() + ") on Party(" + party.getId() + ") to User(" + client.getUserId() + ") with accountName(" + accountName + ")");
 
 							try {
-								userBalance = accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_USERWELCOME, accountName, party.getWelcomeBalance());
+								userBalance = accountingService.addBalanceToAccount(TransactionType.USER_WELCOME, accountName, party.getWelcomeBalance());
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -370,7 +373,7 @@ public class PartyController {
 
 						// show welcome notification
 						log.info("NOTIFICATION Welcome Paty (" + party.getId() + ")");
-						notificationService.create(Notification.TYPE_PARTY_WELCOME, user.getId(), party.getId(), 0l);
+						notificationService.create(NotificationType.PARTY_WELCOME, user.getId(), party.getId(), 0l);
 
 						log.debug("userBalance(" + userBalance + ")");
 
@@ -529,11 +532,11 @@ public class PartyController {
 		// transfer balance to request account
 		accountingService.createAccount(AccountingTools.getAccountNameFromRequest(persistent.getId()));
 		if (request.getKonfettiCount() > 0) {
-			accountingService.transferBetweenAccounts(KonfettiTransaction.TYPE_TASKCREATION, AccountingTools.getAccountNameFromUserAndParty(client.getUserId(), partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
+			accountingService.transferBetweenAccounts(TransactionType.TASK_CREATION, AccountingTools.getAccountNameFromUserAndParty(client.getUserId(), partyId), AccountingTools.getAccountNameFromRequest(persistent.getId()), request.getKonfettiCount());
 		}
 
 		// store notification
-		notificationService.create(Notification.TYPE_REVIEW_WAITING, null, party.getId(), request.getId());
+		notificationService.create(REVIEW_WAITING, null, party.getId(), request.getId());
 
 		// publish info about update on public channel
 		CommandMessage msg = new CommandMessage();
@@ -587,7 +590,7 @@ public class PartyController {
 
 		// delete any waiting notification finding a reviewer
 		if (Request.STATE_REVIEW.equals(request.getState()))
-			notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+			notificationService.deleteByTypeAndReference(REVIEW_WAITING, request.getId());
 
 		// delete
 		Request result = requestService.delete(request.getId());
@@ -596,10 +599,10 @@ public class PartyController {
 		if (!Request.STATE_DONE.equals(request.getState())) {
 			List<KonfettiTransaction> allPayIns = konfettiTransactionService.getAllTransactionsToAccount(AccountingTools.getAccountNameFromRequest(requestId));
 			for (KonfettiTransaction payIn : allPayIns) {
-				if ((payIn.getType()==KonfettiTransaction.TYPE_TASKSUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
+				if ((payIn.getType() == TransactionType.TASK_SUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
 					// make payback
-					accountingService.transferBetweenAccounts(KonfettiTransaction.TYPE_TASKSUPPORT, AccountingTools.getAccountNameFromRequest(requestId), payIn.getFromAccount(), payIn.getAmount());
-					notificationService.create(Notification.TYPE_PAYBACK, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), payIn.getAmount());
+					accountingService.transferBetweenAccounts(TransactionType.TASK_SUPPORT, AccountingTools.getAccountNameFromRequest(requestId), payIn.getFromAccount(), payIn.getAmount());
+					notificationService.create(PAYBACK, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), payIn.getAmount());
 				}
 			}
 		}
@@ -668,7 +671,7 @@ public class PartyController {
 				String accountName = AccountingTools.getAccountNameFromRequest(request.getId());
 				List<KonfettiTransaction> allTransactionsFromRequest = konfettiTransactionService.getAllTransactionsFromAccountSinceTS(accountName, request.getTime());
 				for (KonfettiTransaction konfettiTransaction : allTransactionsFromRequest) {
-					if (konfettiTransaction.getType() != KonfettiTransaction.TYPE_TASKREWARD) continue;
+					if (konfettiTransaction.getType() != TransactionType.TASK_REWARD) continue;
 					if (konfettiTransaction.getFromAccount() == null) {
 						log.warn("NULL fromAdress on transaction(" + konfettiTransaction.getId() + ") on request(" + request.getId() + ") ... why?!?");
 						continue;
@@ -694,7 +697,7 @@ public class PartyController {
 					throw new Exception("user(" + client.getId() + ") has not enough balance to upvote on party(" + partyId + ") - is(" + userBalance + ") needed(" + upvoteAmount + ")");
 
 				// transfer amount
-				if (!accountingService.transferBetweenAccounts(KonfettiTransaction.TYPE_TASKSUPPORT, userAccountname, AccountingTools.getAccountNameFromRequest(requestId), upvoteAmount)) {
+				if (!accountingService.transferBetweenAccounts(TransactionType.TASK_SUPPORT, userAccountname, AccountingTools.getAccountNameFromRequest(requestId), upvoteAmount)) {
 					throw new Exception("was not able to transfer upvote amount(" + upvoteAmount + ") from(" + userAccountname + ") to(" + AccountingTools.getAccountNameFromRequest(requestId) + ")");
 				}
 
@@ -788,10 +791,10 @@ public class PartyController {
 				if (fromReview) {
 
 					// send notification to author
-					notificationService.create(Notification.TYPE_REVIEW_OK, request.getUserId(), request.getPartyId(), request.getId());
+					notificationService.create(NotificationType.REVIEW_OK, request.getUserId(), request.getPartyId(), request.getId());
 
 					// delete any waiting notification finding a reviewer
-					notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+					notificationService.deleteByTypeAndReference(REVIEW_WAITING, request.getId());
 				}
 
 				// publish info about update on public channel
@@ -835,10 +838,10 @@ public class PartyController {
 						webSocket.convertAndSend("/out/updates", GSON.toJson(msg));
 
 						// delete any waiting notification finding a reviewer
-						notificationService.deleteByTypeAndReference(Notification.TYPE_REVIEW_WAITING, request.getId());
+						notificationService.deleteByTypeAndReference(REVIEW_WAITING, request.getId());
 
 						// send notification to author
-						notificationService.create(Notification.TYPE_REVIEW_FAIL, request.getUserId(), request.getPartyId(), request.getId());
+						notificationService.create(REVIEW_FAIL, request.getUserId(), request.getPartyId(), request.getId());
 
 					} else
 
@@ -894,20 +897,20 @@ public class PartyController {
 										continue;
 									}
 									final String rewardeeAccountName = AccountingTools.getAccountNameFromUserAndParty(rewardId, request.getPartyId());
-									if (!accountingService.transferBetweenAccounts(KonfettiTransaction.TYPE_TASKREWARD, requestAccountName, rewardeeAccountName, rewardPerPerson)) {
+									if (!accountingService.transferBetweenAccounts(TransactionType.TASK_REWARD, requestAccountName, rewardeeAccountName, rewardPerPerson)) {
 										log.error("FAIL payout reward(" + rewardPerPerson + ") from(" + requestAccountName + ") to " + rewardeeAccountName);
 									} else {
 										log.info("OK payout reward(" + rewardPerPerson + ") from(" + requestAccountName + ") to " + rewardeeAccountName);
 										// send notification to author
-										notificationService.create(Notification.TYPE_REWARD_GOT, rewardId, request.getPartyId(), request.getId());
+										notificationService.create(REWARD_GOT, rewardId, request.getPartyId(), request.getId());
 									}
 								}
 
 								// notification to all supporters of request about finish
 								List<KonfettiTransaction> allPayIns = konfettiTransactionService.getAllTransactionsToAccount(AccountingTools.getAccountNameFromRequest(requestId));
 								for (KonfettiTransaction payIn : allPayIns) {
-									if ((payIn.getType() == KonfettiTransaction.TYPE_TASKSUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
-										notificationService.create(Notification.TYPE_SUPPORT_WIN, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), request.getId());
+									if ((payIn.getType() == TransactionType.TASK_SUPPORT) && (!AccountingTools.getAccountNameFromUserAndParty(request.getUserId(), request.getPartyId()).equals(payIn.getFromAccount()))) {
+										notificationService.create(SUPPORT_WIN, AccountingTools.getUserIdFromAccountName(payIn.getFromAccount()), AccountingTools.getPartyIdFromAccountName(payIn.getFromAccount()), request.getId());
 									}
 								}
 

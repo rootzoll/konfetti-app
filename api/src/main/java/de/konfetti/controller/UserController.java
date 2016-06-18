@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -66,9 +67,9 @@ public class UserController {
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public User createUser(
-    		@RequestParam(value="mail", defaultValue="") String email, 
-    		@RequestParam(value="pass", defaultValue="") String pass, 
-    		@RequestParam(value="locale", defaultValue="en") String locale ) throws Exception {
+			@RequestParam(value = "mail") @Size(min = 1) String email,
+			@RequestParam(value="pass", defaultValue="") String pass,
+			@RequestParam(value="locale", defaultValue="en") String locale ) throws Exception {
     	
     	boolean createWithCredentials = false;
     	if ((email!=null) && (email.length()>1)) {
@@ -169,9 +170,10 @@ public class UserController {
     
     @CrossOrigin(origins = "*")
     @RequestMapping(value="/login", method = RequestMethod.GET, produces = "application/json")
-    public User login(@RequestParam(value="mail", defaultValue="") String email, @RequestParam(value="pass", defaultValue="") String pass) throws Exception {
-    	
-    	// check user and input data
+	public User login(@RequestParam(value = "mail", defaultValue = "") String email,
+					  @RequestParam(value = "pass", defaultValue = "") String pass) throws Exception {
+
+		// check user and input data
         User user = userService.findByMail(email.toLowerCase());
         if (user==null) {
 			log.warn("LOGIN FAIL: user not found with mail(" + email + ")");
@@ -477,7 +479,7 @@ public class UserController {
 			log.info("- generated single coupon with code: " + code.getCode());
 
 			// remove amount from users balance
-			Long newBalance = accountingService.removeBalanceFromAccount(KonfettiTransaction.TYPE_COUPON, accountName, amount);
+			Long newBalance = accountingService.removeBalanceFromAccount(TransactionType.COUPON, accountName, amount);
 			if (newBalance.equals(userBalance)) {
 				throw new Exception ("Was not able to remove sended konfetti from account("+accountName+")");
 			}
@@ -486,7 +488,7 @@ public class UserController {
 	    	if ((mailConf!=null) && (EMailManager.getInstance().sendMail(javaMailSender, address, "Received "+amount+" Konfetti from "+System.currentTimeMillis(), "Open app and redeem coupon code: '"+code.getCode(), null))) {
 				log.info("- email with coupon send to: " + address);
 			} else {
-	    		accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_PAYBACK, accountName, amount);
+				accountingService.addBalanceToAccount(TransactionType.PAYBACK, accountName, amount);
 				throw new Exception("Was not able to send eMail with coupon code to " + user.getEMail() + " - check address and server email config");
 			}
 
@@ -508,7 +510,7 @@ public class UserController {
 
 			// transfer konfetti
 			String toAccountName = AccountingTools.getAccountNameFromUserAndParty(toUser.getId(), party.getId());
-			if (!accountingService.transferBetweenAccounts(KonfettiTransaction.TYPE_SENDBYUSER, accountName, toAccountName, amount)) {
+			if (!accountingService.transferBetweenAccounts(TransactionType.SEND_BY_USER, accountName, toAccountName, amount)) {
 				throw new Exception("Was not able to transfere amount("+amount+") from("+accountName+") to("+toAccountName+")");
 			}
 
@@ -735,7 +737,7 @@ public class UserController {
 
 		final String userAccountName = AccountingTools.getAccountNameFromUserAndParty(user.getId(), partyId);
 		Long konfettiBefore = this.accountingService.getBalanceOfAccount(userAccountName);
-		Long konfettiAfter = this.accountingService.addBalanceToAccount(KonfettiTransaction.TYPE_COUPON, userAccountName, konfettiAmount);
+		Long konfettiAfter = this.accountingService.addBalanceToAccount(TransactionType.COUPON, userAccountName, konfettiAmount);
 
 		if (konfettiBefore.equals(konfettiAfter)) throw new Exception("adding amount failed");
 

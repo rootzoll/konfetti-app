@@ -2,6 +2,7 @@ package de.konfetti.notifier;
 
 import com.google.common.cache.CacheBuilder;
 import de.konfetti.data.Notification;
+import de.konfetti.data.NotificationType;
 import de.konfetti.data.User;
 import de.konfetti.service.NotificationService;
 import de.konfetti.service.UserService;
@@ -224,16 +225,16 @@ public class NotifierBackgroundTask {
 		/*
 		 * SIMPLE HIGHER ATTENTION CASES
 		 */
-		if (Notification.TYPE_REVIEW_OK==notification.getType()) return true;
-		if (Notification.TYPE_REVIEW_FAIL==notification.getType()) return true;
-		if (Notification.TYPE_CHAT_NEW==notification.getType()) return true;
-		if (Notification.TYPE_REWARD_GOT==notification.getType()) return true;
-		if (Notification.TYPE_SUPPORT_WIN==notification.getType()) return true;
+		if (NotificationType.REVIEW_OK == notification.getType()) return true;
+		if (NotificationType.REVIEW_FAIL == notification.getType()) return true;
+		if (NotificationType.CHAT_NEW == notification.getType()) return true;
+		if (NotificationType.REWARD_GOT == notification.getType()) return true;
+		if (NotificationType.SUPPORT_WIN == notification.getType()) return true;
 		
 		/*
 		 * REVIEW WAITING ==> select one reviewer/admin by random
 		 */
-		if (Notification.TYPE_REVIEW_WAITING == notification.getType()) {
+		if (NotificationType.REVIEW_WAITING == notification.getType()) {
 			
 			// get all reviewer and admins for party
 			List<User> reviewer = userService.getAllUsersReviewerOnParty(notification.getPartyId());
@@ -296,9 +297,9 @@ public class NotifierBackgroundTask {
 
     	// decide to keep or delete the notification
     	boolean keepNotification = true;
-    	if (notification.getType()==Notification.TYPE_REVIEW_WAITING) keepNotification = false;
-    	
-    	if (keepNotification) {
+		if (notification.getType() == NotificationType.REVIEW_WAITING) keepNotification = false;
+
+		if (keepNotification) {
     		
     		// keep but remember that pushed 
      		notificationService.setNotificationAsPushProcessed(notification.getId());
@@ -359,11 +360,11 @@ public class NotifierBackgroundTask {
 		if ((user.getPushActive()) && (PushManager.getInstance().isAvaliable())) {
 			
 			// just push the following notifications
-			if (Notification.TYPE_REVIEW_WAITING.equals(notification.getType())) return PUSHTYPE_PUSH;
-			if (Notification.TYPE_REVIEW_OK.equals(notification.getType())) return PUSHTYPE_PUSH;
-			if (Notification.TYPE_CHAT_NEW.equals(notification.getType())) return PUSHTYPE_PUSH;
-			if (Notification.TYPE_REWARD_GOT.equals(notification.getType())) return PUSHTYPE_PUSH;
-			if (Notification.TYPE_SUPPORT_WIN.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (NotificationType.REVIEW_WAITING.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (NotificationType.REVIEW_OK.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (NotificationType.CHAT_NEW.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (NotificationType.REWARD_GOT.equals(notification.getType())) return PUSHTYPE_PUSH;
+			if (NotificationType.SUPPORT_WIN.equals(notification.getType())) return PUSHTYPE_PUSH;
 		}
 		
 		// check for eMail

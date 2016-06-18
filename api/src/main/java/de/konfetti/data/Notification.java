@@ -7,24 +7,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import static de.konfetti.data.NotificationType.REWARD_GOT;
+
 @Entity
 @Data
 public class Notification {
-	
-	public static final Integer TYPE_MEDIAITEM_FULL  = 0;
-	public static final Integer TYPE_MEDIAITEM_INFO  = 1;
-	public static final Integer TYPE_REVIEW_OK 		 = 2;
-	public static final Integer TYPE_PAYBACK 		 = 3;
-	public static final Integer TYPE_REVIEW_FAIL 	 = 4;
-	public static final Integer TYPE_CHAT_NEW 		 = 5;
-	public static final Integer TYPE_PARTY_WELCOME 	 = 6;
-	public static final Integer TYPE_REWARD_GOT 	 = 7;
-	public static final Integer TYPE_SUPPORT_WIN 	 = 8; // when a task you supported got done
-	public static final Integer TYPE_LOGOUT_REMINDER = 9; 
-	public static final Integer TYPE_REVIEW_WAITING  = 10;
-	
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
     // every notification belongs to one user
@@ -34,9 +24,9 @@ public class Notification {
     private Long partyId;
     
     // type (see CONST above)
-    private Integer type;
-    
-    // reference - depending on type
+	private NotificationType type;
+
+	// reference - depending on type
     private Long ref;
     
     // time stamp of creation
@@ -49,7 +39,7 @@ public class Notification {
      */
     
 	public boolean needsManualDeletion() {
-		return TYPE_REWARD_GOT.equals(this.type);
+		return REWARD_GOT.equals(this.type);
 	}
 
 }

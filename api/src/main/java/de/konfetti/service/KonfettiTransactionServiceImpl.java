@@ -2,6 +2,7 @@ package de.konfetti.service;
 
 import de.konfetti.data.KonfettiTransaction;
 import de.konfetti.data.KonfettiTransactionRepository;
+import de.konfetti.data.TransactionType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class KonfettiTransactionServiceImpl extends BaseService implements Konfe
     }
 
 	@Override
-	public KonfettiTransaction store(Integer type, String fromAccount, String toAmount, Long konfettiAmount, String additionalDataJSON) {
+	public KonfettiTransaction store(TransactionType type, String fromAccount, String toAmount, Long konfettiAmount, String additionalDataJSON) {
 		KonfettiTransaction konfettiTransaction = new KonfettiTransaction();
 		konfettiTransaction.setType(type);
 		konfettiTransaction.setTimestamp(System.currentTimeMillis());
