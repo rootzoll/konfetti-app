@@ -261,7 +261,7 @@ public class ChatController {
     					if (receiver.getPushActive()) {
 							log.info(" - WIN - DOING PUSH ...");
 
-							// TODO multilang - see user
+							// TODO multi lang - see user
     	    				PushManager.getInstance().sendNotification(
     	    						PushManager.PLATFORM_ANDROID, 
     	    						receiver.getPushID(), 

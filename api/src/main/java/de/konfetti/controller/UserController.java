@@ -263,7 +263,7 @@ public class UserController {
 				String pass = Code.generadeCodeNumber()+"";
     			userExisting.setPassword(Helper.hashPassword(this.passwordSalt, pass));
     			if (firstTimeMailSet) {
-    				// TODO multiple language eMail text by lang in user object - use same text as on account created with email
+    				// TODO multi lang eMail text by lang in user object - use same text as on account created with email
 					EMailManager.getInstance().sendMail(javaMailSender, userInput.getEMail(), "Konfetti Account Created", "username: " + userExisting.getEMail() + "\npass: " + pass + "\n\nkeep email or write password down", null);
 				}
     		}
