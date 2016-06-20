@@ -9,7 +9,6 @@ import de.konfetti.utils.Helper;
 import de.konfetti.utils.PushManager;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,8 +35,8 @@ public class UserController {
     
     private String passwordSalt;
 
-    @Autowired
-    private JavaMailSender javaMailSender;
+	@Autowired
+	private EMailManager eMailManager;
     
     @Autowired
     public UserController(final UserService userService, final ClientService clientService, final AccountingService accountingService, final PartyService partyService, final CodeService codeService) {
@@ -97,7 +96,7 @@ public class UserController {
         	user.setPassword(passMD5);
 			log.info("Create new User with eMail(" + email + ") and passwordhash(" + passMD5 + ")");
 			// TODO --> email multi lang by lang set in user
-        	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
+        	if (!eMailManager.sendMail(email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null, user.getSpokenLangs())) {
 				log.warn("was not able to send eMail on account creation to(" + email + ")");
 			}
     	}
@@ -232,7 +231,7 @@ public class UserController {
    	
     	// send by email
     	// TODO --> email multi lang by lang set in user
-    	if (!EMailManager.getInstance().sendMail(javaMailSender, email, "Konfetti Account Password Reset", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null)) {
+    	if (!eMailManager.sendMail(email, "rest.user.reset.subject", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null, user.getSpokenLangs())) {
 			log.warn("was not able to send eMail on account creation to(" + email + ")");
 		}
     	
@@ -246,30 +245,30 @@ public class UserController {
     @RequestMapping(value="/{userId}", method = RequestMethod.PUT, produces = "application/json")
     public User updateUser( @RequestBody @Valid final User userInput, HttpServletRequest httpRequest) throws Exception {
     	
-        User userExisting = userService.findById(userInput.getId());
-        if (userExisting==null) throw new Exception("NOT FOUND user("+userInput.getId()+")");
+        User user = userService.findById(userInput.getId());
+        if (user==null) throw new Exception("NOT FOUND user("+userInput.getId()+")");
     	
     	// check if user is allowed to read
     	if (httpRequest.getHeader("X-CLIENT-ID")!=null) {
     		
     		// A) check that user is himself
     		Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
-    		if (!client.getUserId().equals(userExisting.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+userExisting.getId()+")");
+    		if (!client.getUserId().equals(user.getId())) throw new Exception("client("+client.getId()+") is not allowed to read user("+user.getId()+")");
     	
     		// B) check if email got changed
-			boolean firstTimeMailSet = (userExisting.getEMail() == null) || (userExisting.getEMail().trim().length() == 0);
-			if ((userInput.getEMail() != null) && (!userInput.getEMail().equals(userExisting.getEMail()))) {
-				userExisting.setEMail(userInput.getEMail());
+			boolean firstTimeMailSet = (user.getEMail() == null) || (user.getEMail().trim().length() == 0);
+			if ((userInput.getEMail() != null) && (!userInput.getEMail().equals(user.getEMail()))) {
+				user.setEMail(userInput.getEMail());
 				String pass = Code.generadeCodeNumber()+"";
-    			userExisting.setPassword(Helper.hashPassword(this.passwordSalt, pass));
+    			user.setPassword(Helper.hashPassword(this.passwordSalt, pass));
     			if (firstTimeMailSet) {
     				// TODO multi lang eMail text by lang in user object - use same text as on account created with email
-					EMailManager.getInstance().sendMail(javaMailSender, userInput.getEMail(), "Konfetti Account Created", "username: " + userExisting.getEMail() + "\npass: " + pass + "\n\nkeep email or write password down", null);
+					eMailManager.sendMail(userInput.getEMail(), "rest.user.created.subject", "username: " + user.getEMail() + "\npass: " + pass + "\n\nkeep email or write password down", null, user.getSpokenLangs());
 				}
     		}
     		
     		// send initial welcome push message
-    		if ((userExisting.getPushID()==null) && (userInput.getPushID()!=null)) {
+    		if ((user.getPushID()==null) && (userInput.getPushID()!=null)) {
     			if (PushManager.getInstance().isAvaliable()) {
     				PushManager.getInstance().sendNotification(
     						PushManager.mapUserPlatform(userInput.getPushSystem()), 
@@ -283,14 +282,14 @@ public class UserController {
     		}
     		
         	// transfer selective values from input to existing user
-			userExisting.setEMail(userInput.getEMail());
-			userExisting.setImageMediaID(userInput.getImageMediaID());
-        	userExisting.setName(userInput.getName());
-        	userExisting.setPushActive(userInput.getPushActive());
-        	userExisting.setPushSystem(userInput.getPushSystem());
-        	userExisting.setPushID(userInput.getPushID());
-        	userExisting.setSpokenLangs(userInput.getSpokenLangs()); 
-    		userExisting.setLastActivityTS(System.currentTimeMillis());
+			user.setEMail(userInput.getEMail());
+			user.setImageMediaID(userInput.getImageMediaID());
+        	user.setName(userInput.getName());
+        	user.setPushActive(userInput.getPushActive());
+        	user.setPushSystem(userInput.getPushSystem());
+        	user.setPushID(userInput.getPushID());
+        	user.setSpokenLangs(userInput.getSpokenLangs());
+    		user.setLastActivityTS(System.currentTimeMillis());
     		
     	} else {
     		
@@ -298,17 +297,17 @@ public class UserController {
         	ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
         	
         	// complete overwrite allowed
-        	userExisting = userInput;
+        	user = userInput;
         	
     	}
     	
     	// update user in persistence
-    	userService.update(userExisting);
+    	userService.update(user);
     	
     	// keep password hash just on server side
-    	userExisting.setPassword("");
+    	user.setPassword("");
     	
-        return userExisting;
+        return user;
     }
     
     @SuppressWarnings("deprecation")
@@ -373,7 +372,7 @@ public class UserController {
 
 		log.info("URL to generate Coupons: " + urlStr);
 
-    	if ((mailConf!=null) && (!EMailManager.getInstance().sendMail(javaMailSender, email.trim(), "Konfetti Coupons "+System.currentTimeMillis(), "Print out the PDF attached and spread the love :)", urlStr))) {
+    	if ((mailConf!=null) && (!eMailManager.sendMail(email.trim(), "rest.user.coupons.subject", "Print out the PDF attached and spread the love :)", urlStr, user.getSpokenLangs()))) {
 			throw new Exception("Was not able to send eMail with Coupons to " + user.getEMail());
 		}
 
@@ -485,7 +484,7 @@ public class UserController {
 			}
 
 			// send coupon by eMail
-	    	if ((mailConf!=null) && (EMailManager.getInstance().sendMail(javaMailSender, address, "Received "+amount+" Konfetti from "+System.currentTimeMillis(), "Open app and redeem coupon code: '"+code.getCode(), null))) {
+	    	if ((mailConf!=null) && (eMailManager.sendMail(address, "rest.user.coupons.received", "Open app and redeem coupon code: '"+code.getCode(), null, user.getSpokenLangs()))) {
 				log.info("- email with coupon send to: " + address);
 			} else {
 				accountingService.addBalanceToAccount(TransactionType.PAYBACK, accountName, amount);
@@ -538,7 +537,7 @@ public class UserController {
 			if (!sendNotification) {
 
 				// eMail
-    	    	if ((mailConf!=null) && (EMailManager.getInstance().sendMail(javaMailSender, address, "Received "+amount+" Konfetti ("+System.currentTimeMillis()+")", "Open app and check party '"+party.getName()+"' :)", null))) {
+    	    	if ((mailConf!=null) && (eMailManager.sendMail(address, "rest.user.coupons.received.party", "Open app and check party '"+party.getName()+"' :)", null, user.getSpokenLangs()))) {
 					log.info("- eMail with Info notification send to: " + address);
 				} else {
 					log.error("Was not able to send eMail with Notification about received konfetti to " + user.getEMail() + " - check address and server email config");

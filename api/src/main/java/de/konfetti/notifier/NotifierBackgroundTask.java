@@ -44,7 +44,10 @@ public class NotifierBackgroundTask {
 	private static final String PUSHTYPE_PUSH = "push";
 
 	private static long lastProcessingStart = 0l;
-	
+
+	@Autowired
+	private EMailManager eMailManager;
+
     @Autowired
     private JavaMailSender javaMailSender;
     
@@ -383,7 +386,7 @@ public class NotifierBackgroundTask {
 		User user = userService.findById(notification.getUserId());
 		
 		// TODO multi lang --- see user setting
-		if (EMailManager.getInstance().sendMail(javaMailSender, user.getEMail(), "[konfetti] new events in your neighborhood", "Open Konfetti App so see more :D", null)) {
+		if (eMailManager.sendMail(user.getEMail(), "notifier.party.events", "Open Konfetti App so see more :D", null, null)) {
 			log.info("OK - PUSH SEND BY EMAIL (" + user.getEMail() + ")");
 			return true;
 		} else {
