@@ -26,6 +26,7 @@
         <guava.version>16.0.1</guava.version>
         <!--Used for CrossOrigin-->
         <spring.version>4.2.2.RELEASE</spring.version>
+  	    <docker.image.prefix>konfettiapp</docker.image.prefix>
     </properties>
     
     <dependencies>
@@ -171,6 +172,26 @@
                     </annotationProcessors>
                 </configuration>
             </plugin>
+            <!--
+            	DOCKER PLUGIN see
+            	https://github.com/spring-guides/gs-spring-boot-docker
+             -->
+            <plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<version>0.2.3</version>
+				<configuration>
+					<imageName>${docker.image.prefix}/${project.artifactId}</imageName>
+					<dockerDirectory>src/main/docker</dockerDirectory>
+					<resources>
+						<resource>
+							<targetPath>/</targetPath>
+							<directory>${project.build.directory}</directory>
+							<include>${project.build.finalName}.jar</include>
+						</resource>
+					</resources>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 
