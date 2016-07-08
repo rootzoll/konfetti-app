@@ -299,13 +299,13 @@ angular.module('starter', [
             'ENTERNAME' : 'Please enter your name',
             'SENDMESSAGE' : 'send a message',
             'INTRO_WELCOME' : 'Welcome to Konfetti App',
-            'INTRO_STEP1A' : 'This app is about',
-            'INTRO_STEP1B' : 'neighborly help parties.',
+            'INTRO_STEP1A' : 'Konfetti is like',
+            'INTRO_STEP1B' : 'karma for the neighborhood.',
             'INTRO_STEP2A' : 'Earn Konfetti',
             'INTRO_STEP2B' : 'by taking care of tasks or by donating.',
             'INTRO_STEP3A' : 'Use Konfetti',
             'INTRO_STEP3B' : 'to post tasks to community or to up vote existing tasks.',
-            'INTRO_LETSGO' : 'Show konfetti parties in my area.',
+            'INTRO_LETSGO' : '.. or show konfetti parties in my area.',
             'CREATENEW'    : 'create new',
             'REDEEM_MAGIC_SUB' : 'activate features, add privileges ..',
             'REDEEM_COUPON_SUB' : 'Please enter the code number of your coupon:',
@@ -421,7 +421,8 @@ angular.module('starter', [
             'TITLE_IMPORTANT' : 'Important',
             'RESETTING_SERVER' : 'The server was reset - starting as a fresh user.',
             'LOGINBUTTON_REGISTERFORGOT' : 'Lets register as a new user.',
-            'LOGINBUTTON_LOGINLOGIN' : 'I already have an account.'      
+            'LOGINBUTTON_LOGINLOGIN' : 'I already have an account.',
+            'INTRO_REDEEMCOUPON' : 'Redeem Konfetti Coupon ..'     
    });
 
    $translateProvider.translations('de', {
@@ -487,13 +488,13 @@ angular.module('starter', [
             'ENTERNAME' : 'Bitte gib deinen Namen ein',
             'SENDMESSAGE' : 'sende eine Nachricht',
             'INTRO_WELCOME' : 'Willkommen zur Konfetti App :)',
-            'INTRO_STEP1A' : 'In dieser App geht es um',
-            'INTRO_STEP1B' : 'Nachbarschaftshilfe-Parties.',
+            'INTRO_STEP1A' : 'Konfettis ist wie',
+            'INTRO_STEP1B' : 'Karmapunkte für die Nachbarschaft.',
             'INTRO_STEP2A' : 'Verdiene Konfetti',
             'INTRO_STEP2B' : 'indem du Aufgaben erledigst oder spendest.',
             'INTRO_STEP3A' : 'Nutze Konfetti',
             'INTRO_STEP3B' : 'um selber Aufgaben an die Gemeinschaft zu stellen oder bestehende Aufgaben zu unterstützen.',
-            'INTRO_LETSGO' : 'Zeige Konfetti-Parties in meiner Nähe.',
+            'INTRO_LETSGO' : '.. oder zeige Konfetti-Parties in meiner Nähe.',
             'CREATENEW'    : 'Neu Erstellen',
             'REDEEM_MAGIC_SUB' : 'Aktivierung von zusätzlichen Funktionen oder Rechten ..',
             'REDEEM_COUPON_SUB' : 'Bitte gib die Code-Nummer deines Gutscheines ein:',
@@ -609,7 +610,8 @@ angular.module('starter', [
             'TITLE_IMPORTANT' : 'Wichtig',
             'RESETTING_SERVER' : 'Der Server wurde zurückgesetzt. Du beginnst nochmal als neuer Nutzer.',
             'LOGINBUTTON_REGISTERFORGOT' : 'Als neuer Nutzer anmelden.',
-            'LOGINBUTTON_LOGINLOGIN' : 'Ich habe bereits einen Nutzernamen.'           
+            'LOGINBUTTON_LOGINLOGIN' : 'Ich habe bereits einen Nutzernamen.',
+            'INTRO_REDEEMCOUPON' : 'Konfetti Gutschein einlösen ..'         
    });
 
    $translateProvider.translations('ar', {
@@ -797,7 +799,8 @@ angular.module('starter', [
             'TITLE_IMPORTANT' : 'مهم',
             'RESETTING_SERVER' : 'تم إعادة تعيين الخادم - بدءا كمستخدم جديد.',
             'LOGINBUTTON_REGISTERFORGOT' : 'دعونا تسجيل كمستخدم جديد.',
-            'LOGINBUTTON_LOGINLOGIN' : 'لدي حساب بالفعل.'
+            'LOGINBUTTON_LOGINLOGIN' : 'لدي حساب بالفعل.',
+            'INTRO_REDEEMCOUPON' : 'استبدال القسيمة'
    });
 
   $translateProvider.preferredLanguage("en");

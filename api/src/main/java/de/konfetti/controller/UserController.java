@@ -96,8 +96,13 @@ public class UserController {
         	user.setPassword(passMD5);
 			log.info("Create new User with eMail(" + email + ") and passwordhash(" + passMD5 + ")");
 			// TODO --> email multi lang by lang set in user
-        	if (!eMailManager.sendMail(email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null, user.getSpokenLangs())) {
-				log.warn("was not able to send eMail on account creation to(" + email + ")");
+			try {
+	        	if (!eMailManager.sendMail(email, "Konfetti Account Created", "username: "+email+"\npass: "+pass+"\n\nkeep email or write password down", null, user.getSpokenLangs())) {
+					log.warn("was not able to send eMail on account creation to(" + email + ")");
+				}
+			} catch (Exception e) {
+				// TODO check why there gets an exception thrown later
+				log.warn("EXCEPTION was not able to send eMail on account creation to(" + email + ")");
 			}
     	}
     	
@@ -332,51 +337,84 @@ public class UserController {
 			}
     	}
 
+    	// validate inputs
     	if (count<=0) throw new Exception("must be more than 0 coupons");
     	if (amount<=0) throw new Exception("must be more than 0 per coupon");
-
-    	// get user from HTTP request
-    	Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
-    	if (client==null) throw new Exception("invalid/missing client on request");
-    	User user = userService.findById(client.getUserId());
-    	if (user==null) throw new Exception("missing user with id("+client.getUserId()+")");
-
+    	
     	// check if party exists
     	Party party = partyService.findById(partyId);
     	if (party==null) throw new Exception("party does not exist");
+    		
+        // get user from HTTP request
+        Client client = ControllerSecurityHelper.getClientFromRequestWhileCheckAuth(httpRequest, clientService);
+        if (client==null) throw new Exception("invalid/missing client on request");
+        User user = userService.findById(client.getUserId());
+        if (user==null) throw new Exception("missing user with id("+client.getUserId()+")");
 
-    	// check if user is admin for party
-    	if (!Helper.contains(user.getAdminOnParties(), party.getId())) throw new Exception("user needs to be admin on party");
+        // check if user is admin for party
+        if (!Helper.contains(user.getAdminOnParties(), party.getId())) throw new Exception("user needs to be admin on party");
 
-    	// check if user has set email
-		if (email.trim().length() == 0) email = user.getEMail();
-		if ((email==null) || (email.trim().length()<4)) throw new Exception("user needs to have a valid email on account");
+        // check if user has set email
+    	if (email.trim().length() == 0) email = user.getEMail();
+    	if ((email==null) || (email.trim().length()<4)) throw new Exception("user needs to have a valid email on account");
+    		
+        // generate codes
+        List<String> codes = new ArrayList<String>();
+        for (int i=0; i<count; i++) {
+        	Code code = this.codeService.createKonfettiCoupon(partyId, client.getUserId(), new Long(amount));
+        	System.out.println("Generated CouponCode: "+code.getCode());
+        	codes.add(code.getCode());
+        }
 
-    	// generate codes
-    	List<String> codes = new ArrayList<String>();
-    	for (int i=0; i<count; i++) {
-    		Code code = this.codeService.createKonfettiCoupon(partyId, client.getUserId(), new Long(amount));
-    		System.out.println("Generated CouponCode: "+code.getCode());
-    		codes.add(code.getCode());
+        // URL max 8KB
+        String urlStr = "";
+        for (String code : codes) {
+        	urlStr += (","+code);
+    	}
+        
+        urlStr = "http://localhost:2342/generate?template="+URLEncoder.encode("coupon-master-template.html")+"&amount="+amount+"&codes=" +URLEncoder.encode(urlStr.substring(1));
+    	if (urlStr.length() > (6 * 1024))
+    			log.warn("the URL to generate the codes is >6KB - limit is 8KB - may become critical");
+    	if (urlStr.length()>(8*1024)) throw new Exception("the URL to generate the codes is >8KB - thats bigger than URL GET data can be with NodeJS");
+
+    	log.info("URL to generate Coupons: " + urlStr);
+
+        if ((mailConf!=null) && (!eMailManager.sendMail(email.trim(), "rest.user.coupons.subject", "Print out the PDF attached and spread the love :)", urlStr, user.getSpokenLangs()))) {
+    		throw new Exception("Was not able to send eMail with Coupons to " + user.getEMail());
     	}
 
-    	// URL max 8KB
-    	String urlStr = "";
-    	for (String code : codes) {
-    		urlStr += (","+code);
-		}
-    	urlStr = "http://localhost:2342/generate?template="+URLEncoder.encode("coupon-master-template.html")+"&amount="+amount+"&codes=" +URLEncoder.encode(urlStr.substring(1));
-		if (urlStr.length() > (6 * 1024))
-			log.warn("the URL to generate the codes is >6KB - limit is 8KB - may become critical");
-		if (urlStr.length()>(8*1024)) throw new Exception("the URL to generate the codes is >8KB - thats bigger than URL GET data can be with NodeJS");
+    	return true;
+    		
+	}
+    
+    @SuppressWarnings("deprecation")
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/coupons-admin/{partyId}", method = RequestMethod.GET, produces = "application/json")
+	public List<String> generateCodesAdmin(@PathVariable Long partyId,
+								 @RequestParam(value="count", defaultValue="0") Integer count,
+								 @RequestParam(value="amount", defaultValue="0") Integer amount,
+								 HttpServletRequest httpRequest) throws Exception {
 
-		log.info("URL to generate Coupons: " + urlStr);
+    	// validate inputs
+    	if (count<=0) throw new Exception("must be more than 0 coupons");
+    	if (amount<=0) throw new Exception("must be more than 0 per coupon");
+    	
+    	// check if party exists
+    	Party party = partyService.findById(partyId);
+    	if (party==null) throw new Exception("party does not exist");
+    		
+    	// check for trusted application with administrator privilege
+        ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
 
-    	if ((mailConf!=null) && (!eMailManager.sendMail(email.trim(), "rest.user.coupons.subject", "Print out the PDF attached and spread the love :)", urlStr, user.getSpokenLangs()))) {
-			throw new Exception("Was not able to send eMail with Coupons to " + user.getEMail());
-		}
-
-		return true;
+        // generate codes
+        List<String> codes = new ArrayList<String>();
+        for (int i=0; i<count; i++) {
+        	Code code = this.codeService.createKonfettiCoupon(partyId, 0l, new Long(amount));
+        	System.out.println("Generated CouponCode: "+code.getCode());
+        	codes.add(code.getCode());
+        }
+        
+        return codes;
 	}
 
  	@CrossOrigin(origins = "*")
@@ -672,7 +710,17 @@ public class UserController {
 
 			// redeem konfetti
     		if (Code.ACTION_TYPE_KONFETTI==coupon.getActionType()) {
+    			
+    			// add konfetti to party
         		result.actions = addKonfettiOnParty(user, coupon.getPartyID(), coupon.getAmount(), result.actions);
+        		
+        		// get GPS from party
+        		Party party = this.partyService.findById(coupon.getPartyID());
+        		ClientAction gpsInfo = new ClientAction();
+        		gpsInfo.command = "gpsInfo";
+        		gpsInfo.json = "{lat:"+party.lat+", lon:"+party.lon+"}";
+        		result.actions.add(gpsInfo);
+        		
         	   	// TODO --> multi lang by lang set in user
         		result.feedbackHtml = "You got now "+coupon.getAmount()+" konfetti to create a task with or upvote other ideas.";
     		} else

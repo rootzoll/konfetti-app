@@ -9,7 +9,7 @@ function KonfettiApi($http, $uibModal) {
 
     // SET WHICH SERVER SHOULD BE ACTIVE
 
-    var apiUrl = apiUrlDevelopmentServer; // choose from above
+    var apiUrl = apiUrlLocalDevelopment; //apiUrlDevelopmentServer; // choose from above
 
     // SECURITY TESTING
     if (apiUrlProductionServer.indexOf("https")!=0) {
@@ -216,6 +216,37 @@ function KonfettiApi($http, $uibModal) {
                 config.method = 'POST';
                 config.url = apiUrl + '/party';
                 config.data = party;
+                // WIN
+                var successCallback = function (response) {
+                    win(response.data);
+                };
+                var failCallback = function (err) {
+                    if (isPasswordWrong(err)) {
+                        // try again - recursive
+                        modalAlert("PASSWORD IS WRONG", function () {
+                            waitForPassword(function () {
+                                request(win, fail);
+                            });
+                        });
+                    } else {
+                        fail();
+                    }
+                };
+                $http(config).then(successCallback, failCallback);
+            };
+
+            waitForPassword(function(){
+                request(win, fail);
+            });
+        },
+        generateKonfetti : function(partyId, count, amount, win, fail) {
+
+            var request = function(win, fail) {
+
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = apiUrl + '/account/coupons-admin/'+partyId+'?count='+count+'&amount='+amount;
+               
                 // WIN
                 var successCallback = function (response) {
                     win(response.data);

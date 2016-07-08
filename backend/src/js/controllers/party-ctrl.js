@@ -93,6 +93,15 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
         alert("TODO: buttonDeleteAdminCodes");
     };
 
+    $scope.generateKonfetti = function() {
+        KonfettiApi.generateKonfetti($scope.partyID, 10, 100, function(res) {
+            // TODO - better feedback later
+            alert(JSON.stringify(res));
+        }, function() {
+            alert("generateKonfetti FAILED");
+        });
+    }
+
     // checks if user inputs are valid values
     $scope.inputsAreValid = function() {
 

@@ -219,6 +219,11 @@ angular.module('starter.konfettitoolbox', [])
                            $state.go('tab.dash', {id: JSON.parse(action.json)});
                        } else
 
+                       // GPS info - set if no other GPS is set yet
+                       if (action.command=="gpsInfo") {
+                           alert("gpsInfo: "+action.json);
+                       } else
+
                        // unkown
                        {
                            alert("UNKOWN COMMAND '"+action.command+"'");

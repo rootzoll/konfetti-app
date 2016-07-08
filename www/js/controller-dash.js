@@ -579,6 +579,11 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         };
 
+        // the REDEEM COUPON button on the intro/welcome screen
+        $scope.buttonIntroScreenCoupon = function() {
+            KonfettiToolbox.processCode(true);
+        };
+
         // action to refresh dash data
         $scope.action = function() {        	
 

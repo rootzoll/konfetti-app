@@ -88,9 +88,9 @@ public class Party {
      * just if user within this radius party will be shown
      */
     
-    private Float lon;
-    private Float lat;
-    private int meters;
+    public Float lon;
+    public Float lat;
+    public int meters;
     
     /*
      * SEND KONFETTI

@@ -3,7 +3,9 @@
     <button ng-show="party.id!=0" type="button" class="btn btn-default btn-sm" ng-click="buttonNewParty()" style="margin-bottom: 12px;">+ Create new Party</button>
     <button ng-show="party.id!=0" type="button" class="btn btn-primary btn-sm" ng-click="buttonGenerateAdminCodes()" style="margin-bottom: 12px;">Generate additional Admin-Codes</button>
     <button ng-show="party.id!=0" type="button" class="btn btn-primary btn-sm" ng-click="buttonDeleteAdminCodes()" style="margin-bottom: 12px;">Delete all Admin-Codes</button>
+     <button ng-show="party.id!=0" type="button" class="btn btn-primary btn-sm" ng-click="generateKonfetti()" style="margin-bottom: 12px;">Generate Konfetti</button>
     <button ng-show="party.id!=0" type="button" class="btn btn-danger btn-sm" ng-click="buttonDeleteParty()" style="margin-bottom: 12px;">Delete Party</button>
+    
     <rd-widget>
       <rd-widget-header icon="fa-birthday-cake" title="Party">
           <button type="button" class="btn btn-primary btn-md" ng-class="saveButtonDisabled" ng-click="saveParty(geoMatchingEnabled)" style="float: right;margin-right: -10px;margin-top: 4px;margin-bottom: 0px;">
