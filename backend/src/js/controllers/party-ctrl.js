@@ -24,7 +24,7 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
         lon: 0.0,
         meters: 0,
         sendKonfettiMode : 0,
-        sendKonfettiWhiteList : 0,
+        sendKonfettiWhiteList : [],
         sendKonfettiWhiteListCSV : ""
     };
 
