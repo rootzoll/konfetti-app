@@ -1,6 +1,7 @@
 package de.konfetti.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import de.konfetti.data.*;
 import de.konfetti.service.*;
 import de.konfetti.utils.AccountingTools;
@@ -8,12 +9,14 @@ import de.konfetti.utils.EMailManager;
 import de.konfetti.utils.Helper;
 import de.konfetti.utils.PushManager;
 import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -411,6 +414,38 @@ public class UserController {
         for (int i=0; i<count; i++) {
         	Code code = this.codeService.createKonfettiCoupon(partyId, 0l, new Long(amount));
         	System.out.println("Generated CouponCode: "+code.getCode());
+        	codes.add(code.getCode());
+        }
+        
+        return codes;
+	}
+    
+    @SuppressWarnings("deprecation")
+	@CrossOrigin(origins = "*")
+	@RequestMapping(value = "/codes-admin/{partyId}", method = RequestMethod.GET, produces = "application/json")
+	public List<String> generateCodesAdmin(@PathVariable Long partyId,
+								 @RequestParam(value="count", defaultValue="1") Integer count,
+								 @RequestParam(value="type", defaultValue="admin") String type,
+								 HttpServletRequest httpRequest) throws Exception {
+
+    	// validate inputs
+    	if (count<=0) throw new Exception("must be more than 0");
+    	if ((!type.equals("admin")) && (!type.equals("review"))) throw new Exception("unkown type");
+    	
+    	// check if party exists
+    	Party party = partyService.findById(partyId);
+    	if (party==null) throw new Exception("party does not exist");
+    		
+    	// check for trusted application with administrator privilege
+        ControllerSecurityHelper.checkAdminLevelSecurity(httpRequest);
+
+        // generate codes
+        List<String> codes = new ArrayList<String>();
+        for (int i=0; i<count; i++) {
+        	Code code = null;
+        	if (type.equals("admin")) code = this.codeService.createAdminCode(partyId);
+        	if (type.equals("review")) code = this.codeService.createReviewCode(partyId);
+        	System.out.println("Generated "+type+"+ Code: "+code.getCode());
         	codes.add(code.getCode());
         }
         

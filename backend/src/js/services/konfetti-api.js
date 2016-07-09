@@ -270,6 +270,37 @@ function KonfettiApi($http, $uibModal) {
                 request(win, fail);
             });
         },
+        generateCodes : function(partyId, count, type, win, fail) {
+
+            var request = function(win, fail) {
+
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = apiUrl + '/account/codes-admin/'+partyId+'?count='+count+'&type='+type;
+               
+                // WIN
+                var successCallback = function (response) {
+                    win(response.data);
+                };
+                var failCallback = function (err) {
+                    if (isPasswordWrong(err)) {
+                        // try again - recursive
+                        modalAlert("PASSWORD IS WRONG", function () {
+                            waitForPassword(function () {
+                                request(win, fail);
+                            });
+                        });
+                    } else {
+                        fail();
+                    }
+                };
+                $http(config).then(successCallback, failCallback);
+            };
+
+            waitForPassword(function(){
+                request(win, fail);
+            });
+        },
         updateParty : function(party, win, fail) {
 
             var request = function(win, fail) {

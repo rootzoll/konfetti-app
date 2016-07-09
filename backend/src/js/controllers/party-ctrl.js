@@ -86,7 +86,31 @@ function PartyCtrl($scope, $stateParams, KonfettiApi) {
     };
 
     $scope.buttonGenerateAdminCodes = function() {
-        alert("TODO: buttonGenerateAdminCodes");
+
+        var adminCodes = null;
+        var reviewCodes = null;
+
+        var bothCodesAreRead = function() {
+            alert("ADMIN CODES: "+JSON.stringify(adminCodes)+" REVIEW CODES: "+JSON.stringify(reviewCodes));
+        };
+
+        KonfettiApi.generateCodes($scope.partyID, 3, 'admin', function(codes){
+            // WIN
+            adminCodes = codes;
+            if (reviewCodes!=null) bothCodesAreRead();
+        }, function() {
+            // FAIL
+            alert("FAILED Admin codes");
+        });
+
+        KonfettiApi.generateCodes($scope.partyID, 10, 'review', function(codes){
+            // WIN
+            reviewCodes = codes;
+            if (adminCodes!=null) bothCodesAreRead();
+        }, function() {
+            // FAIL
+            alert("FAILED Review codes");
+        });
     };
 
     $scope.buttonDeleteAdminCodes = function() {
