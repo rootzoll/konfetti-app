@@ -581,7 +581,18 @@ angular.module('starter.controller.dash', [])
 
         // the REDEEM COUPON button on the intro/welcome screen
         $scope.buttonIntroScreenCoupon = function() {
-            KonfettiToolbox.processCode(true);
+            KonfettiToolbox.processCode(true, function(result){
+                if (result.actions.length>0) {
+                    // code worked
+                    KonfettiToolbox.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
+                        $scope.buttonIntroScreenOK();
+                    });
+                } else {
+                    // code wrong
+                    KonfettiToolbox.showIonicAlertWith18nText('REDEEMCOUPON', 'CODE_WRONG', function(){
+                    });
+                }
+            });
         };
 
         // action to refresh dash data
@@ -612,24 +623,10 @@ angular.module('starter.controller.dash', [])
                 return;
             }
             
-            // display intro message
-            if (!AppContext.getLocalState().introScreenShown) {
-                $scope.state = "INTRO";
-                // show intro part of view
-                // --> button press AppContext.getLocalState.introScreenShown = true
-                RainAnimation.makeItRainKonfetti(1.5);
-                $scope.continueFlag = false;
-                $timeout(function() {
-                	$scope.continueFlag = true;
-                },3000);
-                return;
-            }
-
             // check if got client account
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
                     $scope.state = "ACCOUNTWAIT";
-                    ALERT("GO CREATE ACCOUNT");
                     ApiService.createAccount(null, null, AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
@@ -673,6 +670,19 @@ angular.module('starter.controller.dash', [])
                 } else {
                 	console.log("OK  scope.checkedAccount == true");
                 }
+            }
+
+            // display intro message
+            if (!AppContext.getLocalState().introScreenShown) {
+                $scope.state = "INTRO";
+                // show intro part of view
+                // --> button press AppContext.getLocalState.introScreenShown = true
+                RainAnimation.makeItRainKonfetti(1.5);
+                $scope.continueFlag = false;
+                $timeout(function() {
+                	$scope.continueFlag = true;
+                },3000);
+                return;
             }
 
             // make sure websocket is connected & listen on incoming

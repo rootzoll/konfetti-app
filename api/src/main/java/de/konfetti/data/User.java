@@ -19,7 +19,7 @@ public class User {
 	public static final String PUSHSYSTEM_CHROME = "chrome";
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    public Long id;
     // self written name (nick or real)
     private String name;
     // email
@@ -31,7 +31,7 @@ public class User {
 	// list of languages the user speaks (e.g. 'de', 'en', 'ar')
     private String[] spokenLangs = {};
     // IDs of parties the user has an konfetti balance on
-    private Long[] activeOnParties = {};
+    public Long[] activeOnParties = {};
 
 	/*
 	 * PUSH MESSAGING

@@ -188,7 +188,7 @@ angular.module('starter.konfettitoolbox', [])
 
                    });
            },
-           processCode : function(isRedeemCouponBool) {
+           processCode : function(isRedeemCouponBool, /* optional */ successCallback ) {
 
                var processRedeemActions = function(actionArray) {
 
@@ -221,7 +221,22 @@ angular.module('starter.konfettitoolbox', [])
 
                        // GPS info - set if no other GPS is set yet
                        if (action.command=="gpsInfo") {
-                           alert("gpsInfo: "+action.json);
+
+                            var gpsdata = JSON.parse(action.json);
+                            $rootScope.lat  = gpsdata.lat;
+                            $rootScope.lon = gpsdata.lon;
+                            $rootScope.gps  = 'win';
+                            var newPosition = {
+                                ts: Date.now(),
+                                lat: gpsdata.lat,
+                                lon: gpsdata.lon
+                            };
+                            var localState = AppContext.getLocalState();
+                            localState.lastPosition = newPosition;
+                            AppContext.setLocalState(localState);
+
+                            $log.info("GPS update by server: lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+
                        } else
 
                        // unkown
@@ -267,7 +282,12 @@ angular.module('starter.konfettitoolbox', [])
                                 ApiService.redeemCode(res, AppContext.getAppLang(), function(result){
                                     // WIN
                                     $ionicLoading.hide();
-                                    feedbackOnCode(result);
+                                    if ((typeof successCallback != "undefined") && (successCallback!=null)) {
+                                        processRedeemActions(result.actions);
+                                        successCallback(result);
+                                    } else {
+                                        feedbackOnCode(result);
+                                    }
                                 }, function(){
                                     // FAIL
                                     $ionicLoading.hide();

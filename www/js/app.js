@@ -422,7 +422,9 @@ angular.module('starter', [
             'RESETTING_SERVER' : 'The server was reset - starting as a fresh user.',
             'LOGINBUTTON_REGISTERFORGOT' : 'Lets register as a new user.',
             'LOGINBUTTON_LOGINLOGIN' : 'I already have an account.',
-            'INTRO_REDEEMCOUPON' : 'Redeem Konfetti Coupon ..'     
+            'INTRO_REDEEMCOUPON' : 'Redeem Konfetti Coupon ..',
+            'CODE_WRONG': 'The code is not valid or already used. Please check if correct.',
+            'CODE_CORRECT': 'You received Konfetti :) Start now to support existing ideas or create a new task with Konfetti.'   
    });
 
    $translateProvider.translations('de', {
@@ -488,7 +490,7 @@ angular.module('starter', [
             'ENTERNAME' : 'Bitte gib deinen Namen ein',
             'SENDMESSAGE' : 'sende eine Nachricht',
             'INTRO_WELCOME' : 'Willkommen zur Konfetti App :)',
-            'INTRO_STEP1A' : 'Konfettis ist wie',
+            'INTRO_STEP1A' : 'Konfettis sind wie',
             'INTRO_STEP1B' : 'Karmapunkte für die Nachbarschaft.',
             'INTRO_STEP2A' : 'Verdiene Konfetti',
             'INTRO_STEP2B' : 'indem du Aufgaben erledigst oder spendest.',
@@ -611,7 +613,9 @@ angular.module('starter', [
             'RESETTING_SERVER' : 'Der Server wurde zurückgesetzt. Du beginnst nochmal als neuer Nutzer.',
             'LOGINBUTTON_REGISTERFORGOT' : 'Als neuer Nutzer anmelden.',
             'LOGINBUTTON_LOGINLOGIN' : 'Ich habe bereits einen Nutzernamen.',
-            'INTRO_REDEEMCOUPON' : 'Konfetti Gutschein einlösen ..'         
+            'INTRO_REDEEMCOUPON' : 'Konfetti Gutschein einlösen ..',
+            'CODE_WRONG': 'Der Gutscheincode ist icht korrekt oder wurde bereits verwendet.',
+            'CODE_CORRECT': 'Du hast Konfetti erhalten:) Unterstütze damit bestehende Ideen oder wünsch dir etwas von deiner Nachbarschaft.'       
    });
 
    $translateProvider.translations('ar', {
@@ -800,7 +804,9 @@ angular.module('starter', [
             'RESETTING_SERVER' : 'تم إعادة تعيين الخادم - بدءا كمستخدم جديد.',
             'LOGINBUTTON_REGISTERFORGOT' : 'دعونا تسجيل كمستخدم جديد.',
             'LOGINBUTTON_LOGINLOGIN' : 'لدي حساب بالفعل.',
-            'INTRO_REDEEMCOUPON' : 'استبدال القسيمة'
+            'INTRO_REDEEMCOUPON' : 'استبدال القسيمة',
+            'CODE_WRONG': 'رمز غير صالح أو استخدامها بالفعل. يرجى معرفة ما اذا كان صحيح.',
+            'CODE_CORRECT': 'لقد تلقيت حلويات. نبدأ الآن لدعم الأفكار الموجودة أو إنشاء مهمة جديدة مع حلويات.'
    });
 
   $translateProvider.preferredLanguage("en");

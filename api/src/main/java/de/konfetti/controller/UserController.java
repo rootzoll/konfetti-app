@@ -753,7 +753,7 @@ public class UserController {
         		Party party = this.partyService.findById(coupon.getPartyID());
         		ClientAction gpsInfo = new ClientAction();
         		gpsInfo.command = "gpsInfo";
-        		gpsInfo.json = "{lat:"+party.lat+", lon:"+party.lon+"}";
+        		gpsInfo.json = "{\"lat\":"+party.lat+", \"lon\":"+party.lon+"}";
         		result.actions.add(gpsInfo);
         		
         	   	// TODO --> multi lang by lang set in user
@@ -818,6 +818,18 @@ public class UserController {
 	private List<ClientAction> addKonfettiOnParty(User user, Long partyId, Long konfettiAmount, List<ClientAction> actions) throws Exception {
 
 		final String userAccountName = AccountingTools.getAccountNameFromUserAndParty(user.getId(), partyId);
+		
+		// add user to party if not already part of
+		if (!Helper.contains(user.activeOnParties, partyId)) {
+			try {
+				user.activeOnParties = Helper.append(user.activeOnParties, partyId);
+				this.accountingService.createAccount(userAccountName);	
+				this.userService.update(user);
+			} catch (Exception e) {
+				log.warn("EXCEPTION: Was not able to add user("+user.id+") to party("+partyId+"): "+e.getMessage());
+			}
+		}
+		
 		Long konfettiBefore = this.accountingService.getBalanceOfAccount(userAccountName);
 		Long konfettiAfter = this.accountingService.addBalanceToAccount(TransactionType.COUPON, userAccountName, konfettiAmount);
 
