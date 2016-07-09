@@ -69,7 +69,7 @@ public class UserController {
     @CrossOrigin(origins = "*")
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
     public User createUser(
-			@RequestParam(value = "mail") @Size(min = 1) String email,
+			@RequestParam(value="mail", defaultValue=null) String email,
 			@RequestParam(value="pass", defaultValue="") String pass,
 			@RequestParam(value="locale", defaultValue="en") String locale ) throws Exception {
     	
