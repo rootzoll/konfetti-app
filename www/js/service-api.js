@@ -3,7 +3,7 @@ angular.module('starter.api', [])
     .factory('ApiService', function($log, $timeout, AppContext, $http) {
 
         /*
-         * BACKEND API URL CONFIG ----> services.js
+         * BACKEND API URL CONFIG ----> service-appcontext.js
          */
 
         var activeServerUrl =  AppContext.getAppConfig().apiUrl;
