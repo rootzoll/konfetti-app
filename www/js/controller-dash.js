@@ -55,6 +55,8 @@ angular.module('starter.controller.dash', [])
         $scope.amountKonfettiToSpend = 0;
         $scope.sendKonfettiWhiteList = [];  
 
+        $scope.konfettiAddAmountPerTap = 0;
+
         // sorting options
         $scope.sortSet = [
             {sort:'most', display:'most'},
@@ -453,11 +455,14 @@ angular.module('starter.controller.dash', [])
         $scope.tapRequestKonfetti = function($event, request) {
             $event.stopPropagation();
 
-            // check if enough konfetti available
-            if ($rootScope.party.konfettiCount<=0) {
-                if (request.konfettiAdd===0) {
-                    KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
-                }
+            // check if user has konfetti at all
+            if ((request.konfettiAdd===0) && ($rootScope.party.konfettiCount==0)) {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                return;
+            }
+
+            // check enough konfetti available for next tap
+            if (($rootScope.party.konfettiCount-request.konfettiAdd)<0) {
                 return;
             }
 
@@ -465,9 +470,22 @@ angular.module('starter.controller.dash', [])
             if (typeof request.blockTap === "undefined") request.blockTap = false;
             if (request.blockTap) return;
 
+            // revert last tap calculations
+            request.konfettiAdd -= $scope.konfettiAddAmountPerTap;
+            $rootScope.party.konfettiCount += $scope.konfettiAddAmountPerTap;
+
+            // calculate konfetti add
+            if ($scope.konfettiAddAmountPerTap==0) {
+                // start with 1 konfetti per tap
+                $scope.konfettiAddAmountPerTap = 1;
+            } else {
+                // double on each tap ... 2, 4, 8, 16, ..
+                $scope.konfettiAddAmountPerTap = $scope.konfettiAddAmountPerTap * 2;
+            }
+
             // count up confetti to add
-            request.konfettiAdd++;
-            $rootScope.party.konfettiCount--;
+            request.konfettiAdd += $scope.konfettiAddAmountPerTap;
+            $rootScope.party.konfettiCount -= $scope.konfettiAddAmountPerTap;
             request.lastAdd = Date.now();
 
             $timeout(function() {
@@ -481,6 +499,7 @@ angular.module('starter.controller.dash', [])
                     request.konfettiCount += request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
+                    $scope.konfettiAddAmountPerTap = 0;
                     $scope.sortRequests(request.id);
                     try {
                     	RainAnimation.makeItRainKonfetti(2);
