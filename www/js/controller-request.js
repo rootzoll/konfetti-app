@@ -199,17 +199,34 @@ angular.module('starter.controller.request', [])
   $scope.tapRequestKonfetti = function($event, request) {
 
             $event.stopPropagation();
-            if ($rootScope.party.konfettiCount<=0) return;
+
+            // check if user has konfetti at all
+            if (($rootScope.party.konfettiCount<=0) && (request.konfettiAdd==0)) {
+                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                return;
+            }
+
+            // check enough konfetti available for next tap
+            if (($rootScope.party.konfettiCount-request.konfettiAdd)<0) {
+                return;
+            }
 
             // block further tapping when reporting to server
             if (typeof request.blockTap === "undefined") request.blockTap = false;
             if (request.blockTap) return;
 
             // count up confetti to add
-            request.konfettiAdd++;
-            $rootScope.party.konfettiCount--;
+            $rootScope.party.konfettiCount = $rootScope.party.konfettiCount + request.konfettiAdd;
+            if (request.konfettiAdd==0) {
+                // on first tap start with 1
+                request.konfettiAdd = 1;
+            } else {
+                // on the next tap ... always double
+                request.konfettiAdd = request.konfettiAdd * 2;
+            }
+            $rootScope.party.konfettiCount = $rootScope.party.konfettiCount - request.konfettiAdd;
             request.lastAdd = Date.now();
-
+           
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
                 request.blockTap = true;
@@ -228,12 +245,13 @@ angular.module('starter.controller.request', [])
                     }
                 }, function(){
                     // FAIL -> put konfetti back
-                    $rootScope.party.konfettiCount -= request.konfettiAdd;
+                    $rootScope.party.konfettiCount += request.konfettiAdd;
                     request.konfettiAdd = 0;
                     request.blockTap = false;
                 });
 
             },1000);
+
   };
 
   $scope.startChat = function() {

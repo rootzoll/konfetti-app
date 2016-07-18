@@ -55,8 +55,6 @@ angular.module('starter.controller.dash', [])
         $scope.amountKonfettiToSpend = 0;
         $scope.sendKonfettiWhiteList = [];  
 
-        $scope.konfettiAddAmountPerTap = 0;
-
         // sorting options
         $scope.sortSet = [
             {sort:'most', display:'most'},
@@ -470,22 +468,16 @@ angular.module('starter.controller.dash', [])
             if (typeof request.blockTap === "undefined") request.blockTap = false;
             if (request.blockTap) return;
 
-            // revert last tap calculations
-            request.konfettiAdd -= $scope.konfettiAddAmountPerTap;
-            $rootScope.party.konfettiCount += $scope.konfettiAddAmountPerTap;
-
-            // calculate konfetti add
-            if ($scope.konfettiAddAmountPerTap==0) {
+            // calc konfetti to add
+            $rootScope.party.konfettiCount += request.konfettiAdd;
+            if (request.konfettiAdd==0) {
                 // start with 1 konfetti per tap
-                $scope.konfettiAddAmountPerTap = 1;
+                request.konfettiAdd = 1;
             } else {
                 // double on each tap ... 2, 4, 8, 16, ..
-                $scope.konfettiAddAmountPerTap = $scope.konfettiAddAmountPerTap * 2;
+                request.konfettiAdd = request.konfettiAdd * 2;
             }
-
-            // count up confetti to add
-            request.konfettiAdd += $scope.konfettiAddAmountPerTap;
-            $rootScope.party.konfettiCount -= $scope.konfettiAddAmountPerTap;
+            $rootScope.party.konfettiCount -= request.konfettiAdd;
             request.lastAdd = Date.now();
 
             $timeout(function() {
