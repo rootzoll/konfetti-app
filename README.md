@@ -69,3 +69,18 @@ To run server on localhost, go into 'api' folder and run 'mvn spring-boot:run'.
 ## Run App in local Browser (for development)
 
 Run in project root folder 'ionic serve' - this will run the app in local browser for development.
+
+
+# Docker
+
+## Run with docker-compose
+
+cd ~/api
+docker build --tag konfetti/backend .
+docker-compose up -d
+
+## To clean up containers and volumes
+docker-compose stop
+docker-compose rm -v 
+docker volume rm api_konfettiDb
+
