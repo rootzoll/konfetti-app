@@ -87,11 +87,14 @@ public class Party {
      * is a GPS coordinate (lat/lon) together with a radius in meter
      * just if user within this radius party will be shown
      */
-    
-    public Float lon;
-    public Float lat;
-    public int meters;
-    
+
+    private Float lon;
+    private Float lat;
+    private int meters;
+
+    @Transient
+    private int distanceToUser;
+
     /*
      * SEND KONFETTI
      * feature to send konfetti to other users

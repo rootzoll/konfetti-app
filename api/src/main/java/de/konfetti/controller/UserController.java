@@ -753,7 +753,7 @@ public class UserController {
         		Party party = this.partyService.findById(coupon.getPartyID());
         		ClientAction gpsInfo = new ClientAction();
         		gpsInfo.command = "gpsInfo";
-        		gpsInfo.json = "{\"lat\":"+party.lat+", \"lon\":"+party.lon+"}";
+        		gpsInfo.json = "{\"lat\":"+party.getLat()+", \"lon\":"+party.getLon()+"}";
         		result.actions.add(gpsInfo);
         		
         	   	// TODO --> multi lang by lang set in user

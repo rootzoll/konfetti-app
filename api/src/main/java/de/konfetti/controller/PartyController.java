@@ -293,7 +293,7 @@ public class PartyController {
 					log.info("--> IN");
 
 					// use meters field to set distance for user perspective
-					party.setMeters(distanceMeters);
+					party.setDistanceToUser(distanceMeters);
 
 					// add to result list
 					resultParties.add(party);
