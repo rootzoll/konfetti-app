@@ -126,9 +126,9 @@ angular.module('starter', [
                     gotLang = true;
 
                     // check available lang
-                    var lang = result.value.substr(0, 2);
-                    if (!isLangSupported(lang)) {
-                        $log.warn("lang '" + lang + "' not available ... using 'en'");
+                    var lange = result.value.substr(0, 2);
+                    if (!isLangSupported(lange)) {
+                        $log.warn("lang '" + lange + "' not available ... using 'en'");
                         lang = "en";
                     }
 
@@ -148,7 +148,7 @@ angular.module('starter', [
 
         } else {
             //On browser check lang setting differently
-            var lang = navigator.language;
+            var lang = navigator.language.substr(0, 2);
             if (!isLangSupported(lang)) {
                 $log.warn("lang '" + lang + "' not available ... using 'en'");
                 lang = "en";

@@ -24,7 +24,7 @@ angular.module('starter.konfettitoolbox', [])
                                 zipCode: "",
                                 country: "germany"
                             };
-                            $ionicPopup.show({
+                            var popUp = $ionicPopup.show({
                                 templateUrl: './templates/pop-GpsFallback.html',
                                 title: TITLE,
                                 subTitle: SUB,
@@ -33,6 +33,7 @@ angular.module('starter.konfettitoolbox', [])
                                     {
                                         text: GPS,
                                         onTap: function (e) {
+                                            popUp.close();
                                             fail();
                                         }
                                     },
@@ -40,6 +41,7 @@ angular.module('starter.konfettitoolbox', [])
                                         text: OK,
                                         type: 'button-positive',
                                         onTap: function (e) {
+                                            popUp.close();
                                             if (($rootScope.popScope.zipCode.trim().length == 0) && (ApiService.runningDevelopmentEnv())) {
 
                                                 // WORK WITH FAKE TEST DATA ON DEVELOPMENT
@@ -69,12 +71,14 @@ angular.module('starter.konfettitoolbox', [])
                                                         win(lat, lon);
                                                     }, function () {
                                                         // FAIL
+                                                        console.log("GPSFALLBACK_FAIL");
                                                         methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_FAIL', function () {
                                                             methodGetFallbackLocationBySelection(win, fail);
                                                         });
                                                     });
                                                 } else {
                                                     // ON EMPTY INPUT
+                                                    console.log("GPSFALLBACK_NEEDED");
                                                     methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_NEEDED', function () {
                                                         methodGetFallbackLocationBySelection(win, fail);
                                                     });
@@ -223,19 +227,22 @@ angular.module('starter.konfettitoolbox', [])
                        if (action.command=="gpsInfo") {
 
                             var gpsdata = JSON.parse(action.json);
-                            $rootScope.lat  = gpsdata.lat;
-                            $rootScope.lon = gpsdata.lon;
-                            $rootScope.gps  = 'win';
-                            var newPosition = {
-                                ts: Date.now(),
-                                lat: gpsdata.lat,
-                                lon: gpsdata.lon
-                            };
-                            var localState = AppContext.getLocalState();
-                            localState.lastPosition = newPosition;
-                            AppContext.setLocalState(localState);
-
-                            $log.info("GPS update by server: lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+                            if ((gpsdata.lat==0) && (gpsdata.lon==0)) {
+                                $log.info("ignoring GPS from server");
+                            } else {
+                                $rootScope.lat  = gpsdata.lat;
+                                $rootScope.lon = gpsdata.lon;
+                                $rootScope.gps  = 'win';
+                                var newPosition = {
+                                    ts: Date.now(),
+                                    lat: gpsdata.lat,
+                                    lon: gpsdata.lon
+                                };
+                                var localState = AppContext.getLocalState();
+                                localState.lastPosition = newPosition;
+                                AppContext.setLocalState(localState);
+                                $log.info("GPS update by server: lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+                            }
 
                        } else
 
