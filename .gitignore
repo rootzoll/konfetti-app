@@ -11,3 +11,5 @@ api/target/
 *.log
 *.log.*
 .project
+www/backend/node_modules/*
+node_modules/*
