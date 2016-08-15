@@ -125,6 +125,29 @@ a, a:hover, a:focus {
 }
 
 
+.rotate-box-icon-color1 {
+	background-color: #3abdee !important;
+	background: radial-gradient(#3abdee 64%,black) !important;
+	border-radius: 60px !important;
+}
+
+.rotate-box-icon-color2 {
+	background-color: #7abf7e !important;
+	background: radial-gradient(#7abf7e 64%,black) !important;
+	border-radius: 60px !important;
+}
+
+.rotate-box-icon-color3 {
+	background-color: #e7710e !important;
+	background: radial-gradient(#e7710e 64%,black) !important;
+	border-radius: 60px !important;
+}
+
+.rotate-box-icon-color-action {
+	background-color: #e7710e !important;
+	border-radius: 30px !important;
+}
+
 
 /* === Progress Bar === */
 .progress {
@@ -240,8 +263,8 @@ a, a:hover, a:focus {
 
 /* === To Top === */
 .scrolltotop {
-	color: #7FB2F0;
-	border: 2px solid #7FB2F0;
+	color: #3abdee;
+	border: 2px solid #3abdee;
 }
 
 

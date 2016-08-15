@@ -324,7 +324,8 @@ a.rotate-box-1:hover, a.rotate-box-2:hover {
 	right: 3px;
 	bottom: 3px;
 	left: 3px;
-	border: 2px solid #FFF;
+	/*border: 2px solid #FFF;*/
+	border-radius: 60px !important;
 }
 .rotate-box-1:hover.square-icon .rotate-box-icon , .rotate-box-2:hover.square-icon .rotate-box-icon{
 	-webkit-transform: rotate(0deg);
@@ -898,7 +899,7 @@ ul.imp-links li a {
 	text-transform: uppercase;
 }
 p.subtitle {
-	letter-spacing: 2px;
+	letter-spacing: 1px;
 	margin-top: 10px;
 }
 /* ===== End page header ===== */
@@ -1062,7 +1063,6 @@ p.subtitle {
 	padding: 10px 80px;
 }
 
-
 /* Scroll to top button */
 .scrolltotop {
 	position: fixed;
@@ -1079,9 +1079,10 @@ p.subtitle {
 	-moz-transform: rotate(45deg);
 	-o-transform: rotate(45deg);
 	transform: rotate(45deg);
+	border-radius: 60px !important;
 }
 .scrolltotop .fa {
-	padding-left: 4px;
+	padding-left: 3px;
 	-webkit-transform: rotate(-45deg);
 	-moz-transform: rotate(-45deg);
 	-o-transform: rotate(-45deg);
@@ -1123,4 +1124,30 @@ p.subtitle {
 		padding-left: 10px;
 	}
 	
+}
+
+#openDesktop {
+	padding-top: 44px;
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 991px) {
+
+	#openDesktop {
+		padding-top: 0;
+	}
+	
+}
+
+div .langSelector {
+	position: fixed !important;
+    bottom: 19px !important;
+    left: 30px !important;
+    z-index: 9999 !important;
+    background: rgba(130, 128, 128, 0.6);
+    min-width: 110px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+	color: white;
+	text-align: center;
 }

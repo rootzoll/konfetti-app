@@ -31,7 +31,6 @@
             "REWARD" : "reward",
             "YOUGIVE" : "you give",
             "IMPORTANT" : "Important",
-            "ENTERNAME" : "Please enter your name before submit.",
             "THANKYOU" : "Thank You",
             "SUBMITINFO" : "Your task gets now reviewed. You will get a notification once it is public.",
             "SUBMITINFO_NOREVIEW" : "Your task is now public.",
