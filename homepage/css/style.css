@@ -1151,3 +1151,28 @@ div .langSelector {
 	color: white;
 	text-align: center;
 }
+
+div .langSelectorOptions {
+	position: fixed !important;
+    bottom: 60px !important;
+    left: 30px !important;
+    z-index: 9999 !important;
+    background: rgba(130, 128, 128, 0.6);
+    min-width: 110px !important;
+    padding: 10px !important;
+    border-radius: 10px !important;
+	color: white;
+	text-align: center;
+	padding-bottom: 0px !important;
+}
+
+.changelangoptions-tr {
+	height: 32px;
+	cursor:pointer;
+	text-align: left;
+}
+
+.changelangoptions-td-flag {
+	width: 24px;
+	padding-left: 4px;
+}

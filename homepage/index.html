@@ -752,28 +752,34 @@ If you are a coder, designer or a helping hand on location and marketing – fee
            <!-- Scroll to top button -->
             <a href="#" class="scrolltotop"><i class="fa fa-arrow-up"></i></a>
 
-<div class="polyglot-language-switcher langSelector" data-grid-columns="1" data-anim-effect="fade" data-open-mode="click">
+<div class="polyglot-language-switcher langSelector">
 
     <div id="changelang" class="pls-selected-locale">
         <img id="localeImage" src="images/flags/gb.png" />
         <span id="localeName">English</span>
         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
-    </a>
+    </div>
 
-    <div class="pls-language-container-scrollable" style="display: none;">
+</div>
 
+<div id="changelangoptions" class="polyglot-language-switcher langSelectorOptions" style="display: none;">
+    <div class="pls-language-container-scrollable">
         <table class="pls-language-container">
             <tbody>
-                <tr>
+                <tr onclick="changeLang('en')" class="changelangoptions-tr">
+                    <td class="changelangoptions-td-flag">
+                        <div><img src="images/flags/en.png" alt="English"></div>
+                    </td>
                     <td>
-                        <ul>
-                            <li>
-                                <a href="javascript:$('.pls-language-container-scrollable').hide()" title="English" data-lang-id="en_UK"><img src="images/flags/gb.png" alt="United Kingdom"> English</a>
-                            </li>
-                            <li>
-                                <a href="#" title="German" data-lang-id="de_DE"><img src="images/flags/de.png" alt="Germany"> Deutsch</a>
-                            </li>
-                        </ul>
+                        <div>English</div>
+                    </td>
+                </tr>
+                <tr onclick="changeLang('de')" class="changelangoptions-tr">
+                    <td class="changelangoptions-td-flag">
+                        <div><img src="images/flags/de.png" alt="Germany"></div>
+                    </td>
+                    <td>
+                        <div>Deutsch</div>
                     </td>
                 </tr>
             </tbody>
@@ -782,8 +788,7 @@ If you are a coder, designer or a helping hand on location and marketing – fee
 </div>
 
 
-        </div><!-- body ends -->
-        
+<!-- body ends -->
         
         <!-- Plugins JS -->
 		<script src="inc/jquery/jquery-1.11.1.min.js"></script>
@@ -830,6 +835,18 @@ If you are a coder, designer or a helping hand on location and marketing – fee
 
         <script>
 
+            // get browser language and set if possible
+            var userLang = navigator.language || navigator.userLanguage; 
+            if (typeof userLang != "undefined") {
+                // check if lang is available
+                if ((userLang!="de") &&
+                    (userLang!="en") &&
+                    (userLang!="en") )
+                    userLang = "en"; // if not any of the above set 'en' as default
+            } else {
+                userLang = "en";   
+            }
+
             // load i18n translations from json files
             console.dir($.i18n().load( {
                 en: './i18n/test-en.json',
@@ -839,17 +856,39 @@ If you are a coder, designer or a helping hand on location and marketing – fee
                 $('body').i18n();
             }));
 
-            // set language explicitly
-            $.i18n().locale = 'en';
+            var changeLangOpen = false;
 
             // click listener to change the language
             $( "#changelang" ).click(function() {
-                alert( "TODO i18n" + $.i18n( 'message_1' ));
-                $.i18n().locale = 'de';
-                // tell i18n to refresh/translate all data-i18n parameter elements
-                $('body').i18n();
+                if (!changeLangOpen) {
+                    changeLangOpen = true;
+                    $('#changelangoptions').show();
+                } else {
+                    changeLangOpen = false;
+                    $('#changelangoptions').hide();
+                }
             });
 
+            // send by the lang selection menu
+            var changeLang = function(lang) {
+
+                // set lang on i18n
+                $.i18n().locale = lang;
+                // tell i18n to refresh/translate all data-i18n parameter elements
+                $('body').i18n();
+
+                // set selected lang visually (image)
+                $('#localeImage').attr("src", "images/flags/"+lang+".png");
+                
+                $('#localeName').text(lang);
+                if (lang=="en") $('#localeName').text("English");
+                if (lang=="de") $('#localeName').text("Deutsch");
+
+                // close selection
+                changeLangOpen = false;
+                $('#changelangoptions').hide();
+            }
+            changeLang(userLang);
 
         </script>
 
