@@ -1,0 +1,21 @@
+{    
+	"@metadata": {
+        "authors": [
+            "rootzoll",
+			"Ellen Smithee"
+        ],
+        "last-updated": "2016-08-16",
+        "locale": "en",
+        "message-documentation": "qqq"
+    },
+
+	"android": "Android",
+ 	"iphone": "iPhone",   
+	"newsletter": "Newsletter",
+	"facebook": "Facebook",
+
+	"welcomeslides-a-headline": "Build a better neighborhood",
+	"welcomeslides-a-button": "how it works",
+	"welcomeslides-b-headline": "Download the App",
+	"welcomeslides-c-headline": "Join us"
+}

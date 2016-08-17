@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en-US">
+<html lang="en">
 
 <!--
 
@@ -21,6 +21,7 @@ TODOS:
 		<meta name="description" content="Konfetti empowers and connects people – refugees with refugees, neighbours with refugees and strangers with strangers.">
 
 		<meta name="keywords" content="Konfetti, Konfetti App, Social Todo List" />
+        <link rel="shortcut icon" href="./images/favicon.ico">
 
 		<!-- Mobile -->
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -109,20 +110,20 @@ TODOS:
 						<div id="owl-intro-text" class="owl-carousel">
 							<div class="item">
                                 <img src="images/logo_big.png" style="margin-bottom: 10px;"/>
-                                <h1>Build a better neighborhood</h1>
-                                <a class="btn btn-blank" href="#about-section" role="button">how it works</a>
+                                <h1 id="welcomeslides-a-headline"><span data-i18n="welcomeslides-a-headline">Build a better neighborhood</span></h1>
+                                <a class="btn btn-blank" data-i18n="welcomeslides-a-button" href="#about-section" role="button">how it works</a>
 							</div>
                             <div class="item">
                                 <img src="images/app.png" style="margin-bottom: 10px;"/>
-								<h1>Download the App</h1>
-								<a class="btn btn-blank" href="https://play.google.com/store/apps/details?id=de.konfettiapp.app" target="_blank" role="button">Android</a>
-                                <a class="btn btn-blank" href="javascript:alert('iOS App not ready yet. Bookmark mobile browser version until then.');window.location.href ='http://test.konfettiapp.de'" target="_blank" role="button">iPhone</a>
+								<h1 data-i18n="welcomeslides-b-headline">Download the App</h1>
+								<a class="btn btn-blank" data-i18n="android" href="https://play.google.com/store/apps/details?id=de.konfettiapp.app" target="_blank" role="button">Android</a>
+                                <a class="btn btn-blank" data-i18n="iphone" href="javascript:alert('iOS App not ready yet. Bookmark mobile browser version until then.');window.location.href ='http://test.konfettiapp.de'" target="_blank" role="button">iPhone</a>
 							</div>
 							<div class="item">
                                 <img class="image-scaledown" src="images/group.png" style="margin-bottom: 10px;"/>
-								<h1>Join us</h1>
-								<a class="btn btn-blank" href="https://www.facebook.com/konfetti4change" target="_blank" role="button">Facebook</a>
-                                <a class="btn btn-blank" href="#contact-section"  role="button">Newsletter</a>
+								<h1 data-i18n="welcomeslides-c-headline">Join us</h1>
+								<a class="btn btn-blank" data-i18n="facebook" href="https://www.facebook.com/konfetti4change" target="_blank" role="button">Facebook</a>
+                                <a class="btn btn-blank" data-i18n="newsletter" href="#contact-section"  role="button">Newsletter</a>
 							</div>
 						</div>
 
@@ -800,11 +801,55 @@ If you are a coder, designer or a helping hand on location and marketing – fee
 		<!-- Theme JS -->
 		<script src="js/theme.js"></script>
 
+	    <!-- i18n https://github.com/wikimedia/jquery.i18n -->
+        <script src="./i18n/CLDRPluralRuleParser.js"></script>
+	    <script src="./i18n/jquery.i18n.js"></script>
+	    <script src="./i18n/jquery.i18n.messagestore.js"></script>
+	    <script src="./i18n/jquery.i18n.fallbacks.js"></script>
+	    <script src="./i18n/jquery.i18n.language.js"></script>
+	    <script src="./i18n/jquery.i18n.parser.js"></script>
+	    <script src="./i18n/jquery.i18n.emitter.js"></script>
+	    <script src="./i18n/jquery.i18n.emitter.bidi.js"></script>
+
+        <!-- special language prsing rules ... activate if lang comes available
+	    <script src="./i18n/languages/bs.js"></script>
+	    <script src="./i18n/languages/dsb.js"></script>
+	    <script src="./i18n/languages/fi.js"></script>
+	    <script src="./i18n/languages/ga.js"></script>
+	    <script src="./i18n/languages/he.js"></script>
+	    <script src="./i18n/languages/hsb.js"></script>
+	    <script src="./i18n/languages/hu.js"></script>
+	    <script src="./i18n/languages/hy.js"></script>
+	    <script src="./i18n/languages/la.js"></script>
+	    <script src="./i18n/languages/ml.js"></script>
+	    <script src="./i18n/languages/os.js"></script>
+	    <script src="./i18n/languages/ru.js"></script>
+	    <script src="./i18n/languages/sl.js"></script>
+	    <script src="./i18n/languages/uk.js"></script>
+        -->
+
         <script>
 
+            // load i18n translations from json files
+            console.dir($.i18n().load( {
+                en: './i18n/test-en.json',
+                de: './i18n/test-de.json'
+            } ).done(function(){
+                // tell i18n to refresh/translate all data-i18n parameter elements
+                $('body').i18n();
+            }));
+
+            // set language explicitly
+            $.i18n().locale = 'en';
+
+            // click listener to change the language
             $( "#changelang" ).click(function() {
-                alert( "TODO i18n" );
+                alert( "TODO i18n" + $.i18n( 'message_1' ));
+                $.i18n().locale = 'de';
+                // tell i18n to refresh/translate all data-i18n parameter elements
+                $('body').i18n();
             });
+
 
         </script>
 

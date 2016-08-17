@@ -1,0 +1,21 @@
+{
+	"@metadata": {
+        "authors": [
+            "rootzoll",
+			"Ellen Smithee"
+        ],
+        "last-updated": "2016-08-16",
+        "locale": "de",
+        "message-documentation": "qqq"
+    },
+
+	"android": "Android",
+ 	"iphone": "iPhone",   
+	"newsletter": "Newsletter",
+	"facebook": "Facebook",
+
+	"welcomeslides-a-headline": "Karma für die Nachbarschaft",
+	"welcomeslides-a-button": "Wie es geht",
+	"welcomeslides-b-headline": "App herunterladen",
+	"welcomeslides-c-headline": "Mach mit"
+}
