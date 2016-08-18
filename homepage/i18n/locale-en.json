@@ -1,0 +1,66 @@
+{    
+	"@metadata": {
+        "authors": [
+            "rootzoll"
+        ],
+        "last-updated": "2016-08-17",
+        "locale": "en",
+        "message-documentation": "qqq"
+    },
+
+	"headernav-howitworks": "How it works",
+	"headernav-app": "Konfetti App",
+	"headernav-about": "About",
+	"headernav-team": "Team",
+	"headernav-partners": "Partners",
+	"headernav-join": "Join",
+
+	"android": "Android",
+ 	"iphone": "iPhone",   
+	"newsletter": "Newsletter",
+	"facebook": "Facebook",
+	"browserlogin" : "Browser Login",
+
+	"welcomeslides-a-headline": "Build a better neighborhood",
+	"welcomeslides-a-button": "how it works",
+	"welcomeslides-b-headline": "Download the App",
+	"welcomeslides-c-headline": "Join us",
+
+	"howitworks-headline": "How it works",
+	"howitworks-a-headline": "Start Konfetti",
+	"howitworks-a-text": "Konfetti are like karma points for your local community - managed thru the Konfetti App. Start a Konfetti party in your neighborhood and share Konfettis with all members.",
+	"howitworks-b-headline": "Spend Konfetti",
+	"howitworks-b-text": "Now everybody can reward Konfetti for small tasks to improve the neighboorhood or support the existing ideas of others with Konfetti.",
+	"howitworks-c-headline": "Earn Konfetti",
+	"howitworks-c-text": "Get Konfetti as a reward if you do one of those charity task for the neighborhod. And now you can wish for something to be done. Its a circle.",
+	"howitworks-d-headline": "Connecting People",
+	"howitworks-d-text": "Konfetti flows from neighboor to newcomer, newcomer to newcomer, newcomer to neighboor, neighboor to neighboor. Konfetti connects people.",
+
+	"app-headline": "Konfetti App (BETA)",
+	"app-subline": "download the konfetti app for your  smartphone or run it on a desktop browser",
+	"app-pretext": "The Konfetti App manages all your konfetti karma points and connects you to your nearest neighborhood. Use the app to earn and spend your konfetti. The app is in BETA - this means it is just for testing at the moment.",
+	"app-a-headline": "Smartphone",
+	"app-a-text": "Install it on your smartphone directly from the app store. This is the best way to use the app. The location of the phone will be used to automatically connect you with your neighborhood community. Pushnotificatons will help to keep members involved.",
+	"app-b-headline": "Desktop Browser",
+	"app-b-text": "For places where internet is just available thru one community computer workplace or no app store is available, it is also possible to run the konfetti app just on a desktop or mobile browser. This will require an extra login step and setting your location manually by zip code, but keeps member participation possible even if the techinal infrastructure is very basic in the neighborhood.",
+
+	"about-headline": "About Konfetti",
+	"about-a-headline": "Konfetti Vision",
+	"about-a-text": "'Konfetti' empowers and connects people. 'Konfetti' are small and colourful pieces of paper thrown at celebrations (e.g. weddings or on new years). The idea is that people mingle and exchange no matter what background they come from. 'Konfetti' is karma for the neighbourhood. So, let’s enjoy the colours we all bring and share good times.",
+	"about-b-headline": "Konfetti Function",
+	"about-b-text": "'Konfetti' helps pointing out relevant things to be done in the neighbourhood. It provides a 'social' task-manager for local communities to connect newcomers and locals. Newcomers and committed neighbours can get Konfetti by sending an E-Mail or asking in their community.",
+	"about-c-headline": "Konfetti Goal",
+	"about-c-text": "We want to develop the free and open Konfetti app, keep servers running for you and show with examples how konfetti can create better neighborhoods and help on integration.",
+	"about-d-headline": "Konfetti Start",
+	"about-d-text": "You would like to start Konfetti for your neighborhood? Please contact us ... we will help you to set up a konfetti party for your local area.",
+
+	"team-headline": "Our Team",
+	"team-subline": "'Konfetti' is made by volunteers. It’s a project from refugees and locals for refugees and locals. If you are a coder, designer or a helping hand on location and marketing – feel free to join in. Also, don’t miss to join us on facebook.",
+
+	"join-headline": "Join Us",
+	"join-subline": "get the freshest news on facebook, code with us on github and check our calander for meetups",
+
+	"newsletter-headline": "Newsletter",
+	"newsletter-subline": "or just sign up for our newsletter"
+
+}

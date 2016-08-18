@@ -9,6 +9,13 @@
         "message-documentation": "qqq"
     },
 
+	"headernav-howitworks": "Wie gehts",
+	"headernav-app": "Konfetti App",
+	"headernav-about": "Hintergrund",
+	"headernav-team": "Team",
+	"headernav-partners": "Partner",
+	"headernav-join": "Mitmachen",
+
 	"android": "Android",
  	"iphone": "iPhone",   
 	"newsletter": "Newsletter",
