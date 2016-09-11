@@ -63,7 +63,11 @@ Then run 'ionic serve' - than the App should open up in your browser and connect
 
 ## Other Konfetti Software (to run your own server)
 
+The API is the center of the konfetti backend. Check it out and build your Docker Container and do run it with Docker-Compose. To make the local Konfetti App running in your browser connect with this local API change the API URL in the file `www/js/service-appcontext.js` ... remember to change it back before doing a commit or a pullrequest.
+
 API: https://github.com/rootzoll/konfetti-api
+
+... other optional parts of the konfetti backend:
 
 ADMIN-GUI: https://github.com/rootzoll/konfetti-admin
 
