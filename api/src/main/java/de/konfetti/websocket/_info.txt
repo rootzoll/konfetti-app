@@ -1,7 +1,0 @@
-WebSockets on Server Side:
-
-https://spring.io/guides/gs/messaging-stomp-websocket/
-... and see resources/static/websockets-test.html for local testing
-
-WebSockets on Client Side:
-http://g00glen00b.be/spring-angular-sockjs/
