@@ -51,6 +51,8 @@ For programmers: christian@geektank.de
 
 If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
 
+Here is our public [calendar](https://calendar.google.com/calendar/embed?src=1qtlrqsgha4jv6ug26e775gqac@group.calendar.google.com&ctz=Europe/Rome&pli=1) - to join in. 
+
 
 ## Checkout App and Prepare for Running Local
 
