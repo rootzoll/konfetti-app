@@ -52,39 +52,21 @@ For programmers: christian@geektank.de
 If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
 
 
-## Building App from Source
+## Checkout App and Prepare for Running Local
 
 Make sure to have the IONIC framework installed (v1.x): http://ionicframework.com
 
-Checkout from git, run 'ionic state reset' and then 'ionic resources' with project folder.
+Checkout from git, run 'ionic state reset' and then 'ionic resources' within project folder.
+
+Then run 'ionic serve' - than the App should open up in your browser and connect to the public Konfetti server.
 
 
-## Running local Server
+## Other Konfetti Software (to run your own server)
 
-You need to have Maven installed. Check with 'mvn --version'.
+API: https://github.com/rootzoll/konfetti-api
 
-To run server on localhost, go into 'api' folder and run 'mvn spring-boot:run'.
+ADMIN-GUI: https://github.com/rootzoll/konfetti-admin
 
+HOMEPAGE: https://github.com/rootzoll/konfetti-homepage
 
-## Run App in local Browser (for development)
-
-Run in project root folder 'ionic serve' - this will run the app in local browser for development.
-
-
-# Docker
-
-## Run with docker-compose
-
-`cd ~/api`
-
-`docker build --tag konfetti/backend .`
-
-`docker-compose up -d`
-
-## To clean up containers and volumes
-`docker-compose stop`
-
-`docker-compose rm -v`
-
-`docker volume rm api_konfettiDb`
-
+COUPON-GENERATOR: https://github.com/rootzoll/konfetti-coupongenerator
