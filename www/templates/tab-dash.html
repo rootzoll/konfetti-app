@@ -46,7 +46,7 @@
                                 <div style="text-align: center; font-size: 150%;padding-top: 3px;">
                                 	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
                                 </div>
-                                <div style="font-weight: bold; font-size: 100%; direction: ltr;padding-top:4px;">{{party.name}} <span style="font-weight: normal;">({{party.meters | distance}})</span></div>
+                                <div style="font-weight: bold; font-size: 100%; direction: ltr;padding-top:4px;">{{party.name}} <span style="font-weight: normal;">({{party.distanceToUser | distance}})</span></div>
                                 <div style="direction: ltr;">
                                     <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
                                     <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
