@@ -30,6 +30,11 @@ node {
             dockerImg.tag()
             echo "push image"
             dockerImg.push()
+
+            if (production.equals(branch)) {
+                stage "Deploy On Production"
+                build job: 'DeployKonfettiOnProduction', wait: false
+            }
         }
     }
 }
