@@ -119,7 +119,7 @@
         </tr>
 
         <!-- Remind of Logout Option -->
-        <tr ng-if="(notification.type===9)">
+        <tr ng-if="((notification.type===9) || (notification.type=='PARTY_WELCOME'))">
             <td width="45" style="vertical-align: middle; padding-left: 10px;"><i class="icon ion-log-out before-big"></i></td>
             <td width="*" style="vertical-align: middle;">
                 <div>
