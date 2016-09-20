@@ -253,7 +253,7 @@
         NOTIFICATIONS - just show if available
       -->
 
-      <div ng-show="showNotifications" class="list card">
+      <div ng-show="showNotifications" class="list card" style="margin-bottom: 10px; margin-top: 13px;">
           <div notification ng-show="notification.id!=0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}"></div>
       </div>
 
@@ -283,7 +283,7 @@
 
       <div requestcard data-ng-repeat="request in requestsPosted" requesttype="postedRequestCard" id="postedRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card" ng-show="(requestsInteraction.length>0)" style="margin-bottom: 10px;">
+      <div class="card" ng-show="(requestsInteraction.length>0)" style="margin-bottom: 10px; margin-top: 10px;">
           <div class="item item-divider" style="font-weight: bold;">
               {{ 'DASHHEADER_ACTIVE' | translate }}
           </div>
@@ -291,7 +291,7 @@
 
       <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;"></div>
 
-      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px;">
+      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px;  margin-top: 13px;">
           <div class="item item-divider"  style="font-weight: bold; padding-right: 8px;">
               {{ 'DASHHEADER_OPEN' | translate }} <select ng-model="actualSorting" ng-options='sort.sort as sort.display for sort in sortSet' ng-change='changedSorting(actualSorting)' style="float:right;margin-left: 10px;"></select>
           </div>
