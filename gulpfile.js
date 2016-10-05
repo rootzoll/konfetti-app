@@ -6,6 +6,7 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
+var connect = require('gulp-connect');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -28,6 +29,8 @@ gulp.task('sass', function(done) {
 
 gulp.task('watch', function() {
   gulp.watch(paths.sass, ['sass']);
+  gulp.watch(['./www/*.html'], ['html']);
+  gulp.watch(['./www/*.js'], ['js']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -49,3 +52,12 @@ gulp.task('git-check', function(done) {
   }
   done();
 });
+
+gulp.task('connect', function() {
+  connect.server({
+    root: 'www',
+    livereload: true,
+    port: 3000
+  });
+});
+

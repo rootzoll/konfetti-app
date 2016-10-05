@@ -99,8 +99,9 @@ angular.module('starter.api', [])
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
-                config.method = 'GET';
-                config.url = activeServerUrl+'/account/recover?mail='+encodeURIComponent(mail);
+                config.method = 'POST';
+                config.url = activeServerUrl+'/account/reset_password/init';
+                config.data = mail;
                 // WIN
                 var successCallback = function(response) {
                     AppContext.setAccount(response.data);
