@@ -19,7 +19,7 @@ angular.module('starter', [
 							'ngCordova', 
 							'pascalprecht.translate'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox, $timeout) {
   $ionicPlatform.ready(function() {
 
     $rootScope.initDone = false;
@@ -85,6 +85,43 @@ angular.module('starter', [
           AppContext.setAppLang(selected.code);
           $rootScope.spClass = AppContext.getAppLangDirection();
     };
+
+    // upload images on browser - call on rootScope if needed
+    $rootScope.onUploadClick = function(callback) {
+        $rootScope.onUploadClickCallback = callback;
+        $("#hidden-imageupload").click();
+    }
+    $(document).on('change','#hidden-imageupload',function(ev){
+        if ($rootScope.onUploadClickCallback==null) {
+            console.warn("no call back for file upload");
+            return;
+        }
+        var file = $("#hidden-imageupload")[0].files[0];
+        $timeout(function() {
+            if (typeof file != "undefined") {
+
+                // limit filesize to max 1MB
+                if (file.size>(1024*1024)) {
+                    alert("file too big - max. 1MB");
+                    $rootScope.onUploadClickCallback(null);
+                    $rootScope.onUploadClickCallback=null; 
+                    return;
+                }
+
+                // read file and make callback
+                var reader  = new FileReader();
+                reader.addEventListener("load", function () {
+                    $rootScope.onUploadClickCallback(reader.result);
+                }, false);
+                reader.readAsDataURL(file);
+
+            } else {
+                $rootScope.onUploadClickCallback(null);
+                $rootScope.onUploadClickCallback=null;  
+            }
+        },10);
+    });
+    $rootScope.onUploadClickCallback = null;
 
     /*
      * GET LANGUAGE OF DEVICE

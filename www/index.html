@@ -17,6 +17,9 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
 
+    <!-- JQUERY (load before ionic) -->
+    <script src="lib/jquery/jquery-3.1.1.min.js"></script>
+
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
@@ -46,6 +49,7 @@
 	 
   </head>
   <body ng-app="starter">
+        <!-- hidden file/image upload element for browser desktop use -->
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
@@ -62,5 +66,6 @@
     
     <!-- canvas for konfetti raining animation -->
     <canvas id="confetti" style="display:none;" class="confetti-default" width="1" height="1"></canvas>
+    
   </body>
 </html>

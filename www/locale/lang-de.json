@@ -155,7 +155,7 @@
             "RECOVER_EXPLAIN" : "Bitte eMail eingeben, welche bei er Registrierung verwendet wurde. Es wird dann ein neues Passwort versandt.",
             "RECOVER_BUTTON" : "Neues Passwort anfordern",
             "RECOVER_WIN" : "OK. Es wurde dir ein neues Passwort zugesandt.",
-            "RECOVER_FAIL" : "Zurücksetzen des Passworts war nicht möglich. Bitte eMail Adresse und Internetverbindung prüfen.",
+            "RECOVER_FAIL" : "Zurücksetzen des Passworts war nicht möglich. Entweder ist eMail Adresse nicht registriert oder Internetverbindung war nicht möglich.",
             "LOGIN_FAIL" : "Login fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.",
             "REGISTER_FAIL" : "Registrierung fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.",
             "REGISTER_FAILMAIL" : "eMail ist bereits in Verwendung. Wenn du dein Passwort vergessen hast, drücke hier, um es zurückzusetzen.",
