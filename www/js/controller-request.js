@@ -633,18 +633,65 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addInfoDate = function() {
+
             $scope.mediaChoosePopup.close();
+          
+            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
+            $translate("ADDDATE_SUB").then(function (TEXT) {
             $translate("OK").then(function (OK) {
             $translate("CANCEL").then(function (CANCEL) {
-                
+                 
+                $scope.dateInput = {
+                    date: new Date(),
+                    time: null,
+                    comment: "",
+                    addlocation: false
+                };
+
                 var myPopup = $ionicPopup.show({
                      templateUrl: 'templates/pop-dateinput.html',
                      scope: $scope,
-                     title: TITLE,
-                     subTitle: SUBLINE,
+                     subTitle: TEXT,
+                     title: HEADLINE,
                     buttons: [
-                        { text: CANCEL },
+                        { text: CANCEL, onTap: function(e){
+                            $scope.dateInput.date=null;
+                        } },
                         { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+
+                    if ($scope.dateInput.date==null) return;
+
+                    // combine date and time to one timestring
+                    var timeStr = "00:00:00.000Z\"";
+                    if ($scope.dateInput.time!=null) {
+                        var fullDateStr = JSON.stringify($scope.dateInput.time);
+                        timeStr = fullDateStr.substring(fullDateStr.indexOf('T')+1);
+                    }
+                    fullDateStr = JSON.stringify($scope.dateInput.date);
+                    var dateStr = fullDateStr.substring(0,fullDateStr.indexOf('T'));
+                    var combinedDate = JSON.parse(dateStr+"T"+timeStr);
+                    alert(JSON.stringify(combinedDate));
+
+                    alert("TODO create DateItem AND maybe followup location: "+JSON.stringify($scope.dateInput));
+                });
+            
+/*
+                     var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-reward.html',
+                     scope: $scope,
+                     title: 'A',
+                     subTitle: 'SUBLINE',
+                    buttons: [
+                        { text: 'CANCEL' },
+                        { text: 'OK',
                             type: 'button-positive',
                             onTap: function(e) {
                             $scope.rewardDialog = true;
@@ -652,11 +699,11 @@ angular.module('starter.controller.request', [])
                         }
                     ]
                 });
-                
-                myPopup.then(function(res) {   
-                    alert("OK");
+                myPopup.then(function(res) {
                 });
-
+*/
+            });
+            });
             });
             });
             /*
@@ -762,7 +809,7 @@ angular.module('starter.controller.request', [])
                       template: '<img src="img/spinner.gif" />'
                 });
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
-                      $ionicLoading.hide();
+                    $ionicLoading.hide();
                     $scope.request.state='done';
                     $scope.setNoticeTextByRequestState();
                     $ionicScrollDelegate.scrollTop(true);
