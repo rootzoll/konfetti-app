@@ -634,6 +634,32 @@ angular.module('starter.controller.request', [])
 
   $scope.addInfoDate = function() {
             $scope.mediaChoosePopup.close();
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-dateinput.html',
+                     scope: $scope,
+                     title: TITLE,
+                     subTitle: SUBLINE,
+                    buttons: [
+                        { text: CANCEL },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            $scope.rewardDialog = true;
+                        }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+                    alert("OK");
+                });
+
+            });
+            });
+            /*
             $translate("ADDDATE_TITLE").then(function (HEADLINE) {
                 $translate("ADDDATE_SUB").then(function (TEXT) {
                     $ionicPopup.prompt({
@@ -661,6 +687,7 @@ angular.module('starter.controller.request', [])
                     });
                 });
             });
+            */
   };
 
   $scope.addMediaItem = function(mediaitem) {
