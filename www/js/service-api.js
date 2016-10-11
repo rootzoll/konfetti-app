@@ -157,7 +157,7 @@ angular.module('starter.api', [])
             sendChatTextItem: function(chatId, text, win, fail) {
 
                 var mediaObj = {
-                    type : 'java.lang.String',
+                    type : 'TYPE_TEXT',
                     data : text
                 };
 
@@ -435,7 +435,7 @@ angular.module('starter.api', [])
             postTextMediaItemOnRequest: function(requestId, text, langCode, win, fail) {
 
                 var mediaObj = {
-                    type : 'java.lang.String',
+                    type : 'TYPE_TEXT',
                     data : text
                 };
 

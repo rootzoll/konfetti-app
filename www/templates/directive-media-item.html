@@ -14,28 +14,28 @@
                 <td width="*" style="text-align:center;">
 
                     <!-- SIMPLE TEXT -->
-                    <div ng-if="mediaItemData.type=='java.lang.String'" style="white-space: normal;">
+                    <div ng-if="mediaItemData.type=='TYPE_TEXT'" style="white-space: normal;">
                         {{mediaItemData.data}}
                     </div>
 
                     <!-- MULTILANG TEXT -->
-                    <div ng-if="mediaItemData.type=='MediaItemMultiLang'" style="white-space: normal;">
+                    <div ng-if="mediaItemData.type=='TYPE_MULTILANG'" style="white-space: normal;">
                         <div multilang data="{{mediaItemData.data}}" lang="{{actualLang}}" />
                     </div>
 
                     <!-- IMAGE -->
-                    <div ng-if="mediaItemData.type=='Image'" style="white-space: normal;">
+                    <div ng-if="mediaItemData.type=='TYPE_IMAGE'" style="white-space: normal;">
                         <img ng-src="{{mediaItemData.data}}" style="max-width: 300px"/>
                     </div>
 
                     <!-- LOCATION -->
-                    <div ng-if="mediaItemData.type=='Location'" style="white-space: normal;">
+                    <div ng-if="mediaItemData.type=='TYPE_LOCATION'" style="white-space: normal;">
                         <iframe width="300" height="200" frameborder="0" style="border:0"
                                 ng-src="{{getMapUrl()}}" allowfullscreen></iframe>
                     </div>
 
                     <!-- DATE -->
-                    <div ng-if="mediaItemData.type=='Date'" style="white-space: normal; font-weight: bold">
+                    <div ng-if="mediaItemData.type=='TYPE_DATE'" style="white-space: normal; font-weight: bold">
                         <i class="icon ion-clock" style="color: #565656; font-weight: bold; font-size: 110%;"></i>&nbsp;{{ mediaItemData.data | date : 'short' }}
                     </div>
 
