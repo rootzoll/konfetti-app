@@ -283,7 +283,7 @@ angular.module('starter.api', [])
                     // prepare all media items
                     if ((typeof response.data.info != "undefined") && (response.data.info!=null) && (response.data.info.length>0)) {
                         for (var i=0; i < response.data.info.length; i++) {
-                            if (response.data.info[i].type=="Date") {
+                            if (response.data.info[i].type==" TYPE_DATE") {
                                 response.data.info[i].data = new Date(response.data.info[i].data.substr(1,response.data.info[i].data.length-2));
                             }
                         }
@@ -316,7 +316,7 @@ angular.module('starter.api', [])
                 var successCallback = function(response) {
                     
                     // process incomings if needed
-                    if (response.data.type=="Date") {
+                    if (response.data.type=="TYPE_DATE") {
                         response.data.data = new Date(response.data.data.substr(1,response.data.data.length-2));
                     }
                     
@@ -464,7 +464,7 @@ angular.module('starter.api', [])
             postImageMediaItemOnRequest: function(requestId, base64, win, fail) {
 
                 var mediaObj = {
-                    type : 'Image',
+                    type : ' TYPE_IMAGE',
                     data : base64
                 };
 
@@ -493,7 +493,7 @@ angular.module('starter.api', [])
             postLocationMediaItemOnRequest: function(requestId, lat, lon, win, fail) {
 
                 var mediaObj = {
-                    type : 'Location',
+                    type : 'TYPE_LOCATION',
                     data : JSON.stringify({lat:lat,lon:lon})
                 };
 
@@ -522,7 +522,7 @@ angular.module('starter.api', [])
             postDateMediaItemOnRequest: function(requestId, dateObj, win, fail) {
 
                 var mediaObj = {
-                    type : 'Date',
+                    type : 'TYPE_DATE',
                     data : JSON.stringify(dateObj)
                 };
 
