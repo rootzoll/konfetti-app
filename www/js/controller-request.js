@@ -33,55 +33,55 @@ angular.module('starter.controller.request', [])
             $scope.noticeTextId = "";
 
             // when in review and user is author
-            if (($scope.request.state=='review') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_REVIEW') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "#ffc900";
                 $scope.noticeTextId = "EXPLAIN_REVIEW_USER";
             }
 
             // when in review and user is reviewer/admin
-            if (($scope.request.state=='review') && ($scope.isReviewer || $scope.isAdmin)) {
+            if (($scope.request.state=='STATE_REVIEW') && ($scope.isReviewer || $scope.isAdmin)) {
                 $scope.noticeColor = "#ffc900";
                 $scope.noticeTextId = "EXPLAIN_REVIEW_ADMIN";
             }
 
             // when got rejected
-            if (($scope.request.state=='rejected')) {
+            if (($scope.request.state=='STATE_REJECTED')) {
                 $scope.noticeColor = "red";
                 $scope.noticeTextId = "EXPLAIN_REJECTED";
             }
 
             // when open and user is author
-            if (($scope.request.state=='open') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_OPEN') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_OPEN_AUTHOR";
             }
 
             // when open and user is public
-            if (($scope.request.state=='open') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_OPEN') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_OPEN_PUBLIC";
             }
 
             // when open and user is public
-            if (($scope.request.state=='processing') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_PROCESSING') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_PROCESSING_AUTHOR";
             }
 
             // when is in the process of doing and user id author
-            if (($scope.request.state=='processing') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_PROCESSING') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_PROCESSING_PUBLIC";
             }
 
             // when done and user is not author
-            if (($scope.request.state=='done') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_DONE') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_DONE_PUBLIC";
             }
 
             // when done and user is author
-            if (($scope.request.state=='done') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_DONE') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_DONE_AUTHOR";
             }
@@ -736,7 +736,7 @@ angular.module('starter.controller.request', [])
                 });
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
                       $ionicLoading.hide();
-                    $scope.request.state='done';
+                    $scope.request.state='STATE_DONE';
                     $scope.setNoticeTextByRequestState();
                     $ionicScrollDelegate.scrollTop(true);
                 }, function() {
@@ -759,7 +759,7 @@ angular.module('starter.controller.request', [])
     ApiService.setStateOfRequestToProcessing($scope.request.id, function(){
         // WIN
         $ionicLoading.hide();
-        $scope.request.state = "processing";
+        $scope.request.state = "STATE_PROCESSING";
         $scope.setNoticeTextByRequestState();
     }, function() {
         // FAIL
@@ -775,7 +775,7 @@ angular.module('starter.controller.request', [])
       ApiService.setStateOfRequestToReOpen($scope.request.id, function(){
           // WIN
           $ionicLoading.hide();
-          $scope.request.state = "open";
+          $scope.request.state = "STATE_OPEN";
           $scope.setNoticeTextByRequestState();
       }, function() {
           // FAIL
@@ -863,7 +863,7 @@ angular.module('starter.controller.request', [])
 
   $scope.removeChat = function($event, chat) {
       $event.stopPropagation();
-      if (($scope.request.chats.length==1) && ($scope.request.state==='processing')) {
+      if (($scope.request.chats.length==1) && ($scope.request.state==='STATE_PROCESSING')) {
           return;
       }
       $ionicLoading.show({

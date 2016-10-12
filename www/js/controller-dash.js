@@ -863,11 +863,11 @@ angular.module('starter.controller.dash', [])
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;
                 $rootScope.party = data;
-                if ($scope.isAdminForThisParty || $scope.isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'review');
+                if ($scope.isAdminForThisParty || $scope.isReviewerForThisParty) $scope.requestsReview = KonfettiToolbox.filterRequestsByState(data.requests, 'STATE_REVIEW');
                 $scope.requestsPosted = KonfettiToolbox.filterRequestsByAuthor(data.requests,AppContext.getAccount().id);
                 $scope.requestsInteraction = KonfettiToolbox.filterRequestsByInteraction(data.requests,AppContext.getAccount().id);
-                $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'open');
-                $scope.requestsDone = KonfettiToolbox.filterRequestsByState(data.requests, 'done');
+                $scope.requestsOpen = KonfettiToolbox.filterRequestsByState(data.requests, 'STATE_OPEN');
+                $scope.requestsDone = KonfettiToolbox.filterRequestsByState(data.requests, 'STATE_DONE');
                 $scope.notifications = data.notifications;
                 $scope.notifications = $scope.notifications.concat($scope.globalNotifications);
                 $scope.globalNotifications = [];
