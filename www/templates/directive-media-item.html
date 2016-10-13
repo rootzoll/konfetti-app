@@ -44,11 +44,11 @@
                     <div ng-show="(isAdmin) || (userIsAuthor)">
                         <i on-tap="deleteItemFromRequest(itemid)" class="icon ion-close-circled" style="color: lightgrey; font-size: 150%;"></i>
                         <br>
-                        <i ng-show="(reviewed==1)" on-tap="reviewInfo()" class="icon ion-clock" style="color: orange; font-size: 150%;"></i>
+                        <i ng-show="(reviewed=='REVIEWED_PRIVATE')" on-tap="reviewInfo()" class="icon ion-clock" style="color: orange; font-size: 150%;"></i>
                     </div>
                 </td>
             </tr>
-            <tr ng-show="(reviewed==1) && ((isAdmin) || (isReviewer))">
+            <tr ng-show="(reviewed=='REVIEWED_PRIVATE') && ((isAdmin) || (isReviewer))">
                 <td align="center" style="vertical-align: middle">
                     <span>{{ 'PLEASE_REVIEW' | translate }}</span>
                     <button on-tap="reviewFail(itemid)" class="button button-small" style="min-width: 100px;">

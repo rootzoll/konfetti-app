@@ -128,7 +128,7 @@ angular.module('starter.controller.request', [])
     // set public on server
     ApiService.makeMediaItemPublic($scope.request.id, itemid, function(){
        for (var i=0; i<$scope.request.info.length; i++) {
-           if ($scope.request.info[i].id==itemId) $scope.request.info[i].reviewed = 0;
+           if ($scope.request.info[i].id==itemId) $scope.request.info[i].reviewed == 'REVIEWED_PUBLIC';
        }
     },function(){}
     );
