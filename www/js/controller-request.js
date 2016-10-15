@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -565,6 +565,100 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addInfoLocation = function() {
+
+           $scope.mediaChoosePopup.close();
+          
+            $translate("INFO").then(function (HEADLINE) {
+            $translate("USELOCATION").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                
+                var startLat = 52.522011;
+                var startLon = 13.412772;
+                var startZoom = 9;
+
+
+                angular.extend($scope, {
+                markerPosition: {
+                    lat: startLat,
+                    lng: startLon,
+                    zoom: startZoom
+                },
+                markers: {
+                    mainMarker: {
+                        lat: startLat,
+                        lng: startLon,
+                        focus: true,
+                        message: "Set Location",
+                        draggable: true
+                    }   
+                },
+                events: { 
+                    markers:{
+                      enable: [ 'dragend' ]
+                    }
+                }
+                });
+
+                // when user ends drag of marker - update position
+                $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
+                    $scope.markerPosition.lat = args.model.lat;
+                    $scope.markerPosition.lng = args.model.lng;
+                    if ($scope.markerPosition.zoom<17) $scope.markerPosition.zoom++;
+                });
+
+                // when user ends drag of map - set marker to new center position
+                $scope.$on("leafletDirectiveMap.click", function(event, args){
+                    $scope.markers.mainMarker.lat = args.leafletEvent.latlng.lat;
+                    $scope.markers.mainMarker.lng = args.leafletEvent.latlng.lng;
+                    $scope.markerPosition.lat = args.leafletEvent.latlng.lat;
+                    $scope.markerPosition.lng = args.leafletEvent.latlng.lng;
+                    if ($scope.markerPosition.zoom<17) $scope.markerPosition.zoom++;
+                });
+
+            
+                $scope.locationInput = {
+                    lat: 0,
+                    lon: 0,
+                    comment: "",
+                    addDate: false
+                };
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-locationpick.html',
+                     scope: $scope,
+                     subTitle: TEXT,
+                     title: HEADLINE,
+                     cssClass: 'pop-locationpick',
+                    buttons: [
+                        { text: CANCEL, onTap: function(e){
+                            $scope.locationInput=null;
+                        } },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                                $scope.locationInput.lat = $scope.markerPosition.lat;
+                                $scope.locationInput.lon = $scope.markerPosition.lng;
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) { 
+
+                    if ($scope.locationInput==null) return;
+
+                    alert("TODO: comment and followup dat - "+JSON.stringify($scope.locationInput));
+                    $scope.saveLocationMediaItem($scope.locationInput.lat,$scope.locationInput.lon);
+                    $ionicScrollDelegate.scrollBottom(true);
+
+                });
+            });
+            });
+            });
+            });
+
+          /*
       $scope.mediaChoosePopup.close();
 
 
@@ -592,7 +686,7 @@ angular.module('starter.controller.request', [])
                     alert("DONE");
                 });
 
-              /*
+    
               var confirmPopup = $ionicPopup.confirm({
                   title: HEADLINE,
                   template: TEXT
@@ -631,12 +725,12 @@ angular.module('starter.controller.request', [])
                           });
                   }
               });
-              */
+        
 
           });
           });
           });
-      });
+      });      */
 
   };
 
