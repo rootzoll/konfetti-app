@@ -9,6 +9,7 @@
     "angular-translate": "~2.8.1",
     "angular-translate-loader-static-files": "~2.8.1",
     "sockjs": "0.3.4",
-    "stomp-websocket": "2.3.4"
+    "stomp-websocket": "2.3.4",
+    "angular-leaflet-directive": "0.10.0"
   }
 }

@@ -17,7 +17,8 @@ angular.module('starter', [
 							'starter.rainanimation',
 							'starter.konfettitoolbox',
 							'ngCordova', 
-							'pascalprecht.translate'])
+							'pascalprecht.translate',
+                            'leaflet-directive'])
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox, $timeout) {
   $ionicPlatform.ready(function() {
