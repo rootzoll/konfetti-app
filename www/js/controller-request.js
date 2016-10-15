@@ -680,7 +680,28 @@ angular.module('starter.controller.request', [])
                     var combinedDate = JSON.parse(dateStr+"T"+timeStr);
                     alert(JSON.stringify(combinedDate));
 
-                    alert("TODO create DateItem AND maybe followup location: "+JSON.stringify($scope.dateInput));
+                    // TODO: open location picker dialog afterwards and connect with date
+                    if ($scope.dateInput.addlocation) {
+                        alert("TODO: connect location with date");
+                    }
+
+                    $ionicLoading.show({
+                        template: '<img src="img/spinner.gif" />'
+                    });
+
+                    // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
+                    ApiService.postDateMediaItemOnRequest($scope.request.id, combinedDate, function(mediaitem) {
+                        // WIN
+                        $ionicLoading.hide();
+                        mediaitem.data = new Date(mediaitem.data.substr(1,mediaitem.data.length-2));
+                        $scope.addMediaItem(mediaitem);
+                        $ionicScrollDelegate.scrollBottom(true);
+                     }, function() {
+                        // FAIL
+                        $ionicLoading.hide();
+                        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                    });
+
                 });
             
 /*

@@ -138,7 +138,7 @@
             "GPSFALLBACK_GPS" : "Versuche GPS",
             "GPSFALLBACK_FAIL" : "Die Postleitzahl konnte nicht verarbeitet werden. Besteht Internetverbindung?",
             "GPSFALLBACK_NEEDED" : "Bitte Postleitzahl eingaben.",
-            "DATE" : "Datum & Zeit",
+            "DATEANDTIME" : "Datum & Zeit",
             "ADDDATE_TITLE" : "Datum & Zeit",
             "ADDDATE_SUB" : "Trage ein Datum ein.",
             "ADDDATE_DESCRIPTION" : "Beschreibung",
@@ -185,5 +185,9 @@
             "LOGINBUTTON_LOGINLOGIN" : "Ich habe bereits einen Nutzernamen.",
             "INTRO_REDEEMCOUPON" : "Konfetti Gutschein einlösen ..",
             "CODE_WRONG": "Der Gutscheincode ist icht korrekt oder wurde bereits verwendet.",
-            "CODE_CORRECT": "Du hast Konfetti erhalten:) Unterstütze damit bestehende Ideen oder wünsch dir etwas von deiner Nachbarschaft." 
+            "CODE_CORRECT": "Du hast Konfetti erhalten:) Unterstütze damit bestehende Ideen oder wünsch dir etwas von deiner Nachbarschaft.",
+            "DATE" : "Datum",
+            "TIME" : "Uhrzeit",
+            "DATECOMMENT" : "ein Stichwort (Beginn, Treffen, ..)",
+            "ADDLOCATION" : "Ortsinformation hinzufügen"
 }
