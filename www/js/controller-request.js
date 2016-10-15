@@ -566,8 +566,33 @@ angular.module('starter.controller.request', [])
 
   $scope.addInfoLocation = function() {
       $scope.mediaChoosePopup.close();
+
+
       $translate("INFO").then(function (HEADLINE) {
           $translate("USELOCATION").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-locationpick.html',
+                     scope: $scope,
+                     title: HEADLINE,
+                     subTitle: TEXT,
+                    buttons: [
+                        { text: CANCEL },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                myPopup.then(function(res) {
+                    alert("DONE");
+                });
+
+              /*
               var confirmPopup = $ionicPopup.confirm({
                   title: HEADLINE,
                   template: TEXT
@@ -606,6 +631,10 @@ angular.module('starter.controller.request', [])
                           });
                   }
               });
+              */
+
+          });
+          });
           });
       });
 
