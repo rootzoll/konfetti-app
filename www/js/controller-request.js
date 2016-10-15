@@ -703,26 +703,6 @@ angular.module('starter.controller.request', [])
                     });
 
                 });
-            
-/*
-                     var myPopup = $ionicPopup.show({
-                     templateUrl: 'templates/pop-reward.html',
-                     scope: $scope,
-                     title: 'A',
-                     subTitle: 'SUBLINE',
-                    buttons: [
-                        { text: 'CANCEL' },
-                        { text: 'OK',
-                            type: 'button-positive',
-                            onTap: function(e) {
-                            $scope.rewardDialog = true;
-                        }
-                        }
-                    ]
-                });
-                myPopup.then(function(res) {
-                });
-*/
             });
             });
             });
