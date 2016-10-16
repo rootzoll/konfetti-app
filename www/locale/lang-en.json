@@ -190,5 +190,9 @@
             "DATE" : "Date",
             "TIME" : "Time",
             "DATECOMMENT" : "one keyword (start, meeting, ..)",
-            "ADDLOCATION" : "add location info"
+            "ADDLOCATION" : "add location info",
+            "LOCATIONCOMMENT": "location description",
+            "LOCATION_ADDDATE": "add date",
+            "LOCATIONPICKER_TITLE": "Set Location",
+            "LOCATIONPICKER_MARKER": "pinpoint location"
 }

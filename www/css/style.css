@@ -312,6 +312,42 @@ div.popup-body span {
 	opacity: 0;
 }
 
-.popup {
+.pop-locationpick .popup {
+    width: 90%;
+    max-width: 600px;
+    min-height: 400px;
+}
+
+.pop-locationpick .popup-head {
+    padding: 8px 6px;
+    padding-bottom: 0px;
+    border-bottom: 0px solid #eee;
+}
+
+#adddate {
+    padding-bottom: 0px;
+}
+
+.pop-additem .popup-body {
+    overflow: hidden;
+}
+
+#langselect-icon:before {
+    margin-top: 0px;
+}
+
+#sortselect-icon:before {
+    margin-top: 4px;
+}
+
+.pop-selectlanguage .popup-head {
+    padding: 0px;
+}
+
+.pop-dateinput .popup{
     min-width: 300px;
+}
+
+.button-langselect {
+    height: 30px;
 }

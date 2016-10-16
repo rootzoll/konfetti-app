@@ -189,5 +189,9 @@
             "DATE" : "Datum",
             "TIME" : "Uhrzeit",
             "DATECOMMENT" : "ein Stichwort (Beginn, Treffen, ..)",
-            "ADDLOCATION" : "Ortsinformation hinzufügen"
+            "ADDLOCATION" : "Ortsinformation hinzufügen",
+            "LOCATIONCOMMENT": "Ortsbeschreibung",
+            "LOCATION_ADDDATE": "Datum hinzufügen",
+            "LOCATIONPICKER_TITLE": "Ort festlegen",
+            "LOCATIONPICKER_MARKER": "Marker setzen"  
 }

@@ -1,0 +1,19 @@
+<ion-list id="locationpicker">
+    <ion-item>
+        <table width="100%">
+            <tr>
+                <td>
+                    <label class="item item-input" style="width: 99%;">
+                         <input type="text" ng-model="locationInput.comment" placeholder="{{ 'LOCATIONCOMMENT' | translate }}">
+                    </label>
+                </td>
+                <td width="80px" valign="middle" style="vertical-align: middle;text-align: center;">
+                    <input type="checkbox" ng-model="locationInput.addDate" id="cbox2" value="second_checkbox" style="width:13px;    margin-left: 5px;"> <label for="cbox2">{{ 'LOCATION_ADDDATE' | translate }} </label>
+                </td>
+            </tr>
+        </table>
+    </ion-item>
+    <ion-item style="padding: 0px;">
+    <leaflet id="mappick" data-tap-disabled="true" lf-center="markerPosition" event-broadcast="events" markers="markers" height="300px" width="100%"></leaflet>
+    </ion-item>
+</ion-list>

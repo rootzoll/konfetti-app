@@ -7,12 +7,9 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
-        <!-- lang select gets handled on root scope level -->
-        <select 
-        ng-model="select.actualLang" 
-        ng-options='lang.display for lang in langSet' 
-        ng-change='selectedLang(select.actualLang)'
-        style="margin-top: 8px;margin-right: 3px;"></select>
+        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
+            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
+        </button>
     </ion-nav-buttons>
 
     <ion-content>
@@ -123,14 +120,14 @@
                       </td>
                   </tr>
                   <tr>
-                      <td ng-show="((request.state!='open') && (request.state!='processing'))" width="50" style="vertical-align: middle; text-align: center">
+                      <td ng-show="((request.state!='STATE_OPEN') && (request.state!='STATE_PROCESSING'))" width="50" style="vertical-align: middle; text-align: center">
 
-                        <button ng-show="(request.state==='review')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
-                        <button ng-show="(request.state==='done')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
-                        <button ng-show="(request.state==='rejected')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
+                        <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
 
                       </td>
-                      <td ng-show="((request.state==='open') || (request.state==='processing'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
+                      <td ng-show="((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
                           <table class="round" style="width:100%;">
                               <tr>
                                   <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
@@ -176,7 +173,7 @@
 
               <!-- ADDITIONAL INFO TEXTS ON TASK -->
 
-              <div ng-show="(request.state=='done') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state=='STATE_OPEN') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;">
                   {{ 'INFO_REWARD' | translate }} {{request.konfettiAmountReward}} {{ 'KONFETTI' | translate }}.
               </div>
 
@@ -184,12 +181,12 @@
                   {{ 'INFO_SUPPORT' | translate }} {{request.konfettiAmountSupport}} {{ 'KONFETTI' | translate }}.
               </div>
 
-              <div ng-show="(request.state==='review') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state==='STATE_REVIEW') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;">
                   {{ 'CHECK_MEDIAITEMS' | translate }}
               </div>
 
               <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
-              <div ng-show="(!userIsAuthor) && (request.state==='open')" style="width:100%">
+              <div ng-show="(!userIsAuthor) && (request.state==='STATE_OPEN')" style="width:100%">
                   <div style="width:100%">
                     <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
                 </div>
@@ -206,25 +203,25 @@
               </div>
 
               <!-- SHOW WHEN USER IS THE AUTHOR -->
-              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest)) && (request.state!='rejected')" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest)) && (request.state!='STATE_REJECTED')" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
                   <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="padding-left: 10px">
                       &nbsp; {{ 'ADDINFO' | translate }}
                   </button>
               </div>
 
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
-              <div ng-show="((userIsAuthor) && ((request.state==='open') || (request.state==='processing')) && (!loadingRequest))" style="width:100%">
+              <div ng-show="((userIsAuthor) && ((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING')) && (!loadingRequest))" style="width:100%">
                   <div ng-show="(request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
-                  <div ng-show="(request.state==='open')" style="width:100%; padding-top: 8px; padding-bottom: 8px;">
+                  <div ng-show="(request.state==='STATE_OPEN')" style="width:100%; padding-top: 8px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized" style="border-radius: 6px">
                           <span style="font-weight: bold;">{{ 'REQUESTPROCESS' | translate }}</span>
                       </button>
                   </div>
-                  <div ng-show="(request.state==='processing')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                  <div ng-show="(request.state==='STATE_PROCESSING')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized" style="border-radius: 6px">
                           {{ 'REQUESTREOPEN' | translate }}
                       </button>
@@ -238,15 +235,15 @@
 
               <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
               <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-                      <div ng-show="(request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <div ng-show="(request.state==='STATE_REVIEW')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                           <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
                               {{ 'REQUESTAPPROVE' | translate }}
                           </button>
                       </div>
-                      <div ng-show="(request.state==='open') || (request.state==='review')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                      <div ng-show="(request.state==='STATE_OPEN') || (request.state==='STATE_REVIEW')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                           <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-assertive" style="border-radius: 6px">
-                              <span ng-show="(request.state==='review')">{{ 'REQUESTREJECT' | translate }}</span>
-                              <span ng-show="(request.state==='open')">{{ 'REQUESTREJECT_AFTER' | translate }}</span>
+                              <span ng-show="(request.state==='STATE_REVIEW')">{{ 'REQUESTREJECT' | translate }}</span>
+                              <span ng-show="(request.state==='STATE_OPEN')">{{ 'REQUESTREJECT_AFTER' | translate }}</span>
                           </button>
                       </div>
                       <div ng-show="(isAdmin) && (!userIsAuthor)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
@@ -257,7 +254,7 @@
               </div>
 
               <!-- SHOW WHEN YOU ARE AUTHOR AND REQUEST IS REJECTED -->
-              <div ng-show="((isAdmin || userIsAuthor) && (request.id>0) && (request.state==='rejected'))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
+              <div ng-show="((isAdmin || userIsAuthor) && (request.id>0) && (request.state==='STATE_REJECTED'))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
                   <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
                           {{ 'REQUESTDELETE' | translate }}
@@ -320,12 +317,6 @@
       <div ng-show="(request.info.length>0)" class="list card">
           <div data-ng-repeat="info in request.info" >
               <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" ></div>
-          </div>
-      </div>
-
-      <div ng-show="((request.info.length==0) && (request.mediaItemIds.length>0))" class="list card">
-          <div data-ng-repeat="mediaItemId in request.mediaItemIds" >
-              <div mediaitem itemid="{{mediaItemId}}" id="media-id-{{mediaItemId}}"></div>
           </div>
       </div>
 

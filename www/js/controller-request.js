@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -21,6 +21,8 @@ angular.module('starter.controller.request', [])
 
   $scope.mediaChoosePopup = null;
 
+  $scope.request.info = [];
+
   $scope.setNoticeTextByRequestState = function() {
 
             /*
@@ -33,55 +35,55 @@ angular.module('starter.controller.request', [])
             $scope.noticeTextId = "";
 
             // when in review and user is author
-            if (($scope.request.state=='review') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_REVIEW') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "#ffc900";
                 $scope.noticeTextId = "EXPLAIN_REVIEW_USER";
             }
 
             // when in review and user is reviewer/admin
-            if (($scope.request.state=='review') && ($scope.isReviewer || $scope.isAdmin)) {
+            if (($scope.request.state=='STATE_REVIEW') && ($scope.isReviewer || $scope.isAdmin)) {
                 $scope.noticeColor = "#ffc900";
                 $scope.noticeTextId = "EXPLAIN_REVIEW_ADMIN";
             }
 
             // when got rejected
-            if (($scope.request.state=='rejected')) {
+            if (($scope.request.state=='STATE_REJECTED')) {
                 $scope.noticeColor = "red";
                 $scope.noticeTextId = "EXPLAIN_REJECTED";
             }
 
             // when open and user is author
-            if (($scope.request.state=='open') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_OPEN') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_OPEN_AUTHOR";
             }
 
             // when open and user is public
-            if (($scope.request.state=='open') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_OPEN') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_OPEN_PUBLIC";
             }
 
             // when open and user is public
-            if (($scope.request.state=='processing') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_PROCESSING') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_PROCESSING_AUTHOR";
             }
 
             // when is in the process of doing and user id author
-            if (($scope.request.state=='processing') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_PROCESSING') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_PROCESSING_PUBLIC";
             }
 
             // when done and user is not author
-            if (($scope.request.state=='done') && (!$scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_DONE') && (!$scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_DONE_PUBLIC";
             }
 
             // when done and user is author
-            if (($scope.request.state=='done') && ($scope.userIsAuthor)) {
+            if (($scope.request.state=='STATE_DONE') && ($scope.userIsAuthor)) {
                 $scope.noticeColor = "green";
                 $scope.noticeTextId = "EXPLAIN_DONE_AUTHOR";
             }
@@ -100,12 +102,6 @@ angular.module('starter.controller.request', [])
           for (var i=0; i<$scope.request.info.length; i++) {
               if ($scope.request.info[i].id == itemid) {
                   $scope.request.info.splice(i,1);
-                  break;
-              }
-          }
-          for (var i=0; i<$scope.request.mediaItemIds.length; i++) {
-              if ($scope.request.mediaItemIds[i] == itemid) {
-                  $scope.request.mediaItemIds.splice(i,1);
                   break;
               }
           }
@@ -128,7 +124,7 @@ angular.module('starter.controller.request', [])
     // set public on server
     ApiService.makeMediaItemPublic($scope.request.id, itemid, function(){
        for (var i=0; i<$scope.request.info.length; i++) {
-           if ($scope.request.info[i].id==itemId) $scope.request.info[i].reviewed = 0;
+           if ($scope.request.info[i].id==itemId) $scope.request.info[i].reviewed == 'REVIEWED_PUBLIC';
        }
     },function(){}
     );
@@ -202,7 +198,7 @@ angular.module('starter.controller.request', [])
 
             // check if user has konfetti at all
             if (($rootScope.party.konfettiCount<=0) && (request.konfettiAdd==0)) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 return;
             }
 
@@ -282,7 +278,7 @@ angular.module('starter.controller.request', [])
                         },function(){
                             // FAIL
                             $ionicLoading.hide();
-                            KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                            PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                         });
                     }
                 });
@@ -338,11 +334,6 @@ angular.module('starter.controller.request', [])
           $state.go('tab.dash', {id: 0});
           return;
       }
-
-      // make sure lang seletor is set correct
-      $timeout(function(){
-          $rootScope.setActualLangOnSelector();
-      },100);
 
   });
 
@@ -407,7 +398,7 @@ angular.module('starter.controller.request', [])
     var fail = function(error) {
         console.log("CAMERA FAIL:");
         console.dir(error);
-        KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+        PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
     };
 
     // on browser use file upload
@@ -437,9 +428,12 @@ angular.module('starter.controller.request', [])
   $scope.storeSelfi = function(imageDataUrl) {
 
       // user id will get updated once 
-
+      $ionicLoading.show({
+        template: '<img src="img/spinner.gif" />'
+      });
       ApiService.postImageMediaItemOnRequest(0, imageDataUrl, function(item){
           // WIN
+          $ionicLoading.hide();
 
           // set in actual request
           $scope.request.imageMediaID = item.id;
@@ -451,7 +445,8 @@ angular.module('starter.controller.request', [])
 
       }, function() {
           // FAIL
-          KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+          $ionicLoading.hide();
+          PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
       });
   };
 
@@ -469,6 +464,7 @@ angular.module('starter.controller.request', [])
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
+                          cssClass: 'pop-additem',
                           buttons: []
                       });
                   });
@@ -507,7 +503,7 @@ angular.module('starter.controller.request', [])
           }, function() {
               // FAIL
               $ionicLoading.hide();
-              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
           });
       }
 
@@ -556,7 +552,7 @@ angular.module('starter.controller.request', [])
                     }, function() {
                           // FAIL
                           $ionicLoading.hide();
-                          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                     });
                   }
               });
@@ -565,49 +561,41 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addInfoLocation = function() {
-      $scope.mediaChoosePopup.close();
-      $translate("INFO").then(function (HEADLINE) {
-          $translate("USELOCATION").then(function (TEXT) {
-              var confirmPopup = $ionicPopup.confirm({
-                  title: HEADLINE,
-                  template: TEXT
-              });
-              confirmPopup.then(function(res) {
-                  if(res) {
 
-                      // user fake data on browser
-                      if (AppContext.getRunningOS()=="browser") {
-                          alert("USING MOCK LOCATION");
-                          $scope.saveLocationMediaItem(53.55340,9.992196);
-                          return;
-                      }
+           try {
 
-                      $ionicLoading.show({
-                          template: '<img src="img/spinner.gif" />'
-                      });
-                      var posOptions = {timeout: 10000, enableHighAccuracy: true};
-                      $cordovaGeolocation
-                          .getCurrentPosition(posOptions)
-                          .then(function (position) {
-                              $ionicLoading.hide();
-                              $rootScope.lat = position.coords.latitude;
-                              $rootScope.lon = position.coords.longitude;
-                              $scope.saveLocationMediaItem(position.coords.latitude,position.coords.longitude);
-                              $ionicScrollDelegate.scrollBottom(true);
-                          }, function(err) {
-                              $ionicLoading.hide();
-                              if (($rootScope.lon!=null) && ($rootScope.lon!=0)
-                                  && ($rootScope.lat!=null) && ($rootScope.lat!=0)) {
-                                  // use backup start coordinates
-                                  $scope.saveLocationMediaItem($rootScope.lat,$rootScope.lon);
-                              } else {
-                                  KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                              }
-                          });
-                  }
-              });
-          });
-      });
+           $scope.mediaChoosePopup.close();
+          
+           PopupDialogs.locationPicker($scope, function(result) {
+
+               // WIN
+               if (result.cancel) return;
+               // TODO: store also comment on location
+               $scope.saveLocationMediaItem(result.lat,result.lon);
+               $timeout(function(){
+                $ionicScrollDelegate.scrollBottom(true);
+               },500);
+
+               // TODO: in the future when date is follow up dialog - combine to meeting item
+               if (result.addDate) $scope.addInfoDate();
+
+            }, function(error){
+
+                // FAIL
+                if ((typeof error != "undefined") && (error!=null)) alert("ERROR: "+JSON.stringify(error));
+            
+            }, {
+                i18nHeadline: "LOCATIONPICKER_TITLE",
+                i18nMarker: "LOCATIONPICKER_MARKER",
+                inputComment: true,
+                startLat: 52.522011,
+                startLon: 13.412772,
+                startZoom: 9
+            });
+
+      } catch (e) {
+          alert("ERROR on LocationPicker: "+JSON.stringify(e));
+      }
 
   };
 
@@ -627,7 +615,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
 
   };
@@ -653,6 +641,7 @@ angular.module('starter.controller.request', [])
                      scope: $scope,
                      subTitle: TEXT,
                      title: HEADLINE,
+                     cssClass: 'pop-dateinput',
                     buttons: [
                         { text: CANCEL, onTap: function(e){
                             $scope.dateInput.date=null;
@@ -699,7 +688,7 @@ angular.module('starter.controller.request', [])
                      }, function() {
                         // FAIL
                         $ionicLoading.hide();
-                        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                     });
 
                 });
@@ -729,7 +718,7 @@ angular.module('starter.controller.request', [])
                             }, function() {
                                 // FAIL
                                 $ionicLoading.hide();
-                                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                             });
                         }
                     });
@@ -739,10 +728,12 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addMediaItem = function(mediaitem) {
+      if (mediaitem.id==null) {
+          alert("ERROR addMediaItem: cannot add a item with id null");
+          return;
+      }
       if (typeof $scope.request.info == "undefined") $scope.request.info = [];
       $scope.request.info.push(mediaitem);
-      if (typeof $scope.request.mediaItemIds == "undefined") $scope.request.mediaItemIds = [];
-      $scope.request.mediaItemIds.push(mediaitem.id);
   };
 
   $scope.buttonRequestDone = function() {
@@ -798,7 +789,7 @@ angular.module('starter.controller.request', [])
                     }
 
                     if ((rewardUserIds.length>$scope.request.konfettiCount) && ($scope.request.konfettiCount>0)) {
-                        KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LESS');
+                        PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LESS');
                         return;
                     }
 
@@ -811,7 +802,7 @@ angular.module('starter.controller.request', [])
                 });
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
                     $ionicLoading.hide();
-                    $scope.request.state='done';
+                    $scope.request.state='STATE_DONE';
                     $scope.setNoticeTextByRequestState();
                     $ionicScrollDelegate.scrollTop(true);
                 }, function() {
@@ -834,12 +825,12 @@ angular.module('starter.controller.request', [])
     ApiService.setStateOfRequestToProcessing($scope.request.id, function(){
         // WIN
         $ionicLoading.hide();
-        $scope.request.state = "processing";
+        $scope.request.state = "STATE_PROCESSING";
         $scope.setNoticeTextByRequestState();
     }, function() {
         // FAIL
         $ionicLoading.hide();
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
     });
   };
 
@@ -850,12 +841,12 @@ angular.module('starter.controller.request', [])
       ApiService.setStateOfRequestToReOpen($scope.request.id, function(){
           // WIN
           $ionicLoading.hide();
-          $scope.request.state = "open";
+          $scope.request.state = "STATE_OPEN";
           $scope.setNoticeTextByRequestState();
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -877,7 +868,7 @@ angular.module('starter.controller.request', [])
                           }, function() {
                               // FAIL
                               $ionicLoading.hide();
-                              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                           });
                       }
                   });
@@ -907,7 +898,7 @@ angular.module('starter.controller.request', [])
                   }, function() {
                       // FAIL
                       $ionicLoading.hide();
-                      KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                      PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                   });
               });
           });
@@ -921,7 +912,7 @@ angular.module('starter.controller.request', [])
         $state.go('tab.dash', {id: $scope.request.partyId});
       }, function() {
         // FAIL
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -938,7 +929,7 @@ angular.module('starter.controller.request', [])
 
   $scope.removeChat = function($event, chat) {
       $event.stopPropagation();
-      if (($scope.request.chats.length==1) && ($scope.request.state==='processing')) {
+      if (($scope.request.chats.length==1) && ($scope.request.state==='STATE_PROCESSING')) {
           return;
       }
       $ionicLoading.show({
@@ -1000,7 +991,7 @@ angular.module('starter.controller.request', [])
       }
 
       if ($scope.profile.spokenLangs.length==0) {
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LANG');
+          PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LANG');
           return;
       }
 
@@ -1060,7 +1051,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 

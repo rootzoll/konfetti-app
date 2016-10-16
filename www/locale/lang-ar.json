@@ -191,5 +191,9 @@
             "DATE" : "تاريخ",
             "TIME" : "مرة...",
             "DATECOMMENT" : "كلمة رئيسية وصفية",
-            "ADDLOCATION" : "إضافة معلومات الموقع"
+            "ADDLOCATION" : "إضافة معلومات الموقع",
+            "LOCATIONCOMMENT": "الطبوغرافيا",
+            "LOCATION_ADDDATE": "إضافة التعيين",
+            "LOCATIONPICKER_TITLE": "تحديد المكان",
+            "LOCATIONPICKER_MARKER": "الموقع بالغة"
 }
