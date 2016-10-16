@@ -568,8 +568,8 @@ angular.module('starter.controller.request', [])
 
            $scope.mediaChoosePopup.close();
           
-            $translate("INFO").then(function (HEADLINE) {
-            $translate("USELOCATION").then(function (TEXT) {
+            $translate("LOCATIONPICKER_TITLE").then(function (HEADLINE) {
+            $translate("LOCATIONPICKER_MARKER").then(function (TEXT) {
             $translate("OK").then(function (OK) {
             $translate("CANCEL").then(function (CANCEL) {
                 
@@ -589,7 +589,7 @@ angular.module('starter.controller.request', [])
                         lat: startLat,
                         lng: startLon,
                         focus: true,
-                        message: "Set Location",
+                        message: TEXT,
                         draggable: true
                     }   
                 },
@@ -627,7 +627,6 @@ angular.module('starter.controller.request', [])
                 var myPopup = $ionicPopup.show({
                      templateUrl: 'templates/pop-locationpick.html',
                      scope: $scope,
-                     subTitle: TEXT,
                      title: HEADLINE,
                      cssClass: 'pop-locationpick',
                     buttons: [

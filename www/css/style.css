@@ -318,3 +318,13 @@ div.popup-body span {
     min-height: 400px;
 }
 
+.pop-locationpick .popup-head {
+    padding: 8px 6px;
+    padding-bottom: 0px;
+    border-bottom: 0px solid #eee;
+}
+
+#adddate {
+    padding-bottom: 0px;
+}
+
