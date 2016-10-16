@@ -84,6 +84,8 @@ angular.module('starter')
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 
+                try {
+
                 var useCache = ((typeof $attributes.cache !="undefined") && ($attributes.cache==="true"));
                 $scope.loading = true;
                 $scope.itemid = $attributes.itemid;
@@ -162,6 +164,10 @@ angular.module('starter')
                         // FAIL
                         $scope.loading = false;
                     }, useCache);
+                }
+
+                } catch (e) {
+                    alert("ERROR on MediaItem: "+JSON.stringify(e));
                 }
 
             }

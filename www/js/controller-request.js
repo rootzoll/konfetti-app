@@ -566,6 +566,8 @@ angular.module('starter.controller.request', [])
 
   $scope.addInfoLocation = function() {
 
+           try {
+
            $scope.mediaChoosePopup.close();
           
             $translate("LOCATIONPICKER_TITLE").then(function (HEADLINE) {
@@ -738,6 +740,10 @@ angular.module('starter.controller.request', [])
           });
           });
       });      */
+
+      } catch (e) {
+          alert("ERROR on LocationPicker: "+JSON.stringify(e));
+      }
 
   };
 
