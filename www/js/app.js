@@ -16,6 +16,7 @@ angular.module('starter', [
 							'starter.appcontext', 
 							'starter.rainanimation',
 							'starter.konfettitoolbox',
+                            'starter.popupdialogs',
 							'ngCordova', 
 							'pascalprecht.translate',
                             'leaflet-directive'])

@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -20,6 +20,8 @@ angular.module('starter.controller.request', [])
   $scope.pulsateHeadlineInput = false;
 
   $scope.mediaChoosePopup = null;
+
+  $scope.request.info = [];
 
   $scope.setNoticeTextByRequestState = function() {
 
@@ -100,12 +102,6 @@ angular.module('starter.controller.request', [])
           for (var i=0; i<$scope.request.info.length; i++) {
               if ($scope.request.info[i].id == itemid) {
                   $scope.request.info.splice(i,1);
-                  break;
-              }
-          }
-          for (var i=0; i<$scope.request.mediaItemIds.length; i++) {
-              if ($scope.request.mediaItemIds[i] == itemid) {
-                  $scope.request.mediaItemIds.splice(i,1);
                   break;
               }
           }
@@ -469,6 +465,7 @@ angular.module('starter.controller.request', [])
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
+                          cssClass: 'pop-additem',
                           buttons: []
                       });
                   });
@@ -570,176 +567,30 @@ angular.module('starter.controller.request', [])
 
            $scope.mediaChoosePopup.close();
           
-            $translate("LOCATIONPICKER_TITLE").then(function (HEADLINE) {
-            $translate("LOCATIONPICKER_MARKER").then(function (TEXT) {
-            $translate("OK").then(function (OK) {
-            $translate("CANCEL").then(function (CANCEL) {
-                
-                var startLat = 52.522011;
-                var startLon = 13.412772;
-                var startZoom = 9;
+           PopupDialogs.locationPicker($scope, function(result) {
 
+               // WIN 
+               if (result.cancel) return;
 
-                angular.extend($scope, {
-                markerPosition: {
-                    lat: startLat,
-                    lng: startLon,
-                    zoom: startZoom
-                },
-                markers: {
-                    mainMarker: {
-                        lat: startLat,
-                        lng: startLon,
-                        focus: true,
-                        message: TEXT,
-                        draggable: true
-                    }   
-                },
-                events: { 
-                    markers:{
-                      enable: [ 'dragend' ]
-                    }
-                }
-                });
+               alert("TODO: comment and followup dat - "+JSON.stringify(result));
+               $scope.saveLocationMediaItem(result.lat,result.lon);
+               $timeout(function(){
+                $ionicScrollDelegate.scrollBottom(true);
+               },500);
 
-                // when user ends drag of marker - update position
-                $scope.$on("leafletDirectiveMarker.mappick.dragend", function(event, args){
-                    $scope.markerPosition.lat = args.model.lat;
-                    $scope.markerPosition.lng = args.model.lng;
-                    if ($scope.markerPosition.zoom<17) $scope.markerPosition.zoom++;
-                });
+            }, function(error){
 
-                // when user ends drag of map - set marker to new center position
-                $scope.$on("leafletDirectiveMap.mappick.click", function(event, args){
-                    $scope.markers.mainMarker.lat = args.leafletEvent.latlng.lat;
-                    $scope.markers.mainMarker.lng = args.leafletEvent.latlng.lng;
-                    $scope.markerPosition.lat = args.leafletEvent.latlng.lat;
-                    $scope.markerPosition.lng = args.leafletEvent.latlng.lng;
-                    if ($scope.markerPosition.zoom<17) $scope.markerPosition.zoom++;
-                });
-
+                // FAIL
+                if ((typeof error != "undefined") && (error!=null)) alert("ERROR: "+JSON.stringify(error));
             
-                $scope.locationInput = {
-                    lat: 0,
-                    lon: 0,
-                    comment: "",
-                    addDate: false
-                };
-
-                var myPopup = $ionicPopup.show({
-                     templateUrl: 'templates/pop-locationpick.html',
-                     scope: $scope,
-                     title: HEADLINE,
-                     cssClass: 'pop-locationpick',
-                    buttons: [
-                        { text: CANCEL, onTap: function(e){
-                            $scope.locationInput=null;
-                        } },
-                        { text: OK,
-                            type: 'button-positive',
-                            onTap: function(e) {
-                                $scope.locationInput.lat = $scope.markerPosition.lat;
-                                $scope.locationInput.lon = $scope.markerPosition.lng;
-                            }
-                        }
-                    ]
-                });
-
-                leafletData.getMap("mappick").then(function(map) {
-                    setTimeout(function(){
-                        map.invalidateSize();
-                        }, 200);
-                  });
-                
-                myPopup.then(function(res) { 
-
-                    if ($scope.locationInput==null) return;
-
-                    alert("TODO: comment and followup dat - "+JSON.stringify($scope.locationInput));
-                    $scope.saveLocationMediaItem($scope.locationInput.lat,$scope.locationInput.lon);
-                    $timeout(function(){
-                        $ionicScrollDelegate.scrollBottom(true);
-                    },300);
-
-                });
+            }, {
+                i18nHeadline: "LOCATIONPICKER_TITLE",
+                i18nMarker: "LOCATIONPICKER_MARKER",
+                inputComment: true,
+                startLat: 52.522011,
+                startLon: 13.412772,
+                startZoom: 9
             });
-            });
-            });
-            });
-
-          /*
-      $scope.mediaChoosePopup.close();
-
-
-      $translate("INFO").then(function (HEADLINE) {
-          $translate("USELOCATION").then(function (TEXT) {
-            $translate("OK").then(function (OK) {
-            $translate("CANCEL").then(function (CANCEL) {
-
-
-                var myPopup = $ionicPopup.show({
-                     templateUrl: 'templates/pop-locationpick.html',
-                     scope: $scope,
-                     title: HEADLINE,
-                     subTitle: TEXT,
-                    buttons: [
-                        { text: CANCEL },
-                        { text: OK,
-                            type: 'button-positive',
-                            onTap: function(e) {
-                            }
-                        }
-                    ]
-                });
-                myPopup.then(function(res) {
-                    alert("DONE");
-                });
-
-    
-              var confirmPopup = $ionicPopup.confirm({
-                  title: HEADLINE,
-                  template: TEXT
-              });
-              confirmPopup.then(function(res) {
-                  if(res) {
-
-                      // user fake data on browser
-                      if (AppContext.getRunningOS()=="browser") {
-                          alert("USING MOCK LOCATION");
-                          $scope.saveLocationMediaItem(53.55340,9.992196);
-                          return;
-                      }
-
-                      $ionicLoading.show({
-                          template: '<img src="img/spinner.gif" />'
-                      });
-                      var posOptions = {timeout: 10000, enableHighAccuracy: true};
-                      $cordovaGeolocation
-                          .getCurrentPosition(posOptions)
-                          .then(function (position) {
-                              $ionicLoading.hide();
-                              $rootScope.lat = position.coords.latitude;
-                              $rootScope.lon = position.coords.longitude;
-                              $scope.saveLocationMediaItem(position.coords.latitude,position.coords.longitude);
-                              $ionicScrollDelegate.scrollBottom(true);
-                          }, function(err) {
-                              $ionicLoading.hide();
-                              if (($rootScope.lon!=null) && ($rootScope.lon!=0)
-                                  && ($rootScope.lat!=null) && ($rootScope.lat!=0)) {
-                                  // use backup start coordinates
-                                  $scope.saveLocationMediaItem($rootScope.lat,$rootScope.lon);
-                              } else {
-                                  KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                              }
-                          });
-                  }
-              });
-        
-
-          });
-          });
-          });
-      });      */
 
       } catch (e) {
           alert("ERROR on LocationPicker: "+JSON.stringify(e));
@@ -800,10 +651,12 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addMediaItem = function(mediaitem) {
+      if (mediaitem.id==null) {
+          alert("ERROR addMediaItem: cannot add a item with id null");
+          return;
+      }
       if (typeof $scope.request.info == "undefined") $scope.request.info = [];
       $scope.request.info.push(mediaitem);
-      if (typeof $scope.request.mediaItemIds == "undefined") $scope.request.mediaItemIds = [];
-      $scope.request.mediaItemIds.push(mediaitem.id);
   };
 
   $scope.buttonRequestDone = function() {

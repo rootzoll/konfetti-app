@@ -328,3 +328,7 @@ div.popup-body span {
     padding-bottom: 0px;
 }
 
+.pop-additem .popup-body {
+    overflow: hidden;
+}
+

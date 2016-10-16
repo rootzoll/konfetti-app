@@ -186,7 +186,7 @@
             "INTRO_REDEEMCOUPON" : "Konfetti Gutschein einlösen ..",
             "CODE_WRONG": "Der Gutscheincode ist icht korrekt oder wurde bereits verwendet.",
             "CODE_CORRECT": "Du hast Konfetti erhalten:) Unterstütze damit bestehende Ideen oder wünsch dir etwas von deiner Nachbarschaft.",
-            "LOCATIONCOMMENT": "Ortsbeschreibung (Stichworte)",
+            "LOCATIONCOMMENT": "Ortsbeschreibung",
             "LOCATION_ADDDATE": "Datum hinzufügen",
             "LOCATIONPICKER_TITLE": "Ort festlegen",
             "LOCATIONPICKER_MARKER": "Marker setzen"  

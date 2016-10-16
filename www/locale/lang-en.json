@@ -187,7 +187,7 @@
             "INTRO_REDEEMCOUPON" : "Redeem Konfetti Coupon ..",
             "CODE_WRONG": "The code is not valid or already used. Please check if correct.",
             "CODE_CORRECT": "You received Konfetti :) Start now to support existing ideas or create a new task with Konfetti.",
-            "LOCATIONCOMMENT": "location description (keywords)",
+            "LOCATIONCOMMENT": "location description",
             "LOCATION_ADDDATE": "add date",
             "LOCATIONPICKER_TITLE": "Set Location",
             "LOCATIONPICKER_MARKER": "pinpoint location"

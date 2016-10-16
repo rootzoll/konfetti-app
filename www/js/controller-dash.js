@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs) {
 
         /*
          * get state parameter of controller
@@ -538,7 +538,7 @@ angular.module('starter.controller.dash', [])
 		// send confetti to an email address
 		$scope.sendKonfetti = function() {
 			$scope.partyPopUp.close();
-			KonfettiToolbox.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
+			PopupDialogs.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
 		};
 
         // pop up with more info in party
@@ -756,7 +756,7 @@ angular.module('starter.controller.dash', [])
             //$rootScope.gps = 'fail';
             if ($scope.gps==='fail') {
                 $scope.state = "GPSFAIL";
-                KonfettiToolbox.getFallbackLocationBySelection(function(lat, lon) {
+                PopupDialogs.getFallbackLocationBySelection(function(lat, lon) {
                     // WIN
                     $scope.action();
                 }, function() {

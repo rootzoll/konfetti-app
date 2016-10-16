@@ -103,6 +103,9 @@ angular.module('starter')
                             zoom: 2
                         },
                         markers: {
+                        },
+                        defaults: {
+                            tap: false
                         }
                 });
 
@@ -120,12 +123,11 @@ angular.module('starter')
                                 focus: true,
                                 draggable: false
                     }; 
-                    console.dir($scope.center);
-                    console.dir($scope.markers);
                 }
 
                   leafletData.getMap("map"+$scope.mediaItemData.id).then(function(map) {
                     setTimeout(function(){
+                        //map.dragging.disable();
                         map.invalidateSize();
                         }, 200);
                   });
