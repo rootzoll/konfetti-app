@@ -121,7 +121,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginRegisterFinal = function(mail,pass) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 $scope.login.Password = "";
                 return;
             }
@@ -129,7 +129,7 @@ angular.module('starter.controller.dash', [])
 
             // password needs to be at least 8 chars long
             if (pass.length<8) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
+                PopupDialogs.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
                 $scope.login.Password = "";
                 return;
             }
@@ -153,11 +153,11 @@ angular.module('starter.controller.dash', [])
                     // email already in use
                     $scope.login.Password = "";
                     $scope.loginEmail = "";
-                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
+                    PopupDialogs.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
                         $scope.state = "LOGIN_START";
                     });
                 } else {
-                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
+                    PopupDialogs.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
                     $scope.login.Password = "";
                 }
             });
@@ -173,7 +173,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginLoginFinal = function(mail,pass) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 $scope.login.Password = "";
                 return;
             }
@@ -195,7 +195,7 @@ angular.module('starter.controller.dash', [])
                 // FAIL
                 $ionicLoading.hide();
                 $scope.login.Password = "";
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
                 });
             });
         };
@@ -207,7 +207,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginRecoverFinal = function(mail) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 return;
             }
 
@@ -217,13 +217,13 @@ angular.module('starter.controller.dash', [])
             ApiService.recoverPassword(mail, function() {
                 // WIN
                 $ionicLoading.hide();
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
                     $scope.state = "LOGIN_LOGIN";
                 });
             }, function() {
                 // FAIL
                 $ionicLoading.hide();
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_FAIL', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'RECOVER_FAIL', function(){
                 });
             });
         };
@@ -433,7 +433,7 @@ angular.module('starter.controller.dash', [])
 
             // check if user has konfetti at all
             if ((request.konfettiAdd===0) && ($rootScope.party.konfettiCount==0)) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 return;
             }
 
@@ -573,12 +573,12 @@ angular.module('starter.controller.dash', [])
             KonfettiToolbox.processCode(true, function(result){
                 if (result.actions.length>0) {
                     // code worked
-                    KonfettiToolbox.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
+                    PopupDialogs.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
                         $scope.buttonIntroScreenOK();
                     });
                 } else {
                     // code wrong
-                    KonfettiToolbox.showIonicAlertWith18nText('REDEEMCOUPON', 'CODE_WRONG', function(){
+                    PopupDialogs.showIonicAlertWith18nText('REDEEMCOUPON', 'CODE_WRONG', function(){
                     });
                 }
             });
@@ -637,7 +637,7 @@ angular.module('starter.controller.dash', [])
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
                             AppContext.setAccount(account);
-                            KonfettiToolbox.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
+                            PopupDialogs.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
                             	$scope.resetAccount();
                             });
                             return;

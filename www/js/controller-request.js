@@ -198,7 +198,7 @@ angular.module('starter.controller.request', [])
 
             // check if user has konfetti at all
             if (($rootScope.party.konfettiCount<=0) && (request.konfettiAdd==0)) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 return;
             }
 
@@ -278,7 +278,7 @@ angular.module('starter.controller.request', [])
                         },function(){
                             // FAIL
                             $ionicLoading.hide();
-                            KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                            PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                         });
                     }
                 });
@@ -398,7 +398,7 @@ angular.module('starter.controller.request', [])
     var fail = function(error) {
         console.log("CAMERA FAIL:");
         console.dir(error);
-        KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+        PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
     };
 
     // on browser use file upload
@@ -503,7 +503,7 @@ angular.module('starter.controller.request', [])
           }, function() {
               // FAIL
               $ionicLoading.hide();
-              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
           });
       }
 
@@ -552,7 +552,7 @@ angular.module('starter.controller.request', [])
                     }, function() {
                           // FAIL
                           $ionicLoading.hide();
-                          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                     });
                   }
               });
@@ -615,7 +615,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
 
   };
@@ -643,7 +643,7 @@ angular.module('starter.controller.request', [])
                             }, function() {
                                 // FAIL
                                 $ionicLoading.hide();
-                                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                             });
                         }
                     });
@@ -713,7 +713,7 @@ angular.module('starter.controller.request', [])
                     }
 
                     if ((rewardUserIds.length>$scope.request.konfettiCount) && ($scope.request.konfettiCount>0)) {
-                        KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LESS');
+                        PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LESS');
                         return;
                     }
 
@@ -754,7 +754,7 @@ angular.module('starter.controller.request', [])
     }, function() {
         // FAIL
         $ionicLoading.hide();
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
     });
   };
 
@@ -770,7 +770,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -792,7 +792,7 @@ angular.module('starter.controller.request', [])
                           }, function() {
                               // FAIL
                               $ionicLoading.hide();
-                              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                           });
                       }
                   });
@@ -822,7 +822,7 @@ angular.module('starter.controller.request', [])
                   }, function() {
                       // FAIL
                       $ionicLoading.hide();
-                      KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                      PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                   });
               });
           });
@@ -836,7 +836,7 @@ angular.module('starter.controller.request', [])
         $state.go('tab.dash', {id: $scope.request.partyId});
       }, function() {
         // FAIL
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -915,7 +915,7 @@ angular.module('starter.controller.request', [])
       }
 
       if ($scope.profile.spokenLangs.length==0) {
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LANG');
+          PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LANG');
           return;
       }
 
@@ -975,7 +975,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
