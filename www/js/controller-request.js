@@ -428,9 +428,12 @@ angular.module('starter.controller.request', [])
   $scope.storeSelfi = function(imageDataUrl) {
 
       // user id will get updated once 
-
+      $ionicLoading.show({
+        template: '<img src="img/spinner.gif" />'
+      });
       ApiService.postImageMediaItemOnRequest(0, imageDataUrl, function(item){
           // WIN
+          $ionicLoading.hide();
 
           // set in actual request
           $scope.request.imageMediaID = item.id;
@@ -442,6 +445,7 @@ angular.module('starter.controller.request', [])
 
       }, function() {
           // FAIL
+          $ionicLoading.hide();
           KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
       });
   };

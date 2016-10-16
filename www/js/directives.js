@@ -38,6 +38,23 @@ angular.module('starter')
                 // set basic data
                 $scope.data = $scope.$eval($attributes.data);
 
+                // check if data is available
+                $scope.langAvailable = function(actualLang) {
+                    if (typeof $scope.data == "undefined") {
+                        console.log("A");
+                        return false;
+                    }
+                    if (typeof $scope.data.data == "undefined") {
+                        console.log("B");
+                        return false;
+                    }
+                    if (typeof $scope.data.data[actualLang] == "undefined") {
+                        console.log("C");
+                        return false;
+                    }
+                    return true;
+                };
+
                 // info dialog about auto translation
                 $scope.showAutoTranslateInfo = function($event) {
                   $event.stopPropagation();

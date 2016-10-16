@@ -1,10 +1,10 @@
 <div>
-    <div ng-show="typeof data.data[actualLang] != 'undefined'">
+    <div ng-show="langAvailable(actualLang)">
         <span class="multiLangText">{{data.data[actualLang].text}}</span>
         <span ng-show="data.data[actualLang].translator<0"><img on-tap="showAutoTranslateInfo($event)" style="height: 17px;margin-bottom:-2px;" src="./img/autotranslate.svg"/></span>
     </div>
     <!-- fall back to first lang in data when actual lang not in set -->
-    <div ng-show="typeof data.data[actualLang] == 'undefined'">
+    <div ng-show="!langAvailable(actualLang)">
         <span class="multiLangText">{{data.data[0].text}}</span>
         <span ng-show="data.data[0].translator<0"><img on-tap="showAutoTranslateInfo($event)" style="height: 17px;margin-bottom:-2px;" src="./img/autotranslate.svg"/></span>
     </div>
