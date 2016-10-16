@@ -336,6 +336,10 @@ div.popup-body span {
     margin-top: 0px;
 }
 
+#sortselect-icon:before {
+    margin-top: 4px;
+}
+
 .pop-selectlanguage .popup-head {
     padding: 0px;
 }

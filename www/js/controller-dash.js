@@ -26,8 +26,6 @@ angular.module('starter.controller.dash', [])
         $scope.isReviewerForThisParty = false;
         $scope.isAdminForThisParty = false;
 
-        $scope.actualSorting = null;
-
         $scope.partyList = [];
         $scope.actualPartyIndex = 0;
 
@@ -56,11 +54,7 @@ angular.module('starter.controller.dash', [])
         $scope.sendKonfettiWhiteList = [];  
 
         // sorting options
-        $scope.sortSet = [
-            {sort:'most', display:'most'},
-            {sort:'new', display:'new'}
-        ];
-        $scope.actualSorting = $scope.sortSet[0].sort;
+        $scope.actualSorting = "POSTSORT_MOST"; // or "POSTSORT_NEW"
 
         $scope.login = {
             Email: "",
@@ -70,30 +64,6 @@ angular.module('starter.controller.dash', [])
         /*
          * controller logic
          */      
-        
-        // update displayed text on sort options based on actual lang
-        $scope.updateSortOptions = function() {
-            $translate("POSTSORT_MOST").then(function (POSTSORT_MOST) {
-                $translate("POSTSORT_NEW").then(function (POSTSORT_NEW) {
-                    $scope.sortSet[0].display = POSTSORT_MOST;
-                    $scope.sortSet[1].display = POSTSORT_NEW;
-                });
-            });
-        };
-        $scope.updateSortOptions();
-
-        // the sorting of open tasks changed
-        $scope.changedSorting = function(actualSorting) {
-            if ((typeof actualSorting != "undefined") && (actualSorting!=null)) {
-                $scope.actualSorting = actualSorting;
-            } else {
-                $scope.actualSorting = $scope.sortSet[0].sort;
-            }
-            $timeout(function(){
-                console.dir("trigger sorting: "+$scope.actualSorting);
-                $scope.sortRequests();
-            },100);
-        };
 
         // redeem button
         $scope.onButtonCoupon = function() {
@@ -110,6 +80,15 @@ angular.module('starter.controller.dash', [])
                 $scope.login.Password = "";
                 $scope.state = "LOGIN_REGISTER";
             },10);
+        };
+
+        $scope.openChangeSortDialog = function() {
+            if ($scope.actualSorting=="POSTSORT_MOST") {
+                $scope.actualSorting="POSTSORT_NEW";
+            } else {
+                $scope.actualSorting="POSTSORT_MOST";
+            }
+            $scope.sortRequests();
         };
         
         $scope.tapOnPartyContact = function() {
@@ -259,9 +238,9 @@ angular.module('starter.controller.dash', [])
                 return (b.time) - (a.time);
             };
             var sortFunction = sortFunctionMost;
-            if ($scope.actualSorting==='new') sortFunction = sortFunctionNew;
+            if ($scope.actualSorting==='POSTSORT_NEW') sortFunction = sortFunctionNew;
 
-            if ((typeof changedRequestId != "undefined") && ($scope.actualSorting!='new')) {
+            if ((typeof changedRequestId != "undefined") && ($scope.actualSorting!='POSTSORT_NEW')) {
 
                 // get index of request in focus
                 var requestChangedIndex = 0;
@@ -318,7 +297,6 @@ angular.module('starter.controller.dash', [])
         // overwriting rootScope
         $scope.selectedLang = function(selected) {
             $rootScope.selectedLang(selected);
-            $rootScope.setActualLangOnSelector();
             $scope.updateSortOptions();
             $scope.action();
         };

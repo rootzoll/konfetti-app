@@ -17,6 +17,7 @@ angular.module('starter')
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 $scope.requesttype = $attributes.requesttype;
+                $scope.lang = $attributes.lang;
                 $scope.getImageUrl = function() {
                     if ((typeof $scope.request.imageMediaID != "undefined") && ($scope.request.imageMediaID!=null)) {
                         return ApiService.getImageUrlFromMediaItem($scope.request.imageMediaID);
@@ -36,19 +37,6 @@ angular.module('starter')
 
                 // set basic data
                 $scope.data = $scope.$eval($attributes.data);
-                $scope.lang = $attributes.lang;
-
-                // if actual lang not available try to default to en or de
-                for (var i=0; i<$rootScope.langSet.length; i++) {
-                    // check if actual set language is available ob multi lang item
-                    if ((typeof $scope.data.data[$scope.lang] == "undefined") || ($scope.data.data[$scope.lang].length==0)) {
-                        // actual lang is available - try next
-                        $scope.lang = $rootScope.langSet[i].code;
-                    } else {
-                        // ok- got data - no need to check other langs
-                        break;
-                    }
-                }
 
                 // info dialog about auto translation
                 $scope.showAutoTranslateInfo = function($event) {

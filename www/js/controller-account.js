@@ -12,11 +12,6 @@ angular.module('starter.controller.account', [])
           return;
       }
 
-      // make sure lang selector is set correct
-      $timeout(function(){
-          $rootScope.setActualLangOnSelector();
-      },100);
-
       // debug information
       $scope.accountJson = JSON.stringify(AppContext.getAccount());
 

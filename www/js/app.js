@@ -69,24 +69,21 @@ angular.module('starter', [
 
     // setting selected lang in view to setting
     // should be called on every view enter
-    $rootScope.select = {actualLang: 'en'};
-    $rootScope.setActualLangOnSelector = function() {
-          $rootScope.select.actualLang = $rootScope.langSet[0];
-          for (i = 0; i < $rootScope.langSet.length; i++) {
-              if ($rootScope.langSet[i].code===AppContext.getAppLang()) {
-                  $rootScope.select.actualLang = $rootScope.langSet[i];
-                  break;
-              }
-          }
-    };
+    $rootScope.select = {};
+    for (i = 0; i < $rootScope.langSet.length; i++) {
+        $rootScope.select.actualLang = $rootScope.langSet[i];
+        if ($rootScope.langSet[i].code===AppContext.getAppLang()) break;
+    }
 
     // receiving changes lang settings from selector --> with i18n
     $rootScope.selectedLang = function(selected) {
-          $rootScope.actualLang = selected.code;
-          $translate.use(selected.code);
-          AppContext.setAppLang(selected.code);
-          $rootScope.spClass = AppContext.getAppLangDirection();
-          $rootScope.select.actualLang = selected;
+          $timeout(function(){
+            $rootScope.actualLang = selected.code;
+            $translate.use(selected.code);
+            AppContext.setAppLang(selected.code);
+            $rootScope.spClass = AppContext.getAppLangDirection();
+            $rootScope.select.actualLang = selected;
+          },10);
     };
 
     // called when button in top right is pressed
@@ -156,7 +153,6 @@ angular.module('starter', [
         } else {
             $log.info("already running lang(" + lang + ") ... no need to switch");
         }
-        $rootScope.setActualLangOnSelector();
     };
 
     var isLangSupported = function(lang) {
