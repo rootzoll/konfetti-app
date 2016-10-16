@@ -77,7 +77,7 @@ angular.module('starter')
         };
         return fallbackSrc;
     })
-    .directive('mediaitem', function (ApiService, $sce) {
+    .directive('mediaitem', function (ApiService, $sce, leafletData) {
         return {
             templateUrl: 'templates/directive-media-item.html',
             replace: true,
@@ -93,8 +93,41 @@ angular.module('starter')
                     console.log("TODO: reviewInfo id("+$scope.itemid+")");
                 };
 
-                $scope.getMapUrl = function() {
-                    return $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q="+$scope.mediaItemData.data.lat+",+"+$scope.mediaItemData.data.lon+"&key=AIzaSyAsGmhV2-6ahp6i_n62GZgVddpITrLDNkw");
+                // pepare map data
+                angular.extend($scope, {
+                        center: {
+                            lat: 0,
+                            lng: 0,
+                            zoom: 2
+                        },
+                        markers: {
+                        }
+                });
+
+                $scope.afterProcessMediaData = function() {
+                if ($scope.mediaItemData.type=='TYPE_LOCATION') {
+                    if (typeof $scope.mediaItemData.data == "string") {
+                        $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                    }
+                    $scope.center.lat = $scope.mediaItemData.data.lat;
+                    $scope.center.lng = $scope.mediaItemData.data.lon;
+                    $scope.center.zoom = 12;
+                    $scope.markers.mainMarker = {
+                                lat: $scope.mediaItemData.data.lat,
+                                lng: $scope.mediaItemData.data.lon,
+                                focus: true,
+                                draggable: false
+                    }; 
+                    console.dir($scope.center);
+                    console.dir($scope.markers);
+                }
+
+                  leafletData.getMap("map"+$scope.mediaItemData.id).then(function(map) {
+                    setTimeout(function(){
+                        map.invalidateSize();
+                        }, 200);
+                  });
+
                 };
 
                 if ((typeof $attributes.item != "undefined") && ($attributes.item!=null)) {
@@ -105,7 +138,7 @@ angular.module('starter')
 
                     $scope.loading = false;
                     $scope.mediaItemData = JSON.parse($attributes.item);
-
+                    $scope.afterProcessMediaData();
 
                 } else {
 
@@ -123,6 +156,7 @@ angular.module('starter')
 
                         // parse data for complex data
                         if ($scope.mediaItemData.type=='Location') $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                        $scope.afterProcessMediaData();
 
                     }, function(code) {
                         // FAIL

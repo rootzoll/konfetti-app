@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -601,14 +601,14 @@ angular.module('starter.controller.request', [])
                 });
 
                 // when user ends drag of marker - update position
-                $scope.$on("leafletDirectiveMarker.dragend", function(event, args){
+                $scope.$on("leafletDirectiveMarker.mappick.dragend", function(event, args){
                     $scope.markerPosition.lat = args.model.lat;
                     $scope.markerPosition.lng = args.model.lng;
                     if ($scope.markerPosition.zoom<17) $scope.markerPosition.zoom++;
                 });
 
                 // when user ends drag of map - set marker to new center position
-                $scope.$on("leafletDirectiveMap.click", function(event, args){
+                $scope.$on("leafletDirectiveMap.mappick.click", function(event, args){
                     $scope.markers.mainMarker.lat = args.leafletEvent.latlng.lat;
                     $scope.markers.mainMarker.lng = args.leafletEvent.latlng.lng;
                     $scope.markerPosition.lat = args.leafletEvent.latlng.lat;
@@ -642,6 +642,12 @@ angular.module('starter.controller.request', [])
                         }
                     ]
                 });
+
+                leafletData.getMap("mappick").then(function(map) {
+                    setTimeout(function(){
+                        map.invalidateSize();
+                        }, 200);
+                  });
                 
                 myPopup.then(function(res) { 
 
@@ -649,7 +655,9 @@ angular.module('starter.controller.request', [])
 
                     alert("TODO: comment and followup dat - "+JSON.stringify($scope.locationInput));
                     $scope.saveLocationMediaItem($scope.locationInput.lat,$scope.locationInput.lon);
-                    $ionicScrollDelegate.scrollBottom(true);
+                    $timeout(function(){
+                        $ionicScrollDelegate.scrollBottom(true);
+                    },300);
 
                 });
             });
