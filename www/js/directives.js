@@ -116,7 +116,7 @@ angular.module('starter')
                     }
                     $scope.center.lat = $scope.mediaItemData.data.lat;
                     $scope.center.lng = $scope.mediaItemData.data.lon;
-                    $scope.center.zoom = 12;
+                    $scope.center.zoom = 14;
                     $scope.markers.mainMarker = {
                                 lat: $scope.mediaItemData.data.lat,
                                 lng: $scope.mediaItemData.data.lon,

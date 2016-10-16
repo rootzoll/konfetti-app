@@ -258,7 +258,7 @@ angular.module('starter.popupdialogs', [])
                     }, 200);
                   });
 
-                myPopup.then(function(){});
+                myPopup.then(function(){myPopup.close();});
 
             });
             });
@@ -266,7 +266,6 @@ angular.module('starter.popupdialogs', [])
             });
 
         };
-
 
     return {
 

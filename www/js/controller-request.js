@@ -569,14 +569,16 @@ angular.module('starter.controller.request', [])
           
            PopupDialogs.locationPicker($scope, function(result) {
 
-               // WIN 
+               // WIN
                if (result.cancel) return;
-
-               alert("TODO: comment and followup dat - "+JSON.stringify(result));
+               // TODO: store also comment on location
                $scope.saveLocationMediaItem(result.lat,result.lon);
                $timeout(function(){
                 $ionicScrollDelegate.scrollBottom(true);
                },500);
+
+               // TODO: in the future when date is follow up dialog - combine to meeting item
+               if (result.addDate) $scope.addInfoDate();
 
             }, function(error){
 

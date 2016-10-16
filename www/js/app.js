@@ -21,7 +21,7 @@ angular.module('starter', [
 							'pascalprecht.translate',
                             'leaflet-directive'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox, $timeout) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox, $timeout, $ionicPopup) {
   $ionicPlatform.ready(function() {
 
     $rootScope.initDone = false;
@@ -86,6 +86,21 @@ angular.module('starter', [
           $translate.use(selected.code);
           AppContext.setAppLang(selected.code);
           $rootScope.spClass = AppContext.getAppLangDirection();
+          $rootScope.select.actualLang = selected;
+    };
+
+    // called when button in top right is pressed
+    $rootScope.languageSelectionDialog = function() {
+        var sendPop = $ionicPopup.show({
+                    templateUrl: './templates/pop-selectlanguage.html',
+                    scope: $rootScope,
+                    cssClass: 'pop-selectlanguage'
+                });
+        $rootScope.selectedLangDialog = function(lang) {
+            sendPop.close();
+            $rootScope.selectedLang(lang);
+        }
+        sendPop.then(function(){sendPop.close();});
     };
 
     // upload images on browser - call on rootScope if needed

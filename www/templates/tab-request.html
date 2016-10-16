@@ -7,12 +7,9 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
-        <!-- lang select gets handled on root scope level -->
-        <select 
-        ng-model="select.actualLang" 
-        ng-options='lang.display for lang in langSet' 
-        ng-change='selectedLang(select.actualLang)'
-        style="margin-top: 8px;margin-right: 3px;"></select>
+        <button class="button button-small button-stable" on-tap="languageSelectionDialog()">
+            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
+        </button>
     </ion-nav-buttons>
 
     <ion-content>

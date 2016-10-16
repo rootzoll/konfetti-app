@@ -332,3 +332,11 @@ div.popup-body span {
     overflow: hidden;
 }
 
+#langselect-icon:before {
+    margin-top: 0px;
+}
+
+.pop-selectlanguage .popup-head {
+    padding: 0px;
+}
+
