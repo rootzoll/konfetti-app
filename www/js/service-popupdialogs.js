@@ -128,7 +128,7 @@ angular.module('starter.popupdialogs', [])
                                         	 
                                         	 // check valid email
                                         	 if ((typeof $rootScope.popScope.sendMail == "undefined") || ($rootScope.popScope.sendMail.length==0)) {
-     											PopupDialogs.methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILUNVALID");
+     											methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILUNVALID");
                                         		return false;
                                         	}
                                         	
@@ -143,7 +143,7 @@ angular.module('starter.popupdialogs', [])
                                         			}
                                         		}
                                         		if (!isListed) {
-                                        			PopupDialogs.methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILNOTALLOWED");
+                                        			methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILNOTALLOWED");
                                         			return false;
                                         		}
                                         	}
@@ -154,11 +154,11 @@ angular.module('starter.popupdialogs', [])
                                         	ApiService.sendKonfetti(partyID, $rootScope.popScope.sendMail, $rootScope.popScope.sendAmount, AppContext.getAppLang(), function(){
                                         		// WIN
                                         		$ionicLoading.hide();
-                                        		PopupDialogs.methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDOK");
+                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDOK");
                                         	}, function(){
                                         		// FAIL
                                         		$ionicLoading.hide();
-                                        		PopupDialogs.methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDFAILED");
+                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDFAILED");
                                         	});
                                         
                                         	return true;

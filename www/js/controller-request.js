@@ -446,7 +446,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+          PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
       });
   };
 

@@ -1,6 +1,6 @@
 angular.module('starter.controller.account', [])
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox, PopupDialogs) {
 
   $scope.email = "";
 
