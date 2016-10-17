@@ -603,7 +603,7 @@ angular.module('starter.controller.request', [])
 
   $scope.saveLocationMediaItem = function(lat, lon) {
 
-      console.log("saveLocationMediaItem("+lat+","+lon+")");
+      //console.log("saveLocationMediaItem("+lat+","+lon+")");
 
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
@@ -624,6 +624,38 @@ angular.module('starter.controller.request', [])
 
             $scope.mediaChoosePopup.close();
           
+            PopupDialogs.datePicker($scope, function(result){
+
+                // WIN
+                $ionicLoading.show({
+                    template: '<img src="img/spinner.gif" />'
+                });
+
+                // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
+                ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, function(mediaitem) {
+                        // WIN
+                        $ionicLoading.hide();
+                        $scope.addMediaItem(mediaitem);
+                        $ionicScrollDelegate.scrollBottom(true);
+
+                        // TODO: combine location picker dialog data with date to a new meeting object
+                        if (result.addlocation) {
+                            $scope.addInfoLocation();
+                        }
+
+                     }, function() {
+                        // FAIL
+                        $ionicLoading.hide();
+                        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                });
+
+            }, function(e) {
+                // FAIL
+                alert("ERROR "+JSON.stringify(e));
+            });
+
+            /*
+
             $translate("ADDDATE_TITLE").then(function (HEADLINE) {
             $translate("ADDDATE_SUB").then(function (TEXT) {
             $translate("OK").then(function (OK) {
@@ -667,7 +699,6 @@ angular.module('starter.controller.request', [])
                     fullDateStr = JSON.stringify($scope.dateInput.date);
                     var dateStr = fullDateStr.substring(0,fullDateStr.indexOf('T'));
                     var combinedDate = JSON.parse(dateStr+"T"+timeStr);
-                    alert(JSON.stringify(combinedDate));
 
                     // TODO: open location picker dialog afterwards and connect with date
                     if ($scope.dateInput.addlocation) {
@@ -682,7 +713,6 @@ angular.module('starter.controller.request', [])
                     ApiService.postDateMediaItemOnRequest($scope.request.id, combinedDate, function(mediaitem) {
                         // WIN
                         $ionicLoading.hide();
-                        mediaitem.data = new Date(mediaitem.data.substr(1,mediaitem.data.length-2));
                         $scope.addMediaItem(mediaitem);
                         $ionicScrollDelegate.scrollBottom(true);
                      }, function() {
@@ -695,34 +725,6 @@ angular.module('starter.controller.request', [])
             });
             });
             });
-            });
-            /*
-            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
-                $translate("ADDDATE_SUB").then(function (TEXT) {
-                    $ionicPopup.prompt({
-                        title: HEADLINE,
-                        template: TEXT,
-                        inputType: 'datetime-local'
-                    }).then(function(res) {
-                        var jsonDate = JSON.stringify(res).trim();
-                        if ((typeof jsonDate!="undefined") && (jsonDate.length>2)) {
-                             $ionicLoading.show({
-                             template: '<img src="img/spinner.gif" />'
-                             });
-                            ApiService.postDateMediaItemOnRequest($scope.request.id, res, function(mediaitem) {
-                                // WIN
-                                $ionicLoading.hide();
-                                mediaitem.data = new Date(mediaitem.data.substr(1,mediaitem.data.length-2));
-                                $scope.addMediaItem(mediaitem);
-                                $ionicScrollDelegate.scrollBottom(true);
-                            }, function() {
-                                // FAIL
-                                $ionicLoading.hide();
-                                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                            });
-                        }
-                    });
-                });
             });
             */
   };
