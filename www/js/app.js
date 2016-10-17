@@ -8,6 +8,7 @@
 angular.module('starter', [
 							'ionic', 
 							'starter.controllers', 
+                            'starter.filters',
 							'starter.controller.dash', 
 							'starter.controller.request', 
 							'starter.controller.account', 
