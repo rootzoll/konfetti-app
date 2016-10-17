@@ -86,7 +86,7 @@ angular.module('starter')
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 
-                try {
+                //try {
 
                 var useCache = ((typeof $attributes.cache !="undefined") && ($attributes.cache==="true"));
                 $scope.loading = true;
@@ -140,6 +140,7 @@ angular.module('starter')
                 if ($scope.mediaItemData.type=='TYPE_DATE') {
 
                     if (typeof $scope.mediaItemData.data == "string") {
+                        console.log($scope.mediaItemData.data);
                         $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
                     }
 
@@ -193,9 +194,11 @@ angular.module('starter')
                     }, useCache);
                 }
 
+                /*
                 } catch (e) {
                     alert("ERROR on MediaItem: "+JSON.stringify(e));
                 }
+                */
 
             }
         };

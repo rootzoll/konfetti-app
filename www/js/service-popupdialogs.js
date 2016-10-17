@@ -267,6 +267,69 @@ angular.module('starter.popupdialogs', [])
 
         };
 
+    var addDateDialog = function(scope, win, fail) {
+          
+        try {
+
+            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
+            $translate("ADDDATE_SUB").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                 
+                scope.dateInput = {
+                    cancel: false,
+                    date: new Date(),
+                    time: null,
+                    combinedDate: null,
+                    comment: "",
+                    addlocation: false
+                };
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-dateinput.html',
+                     scope: scope,
+                     subTitle: TEXT,
+                     title: HEADLINE,
+                     cssClass: 'pop-dateinput',
+                    buttons: [
+                        { text: CANCEL, onTap: function(e){
+                            scope.dateInput.cancel=true;
+                        } },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+
+                    myPopup.close();
+
+                    // combine date and time to one timestring
+                    var timeStr = "00:00:00.000Z\"";
+                    if (scope.dateInput.time!=null) {
+                        var fullDateStr = JSON.stringify(scope.dateInput.time);
+                        timeStr = fullDateStr.substring(fullDateStr.indexOf('T')+1);
+                    }
+                    fullDateStr = JSON.stringify(scope.dateInput.date);
+                    var dateStr = fullDateStr.substring(0,fullDateStr.indexOf('T'));
+                    scope.dateInput.combinedDate = JSON.parse(dateStr+"T"+timeStr);
+
+                    win(scope.dateInput);
+
+                });
+            });
+            });
+            });
+            });
+
+        } catch (e) {
+            fail(e);
+        }
+  };    
+
     return {
 
         showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText, win) {
@@ -301,6 +364,9 @@ angular.module('starter.popupdialogs', [])
 
             locationPickerAlert(scope, win, fail, config);
 
+        },
+        datePicker : function(scope, win, fail) {
+            addDateDialog(scope, win, fail);
         },
         getFallbackLocationBySelection : function(win, fail) {
             methodGetFallbackLocationBySelection(win, fail);
