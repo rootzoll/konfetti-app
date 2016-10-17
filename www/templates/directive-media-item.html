@@ -34,8 +34,12 @@
                     </div>
 
                     <!-- DATE -->
-                    <div ng-if="mediaItemData.type=='TYPE_DATE'" style="white-space: normal; font-weight: bold">
-                        <i class="icon ion-clock" style="color: #565656; font-weight: bold; font-size: 110%;"></i>&nbsp;{{ mediaItemData.data | date : 'short' }}
+                    <div ng-if="mediaItemData.type=='TYPE_DATE'" style="white-space: normal; font-weight: bold;font-size: 130%;padding-top: 12px;padding-bottom: 12px;">
+
+                        
+                        <i class="icon ion-android-calendar" style="color: #565656; font-weight: bold; font-size: 120%;"></i>&nbsp;{{ mediaItemData.data | date : dateformat | datetranslate:actualLang}}
+
+                        <i class="icon ion-clock" style="color: #565656; font-weight: bold; font-size: 120%;"></i>&nbsp;{{ mediaItemData.data | date : timeformat }}
                     </div>
 
                 </td>

@@ -41,15 +41,12 @@ angular.module('starter')
                 // check if data is available
                 $scope.langAvailable = function(actualLang) {
                     if (typeof $scope.data == "undefined") {
-                        console.log("A");
                         return false;
                     }
                     if (typeof $scope.data.data == "undefined") {
-                        console.log("B");
                         return false;
                     }
                     if (typeof $scope.data.data[actualLang] == "undefined") {
-                        console.log("C");
                         return false;
                     }
                     return true;
@@ -82,7 +79,7 @@ angular.module('starter')
         };
         return fallbackSrc;
     })
-    .directive('mediaitem', function (ApiService, $sce, leafletData) {
+    .directive('mediaitem', function (ApiService, $sce, leafletData, $rootScope) {
         return {
             templateUrl: 'templates/directive-media-item.html',
             replace: true,
@@ -115,10 +112,13 @@ angular.module('starter')
                 });
 
                 $scope.afterProcessMediaData = function() {
+
                 if ($scope.mediaItemData.type=='TYPE_LOCATION') {
+
                     if (typeof $scope.mediaItemData.data == "string") {
                         $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
                     }
+
                     $scope.center.lat = $scope.mediaItemData.data.lat;
                     $scope.center.lng = $scope.mediaItemData.data.lon;
                     $scope.center.zoom = 14;
@@ -128,14 +128,34 @@ angular.module('starter')
                                 focus: true,
                                 draggable: false
                     }; 
+
+                    leafletData.getMap("map"+$scope.mediaItemData.id).then(function(map) {
+                        setTimeout(function(){
+                            //map.dragging.disable();
+                            map.invalidateSize();
+                        }, 200);
+                    });
                 }
 
-                  leafletData.getMap("map"+$scope.mediaItemData.id).then(function(map) {
-                    setTimeout(function(){
-                        //map.dragging.disable();
-                        map.invalidateSize();
-                        }, 200);
-                  });
+                if ($scope.mediaItemData.type=='TYPE_DATE') {
+
+                    if (typeof $scope.mediaItemData.data == "string") {
+                        $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                    }
+
+                    // english as default
+                    $scope.dateformat = "EEEE MM/dd/yyyy";
+                    $scope.timeformat = "hh:mm a";
+
+                    if ($rootScope.actualLang=='ar') {
+                        $scope.dateformat = "EEEE dd.MM.yyyy ";
+                        $scope.timeformat = "HH:mm";
+                    }
+                    if ($rootScope.actualLang=='de') {
+                        $scope.dateformat = "EEEE dd.MM.yyyy";
+                        $scope.timeformat = "HH:mm";
+                    }
+                }
 
                 };
 
@@ -197,4 +217,4 @@ angular.module('starter')
                 }
             });
         };
-    });;
+    });

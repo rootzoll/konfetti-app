@@ -344,7 +344,10 @@ div.popup-body span {
     padding: 0px;
 }
 
+.pop-dateinput .popup{
+    min-width: 300px;
+}
+
 .button-langselect {
     height: 30px;
 }
-
