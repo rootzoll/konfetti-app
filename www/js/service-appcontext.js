@@ -6,8 +6,8 @@ angular.module('starter.appcontext', [])
    * APP CONFIG PARAMETER
    */
 
-  var apiUrlLocalDevelopment = "http://localhost:9000/konfetti/api";
-  var apiUrlDevelopmentServer = "http://fourcores2016.cloudapp.net:9000/konfetti/api";
+  var apiUrlLocalDevelopment = "http://localhost:8280/konfetti/api";
+  var apiUrlDevelopmentServer = "http://fourcores2016.cloudapp.net:8280/konfetti/api";
   var apiUrlProductionServer = "https://konfetti-prod.testserver.de/konfetti/api";
 
   var appConfig = {
