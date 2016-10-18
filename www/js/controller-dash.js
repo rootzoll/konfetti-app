@@ -328,43 +328,38 @@ angular.module('starter.controller.dash', [])
         // when user taps a notification
         $scope.tapNotificationMore = function($event, noti) {
 
-            // media item info --> ignore tap
-            if (noti.type==1) {
-                return;
-            }
-
             // request now public --> go to request page
-            if (noti.type==2) {
+            if ((noti.type==2) || (noti.type=="REVIEW_OK")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // request rejected --> go to request page
-            if (noti.type==4) {
+            if ((noti.type==4) || (noti.type=="REVIEW_FAIL")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // new chat message --> go to request page - scroll down to chats
-            if (noti.type==5) {
+            if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
                 return;
             }
 
             // rewarded --> go to request page
-            if (noti.type==7) {
+            if ((noti.type==7) || (noti.type=="REWARD_GOT")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // support done --> go to request page
-            if (noti.type==8) {
+            if ((noti.type==8) || (noti.type=="SUPPORT_WIN")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // logout reminder --> flash option
-            if (noti.type==9) {
+            if ((noti.type==9) || (noti.type=="LOGOUT_REMINDER")) {
                 document.getElementById('deleteAccount').classList.add("animationPulsateSimple");
                 $timeout(function(){
                     document.getElementById('deleteAccount').classList.remove("animationPulsateSimple");
