@@ -17,6 +17,7 @@ angular.module('starter')
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 $scope.requesttype = $attributes.requesttype;
+                $scope.lang = $attributes.lang;
                 $scope.getImageUrl = function() {
                     if ((typeof $scope.request.imageMediaID != "undefined") && ($scope.request.imageMediaID!=null)) {
                         return ApiService.getImageUrlFromMediaItem($scope.request.imageMediaID);
@@ -36,19 +37,20 @@ angular.module('starter')
 
                 // set basic data
                 $scope.data = $scope.$eval($attributes.data);
-                $scope.lang = $attributes.lang;
 
-                // if actual lang not available try to default to en or de
-                for (var i=0; i<$rootScope.langSet.length; i++) {
-                    // check if actual set language is available ob multi lang item
-                    if ((typeof $scope.data.data[$scope.lang] == "undefined") || ($scope.data.data[$scope.lang].length==0)) {
-                        // actual lang is available - try next
-                        $scope.lang = $rootScope.langSet[i].code;
-                    } else {
-                        // ok- got data - no need to check other langs
-                        break;
+                // check if data is available
+                $scope.langAvailable = function(actualLang) {
+                    if (typeof $scope.data == "undefined") {
+                        return false;
                     }
-                }
+                    if (typeof $scope.data.data == "undefined") {
+                        return false;
+                    }
+                    if (typeof $scope.data.data[actualLang] == "undefined") {
+                        return false;
+                    }
+                    return true;
+                };
 
                 // info dialog about auto translation
                 $scope.showAutoTranslateInfo = function($event) {
@@ -77,13 +79,15 @@ angular.module('starter')
         };
         return fallbackSrc;
     })
-    .directive('mediaitem', function (ApiService, $sce) {
+    .directive('mediaitem', function (ApiService, $sce, leafletData, $rootScope) {
         return {
             templateUrl: 'templates/directive-media-item.html',
             replace: true,
             restrict: 'A',
             link: function ($scope, $element, $attributes) {
                 
+                //try {
+
                 var useCache = ((typeof $attributes.cache !="undefined") && ($attributes.cache==="true"));
                 $scope.loading = true;
                 $scope.itemid = $attributes.itemid;
@@ -93,8 +97,67 @@ angular.module('starter')
                     console.log("TODO: reviewInfo id("+$scope.itemid+")");
                 };
 
-                $scope.getMapUrl = function() {
-                    return $sce.trustAsResourceUrl("https://www.google.com/maps/embed/v1/place?q="+$scope.mediaItemData.data.lat+",+"+$scope.mediaItemData.data.lon+"&key=AIzaSyAsGmhV2-6ahp6i_n62GZgVddpITrLDNkw");
+                // pepare map data
+                angular.extend($scope, {
+                        center: {
+                            lat: 0,
+                            lng: 0,
+                            zoom: 2
+                        },
+                        markers: {
+                        },
+                        defaults: {
+                            tap: false
+                        }
+                });
+
+                $scope.afterProcessMediaData = function() {
+
+                if ($scope.mediaItemData.type=='TYPE_LOCATION') {
+
+                    if (typeof $scope.mediaItemData.data == "string") {
+                        $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                    }
+
+                    $scope.center.lat = $scope.mediaItemData.data.lat;
+                    $scope.center.lng = $scope.mediaItemData.data.lon;
+                    $scope.center.zoom = 14;
+                    $scope.markers.mainMarker = {
+                                lat: $scope.mediaItemData.data.lat,
+                                lng: $scope.mediaItemData.data.lon,
+                                focus: true,
+                                draggable: false
+                    }; 
+
+                    leafletData.getMap("map"+$scope.mediaItemData.id).then(function(map) {
+                        setTimeout(function(){
+                            //map.dragging.disable();
+                            map.invalidateSize();
+                        }, 200);
+                    });
+                }
+
+                if ($scope.mediaItemData.type=='TYPE_DATE') {
+
+                    if (typeof $scope.mediaItemData.data == "string") {
+                        console.log($scope.mediaItemData.data);
+                        $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                    }
+
+                    // english as default
+                    $scope.dateformat = "EEEE MM/dd/yyyy";
+                    $scope.timeformat = "hh:mm a";
+
+                    if ($rootScope.actualLang=='ar') {
+                        $scope.dateformat = "EEEE dd.MM.yyyy ";
+                        $scope.timeformat = "HH:mm";
+                    }
+                    if ($rootScope.actualLang=='de') {
+                        $scope.dateformat = "EEEE dd.MM.yyyy";
+                        $scope.timeformat = "HH:mm";
+                    }
+                }
+
                 };
 
                 if ((typeof $attributes.item != "undefined") && ($attributes.item!=null)) {
@@ -105,7 +168,7 @@ angular.module('starter')
 
                     $scope.loading = false;
                     $scope.mediaItemData = JSON.parse($attributes.item);
-
+                    $scope.afterProcessMediaData();
 
                 } else {
 
@@ -123,12 +186,19 @@ angular.module('starter')
 
                         // parse data for complex data
                         if ($scope.mediaItemData.type=='Location') $scope.mediaItemData.data = JSON.parse($scope.mediaItemData.data);
+                        $scope.afterProcessMediaData();
 
                     }, function(code) {
                         // FAIL
                         $scope.loading = false;
                     }, useCache);
                 }
+
+                /*
+                } catch (e) {
+                    alert("ERROR on MediaItem: "+JSON.stringify(e));
+                }
+                */
 
             }
         };
@@ -150,4 +220,4 @@ angular.module('starter')
                 }
             });
         };
-    });;
+    });

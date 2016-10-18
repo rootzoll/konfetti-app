@@ -7,12 +7,9 @@
     </ion-nav-buttons>
 
     <ion-nav-buttons side="secondary">
-        <!-- lang select gets handled on root scope level -->
-        <select 
-        ng-model="select.actualLang" 
-        ng-options='lang.display for lang in langSet' 
-        ng-change='selectedLang(select.actualLang)'
-        style="margin-top: 8px;margin-right: 3px;"></select>
+        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
+            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
+        </button>
     </ion-nav-buttons>
 
     <ion-content>
@@ -320,12 +317,6 @@
       <div ng-show="(request.info.length>0)" class="list card">
           <div data-ng-repeat="info in request.info" >
               <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" ></div>
-          </div>
-      </div>
-
-      <div ng-show="((request.info.length==0) && (request.mediaItemIds.length>0))" class="list card">
-          <div data-ng-repeat="mediaItemId in request.mediaItemIds" >
-              <div mediaitem itemid="{{mediaItemId}}" id="media-id-{{mediaItemId}}"></div>
           </div>
       </div>
 

@@ -1,99 +1,5 @@
 angular.module('starter.konfettitoolbox', [])
-.factory('KonfettiToolbox', function($rootScope, $log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService, $cordovaGeolocation) {
-
-		// local def --> on service is called --> showIonicAlertWith18nText
-        var methodShowIonicAlertWith18nText = function(i18nKeyTitle, i18nKeyText, win) {
-            $translate(i18nKeyTitle).then(function (TITLE) {
-                $translate(i18nKeyText).then(function (TEXT) {
-                    $ionicPopup.alert({
-                        title: TITLE,
-                        template: TEXT
-                    }).then(function(res) {
-                        if ((typeof win != "undefined") && (win!=null)) win();
-                    });
-                });
-            });
-        };
-
-        var methodGetFallbackLocationBySelection = function(win, fail) {
-            $translate("GPSFALLBACK_TITLE").then(function (TITLE) {
-                $translate("GPSFALLBACK_SUB").then(function (SUB) {
-                    $translate("GPSFALLBACK_GPS").then(function (GPS) {
-                        $translate("OK").then(function (OK) {
-                            $rootScope.popScope = {
-                                zipCode: "",
-                                country: "germany"
-                            };
-                            var popUp = $ionicPopup.show({
-                                templateUrl: './templates/pop-GpsFallback.html',
-                                title: TITLE,
-                                subTitle: SUB,
-                                scope: $rootScope,
-                                buttons: [
-                                    {
-                                        text: GPS,
-                                        onTap: function (e) {
-                                            popUp.close();
-                                            fail();
-                                        }
-                                    },
-                                    {
-                                        text: OK,
-                                        type: 'button-positive',
-                                        onTap: function (e) {
-                                            popUp.close();
-                                            if (($rootScope.popScope.zipCode.trim().length == 0) && (ApiService.runningDevelopmentEnv())) {
-
-                                                // WORK WITH FAKE TEST DATA ON DEVELOPMENT
-                                                $rootScope.lat = 52.52;
-                                                $rootScope.lon = 13.13;
-                                                $rootScope.gps = 'win';
-                                                win($rootScope.lat, $rootScope.lon);
-
-                                            } else {
-
-                                                // TRY TO RESOLVE ZIP CODE TO GPS
-                                                if ($rootScope.popScope.zipCode.trim().length > 2) {
-                                                    $rootScope.popScope.zipCode = $rootScope.popScope.zipCode.trim();
-                                                    ApiService.getGPSfromZIP($rootScope.popScope.zipCode, $rootScope.popScope.country, function (lat, lon) {
-                                                        // WIN
-                                                        $rootScope.lat = lat;
-                                                        $rootScope.lon = lon;
-                                                        $rootScope.gps = 'win';
-                                                        var newPosition = {
-                                                            ts: Date.now(),
-                                                            lat: lat,
-                                                            lon: lon
-                                                        };
-                                                        var localState = AppContext.getLocalState();
-                                                        localState.lastPosition = newPosition;
-                                                        AppContext.setLocalState(localState);
-                                                        win(lat, lon);
-                                                    }, function () {
-                                                        // FAIL
-                                                        console.log("GPSFALLBACK_FAIL");
-                                                        methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_FAIL', function () {
-                                                            methodGetFallbackLocationBySelection(win, fail);
-                                                        });
-                                                    });
-                                                } else {
-                                                    // ON EMPTY INPUT
-                                                    console.log("GPSFALLBACK_NEEDED");
-                                                    methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_NEEDED', function () {
-                                                        methodGetFallbackLocationBySelection(win, fail);
-                                                    });
-                                                }
-                                            }
-
-                                        }
-                                    }
-                                ]
-                            });
-                        });
-                    });
-                });
-            });
-        };
+.factory('KonfettiToolbox', function($rootScope, $log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService, $cordovaGeolocation, PopupDialogs) {
 
         return {
             filterRequestsByState: function(requestArray, state) {
@@ -121,11 +27,15 @@ angular.module('starter.konfettitoolbox', [])
                 }
                 return resultArray;
             },
-            showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText, win) {
-                methodShowIonicAlertWith18nText(i18nKeyTitle, i18nKeyText, win);
-            },
-           getFallbackLocationBySelection : function(win, fail) {
-               methodGetFallbackLocationBySelection(win, fail);
+            filterDuplicatesFromArray : function (a) {
+                var prims = {"boolean":{}, "number":{}, "string":{}}, objs = [];
+                return a.filter(function(item) {
+                    var type = typeof item;
+                    if (type in prims)
+                        return prims[type].hasOwnProperty(item) ? false : (prims[type][item] = true);
+                    else
+                return objs.indexOf(item) >= 0 ? false : objs.push(item);
+                });
            },
            updateGPS : function() {
                /*
@@ -306,81 +216,7 @@ angular.module('starter.konfettitoolbox', [])
                         });
                     });
                 });
-           	},
-            
-        	sendKonfetti : function(partyID, maxSendAmount, listOfGreenAddresses) {
-                $translate("SENDKONFETTI").then(function (TITLE) {
-                	var translateKey = "SENDKONFETTI_SUB_ALL";
-                	if ((typeof  listOfGreenAddresses != "undefined") && (listOfGreenAddresses!=null) && ( listOfGreenAddresses.length>0)) translateKey = "SENDKONFETTI_SUB_LIST";
-                    $translate(translateKey).then(function (SUB) {
-                    $translate("CANCEL").then(function (CANCEL) {
-                        $translate("OK").then(function (OK) {
-                            $rootScope.popScope = {
-                                sendAmount: 1,
-                                sendMail: ""
-                            };
-                            var sendPop = $ionicPopup.show({
-                                templateUrl: './templates/pop-sendkonfetti.html',
-                                title: TITLE,
-                                subTitle: SUB,
-                                scope: $rootScope,
-                                buttons: [
-                                    {
-                                        text: CANCEL,
-                                        onTap: function (e) {
-                                        }
-                                    },
-                                    {
-                                        text: OK,
-                                        type: 'button-positive',
-                                        onTap: function (e) {
-                                        	 
-                                        	 // check valid email
-                                        	 if ((typeof $rootScope.popScope.sendMail == "undefined") || ($rootScope.popScope.sendMail.length==0)) {
-     											methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILUNVALID");
-                                        		return false;
-                                        	}
-                                        	
-                                        	$rootScope.popScope.sendMail = $rootScope.popScope.sendMail.toLowerCase();
-                                        	if ((typeof listOfGreenAddresses != "undefined") && (listOfGreenAddresses.length>0)) {
-                                        		var isListed = false;
-                                        		for (var i=0; i<listOfGreenAddresses.length; i++) {
-                                        			var listedMail = listOfGreenAddresses[i].toLowerCase();
-                                        			if ($rootScope.popScope.sendMail==listedMail) {
-                                        				isListed = true;
-                                        				break;
-                                        			}
-                                        		}
-                                        		if (!isListed) {
-                                        			methodShowIonicAlertWith18nText("KONFETTI-APP", "EMAILNOTALLOWED");
-                                        			return false;
-                                        		}
-                                        	}
-
-                                        	$ionicLoading.show({
-                                    			template: '<img src="img/spinner.gif" />'
-                                			});
-                                        	ApiService.sendKonfetti(partyID, $rootScope.popScope.sendMail, $rootScope.popScope.sendAmount, AppContext.getAppLang(), function(){
-                                        		// WIN
-                                        		$ionicLoading.hide();
-                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDOK");
-                                        	}, function(){
-                                        		// FAIL
-                                        		$ionicLoading.hide();
-                                        		methodShowIonicAlertWith18nText("KONFETTI-APP", "SENDFAILED");
-                                        	});
-                                        
-                                        	return true;
-                                        }
-                                    }
-                                ]
-                            }); // END ionic pop
-                            
-                            sendPop.then(function(){sendPop.close();});
-                        }); // END translate OK
-                    });	// END translate CANCEL
-                    });// END translate SUB
-                }); // END translate TITLE
-     		} // END sendKonfetti         
+           	}
+                
 	};
 });

@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs) {
 
         /*
          * get state parameter of controller
@@ -25,8 +25,6 @@ angular.module('starter.controller.dash', [])
 
         $scope.isReviewerForThisParty = false;
         $scope.isAdminForThisParty = false;
-
-        $scope.actualSorting = null;
 
         $scope.partyList = [];
         $scope.actualPartyIndex = 0;
@@ -56,11 +54,7 @@ angular.module('starter.controller.dash', [])
         $scope.sendKonfettiWhiteList = [];  
 
         // sorting options
-        $scope.sortSet = [
-            {sort:'most', display:'most'},
-            {sort:'new', display:'new'}
-        ];
-        $scope.actualSorting = $scope.sortSet[0].sort;
+        $scope.actualSorting = "POSTSORT_MOST"; // or "POSTSORT_NEW"
 
         $scope.login = {
             Email: "",
@@ -70,30 +64,6 @@ angular.module('starter.controller.dash', [])
         /*
          * controller logic
          */      
-        
-        // update displayed text on sort options based on actual lang
-        $scope.updateSortOptions = function() {
-            $translate("POSTSORT_MOST").then(function (POSTSORT_MOST) {
-                $translate("POSTSORT_NEW").then(function (POSTSORT_NEW) {
-                    $scope.sortSet[0].display = POSTSORT_MOST;
-                    $scope.sortSet[1].display = POSTSORT_NEW;
-                });
-            });
-        };
-        $scope.updateSortOptions();
-
-        // the sorting of open tasks changed
-        $scope.changedSorting = function(actualSorting) {
-            if ((typeof actualSorting != "undefined") && (actualSorting!=null)) {
-                $scope.actualSorting = actualSorting;
-            } else {
-                $scope.actualSorting = $scope.sortSet[0].sort;
-            }
-            $timeout(function(){
-                console.dir("trigger sorting: "+$scope.actualSorting);
-                $scope.sortRequests();
-            },100);
-        };
 
         // redeem button
         $scope.onButtonCoupon = function() {
@@ -110,6 +80,15 @@ angular.module('starter.controller.dash', [])
                 $scope.login.Password = "";
                 $scope.state = "LOGIN_REGISTER";
             },10);
+        };
+
+        $scope.openChangeSortDialog = function() {
+            if ($scope.actualSorting=="POSTSORT_MOST") {
+                $scope.actualSorting="POSTSORT_NEW";
+            } else {
+                $scope.actualSorting="POSTSORT_MOST";
+            }
+            $scope.sortRequests();
         };
         
         $scope.tapOnPartyContact = function() {
@@ -142,7 +121,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginRegisterFinal = function(mail,pass) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 $scope.login.Password = "";
                 return;
             }
@@ -150,7 +129,7 @@ angular.module('starter.controller.dash', [])
 
             // password needs to be at least 8 chars long
             if (pass.length<8) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
+                PopupDialogs.showIonicAlertWith18nText('INFO','PASSWORD_LENGTH',null);
                 $scope.login.Password = "";
                 return;
             }
@@ -174,11 +153,11 @@ angular.module('starter.controller.dash', [])
                     // email already in use
                     $scope.login.Password = "";
                     $scope.loginEmail = "";
-                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
+                    PopupDialogs.showIonicAlertWith18nText('INFO', 'REGISTER_FAILMAIL', function(){
                         $scope.state = "LOGIN_START";
                     });
                 } else {
-                    KonfettiToolbox.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
+                    PopupDialogs.showIonicAlertWith18nText('INFO', 'REGISTER_FAIL', function(){});
                     $scope.login.Password = "";
                 }
             });
@@ -194,7 +173,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginLoginFinal = function(mail,pass) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 $scope.login.Password = "";
                 return;
             }
@@ -216,7 +195,7 @@ angular.module('starter.controller.dash', [])
                 // FAIL
                 $ionicLoading.hide();
                 $scope.login.Password = "";
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'LOGIN_FAIL', function(){
                 });
             });
         };
@@ -228,7 +207,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginRecoverFinal = function(mail) {
 
             if (typeof mail == "undefined") {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 return;
             }
 
@@ -238,13 +217,13 @@ angular.module('starter.controller.dash', [])
             ApiService.recoverPassword(mail, function() {
                 // WIN
                 $ionicLoading.hide();
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'RECOVER_WIN', function(){
                     $scope.state = "LOGIN_LOGIN";
                 });
             }, function() {
                 // FAIL
                 $ionicLoading.hide();
-                KonfettiToolbox.showIonicAlertWith18nText('INFO', 'RECOVER_FAIL', function(){
+                PopupDialogs.showIonicAlertWith18nText('INFO', 'RECOVER_FAIL', function(){
                 });
             });
         };
@@ -259,9 +238,9 @@ angular.module('starter.controller.dash', [])
                 return (b.time) - (a.time);
             };
             var sortFunction = sortFunctionMost;
-            if ($scope.actualSorting==='new') sortFunction = sortFunctionNew;
+            if ($scope.actualSorting==='POSTSORT_NEW') sortFunction = sortFunctionNew;
 
-            if ((typeof changedRequestId != "undefined") && ($scope.actualSorting!='new')) {
+            if ((typeof changedRequestId != "undefined") && ($scope.actualSorting!='POSTSORT_NEW')) {
 
                 // get index of request in focus
                 var requestChangedIndex = 0;
@@ -318,7 +297,6 @@ angular.module('starter.controller.dash', [])
         // overwriting rootScope
         $scope.selectedLang = function(selected) {
             $rootScope.selectedLang(selected);
-            $rootScope.setActualLangOnSelector();
             $scope.updateSortOptions();
             $scope.action();
         };
@@ -350,43 +328,38 @@ angular.module('starter.controller.dash', [])
         // when user taps a notification
         $scope.tapNotificationMore = function($event, noti) {
 
-            // media item info --> ignore tap
-            if (noti.type==1) {
-                return;
-            }
-
             // request now public --> go to request page
-            if (noti.type==2) {
+            if ((noti.type==2) || (noti.type=="REVIEW_OK")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // request rejected --> go to request page
-            if (noti.type==4) {
+            if ((noti.type==4) || (noti.type=="REVIEW_FAIL")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // new chat message --> go to request page - scroll down to chats
-            if (noti.type==5) {
+            if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
                 return;
             }
 
             // rewarded --> go to request page
-            if (noti.type==7) {
+            if ((noti.type==7) || (noti.type=="REWARD_GOT")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // support done --> go to request page
-            if (noti.type==8) {
+            if ((noti.type==8) || (noti.type=="SUPPORT_WIN")) {
                 $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // logout reminder --> flash option
-            if (noti.type==9) {
+            if ((noti.type==9) || (noti.type=="LOGOUT_REMINDER")) {
                 document.getElementById('deleteAccount').classList.add("animationPulsateSimple");
                 $timeout(function(){
                     document.getElementById('deleteAccount').classList.remove("animationPulsateSimple");
@@ -455,7 +428,7 @@ angular.module('starter.controller.dash', [])
 
             // check if user has konfetti at all
             if ((request.konfettiAdd===0) && ($rootScope.party.konfettiCount==0)) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 return;
             }
 
@@ -538,7 +511,7 @@ angular.module('starter.controller.dash', [])
 		// send confetti to an email address
 		$scope.sendKonfetti = function() {
 			$scope.partyPopUp.close();
-			KonfettiToolbox.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
+			PopupDialogs.sendKonfetti($scope.party.id, $scope.party.sendKonfettiMaxAmount, $scope.party.sendKonfettiWhiteList);
 		};
 
         // pop up with more info in party
@@ -595,12 +568,12 @@ angular.module('starter.controller.dash', [])
             KonfettiToolbox.processCode(true, function(result){
                 if (result.actions.length>0) {
                     // code worked
-                    KonfettiToolbox.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
+                    PopupDialogs.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
                         $scope.buttonIntroScreenOK();
                     });
                 } else {
                     // code wrong
-                    KonfettiToolbox.showIonicAlertWith18nText('REDEEMCOUPON', 'CODE_WRONG', function(){
+                    PopupDialogs.showIonicAlertWith18nText('REDEEMCOUPON', 'CODE_WRONG', function(){
                     });
                 }
             });
@@ -659,7 +632,7 @@ angular.module('starter.controller.dash', [])
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
                             AppContext.setAccount(account);
-                            KonfettiToolbox.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
+                            PopupDialogs.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
                             	$scope.resetAccount();
                             });
                             return;
@@ -756,7 +729,7 @@ angular.module('starter.controller.dash', [])
             //$rootScope.gps = 'fail';
             if ($scope.gps==='fail') {
                 $scope.state = "GPSFAIL";
-                KonfettiToolbox.getFallbackLocationBySelection(function(lat, lon) {
+                PopupDialogs.getFallbackLocationBySelection(function(lat, lon) {
                     // WIN
                     $scope.action();
                 }, function() {

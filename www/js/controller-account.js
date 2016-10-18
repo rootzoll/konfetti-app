@@ -1,6 +1,6 @@
 angular.module('starter.controller.account', [])
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox, PopupDialogs) {
 
   $scope.email = "";
 
@@ -11,11 +11,6 @@ angular.module('starter.controller.account', [])
           $state.go('tab.dash', {id: 0});
           return;
       }
-
-      // make sure lang selector is set correct
-      $timeout(function(){
-          $rootScope.setActualLangOnSelector();
-      },100);
 
       // debug information
       $scope.accountJson = JSON.stringify(AppContext.getAccount());
@@ -44,7 +39,7 @@ angular.module('starter.controller.account', [])
 
       // check if eMail is set
       if ((typeof email == "undefined") || (email==null) || (email.trim().length==0)) {
-          KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_NEEDED');
+          PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_NEEDED');
           return;
       }
 
@@ -81,11 +76,11 @@ angular.module('starter.controller.account', [])
                   ApiService.generateCoupons($rootScope.party.id, $scope.coupons.count, $scope.coupons.amount, email, AppContext.getAppLang(), function(){
                       // WIN
                       $ionicLoading.hide();
-                      KonfettiToolbox.showIonicAlertWith18nText('INFO', 'CREATE_COUPON_OK');
+                      PopupDialogs.showIonicAlertWith18nText('INFO', 'CREATE_COUPON_OK');
                   }, function(){
                       // FAIL
                       $ionicLoading.hide();
-                      KonfettiToolbox.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
+                      PopupDialogs.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
                   });
               });
           });
@@ -97,7 +92,7 @@ angular.module('starter.controller.account', [])
   $scope.storeMail = function(mail) {
 
       if (typeof mail == "undefined") {
-          KonfettiToolbox.showIonicAlertWith18nText('INFO', 'INVALID_EMAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO', 'INVALID_EMAIL');
           return;
       }
 
@@ -116,11 +111,11 @@ angular.module('starter.controller.account', [])
         // WIN
         $ionicLoading.hide();
         AppContext.setAccount(account);
-        KonfettiToolbox.showIonicAlertWith18nText('INFO', 'EMAIL_OK');
+        PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_OK');
       }, function(){
         // FAIL
         $ionicLoading.hide();
-        KonfettiToolbox.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
+        PopupDialogs.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
       });
   };
 

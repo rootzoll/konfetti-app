@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -20,6 +20,8 @@ angular.module('starter.controller.request', [])
   $scope.pulsateHeadlineInput = false;
 
   $scope.mediaChoosePopup = null;
+
+  $scope.request.info = [];
 
   $scope.setNoticeTextByRequestState = function() {
 
@@ -100,12 +102,6 @@ angular.module('starter.controller.request', [])
           for (var i=0; i<$scope.request.info.length; i++) {
               if ($scope.request.info[i].id == itemid) {
                   $scope.request.info.splice(i,1);
-                  break;
-              }
-          }
-          for (var i=0; i<$scope.request.mediaItemIds.length; i++) {
-              if ($scope.request.mediaItemIds[i] == itemid) {
-                  $scope.request.mediaItemIds.splice(i,1);
                   break;
               }
           }
@@ -202,7 +198,7 @@ angular.module('starter.controller.request', [])
 
             // check if user has konfetti at all
             if (($rootScope.party.konfettiCount<=0) && (request.konfettiAdd==0)) {
-                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_ZEROKONFETTI');
                 return;
             }
 
@@ -282,7 +278,7 @@ angular.module('starter.controller.request', [])
                         },function(){
                             // FAIL
                             $ionicLoading.hide();
-                            KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                            PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                         });
                     }
                 });
@@ -338,11 +334,6 @@ angular.module('starter.controller.request', [])
           $state.go('tab.dash', {id: 0});
           return;
       }
-
-      // make sure lang seletor is set correct
-      $timeout(function(){
-          $rootScope.setActualLangOnSelector();
-      },100);
 
   });
 
@@ -407,7 +398,7 @@ angular.module('starter.controller.request', [])
     var fail = function(error) {
         console.log("CAMERA FAIL:");
         console.dir(error);
-        KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+        PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
     };
 
     // on browser use file upload
@@ -437,9 +428,12 @@ angular.module('starter.controller.request', [])
   $scope.storeSelfi = function(imageDataUrl) {
 
       // user id will get updated once 
-
+      $ionicLoading.show({
+        template: '<img src="img/spinner.gif" />'
+      });
       ApiService.postImageMediaItemOnRequest(0, imageDataUrl, function(item){
           // WIN
+          $ionicLoading.hide();
 
           // set in actual request
           $scope.request.imageMediaID = item.id;
@@ -451,7 +445,8 @@ angular.module('starter.controller.request', [])
 
       }, function() {
           // FAIL
-          KonfettiToolbox.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
+          $ionicLoading.hide();
+          PopupDialogs.showIonicAlertWith18nText("INFO","INFO_FAILTRYAGAIN");
       });
   };
 
@@ -469,6 +464,7 @@ angular.module('starter.controller.request', [])
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
+                          cssClass: 'pop-additem',
                           buttons: []
                       });
                   });
@@ -507,7 +503,7 @@ angular.module('starter.controller.request', [])
           }, function() {
               // FAIL
               $ionicLoading.hide();
-              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
           });
       }
 
@@ -556,7 +552,7 @@ angular.module('starter.controller.request', [])
                     }, function() {
                           // FAIL
                           $ionicLoading.hide();
-                          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                     });
                   }
               });
@@ -565,49 +561,41 @@ angular.module('starter.controller.request', [])
   };
 
   $scope.addInfoLocation = function() {
-      $scope.mediaChoosePopup.close();
-      $translate("INFO").then(function (HEADLINE) {
-          $translate("USELOCATION").then(function (TEXT) {
-              var confirmPopup = $ionicPopup.confirm({
-                  title: HEADLINE,
-                  template: TEXT
-              });
-              confirmPopup.then(function(res) {
-                  if(res) {
 
-                      // user fake data on browser
-                      if (AppContext.getRunningOS()=="browser") {
-                          alert("USING MOCK LOCATION");
-                          $scope.saveLocationMediaItem(53.55340,9.992196);
-                          return;
-                      }
+           try {
 
-                      $ionicLoading.show({
-                          template: '<img src="img/spinner.gif" />'
-                      });
-                      var posOptions = {timeout: 10000, enableHighAccuracy: true};
-                      $cordovaGeolocation
-                          .getCurrentPosition(posOptions)
-                          .then(function (position) {
-                              $ionicLoading.hide();
-                              $rootScope.lat = position.coords.latitude;
-                              $rootScope.lon = position.coords.longitude;
-                              $scope.saveLocationMediaItem(position.coords.latitude,position.coords.longitude);
-                              $ionicScrollDelegate.scrollBottom(true);
-                          }, function(err) {
-                              $ionicLoading.hide();
-                              if (($rootScope.lon!=null) && ($rootScope.lon!=0)
-                                  && ($rootScope.lat!=null) && ($rootScope.lat!=0)) {
-                                  // use backup start coordinates
-                                  $scope.saveLocationMediaItem($rootScope.lat,$rootScope.lon);
-                              } else {
-                                  KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                              }
-                          });
-                  }
-              });
-          });
-      });
+           $scope.mediaChoosePopup.close();
+          
+           PopupDialogs.locationPicker($scope, function(result) {
+
+               // WIN
+               if (result.cancel) return;
+               // TODO: store also comment on location
+               $scope.saveLocationMediaItem(result.lat,result.lon);
+               $timeout(function(){
+                $ionicScrollDelegate.scrollBottom(true);
+               },500);
+
+               // TODO: in the future when date is follow up dialog - combine to meeting item
+               if (result.addDate) $scope.addInfoDate();
+
+            }, function(error){
+
+                // FAIL
+                if ((typeof error != "undefined") && (error!=null)) alert("ERROR: "+JSON.stringify(error));
+            
+            }, {
+                i18nHeadline: "LOCATIONPICKER_TITLE",
+                i18nMarker: "LOCATIONPICKER_MARKER",
+                inputComment: true,
+                startLat: 52.522011,
+                startLon: 13.412772,
+                startZoom: 9
+            });
+
+      } catch (e) {
+          alert("ERROR on LocationPicker: "+JSON.stringify(e));
+      }
 
   };
 
@@ -615,7 +603,7 @@ angular.module('starter.controller.request', [])
 
   $scope.saveLocationMediaItem = function(lat, lon) {
 
-      console.log("saveLocationMediaItem("+lat+","+lon+")");
+      //console.log("saveLocationMediaItem("+lat+","+lon+")");
 
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
@@ -627,47 +615,127 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
 
   };
 
   $scope.addInfoDate = function() {
+
             $scope.mediaChoosePopup.close();
-            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
-                $translate("ADDDATE_SUB").then(function (TEXT) {
-                    $ionicPopup.prompt({
-                        title: HEADLINE,
-                        template: TEXT,
-                        inputType: 'datetime-local'
-                    }).then(function(res) {
-                        var jsonDate = JSON.stringify(res).trim();
-                        if ((typeof jsonDate!="undefined") && (jsonDate.length>2)) {
-                             $ionicLoading.show({
-                             template: '<img src="img/spinner.gif" />'
-                             });
-                            ApiService.postDateMediaItemOnRequest($scope.request.id, res, function(mediaitem) {
-                                // WIN
-                                $ionicLoading.hide();
-                                mediaitem.data = new Date(mediaitem.data.substr(1,mediaitem.data.length-2));
-                                $scope.addMediaItem(mediaitem);
-                                $ionicScrollDelegate.scrollBottom(true);
-                            }, function() {
-                                // FAIL
-                                $ionicLoading.hide();
-                                KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                            });
+          
+            PopupDialogs.datePicker($scope, function(result){
+
+                // WIN
+                $ionicLoading.show({
+                    template: '<img src="img/spinner.gif" />'
+                });
+
+                // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
+                ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, function(mediaitem) {
+                        // WIN
+                        $ionicLoading.hide();
+                        $scope.addMediaItem(mediaitem);
+                        $ionicScrollDelegate.scrollBottom(true);
+
+                        // TODO: combine location picker dialog data with date to a new meeting object
+                        if (result.addlocation) {
+                            $scope.addInfoLocation();
                         }
+
+                     }, function() {
+                        // FAIL
+                        $ionicLoading.hide();
+                        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                });
+
+            }, function(e) {
+                // FAIL
+                alert("ERROR "+JSON.stringify(e));
+            });
+
+            /*
+
+            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
+            $translate("ADDDATE_SUB").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                 
+                $scope.dateInput = {
+                    date: new Date(),
+                    time: null,
+                    comment: "",
+                    addlocation: false
+                };
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-dateinput.html',
+                     scope: $scope,
+                     subTitle: TEXT,
+                     title: HEADLINE,
+                     cssClass: 'pop-dateinput',
+                    buttons: [
+                        { text: CANCEL, onTap: function(e){
+                            $scope.dateInput.date=null;
+                        } },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+
+                    if ($scope.dateInput.date==null) return;
+
+                    // combine date and time to one timestring
+                    var timeStr = "00:00:00.000Z\"";
+                    if ($scope.dateInput.time!=null) {
+                        var fullDateStr = JSON.stringify($scope.dateInput.time);
+                        timeStr = fullDateStr.substring(fullDateStr.indexOf('T')+1);
+                    }
+                    fullDateStr = JSON.stringify($scope.dateInput.date);
+                    var dateStr = fullDateStr.substring(0,fullDateStr.indexOf('T'));
+                    var combinedDate = JSON.parse(dateStr+"T"+timeStr);
+
+                    // TODO: open location picker dialog afterwards and connect with date
+                    if ($scope.dateInput.addlocation) {
+                        alert("TODO: connect location with date");
+                    }
+
+                    $ionicLoading.show({
+                        template: '<img src="img/spinner.gif" />'
                     });
+
+                    // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
+                    ApiService.postDateMediaItemOnRequest($scope.request.id, combinedDate, function(mediaitem) {
+                        // WIN
+                        $ionicLoading.hide();
+                        $scope.addMediaItem(mediaitem);
+                        $ionicScrollDelegate.scrollBottom(true);
+                     }, function() {
+                        // FAIL
+                        $ionicLoading.hide();
+                        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                    });
+
                 });
             });
+            });
+            });
+            });
+            */
   };
 
   $scope.addMediaItem = function(mediaitem) {
+      if (mediaitem.id==null) {
+          alert("ERROR addMediaItem: cannot add a item with id null");
+          return;
+      }
       if (typeof $scope.request.info == "undefined") $scope.request.info = [];
       $scope.request.info.push(mediaitem);
-      if (typeof $scope.request.mediaItemIds == "undefined") $scope.request.mediaItemIds = [];
-      $scope.request.mediaItemIds.push(mediaitem.id);
   };
 
   $scope.buttonRequestDone = function() {
@@ -723,7 +791,7 @@ angular.module('starter.controller.request', [])
                     }
 
                     if ((rewardUserIds.length>$scope.request.konfettiCount) && ($scope.request.konfettiCount>0)) {
-                        KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LESS');
+                        PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LESS');
                         return;
                     }
 
@@ -735,7 +803,7 @@ angular.module('starter.controller.request', [])
                       template: '<img src="img/spinner.gif" />'
                 });
                 ApiService.rewardRequest($scope.request.id, rewardUserIds, function() {
-                      $ionicLoading.hide();
+                    $ionicLoading.hide();
                     $scope.request.state='STATE_DONE';
                     $scope.setNoticeTextByRequestState();
                     $ionicScrollDelegate.scrollTop(true);
@@ -764,7 +832,7 @@ angular.module('starter.controller.request', [])
     }, function() {
         // FAIL
         $ionicLoading.hide();
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
     });
   };
 
@@ -780,7 +848,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -802,7 +870,7 @@ angular.module('starter.controller.request', [])
                           }, function() {
                               // FAIL
                               $ionicLoading.hide();
-                              KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                              PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                           });
                       }
                   });
@@ -832,7 +900,7 @@ angular.module('starter.controller.request', [])
                   }, function() {
                       // FAIL
                       $ionicLoading.hide();
-                      KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                      PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
                   });
               });
           });
@@ -846,7 +914,7 @@ angular.module('starter.controller.request', [])
         $state.go('tab.dash', {id: $scope.request.partyId});
       }, function() {
         // FAIL
-        KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
@@ -925,7 +993,7 @@ angular.module('starter.controller.request', [])
       }
 
       if ($scope.profile.spokenLangs.length==0) {
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','SELECT_LANG');
+          PopupDialogs.showIonicAlertWith18nText('INFO','SELECT_LANG');
           return;
       }
 
@@ -985,7 +1053,7 @@ angular.module('starter.controller.request', [])
       }, function() {
           // FAIL
           $ionicLoading.hide();
-          KonfettiToolbox.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
   };
 
