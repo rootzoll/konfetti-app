@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition) {
 
   $scope.loadingRequest = true;
   $scope.profile = AppContext.getAccount();
@@ -149,7 +149,8 @@ angular.module('starter.controller.request', [])
                 // get anchor
                 if (typeof $stateParams.area!="undefined") {
                     if ($stateParams.area==='chats') $timeout(function(){
-                        $ionicScrollDelegate.scrollBottom(true);
+                        var position = $ionicPosition.position(angular.element(document.getElementById('chatitems')));
+                        $ionicScrollDelegate.scrollTo(position.left, position.top-60, true);
                     },500);
                 }
 
