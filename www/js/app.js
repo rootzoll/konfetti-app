@@ -151,6 +151,9 @@ angular.module('starter', [
             AppContext.setAppLang(lang);
             $translate.use(AppContext.getAppLang());
             $rootScope.spClass = AppContext.getAppLangDirection();
+            $rootScope.langSet.forEach(function(langSet){
+                if (langSet.code==lang) $rootScope.selectedLang(langSet);
+            });
         } else {
             $log.info("already running lang(" + lang + ") ... no need to switch");
         }
