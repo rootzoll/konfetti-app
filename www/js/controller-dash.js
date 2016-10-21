@@ -149,7 +149,7 @@ angular.module('starter.controller.dash', [])
             }, function(errorcode) {
                 // FAIL
                 $ionicLoading.hide();
-                if ((typeof errorcode != "undefined") || (errorcode==1)) {
+                if ((typeof errorcode != "undefined") && (errorcode==1)) {
                     // email already in use
                     $scope.login.Password = "";
                     $scope.loginEmail = "";

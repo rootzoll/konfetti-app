@@ -15,7 +15,7 @@ angular.module('starter.controller.account', [])
       // debug information
       $scope.accountJson = JSON.stringify(AppContext.getAccount());
 
-      $scope.email = AppContext.getAccount().eMail;
+      $scope.email = AppContext.getAccount().email;
   });
   
   $scope.keyUpEmailInput = function(e) {
