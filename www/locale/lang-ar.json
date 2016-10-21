@@ -134,6 +134,8 @@
             "SELECT_LANG" : "الرجاء تحديد اللغات التي يتكلم .",
             "GPSFALLBACK_TITLE" : "أين هو منطقتكم؟",
             "GPSFALLBACK_SUB" : "يرجى يتيح لنا أن نعرف الرمز البريدي الخاص بك والبلاد",
+            "GPSFALLBACK_SUB2" : "موقف تقريبي كافية",
+            "GPSFALLBACK_MARKER" : "الحي الذي أقطنه",
             "ZIPCODE" : "الرمز البريدي:",
             "COUNTRY" : "بلد:",
             "COUNTRY_GERMANY" : "ألمانيا",

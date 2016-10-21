@@ -178,8 +178,11 @@ angular.module('starter.popupdialogs', [])
 
             $translate(config.i18nHeadline).then(function (HEADLINE) {
             $translate(config.i18nMarker).then(function (TEXT) {
+            $translate(config.i18nSubline).then(function (SUB) {
             $translate("OK").then(function (OK) {
-            $translate("CANCEL").then(function (CANCEL) {
+            $translate(config.i18nCancel).then(function (CANCEL) {
+
+                if (config.i18nSubline=="CANCEL") SUB = null;
                 
                 angular.extend(scope, {
                 markerPosition: {
@@ -193,6 +196,7 @@ angular.module('starter.popupdialogs', [])
                         lng: config.startLon,
                         focus: true,
                         message: TEXT,
+                        subTitle: SUB,
                         draggable: true
                     }   
                 },
@@ -200,7 +204,8 @@ angular.module('starter.popupdialogs', [])
                     markers:{
                       enable: [ 'dragend' ]
                     }
-                }
+                },
+                inputComment: config.inputComment
                 });
 
                 // when user ends drag of marker - update position
@@ -231,6 +236,7 @@ angular.module('starter.popupdialogs', [])
                      templateUrl: 'templates/pop-locationpick.html',
                      scope: scope,
                      title: HEADLINE,
+                     subTitle: SUB,
                      cssClass: 'pop-locationpick',
                      buttons: [
                         { text: CANCEL, onTap: function(e){
@@ -260,6 +266,7 @@ angular.module('starter.popupdialogs', [])
 
                 myPopup.then(function(){myPopup.close();});
 
+            });
             });
             });
             });
@@ -353,8 +360,11 @@ angular.module('starter.popupdialogs', [])
             // fall back config
             if (typeof config == "undefined") config = {};
             if (typeof config.i18nHeadline == "undefined") config.i18nHeadline = "LOCATIONPICKER_TITLE";
+            if (typeof config.i18nSubline == "undefined") config.i18nSubline = "CANCEL";
             if (typeof config.i18nMarker == "undefined") config.i18nMarker = "LOCATIONPICKER_MARKER";
+            if (typeof config.i18nCancel == "undefined") config.i18nCancel = "CANCEL";          
             if (typeof config.inputComment == "undefined") config.inputComment = false;
+
             if (typeof config.startZoom == "undefined") config.startZoom = 12;
             if ((typeof config.startLat == "undefined") || (typeof config.startLon == "undefined")) {
                 config.startLat = 52.522011;

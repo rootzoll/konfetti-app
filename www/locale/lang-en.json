@@ -133,6 +133,8 @@
             "SELECT_LANG" : "Please select languages you speak.",
             "GPSFALLBACK_TITLE" : "Where is your neighboorhood?",
             "GPSFALLBACK_SUB" : "please lets us know your zipcode and country",
+            "GPSFALLBACK_SUB2" : "street level is OK - it doesnt need to be your exact address",
+            "GPSFALLBACK_MARKER" : "my neighboorhood",
             "ZIPCODE" : "Zipcode:",
             "COUNTRY" : "Country:",
             "COUNTRY_GERMANY" : "Germany",

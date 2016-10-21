@@ -728,15 +728,40 @@ angular.module('starter.controller.dash', [])
             // check if GPS is failed
             //$rootScope.gps = 'fail';
             if ($scope.gps==='fail') {
+
                 $scope.state = "GPSFAIL";
-                PopupDialogs.getFallbackLocationBySelection(function(lat, lon) {
+
+                PopupDialogs.locationPicker($scope, function(result){
                     // WIN
+
+                    // when CANCEL was pressed
+                    if (result.cancel) {
+                        KonfettiToolbox.updateGPS();
+                        $timeout(function(){
+                            $scope.action();
+                        }, 5000);
+                        return;
+                    }
+
+                    // on normal result
+                    $rootScope.lat = result.lat;
+                    $rootScope.lon = result.lon;
+                    $rootScope.gps = 'win';
                     $scope.action();
-                }, function() {
-                    // FAIL
-                    KonfettiToolbox.updateGPS();
-                    $scope.action();
-                });
+
+                }, function(error) {
+                    alert("ERROR on initial LocationPicker: "+JSON.stringify(e));
+                }, {
+                i18nHeadline: "GPSFALLBACK_TITLE",
+                i18nSubline: "GPSFALLBACK_SUB2",
+                i18nMarker: "GPSFALLBACK_MARKER",
+                i18nCancel: "GPSFALLBACK_GPS",
+                inputComment: false,
+                startLat: 52.522011,
+                startLon: 13.412772,
+                startZoom: 9
+            });
+
                 return;
             }
 

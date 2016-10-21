@@ -38,6 +38,7 @@ angular.module('starter.konfettitoolbox', [])
                 });
            },
            updateGPS : function() {
+
                /*
                 * START GEOLOCATION
                 * http://ngcordova.com/docs/plugins/geolocation/

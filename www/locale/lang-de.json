@@ -132,6 +132,8 @@
             "SELECT_LANG" : "Bitte Sprache auswählen.",
             "GPSFALLBACK_TITLE" : "Wo befindet sich deine Nachbarschaft?",
             "GPSFALLBACK_SUB" : "Bitte nenne uns Postleizahl und Land",
+            "GPSFALLBACK_SUB2" : "grobe Strassenecke reicht - es muss nicht genau deine Wohnung sein",
+            "GPSFALLBACK_MARKER" : "Meine Nachbarschaft",
             "ZIPCODE" : "Postleitzahl:",
             "COUNTRY" : "Land:",
             "COUNTRY_GERMANY" : "Deutschland",
