@@ -195,5 +195,6 @@
             "LOCATIONCOMMENT": "Ortsbeschreibung",
             "LOCATION_ADDDATE": "Datum hinzufügen",
             "LOCATIONPICKER_TITLE": "Ort festlegen",
-            "LOCATIONPICKER_MARKER": "Marker setzen"  
+            "LOCATIONPICKER_MARKER": "Marker setzen",
+            "TEXTCOMMENT" : "Info oder Beschreibung"
 }

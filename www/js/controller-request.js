@@ -533,6 +533,29 @@ angular.module('starter.controller.request', [])
 
   $scope.addInfoText = function() {
       $scope.mediaChoosePopup.close();
+      PopupDialogs.textInput($scope, function(result) {
+          // WIN or Cancel
+          if (!result.cancel) {  
+                    $ionicLoading.show({
+                        template: '<img src="img/spinner.gif" />'
+                    });
+                    ApiService.postTextMediaItemOnRequest($scope.request.id, result.text, AppContext.getAppLang(), function(mediaitem) {
+                          // WIN
+                          $ionicLoading.hide();
+                          $scope.addMediaItem(mediaitem);
+                          $ionicScrollDelegate.scrollBottom(true);
+                    }, function() {
+                          // FAIL
+                          $ionicLoading.hide();
+                          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+                    });
+          }
+      }, function(e){
+          // FAIL
+          alert("ERROR addInfoText: "+JSON.stringify(e));
+      });
+
+      /*
       $translate("ADDTEXT").then(function (HEADLINE) {
           $translate("ENTERTEXT").then(function (TEXT) {
               $ionicPopup.prompt({
@@ -559,6 +582,7 @@ angular.module('starter.controller.request', [])
               });
           });
       });
+      */
   };
 
   $scope.addInfoLocation = function() {

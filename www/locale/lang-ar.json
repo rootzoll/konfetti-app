@@ -197,5 +197,6 @@
             "LOCATIONCOMMENT": "الطبوغرافيا",
             "LOCATION_ADDDATE": "إضافة التعيين",
             "LOCATIONPICKER_TITLE": "تحديد المكان",
-            "LOCATIONPICKER_MARKER": "الموقع بالغة"
+            "LOCATIONPICKER_MARKER": "الموقع بالغة",
+            "TEXTCOMMENT" : "وصف"
 }

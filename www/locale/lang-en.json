@@ -196,5 +196,6 @@
             "LOCATIONCOMMENT": "location description",
             "LOCATION_ADDDATE": "add date",
             "LOCATIONPICKER_TITLE": "Set Location",
-            "LOCATIONPICKER_MARKER": "pinpoint location"
+            "LOCATIONPICKER_MARKER": "pinpoint location",
+            "TEXTCOMMENT" : "info or description"
 }

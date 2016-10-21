@@ -274,6 +274,52 @@ angular.module('starter.popupdialogs', [])
 
         };
 
+    var addTextDialog = function(scope, win, fail) {
+          
+        try {
+
+            $translate("ADDTEXT").then(function (HEADLINE) {
+            $translate("ENTERTEXT").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                 
+                scope.textInput = {
+                    cancel: false,
+                    text: ""
+                };
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-textinput.html',
+                     scope: scope,
+                     subTitle: TEXT,
+                     title: HEADLINE,
+                     cssClass: 'pop-textinput',
+                    buttons: [
+                        { text: CANCEL, onTap: function(e){
+                            scope.textInput.cancel=true;
+                        } },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+                    myPopup.close();
+                    win(scope.textInput);
+                });
+            });
+            });
+            });
+            });
+
+        } catch (e) {
+            fail(e);
+        }
+  }; 
+
     var addDateDialog = function(scope, win, fail) {
           
         try {
@@ -378,9 +424,12 @@ angular.module('starter.popupdialogs', [])
         datePicker : function(scope, win, fail) {
             addDateDialog(scope, win, fail);
         },
+        textInput : function(scope, win, fail) {
+            addTextDialog(scope, win, fail);
+        },
         getFallbackLocationBySelection : function(win, fail) {
             methodGetFallbackLocationBySelection(win, fail);
-        },
+        }
     }
 
  });

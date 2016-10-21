@@ -348,6 +348,14 @@ div.popup-body span {
     min-width: 300px;
 }
 
+.pop-textinput .popup{
+    min-width: 300px;
+}
+
+.pop-textinput .popup-body{
+    padding-top: 0px;
+}
+
 .button-langselect {
     height: 30px;
 }
