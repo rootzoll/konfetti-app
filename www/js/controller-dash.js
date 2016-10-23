@@ -29,6 +29,8 @@ angular.module('starter.controller.dash', [])
         $scope.partyList = [];
         $scope.actualPartyIndex = 0;
 
+        $scope.gpsWaitCount = 0;
+
         // collector of notifications to be added to next load of party notifications
         $scope.globalNotifications = [];
 
@@ -723,15 +725,21 @@ angular.module('starter.controller.dash', [])
             }
 
             // check if GPS is available
-            if ($scope.gps==='wait') {
-                $scope.state = "GPSWAIT";
-                $timeout($scope.action, 300);
-                return;
+            if ($rootScope.gps==='wait') {
+                $scope.gpsWaitCount++;
+
+                if ($scope.gpsWaitCount>20) {
+                    $rootScope.gps='fail';
+                    $scope.gpsWaitCount = 0;
+                } else {
+                    $scope.state = "GPSWAIT";
+                    $timeout($scope.action, 300);
+                    return;
+                }
             }
 
             // check if GPS is failed
-            //$rootScope.gps = 'fail';
-            if ($scope.gps==='fail') {
+            if ($rootScope.gps==='fail') {
 
                 $scope.state = "GPSFAIL";
 
