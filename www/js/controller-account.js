@@ -37,7 +37,7 @@ angular.module('starter.controller.account', [])
 
   $scope.onButtonAdminCreateCoupons = function(email) {
 
-      // check if eMail is set
+      // check if email is set
       if ((typeof email == "undefined") || (email==null) || (email.trim().length==0)) {
           PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_NEEDED');
           return;
@@ -98,12 +98,12 @@ angular.module('starter.controller.account', [])
 
       var updatedAccount = AppContext.getAccount();
 
-      if (mail==updatedAccount.eMail) {
+      if (mail==updatedAccount.email) {
           console.log("email havent changed - ignore");
           return;
       }
 
-      updatedAccount.eMail = mail;
+      updatedAccount.email = mail;
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
       });

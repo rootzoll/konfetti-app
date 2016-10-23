@@ -40,7 +40,7 @@ angular.module('starter.appcontext', [])
           adminOnParties: [],
           spokenLangs : [],
           name: "",
-          eMail: "",
+          email: "",
           imageMediaID: 0,
           pushActive: false,
           pushSystem: null,
@@ -94,7 +94,7 @@ angular.module('starter.appcontext', [])
     setAccount: function(account) {
         appContext.account = account;
         if (appContext.account.name==null) appContext.account.name = "";
-        if (appContext.account.eMail==null) appContext.account.eMail = "";
+        if (appContext.account.email==null) appContext.account.email = "";
         this.persistContext();
     },
     loadContext: function(win) {
