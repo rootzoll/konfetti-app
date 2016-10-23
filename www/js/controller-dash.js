@@ -670,6 +670,7 @@ angular.module('starter.controller.dash', [])
             }
 
             // make sure websocket is connected & listen on incoming
+            try {
             WebSocketService.init();
             WebSocketService.receive("dash", function(message){
                 console.log("GOT MESSAGE: "+JSON.stringify(message));
@@ -717,6 +718,9 @@ angular.module('starter.controller.dash', [])
                 console.log("Unkown WebSocket message with command("+message.command+")");
                 return;
             });
+            } catch (e) {
+                console.error("Websockets init failed: "+JSON.stringify(e));
+            }
 
             // check if GPS is available
             if ($scope.gps==='wait') {
