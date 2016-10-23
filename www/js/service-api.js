@@ -464,7 +464,7 @@ angular.module('starter.api', [])
             postImageMediaItemOnRequest: function(requestId, base64, win, fail) {
 
                 var mediaObj = {
-                    type : ' TYPE_IMAGE',
+                    type : 'TYPE_IMAGE',
                     data : base64
                 };
 
