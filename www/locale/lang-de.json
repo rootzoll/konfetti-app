@@ -196,5 +196,7 @@
             "LOCATION_ADDDATE": "Datum hinzufügen",
             "LOCATIONPICKER_TITLE": "Ort festlegen",
             "LOCATIONPICKER_MARKER": "Marker setzen",
-            "TEXTCOMMENT" : "Info oder Beschreibung"
+            "TEXTCOMMENT" : "Info oder Beschreibung",
+            "IMAGEUPLOAD_INFO" : "Bild hochladen: max 1MB, JPEG or PNG",
+            "IMAGEUPLOAD_SELFI" : "Bild hochladen: möglichst quadratisch, max 1MB, JPEG or PNG"
 }

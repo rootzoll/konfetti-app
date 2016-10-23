@@ -389,9 +389,11 @@ angular.module('starter.controller.request', [])
           correctOrientation:true
       };
 
-    var win = function(imageData) {
+    // win of getting a image data for profile picture
+    var win = function(imageData,filetype) {
+        if (typeof filetype == "undefined") filetype = "jpeg";
         // add data url prefix
-        imageData = "data:image/jpeg;base64," + imageData;
+        imageData = "data:image/"+filetype+";base64," + imageData;
         // store (local & server)
         $scope.storeSelfi(imageData);
     };
@@ -404,12 +406,12 @@ angular.module('starter.controller.request', [])
 
     // on browser use file upload
     if (AppContext.getRunningOS()=="browser") {
-        // TODO i18n
-        alert("select profile image: mostly square, max 1MB, JPEG");
-        $rootScope.onUploadClick(function(imageData){
-            if (imageData==null) return;
-            imageData = imageData.substring(imageData.indexOf(',')+1);    
-            win(imageData);
+        PopupDialogs.showIonicAlertWith18nText("INFO", "IMAGEUPLOAD_SELFI", function(){
+            $rootScope.onUploadClick(function(imageData, filetype){
+                if (imageData==null) return;
+                imageData = imageData.substring(imageData.indexOf(',')+1);    
+                win(imageData,filetype);
+            });
         });
         return;
     }
@@ -491,8 +493,11 @@ angular.module('starter.controller.request', [])
           correctOrientation:true
       };
 
-      var win = function(imageData) {
-          imageData = "data:image/jpeg;base64,"+imageData;
+      // win of adding a image as info to the task
+      var win = function(imageData, filetype) {
+          if (typeof filetype == "undefined") filetype = "jpeg";
+          alert("B"+filetype);
+          imageData = "data:image/"+filetype+";base64,"+imageData;
           $ionicLoading.show({
               template: '<img src="img/spinner.gif" />'
           });
@@ -510,15 +515,15 @@ angular.module('starter.controller.request', [])
 
       // on browser use file upload
       if (AppContext.getRunningOS()=="browser") {
-        // TODO: i18n
-        alert("select image: mostly square, max 1MB, JPEG");
-        $rootScope.onUploadClick(function(imageData){
-            if (imageData==null) {
-                console.log("null on image callback");
-                return;
-            }
-            imageData = imageData.substring(imageData.indexOf(',')+1);    
-            win(imageData);
+        PopupDialogs.showIonicAlertWith18nText("INFO", "IMAGEUPLOAD_INFO", function(){
+            $rootScope.onUploadClick(function(imageData,filetype){
+                if (imageData==null) {
+                    console.log("null on image callback");
+                    return;
+                }
+                imageData = imageData.substring(imageData.indexOf(',')+1);    
+                win(imageData,filetype);
+            });
         });
         return;
       }

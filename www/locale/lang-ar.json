@@ -198,5 +198,7 @@
             "LOCATION_ADDDATE": "إضافة التعيين",
             "LOCATIONPICKER_TITLE": "تحديد المكان",
             "LOCATIONPICKER_MARKER": "الموقع بالغة",
-            "TEXTCOMMENT" : "وصف"
+            "TEXTCOMMENT" : "وصف",
+            "IMAGEUPLOAD_INFO" : "<1MB, JPEG/PNG",
+            "IMAGEUPLOAD_SELFI" : "<1MB, JPEG/PNG"
 }

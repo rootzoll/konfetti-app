@@ -197,5 +197,7 @@
             "LOCATION_ADDDATE": "add date",
             "LOCATIONPICKER_TITLE": "Set Location",
             "LOCATIONPICKER_MARKER": "pinpoint location",
-            "TEXTCOMMENT" : "info or description"
+            "TEXTCOMMENT" : "info or description",
+            "IMAGEUPLOAD_INFO" : "Upload image from computer: max 1MB, JPEG or PNG",
+            "IMAGEUPLOAD_SELFI" : "Upload image from computer: mostly square, max 1MB, JPEG or PNG"
 }

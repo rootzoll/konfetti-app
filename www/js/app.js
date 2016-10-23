@@ -126,7 +126,9 @@ angular.module('starter', [
                 // read file and make callback
                 var reader  = new FileReader();
                 reader.addEventListener("load", function () {
-                    $rootScope.onUploadClickCallback(reader.result);
+                    var filetype = "jpeg";
+                    if (reader.result.indexOf('data:image/png')>=0) filetype = "png";
+                    $rootScope.onUploadClickCallback(reader.result,filetype);
                 }, false);
                 reader.readAsDataURL(file);
 
