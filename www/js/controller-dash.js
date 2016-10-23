@@ -894,7 +894,7 @@ angular.module('starter.controller.dash', [])
         		$scope.sendKonfettiWhiteList = [];                   
                 if (typeof data.sendKonfettiMode != "undefined") {
                 	
-        			if (data.sendKonfettiMode>0) {
+        			if (data.sendKonfettiMode!="SENDKONFETTIMODE_DISABLED") {
                 		$scope.hasKonfettiToSpend =  true;
         				$scope.amountKonfettiToSpend = data.sendKonfettiMaxAmount;
         				$scope.sendKonfettiWhiteList = data.sendKonfettiWhiteList;

@@ -1052,7 +1052,7 @@ angular.module('starter.controller.request', [])
               $state.go('tab.dash', {id: $rootScope.party.id});
           };
 
-          if ($rootScope.party.reviewLevel==0) {
+          if ($rootScope.party.reviewLevel=="REVIEWLEVEL_NONE") {
               // no review needed
               $translate("THANKYOU").then(function (HEADLINE) {
                   $translate("SUBMITINFO_NOREVIEW").then(function (TEXT) {

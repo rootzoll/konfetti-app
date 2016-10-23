@@ -14,7 +14,7 @@
   		<i class="icon ion-paper-airplane"></i> {{ 'SENDKONFETTI' | translate }}
 	</button>
 	
-	<div ng-show="(hasKonfettiToSpend) && (party.sendKonfettiMode==2)" style="width: 80%; margin: auto;">
+	<div ng-show="(hasKonfettiToSpend) && (party.sendKonfettiMode=='SENDKONFETTIMODE_JUSTEARNED')" style="width: 80%; margin: auto;">
 		{{partyinfo_youcanspendkonfetti}}
 	</div>
 	
