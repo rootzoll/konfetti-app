@@ -496,7 +496,6 @@ angular.module('starter.controller.request', [])
       // win of adding a image as info to the task
       var win = function(imageData, filetype) {
           if (typeof filetype == "undefined") filetype = "jpeg";
-          alert("B"+filetype);
           imageData = "data:image/"+filetype+";base64,"+imageData;
           $ionicLoading.show({
               template: '<img src="img/spinner.gif" />'

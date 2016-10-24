@@ -583,7 +583,7 @@ angular.module('starter.api', [])
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
-                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=processing";
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=STATE_PROCESSING";
                 // WIN
                 var successCallback = function(response) {
                     win(response.data);
@@ -595,7 +595,7 @@ angular.module('starter.api', [])
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
-                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=open";
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=STATE_OPEN";
                 // WIN
                 var successCallback = function(response) {
                     win(response.data);
@@ -607,8 +607,8 @@ angular.module('starter.api', [])
             // messageStr - just optional in case reviewer likes to chat back the reason
             reviewResultOnRequest : function(requestId, allowRequestBool, mediaItemId, messageStr, win, fail) {
 
-                var action = "rejected";
-                if (allowRequestBool) action = "open";
+                var action = "STATE_REJECTED";
+                if (allowRequestBool) action = "STATE_OPEN";
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
