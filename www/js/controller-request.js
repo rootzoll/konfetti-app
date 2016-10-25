@@ -288,8 +288,10 @@ angular.module('starter.controller.request', [])
           return;
       }
 
+      // start the chat
       ApiService.createChat($scope.request.id, AppContext.getAccount().id, $scope.request.userId, function(result) {
         // WIN
+        KonfettiToolbox.markInteractionOnRequest($scope.request.id);
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
         $state.go('tab.chat-detail', dataObj);

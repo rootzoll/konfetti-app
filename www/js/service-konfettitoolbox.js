@@ -1,6 +1,26 @@
 angular.module('starter.konfettitoolbox', [])
 .factory('KonfettiToolbox', function($rootScope, $log, $ionicPopup, $translate, $ionicLoading, $state, AppContext, ApiService, $cordovaGeolocation, PopupDialogs) {
 
+        var arrayContainsObject = function(arr, obj) {
+            for (var i=0; i < arr.length; i++) {
+                if (arr[i]===obj) return true;
+            };
+            return false;
+        };
+
+        var wasUserActiveOnTask = function(idOfTask) {
+            var arrayIds = JSON.parse(window.localStorage.getItem("activeTasksTemp"));
+            if ((typeof arrayIds == "undefined") || (arrayIds==null)) arrayIds = new Array();
+            return arrayContainsObject(arrayIds,idOfTask);
+        };
+
+        var setUserActiveOnTask = function(idOfTask) {
+            var arrayIds = window.localStorage.getItem("activeTasksTemp");
+            if ((typeof arrayIds == "undefined") || (arrayIds==null)) arrayIds = new Array();
+            if (!arrayContainsObject(arrayIds,idOfTask)) arrayIds.push(idOfTask);
+            window.localStorage.setItem("activeTasksTemp", JSON.stringify(arrayIds));
+        };
+
         return {
             filterRequestsByState: function(requestArray, state) {
                 var resultArray = [];
@@ -16,14 +36,24 @@ angular.module('starter.konfettitoolbox', [])
                 }
                 return resultArray;
             },
+            markInteractionOnRequest: function(idOfTask) {
+                setUserActiveOnTask(idOfTask);
+            },
             filterRequestsByInteraction: function(requestArray, userId) {
                 var resultArray = [];
                 for (var i = 0; i < requestArray.length; i++) {
                     // ignore if user is author of request
                     if (requestArray[i].userId===userId) continue;
                     // use if there is a chat on request
-                    // server should just deliver chats if related to requesting user
-                    if (requestArray[i].chats.length>0) resultArray.push(requestArray[i]);
+                    // TODO: server should deliver chats if related to requesting user
+                    if (requestArray[i].chats.length>0) {
+                        resultArray.push(requestArray[i]);
+                    } else {
+                        // fallback - the client remembers tasks chatted with in local storage
+                        if (wasUserActiveOnTask(requestArray[i].id)) {
+                            resultArray.push(requestArray[i]);
+                        }
+                    }
                 }
                 return resultArray;
             },
