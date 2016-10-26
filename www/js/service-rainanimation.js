@@ -1,5 +1,5 @@
 angular.module('starter.rainanimation', [])
- .factory('RainAnimation', function($log, $document, $window, $timeout) {
+ .factory('RainAnimation', function($log, $document, $window, $timeout, $rootScope) {
        
         // basic values
        	var retina = window.devicePixelRatio,
@@ -385,6 +385,7 @@ angular.module('starter.rainanimation', [])
     					return;
     				}
     				isRaining = true;
+                    $rootScope.animationRainIsRunning = true;
             		
             		// show canvas and start animation
     				document.getElementById("confetti").style.display = "initial";
@@ -399,13 +400,16 @@ angular.module('starter.rainanimation', [])
             					document.getElementById("confetti").style.display = "none";
             					confetti.stop();
             					isRaining = false;
+                                $rootScope.animationRainIsRunning = false;
         					}, 500);
         				} catch (e) {
+                            $rootScope.animationRainIsRunning = false;
         					alert("Exception on service-rainanimation: makeItRainKonfetti-2: "+JSON.stringify(e));
         				}	
     				}, durationInSeconds * 1000);
             	
             	} catch (e) {
+                    $rootScope.animationRainIsRunning = false;
             		alert("Exception on service-rainanimation: makeItRainKonfetti-1: "+JSON.stringify(e));
             	} 
             	
