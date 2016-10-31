@@ -57,6 +57,13 @@ angular.module('starter', [
         alert("FAIL set running os info: "+e);
     }
 
+    // import GIT build version (from latest 'ionic build' run)
+    $rootScope.latestGitVersion = window.appGitVersion;
+    if ($rootScope.os=="browser") {
+        $rootScope.latestGitVersion = $rootScope.latestGitVersion + "+1"
+    }
+    
+
     /*
      * GLOBAL LANGUAGE SELECTOR (displayed in every tab)
      */

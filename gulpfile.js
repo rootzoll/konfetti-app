@@ -8,6 +8,9 @@ var rename = require('gulp-rename');
 var sh = require('shelljs');
 var connect = require('gulp-connect');
 
+var fs = require('fs');
+var path = require('path');
+
 var paths = {
   sass: ['./scss/**/*.scss']
 };
@@ -61,3 +64,23 @@ gulp.task('connect', function() {
   });
 });
 
+gulp.task('git-version', function() {
+     console.log(
+      'UPDATING GIT VERSION TO --> buildversion.js'
+    ); 
+    var exec = require('child_process').exec;
+    exec('git describe', function(error, stdout, stderr) {
+    try {
+      var version = "n/a";
+      if ((typeof stdout != "undefined") && (stdout!=null) && (stdout.length>0)) version = stdout.trim();
+      var fileContent = "window.appGitVersion='"+version+"';";
+      var jsPath = path.join('www', 'buildversion.js');
+      fs.unlinkSync(jsPath);
+      fs.writeFileSync(jsPath, fileContent, 'utf8');
+      console.log("OK file '"+jsPath+"' updated\n");
+    } catch (e) {
+      console.log("BEFORE BUILD HOOK --> ERROR ON GETTING GIT VERSION : "+JSON.stringify(e)+" \n");
+    }
+});
+
+});

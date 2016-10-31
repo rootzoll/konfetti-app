@@ -52,7 +52,7 @@
                                 </div>
 
                             </div>
-                            <div ng-show="loadingParty" style="min-height: 76px; padding-top: 10px">
+                            <div ng-show="loadingParty" style="min-height: 76px; padding-top: 10px;">
                                 <ion-spinner icon="android"></ion-spinner>
                                 <div ng-show="(state==='')">
                                     {{ 'INITACCOUNT' | translate }}
@@ -339,6 +339,10 @@
 
       <div requestcard data-ng-repeat="request in requestsDone" requesttype="interactionRequestCard" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"></div>
 
+      </div>
+
+      <div style="text-align:center;font-size:74%;color:grey;padding:12px;">
+          {{latestGitVersion}}
       </div>
 
   </ion-content>
