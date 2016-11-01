@@ -221,9 +221,14 @@ angular.module('starter.konfettitoolbox', [])
                             inputType: 'number',
                             inputPlaceholder: ''
                         }).then(function(res) {
-                            console.log('name:', res);
+                            //console.log('name:', res);
                             if (typeof res != "undefined") {
                                 if (res.length==0) return;
+                                if (isRedeemCouponBool) {
+                                    // dont allow admin debug codes when entering coupon codes
+                                    if ((res=="1") || (res=="11") || (res=="111")) return;
+                                    if ((res=="2") || (res=="22") || (res=="222")) return;
+                                }
                                 $ionicLoading.show({
                                     template: '<img src="img/spinner.gif" />'
                                 });
@@ -234,13 +239,19 @@ angular.module('starter.konfettitoolbox', [])
                                         processRedeemActions(result.actions);
                                         successCallback(result);
                                     } else {
-                                        feedbackOnCode(result);
+                                        if ((typeof result == "undefined") || (result==null) || (result.length<=0)) {
+                                            $translate("CODE_WRONG").then(function (text) {
+                                                feedbackOnCode({feedbackHtml : text});
+                                            });
+                                        } else {
+                                            feedbackOnCode(result);
+                                        }
                                     }
                                 }, function(){
                                     // FAIL
                                     $ionicLoading.hide();
                                     $translate("INTERNETPROBLEM").then(function (text) {
-                                        feedbackOnCode(text);
+                                        feedbackOnCode({feedbackHtml : text});
                                     });
                                 });
                             }
