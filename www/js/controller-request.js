@@ -657,6 +657,9 @@ angular.module('starter.controller.request', [])
           
             PopupDialogs.datePicker($scope, function(result){
 
+                // when clicked cancel on date
+                if (result.cancel) return;
+
                 // WIN
                 $ionicLoading.show({
                     template: '<img src="img/spinner.gif" />'
