@@ -148,10 +148,7 @@ angular.module('starter.controller.request', [])
 
                 // get anchor
                 if (typeof $stateParams.area!="undefined") {
-                    if ($stateParams.area==='chats') $timeout(function(){
-                        var position = $ionicPosition.position(angular.element(document.getElementById('chatitems')));
-                        $ionicScrollDelegate.scrollTo(position.left, position.top-60, true);
-                    },500);
+                    if ($stateParams.area==='chats') $scope.scrollToChatSection();
                 }
 
     }, function(code){
@@ -161,6 +158,13 @@ angular.module('starter.controller.request', [])
                     $scope.loadRequest();
                 },5000);
     });
+  };
+
+  $scope.scrollToChatSection = function() {
+    $timeout(function(){
+        var position = $ionicPosition.position(angular.element(document.getElementById('chatitems')));
+        $ionicScrollDelegate.scrollTo(position.left, position.top-60, true);
+    },600);
   };
 
   // set new request function
