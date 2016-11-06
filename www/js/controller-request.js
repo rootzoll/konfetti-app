@@ -561,34 +561,6 @@ angular.module('starter.controller.request', [])
           alert("ERROR addInfoText: "+JSON.stringify(e));
       });
 
-      /*
-      $translate("ADDTEXT").then(function (HEADLINE) {
-          $translate("ENTERTEXT").then(function (TEXT) {
-              $ionicPopup.prompt({
-                  title: HEADLINE,
-                  template: TEXT,
-                  inputType: 'text',
-                  inputPlaceholder: ''
-              }).then(function(res) {
-                  if (typeof res != "undefined") {  
-                    $ionicLoading.show({
-                        template: '<img src="img/spinner.gif" />'
-                    });
-                    ApiService.postTextMediaItemOnRequest($scope.request.id, res, AppContext.getAppLang(), function(mediaitem) {
-                          // WIN
-                          $ionicLoading.hide();
-                          $scope.addMediaItem(mediaitem);
-                          $ionicScrollDelegate.scrollBottom(true);
-                    }, function() {
-                          // FAIL
-                          $ionicLoading.hide();
-                          PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                    });
-                  }
-              });
-          });
-      });
-      */
   };
 
   $scope.addInfoLocation = function() {
@@ -633,8 +605,6 @@ angular.module('starter.controller.request', [])
 
 
   $scope.saveLocationMediaItem = function(lat, lon) {
-
-      //console.log("saveLocationMediaItem("+lat+","+lon+")");
 
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
@@ -688,79 +658,6 @@ angular.module('starter.controller.request', [])
                 alert("ERROR "+JSON.stringify(e));
             });
 
-            /*
-
-            $translate("ADDDATE_TITLE").then(function (HEADLINE) {
-            $translate("ADDDATE_SUB").then(function (TEXT) {
-            $translate("OK").then(function (OK) {
-            $translate("CANCEL").then(function (CANCEL) {
-                 
-                $scope.dateInput = {
-                    date: new Date(),
-                    time: null,
-                    comment: "",
-                    addlocation: false
-                };
-
-                var myPopup = $ionicPopup.show({
-                     templateUrl: 'templates/pop-dateinput.html',
-                     scope: $scope,
-                     subTitle: TEXT,
-                     title: HEADLINE,
-                     cssClass: 'pop-dateinput',
-                    buttons: [
-                        { text: CANCEL, onTap: function(e){
-                            $scope.dateInput.date=null;
-                        } },
-                        { text: OK,
-                            type: 'button-positive',
-                            onTap: function(e) {
-                            }
-                        }
-                    ]
-                });
-                
-                myPopup.then(function(res) {   
-
-                    if ($scope.dateInput.date==null) return;
-
-                    // combine date and time to one timestring
-                    var timeStr = "00:00:00.000Z\"";
-                    if ($scope.dateInput.time!=null) {
-                        var fullDateStr = JSON.stringify($scope.dateInput.time);
-                        timeStr = fullDateStr.substring(fullDateStr.indexOf('T')+1);
-                    }
-                    fullDateStr = JSON.stringify($scope.dateInput.date);
-                    var dateStr = fullDateStr.substring(0,fullDateStr.indexOf('T'));
-                    var combinedDate = JSON.parse(dateStr+"T"+timeStr);
-
-                    // TODO: open location picker dialog afterwards and connect with date
-                    if ($scope.dateInput.addlocation) {
-                        alert("TODO: connect location with date");
-                    }
-
-                    $ionicLoading.show({
-                        template: '<img src="img/spinner.gif" />'
-                    });
-
-                    // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
-                    ApiService.postDateMediaItemOnRequest($scope.request.id, combinedDate, function(mediaitem) {
-                        // WIN
-                        $ionicLoading.hide();
-                        $scope.addMediaItem(mediaitem);
-                        $ionicScrollDelegate.scrollBottom(true);
-                     }, function() {
-                        // FAIL
-                        $ionicLoading.hide();
-                        PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                    });
-
-                });
-            });
-            });
-            });
-            });
-            */
   };
 
   $scope.addMediaItem = function(mediaitem) {
@@ -1038,12 +935,12 @@ angular.module('starter.controller.request', [])
         partyId : $rootScope.party.id,
         konfettiCount: $scope.confetti.toSpend,
         title : $scope.headline.temp,
-        mediaItemIds : $scope.request.mediaItemIds,
         imageMediaID : $scope.request.imageMediaID
       };
 
       $ionicLoading.show();
-      ApiService.postRequest(newRequest, AppContext.getAppLang(), function(){
+      ApiService.postRequest(newRequest, AppContext.getAppLang(), function(respData){
+
           // WIN
           $scope.entercount = 0;
           $ionicLoading.hide();
@@ -1083,12 +980,29 @@ angular.module('starter.controller.request', [])
           }
           
           RainAnimation.makeItRainKonfetti(2);
+
+          // make sure to attach media items if already created
+          if ((typeof $scope.request.info != "undefined") && ($scope.request.info.length>0)) {
+              $scope.connectMediaItemArrayToRequest(respData, $scope.request.info);
+          }
           
       }, function() {
           // FAIL
           $ionicLoading.hide();
           PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
+  };
+
+  $scope.connectMediaItemArrayToRequest = function(request, mediaItemArray) {
+        // get first media item from array
+        var item = mediaItemArray.pop();
+        ApiService.addMediaItemToRequest(request.id, item.id, function(){
+            // WIN --> recursive call when array still contains more
+            if (mediaItemArray.length>0) $scope.connectMediaItemArrayToRequest(request, mediaItemArray);
+        }, function(){
+            // FAIL
+            console.warn("was not able to connect madia item("+item.id+") to request("+request.id+") - abort");
+        });
   };
 
 });

@@ -432,6 +432,13 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
             },
+            addMediaItemToRequest: function(requestId, mediaItemId, win, fail) {
+                // add media item to request
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/party/action/request/'+requestId+"?action=addMedia&json="+mediaItemId;
+                $http(config).then(win, fail);    
+            },
             postTextMediaItemOnRequest: function(requestId, text, langCode, win, fail) {
 
                 var mediaObj = {
