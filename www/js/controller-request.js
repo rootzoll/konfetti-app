@@ -615,8 +615,6 @@ angular.module('starter.controller.request', [])
 
   };
 
-
-
   $scope.saveLocationMediaItem = function(lat, lon) {
 
       $ionicLoading.show({

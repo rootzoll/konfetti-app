@@ -15,10 +15,14 @@ angular.module('starter.konfettitoolbox', [])
         };
 
         var setUserActiveOnTask = function(idOfTask) {
-            var arrayIds = window.localStorage.getItem("activeTasksTemp");
-            if ((typeof arrayIds == "undefined") || (arrayIds==null)) arrayIds = new Array();
-            if (!arrayContainsObject(arrayIds,idOfTask)) arrayIds.push(idOfTask);
-            window.localStorage.setItem("activeTasksTemp", JSON.stringify(arrayIds));
+            try {
+                var arrayIds = window.localStorage.getItem("activeTasksTemp");
+                if ((typeof arrayIds == "undefined") || (arrayIds==null)) arrayIds = new Array();
+                if (!arrayContainsObject(arrayIds,idOfTask)) arrayIds[arrayIds.length] = idOfTask;
+                window.localStorage.setItem("activeTasksTemp", JSON.stringify(arrayIds));
+            } catch (e) {
+                console.warn("ERROR on setUserActiveOnTask : "+JSON.stringify(e));
+            }
         };
 
         return {
