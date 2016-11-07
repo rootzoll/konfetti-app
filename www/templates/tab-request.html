@@ -143,7 +143,7 @@
                       </td>
                       <td colspan="2" width="*" style="text-align: center; vertical-align: middle;padding-top: 10px;">
                           <div style="font-size: 125%; font-weight: bold;  padding-top: 6px;">
-                              {{request.title}}
+                              {{getMultiLangOnRequest(actualLang)}}
                           </div>
                           <div style="font-size: 75%; color:grey">
                               {{ 'REQUESTEDON' | translate }} {{request.time | date:'medium'}}

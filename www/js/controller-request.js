@@ -151,6 +151,8 @@ angular.module('starter.controller.request', [])
                     if ($stateParams.area==='chats') $scope.scrollToChatSection();
                 }
 
+                if (typeof $scope.request.titleMultiLang == "undefined") $scope.request.titleMultiLang=null;
+
     }, function(code){
                 // FAIL
                 $scope.state = "INTERNETFAIL";
@@ -158,6 +160,13 @@ angular.module('starter.controller.request', [])
                     $scope.loadRequest();
                 },5000);
     });
+  };
+
+  $scope.getMultiLangOnRequest = function(actualLang) {
+      if ($scope.request.titleMultiLang==null) return $scope.request.title;
+      if (typeof $scope.request.titleMultiLang.data == "string") $scope.request.titleMultiLang.data = JSON.parse($scope.request.titleMultiLang.data);
+      if (typeof $scope.request.titleMultiLang.data[actualLang] != "undefined") return $scope.request.titleMultiLang.data[actualLang].text;
+      return $scope.request.title;
   };
 
   $scope.scrollToChatSection = function() {
