@@ -268,37 +268,31 @@ angular.module('starter.controller.request', [])
 
       // make sure user has entered name before first chat
       if ($scope.profile.name.length<=0) {
-          $translate("IMPORTANT").then(function (HEADLINE) {
-              $translate("ENTERNAME").then(function (TEXT) {
-                $ionicPopup.prompt({
-                    title: HEADLINE,
-                    template: TEXT,
-                    inputType: 'text',
-                    inputPlaceholder: ''
-                }).then(function(res) {
-                    if (typeof res != "undefined") {
-                        $scope.profile.name = res;
-                        var account = AppContext.getAccount();
-                        account.name = res;
-                        $ionicLoading.show({
-                            template: '<img src="img/spinner.gif" />'
-                        });
-                        ApiService.updateAccount(account, function(updatedAccount){
-                            // WIN
-                            $ionicLoading.hide();
-                            AppContext.setAccount(updatedAccount);
-                            // now that we got a name - call this method again
-                            $scope.startChat();
-                        },function(){
-                            // FAIL
-                            $ionicLoading.hide();
-                            PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
-                        });
-                    }
-                });
+        PopupDialogs.usernameDialog($scope, $scope.profile.name, function(data) {
+          //alert(JSON.stringify(data));
+          if ((!data.cancel) && (data.valid)) {
+              $scope.profile.name = data.text; 
+              var account = AppContext.getAccount();
+              account.name = data.text;
+              $ionicLoading.show({
+                template: '<img src="img/spinner.gif" />'
               });
-          });
-          return;
+              ApiService.updateAccount(account, function(updatedAccount){
+                // WIN
+                $ionicLoading.hide();
+                AppContext.setAccount(updatedAccount);
+                // now that we got a name - call this method again
+                $scope.startChat();
+              },function(){
+                // FAIL
+                $ionicLoading.hide();
+                PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+              });
+          }
+        }, function(e){
+            console.warn("failed $scope.startChat with: "+JSON.stringify(e));
+        });
+        return;
       }
 
       // start the chat
@@ -857,6 +851,16 @@ angular.module('starter.controller.request', [])
       }, function() {
         // FAIL
         PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
+      });
+  };
+
+  $scope.enterUserName = function() {
+      document.getElementById('headline').focus();
+      PopupDialogs.usernameDialog($scope, $scope.profile.name, function(data) {
+          //alert(JSON.stringify(data));
+          if ((!data.cancel) && (data.valid)) $scope.profile.name = data.text; 
+      }, function(e){
+          console.warn("failed $scope.enterUserName with: "+JSON.stringify(e));
       });
   };
 

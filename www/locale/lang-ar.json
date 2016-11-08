@@ -200,5 +200,8 @@
             "LOCATIONPICKER_MARKER": "الموقع بالغة",
             "TEXTCOMMENT" : "وصف",
             "IMAGEUPLOAD_INFO" : "<1MB, JPEG/PNG",
-            "IMAGEUPLOAD_SELFI" : "<1MB, JPEG/PNG"
+            "IMAGEUPLOAD_SELFI" : "<1MB, JPEG/PNG",
+            "USERNAMETITLE" : "تعيين اسمك العام",
+            "USERNAMESUB" : "اختيار اسم عام مجاني - يمكن أن يكون اللقب",
+            "USERNAMECOMMENT" : "المستخدم أو لقب"
 }

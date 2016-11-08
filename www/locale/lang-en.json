@@ -199,5 +199,8 @@
             "LOCATIONPICKER_MARKER": "pinpoint location",
             "TEXTCOMMENT" : "info or description",
             "IMAGEUPLOAD_INFO" : "Upload image from computer: max 1MB, JPEG or PNG",
-            "IMAGEUPLOAD_SELFI" : "Upload image from computer: mostly square, max 1MB, JPEG or PNG"
+            "IMAGEUPLOAD_SELFI" : "Upload image from computer: mostly square, max 1MB, JPEG or PNG",
+            "USERNAMETITLE" : "Set Your Public Name",
+            "USERNAMESUB" : "choose a free public name - can be nick name",
+            "USERNAMECOMMENT" : "user or nick name"
 }

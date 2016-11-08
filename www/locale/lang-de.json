@@ -198,5 +198,8 @@
             "LOCATIONPICKER_MARKER": "Marker setzen",
             "TEXTCOMMENT" : "Info oder Beschreibung",
             "IMAGEUPLOAD_INFO" : "Bild hochladen: max 1MB, JPEG or PNG",
-            "IMAGEUPLOAD_SELFI" : "Bild hochladen: möglichst quadratisch, max 1MB, JPEG or PNG"
+            "IMAGEUPLOAD_SELFI" : "Bild hochladen: möglichst quadratisch, max 1MB, JPEG or PNG",
+            "USERNAMETITLE" : "Wähle Deinen öffentlichen Nutzernamen",
+            "USERNAMESUB" : "Muss noch frei sein - Nachname nicht notwendig",
+            "USERNAMECOMMENT" : "Nutzer- oder Spitzname"
 }

@@ -52,7 +52,8 @@
                           <div> 
                               <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
-                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
+                                      <!--<input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">-->   
+                                      <input ng-focus="enterUserName()" ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                   </label>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">

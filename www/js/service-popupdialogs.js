@@ -2,7 +2,7 @@ angular.module('starter.popupdialogs', [])
 /*
  * Costumized PopUpDIalogs
  */
-.factory('PopupDialogs', function($log, $ionicPopup, $translate, $rootScope) {
+.factory('PopupDialogs', function($log, $ionicPopup, $translate, $rootScope, ApiService) {
 
 		// local def --> on service is called --> showIonicAlertWith18nText
         var methodShowIonicAlertWith18nText = function(i18nKeyTitle, i18nKeyText, win) {
@@ -320,6 +320,87 @@ angular.module('starter.popupdialogs', [])
         }
   }; 
 
+    var enterUsernameDialog = function(scope, preset, win, fail) {
+          
+        try {
+
+            if (preset==null) preset = "";
+
+            $translate("USERNAMETITLE").then(function (HEADLINE) {
+            $translate("USERNAMESUB").then(function (TEXT) {
+            $translate("OK").then(function (OK) {
+            $translate("CANCEL").then(function (CANCEL) {
+                 
+                scope.textInput = {
+                    cancel: false,
+                    valid: preset.length>0,
+                    text: preset
+                };
+
+                var scopeRef = scope;
+                scope.namechange = function(actualName){
+
+                    //console.log(actualName);
+                    if (actualName==null) return;
+
+                    // if to short its not valid
+                    if (actualName.length<2) {
+                        scopeRef.textInput.valid = false;
+                        return;
+                    }
+
+                    // is ok if value not changing
+                    if (actualName==preset) {
+                        scopeRef.textInput.valid = true;
+                        return;
+                    }
+
+                    // make request to check if name is still free
+                    var scopeRefRef = scopeRef;
+                    ApiService.checkUsernameIsFree(actualName, function(name, result){
+                        // check if result is still valid for actual input
+                        if (scopeRefRef.textInput.text==name) {
+                            //console.log("name("+name+") result("+result+")")
+                            scopeRefRef.textInput.valid = result;
+                        } else {
+                            //console.log("input("+scopeRefRef.textInput.text+") not anymore("+name+")");
+                        }
+                    });
+
+                };
+
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-username.html',
+                     scope: scope,
+                     subTitle: TEXT,
+                     title: HEADLINE,
+                     cssClass: 'pop-textinput',
+                    buttons: [
+                        { text: CANCEL, onTap: function(e){
+                            scope.textInput.cancel=true;
+                        } },
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+                    myPopup.close();
+                    win(scope.textInput);
+                });
+            });
+            });
+            });
+            });
+
+        } catch (e) {
+            fail(e);
+        }
+  }; 
+
     var addDateDialog = function(scope, win, fail) {
           
         try {
@@ -426,6 +507,9 @@ angular.module('starter.popupdialogs', [])
         },
         textInput : function(scope, win, fail) {
             addTextDialog(scope, win, fail);
+        },
+        usernameDialog : function(scope, preset, win, fail) {
+            enterUsernameDialog(scope, preset, win, fail);
         },
         getFallbackLocationBySelection : function(win, fail) {
             methodGetFallbackLocationBySelection(win, fail);

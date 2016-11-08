@@ -1,0 +1,17 @@
+<ion-list> 
+    <ion-item>
+    <table style="width:100%;">
+        <tr>
+            <td width="*">
+                <label class="item item-input">
+                    <input type="text" ng-model="textInput.text" ng-change="namechange(textInput.text)" placeholder="{{ 'USERNAMECOMMENT' | translate }}" maxlength="20">
+                </label>
+            </td>
+            <td width="40px" style="text-align:center;vertical-align:middle;padding-top:1px;padding-left:10px;font-size:30px;">
+                <i ng-show="textInput.valid" class="icon ion-checkmark-circled" style="color: green;"></i>
+                <i ng-hide="textInput.valid" class="icon ion-close-circled" style="color: red;"></i>
+            </td>
+        </tr>    
+    </table>
+    </ion-item>
+</ion-list>
