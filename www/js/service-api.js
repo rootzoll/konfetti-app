@@ -512,11 +512,12 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
             },
-            postLocationMediaItemOnRequest: function(requestId, lat, lon, win, fail) {
+            postLocationMediaItemOnRequest: function(requestId, lat, lon, comment, win, fail) {
 
                 var mediaObj = {
                     type : 'TYPE_LOCATION',
-                    data : JSON.stringify({lat:lat,lon:lon})
+                    data : JSON.stringify({lat:lat,lon:lon}),
+                    comment: comment
                 };
 
                 // CONFIG
@@ -541,11 +542,12 @@ angular.module('starter.api', [])
                 };
                 $http(config).then(successCallback, fail);
             },
-            postDateMediaItemOnRequest: function(requestId, dateObj, win, fail) {
+            postDateMediaItemOnRequest: function(requestId, dateObj, comment, win, fail) {
 
                 var mediaObj = {
                     type : 'TYPE_DATE',
-                    data : JSON.stringify(dateObj)
+                    data : JSON.stringify(dateObj),
+                    comment : comment
                 };
 
                 // CONFIG

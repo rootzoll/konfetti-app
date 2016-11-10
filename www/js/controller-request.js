@@ -581,7 +581,7 @@ angular.module('starter.controller.request', [])
                // WIN
                if (result.cancel) return;
                // TODO: store also comment on location
-               $scope.saveLocationMediaItem(result.lat,result.lon);
+               $scope.saveLocationMediaItem(result.lat,result.lon, result.comment);
                $timeout(function(){
                 $ionicScrollDelegate.scrollBottom(true);
                },500);
@@ -609,12 +609,12 @@ angular.module('starter.controller.request', [])
 
   };
 
-  $scope.saveLocationMediaItem = function(lat, lon) {
+  $scope.saveLocationMediaItem = function(lat, lon, comment) {
 
       $ionicLoading.show({
           template: '<img src="img/spinner.gif" />'
       });
-      ApiService.postLocationMediaItemOnRequest($scope.request.id, lat, lon, function(mediaitem) {
+      ApiService.postLocationMediaItemOnRequest($scope.request.id, lat, lon, comment, function(mediaitem) {
           // WIN
           $ionicLoading.hide();
           $scope.addMediaItem(mediaitem);
@@ -641,7 +641,7 @@ angular.module('starter.controller.request', [])
                 });
 
                 // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
-                ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, function(mediaitem) {
+                ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, result.comment, function(mediaitem) {
                         // WIN
                         $ionicLoading.hide();
                         $scope.addMediaItem(mediaitem);
@@ -671,6 +671,8 @@ angular.module('starter.controller.request', [])
           return;
       }
       if (typeof $scope.request.info == "undefined") $scope.request.info = [];
+      if (typeof mediaitem.comment == "undefined") mediaitem.comment = null;
+      if ((mediaitem.comment!=null) && (mediaitem.comment.trim().length==0)) mediaitem.comment = null;
       $scope.request.info.push(mediaitem);
   };
 

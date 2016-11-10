@@ -30,13 +30,14 @@
 
                     <!-- LOCATION -->
                     <div ng-if="mediaItemData.type=='TYPE_LOCATION'" style="white-space: normal;">
-                        <leaflet id="map{{mediaItemData.id}}" data-tap-disabled="true" defaults="defaults" lf-center="center" markers="markers" height="200px" width="300px" style="margin-left: auto;margin-right: auto;"></leaflet>
+                        <div ng-show="mediaItemData.comment!=null" style="padding: 13px;padding-top: 3px;font-weight: bolder;font-size: 110%;">{{mediaItemData.comment}}</div>
+                        <leaflet id="map{{mediaItemData.id}}" data-tap-disabled="true" defaults="defaults" lf-center="center" markers="markers" height="200px" width="300px" style="margin-left: auto;margin-right: auto;    margin-bottom: 13px;"></leaflet>
                     </div>
 
                     <!-- DATE -->
+                    <div ng-show="(mediaItemData.type=='TYPE_DATE') && (mediaItemData.comment!=null)" style="padding: 10px;padding-top: 3px; padding-bottom:0px;font-weight: bolder;font-size: 110%;">{{mediaItemData.comment}}</div>
                     <div ng-if="mediaItemData.type=='TYPE_DATE'" style="white-space: normal; font-weight: bold;font-size: 110%;padding-top: 12px;padding-bottom: 12px;">
 
-                        
                         <i class="icon ion-android-calendar" style="color: #565656; font-weight: bold; font-size: 120%;"></i>&nbsp;{{ mediaItemData.data | date : dateformat | datetranslate:actualLang}}
 
                         <i class="icon ion-clock" style="color: #565656; font-weight: bold; font-size: 120%;"></i>&nbsp;{{ mediaItemData.data | date : timeformat }}
