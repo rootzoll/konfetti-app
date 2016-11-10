@@ -69,7 +69,15 @@ angular.module('starter.controller.dash', [])
 
         // redeem button
         $scope.onButtonCoupon = function() {
-            KonfettiToolbox.processCode(true);
+            KonfettiToolbox.processCode(true, function(result){
+                console.dir(result);
+                if (result.actions.length>0) {
+                    $scope.reloadPartyList();
+                    PopupDialogs.showIonicAlertWith18nText('INFO','CODE_CORRECT',null);
+                } else {
+                    PopupDialogs.showIonicAlertWith18nText('INFO','CODE_WRONG',null);
+                }
+            });
         };
         
         $scope.getKonfetti = function() {
