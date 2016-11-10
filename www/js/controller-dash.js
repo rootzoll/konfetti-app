@@ -829,8 +829,7 @@ angular.module('starter.controller.dash', [])
                         // WIN;
                         $scope.partyList = list;
                         if ($scope.partyList.length==0) {
-                            alert("no parties in your area - maybe a server error - try again later");
-                            if (typeof navigator.app != "undefined") navigator.app.exitApp();
+                            PopupDialogs.errorDialog($scope, "controller-dash-1");
                         } else {
                             $scope.action();
                         }

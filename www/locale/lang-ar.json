@@ -203,5 +203,8 @@
             "IMAGEUPLOAD_SELFI" : "<1MB, JPEG/PNG",
             "USERNAMETITLE" : "تعيين اسمك العام",
             "USERNAMESUB" : "اختيار اسم عام مجاني - يمكن أن يكون اللقب",
-            "USERNAMECOMMENT" : "المستخدم أو لقب"
+            "USERNAMECOMMENT" : "المستخدم أو لقب",
+            "ERROR_HEAD" : "خطأ",
+            "ERROR_TEXT" : "حدث خطأ. إعادة التشغيل لاحقا. إذا مزيد من الخطأ البريد bugs@konfettiapp.de البريد مع المعلومات التالية:",
+            "ERROR_BUTTON" : "تمهيد"
 }

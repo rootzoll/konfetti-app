@@ -2,7 +2,7 @@ angular.module('starter.popupdialogs', [])
 /*
  * Costumized PopUpDIalogs
  */
-.factory('PopupDialogs', function($log, $ionicPopup, $translate, $rootScope, ApiService) {
+.factory('PopupDialogs', function($log, $ionicPopup, $translate, $rootScope, ApiService, AppContext) {
 
 		// local def --> on service is called --> showIonicAlertWith18nText
         var methodShowIonicAlertWith18nText = function(i18nKeyTitle, i18nKeyText, win) {
@@ -464,6 +464,47 @@ angular.module('starter.popupdialogs', [])
         }
   };    
 
+    var errorDialog = function(scope, code) {
+          
+        try {
+
+            scope.errorCode = code;
+            scope.account = AppContext.getAccount();
+
+            $translate("ERROR_HEAD").then(function (HEADLINE) {
+            $translate("ERROR_BUTTON").then(function (OK) {
+                 
+                var myPopup = $ionicPopup.show({
+                     templateUrl: 'templates/pop-error.html',
+                     scope: scope,
+                     title: HEADLINE,
+                     cssClass: 'pop-dateinput',
+                    buttons: [
+                        { text: OK,
+                            type: 'button-positive',
+                            onTap: function(e) {
+                            }
+                        }
+                    ]
+                });
+                
+                myPopup.then(function(res) {   
+
+                   if (typeof navigator.app != "undefined") {
+                    navigator.app.exitApp();
+                   } else {
+                    location.reload();
+                   }
+
+                });
+            });
+            });
+
+        } catch (e) {
+            alert("FAIL ON ERROR DIALOG: "+JSON.stringify(e));
+        }
+  };    
+
     return {
 
         showIonicAlertWith18nText: function(i18nKeyTitle, i18nKeyText, win) {
@@ -513,6 +554,9 @@ angular.module('starter.popupdialogs', [])
         },
         getFallbackLocationBySelection : function(win, fail) {
             methodGetFallbackLocationBySelection(win, fail);
+        },
+        errorDialog : function(scope, code) {
+            errorDialog(scope, code);
         }
     }
 

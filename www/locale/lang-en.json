@@ -202,5 +202,8 @@
             "IMAGEUPLOAD_SELFI" : "Upload image from computer: mostly square, max 1MB, JPEG or PNG",
             "USERNAMETITLE" : "Set Your Public Name",
             "USERNAMESUB" : "choose a free public name - can be nick name",
-            "USERNAMECOMMENT" : "user or nick name"
+            "USERNAMECOMMENT" : "user or nick name",
+            "ERROR_HEAD" : "App Error",
+            "ERROR_TEXT" : "A critical error has occurred. This can possibly only be temporary. Therefore, try again later simply to restart. If the error persists, please contact the Konfetti team at bugs@konfettiapp.de with the following data:",
+            "ERROR_BUTTON" : "Close / Restart"
 }

@@ -201,5 +201,8 @@
             "IMAGEUPLOAD_SELFI" : "Bild hochladen: möglichst quadratisch, max 1MB, JPEG or PNG",
             "USERNAMETITLE" : "Wähle Deinen öffentlichen Nutzernamen",
             "USERNAMESUB" : "Muss noch frei sein - Nachname nicht notwendig",
-            "USERNAMECOMMENT" : "Nutzer- oder Spitzname"
+            "USERNAMECOMMENT" : "Nutzer- oder Spitzname",
+            "ERROR_HEAD" : "App Fehler",
+            "ERROR_TEXT" : "Es ist ein kritischer Fehler aufgetreten. Dieser kann ggf. nur temporär sein. Daher versuch später die einfach nocheinmal neuzustarten. Sollte der Fehler anhalten, dann bitte wende sich an das Konfetti Team unter bugs@konfettiapp.de mit folgenden Daten:",
+            "ERROR_BUTTON" : "Schließen / Neustarten"
 }
