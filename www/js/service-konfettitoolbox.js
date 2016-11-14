@@ -230,8 +230,8 @@ angular.module('starter.konfettitoolbox', [])
                                 if (res.length==0) return;
                                 if (isRedeemCouponBool) {
                                     // dont allow admin debug codes when entering coupon codes
-                                    if ((res=="1") || (res=="11") || (res=="111")) return;
-                                    if ((res=="2") || (res=="22") || (res=="222")) return;
+                                    if ((res=="1") || (res=="2") || (res=="3") || (res=="4")) return;
+                                    if ((res=="11") || (res=="22") || (res=="33") || (res=="44")) return;
                                 }
                                 $ionicLoading.show({
                                     template: '<img src="img/spinner.gif" />'
