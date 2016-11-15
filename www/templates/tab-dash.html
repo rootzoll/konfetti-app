@@ -50,12 +50,12 @@
                                 <div style="direction: ltr;">
                                     <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
                                     <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
-                                	<span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;REVIEWER</span>
-                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;ADMIN</span>
+                                	<span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
+                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
                                 </div>
 
                             </div>
-                            <div ng-show="loadingParty" style="min-height: 76px; padding-top: 10px;">
+                            <div ng-show="loadingParty" style="min-height: 74px; padding-top: 10px;">
                                 <ion-spinner icon="android"></ion-spinner>
                                 <div ng-show="(state==='')">
                                     {{ 'INITACCOUNT' | translate }}

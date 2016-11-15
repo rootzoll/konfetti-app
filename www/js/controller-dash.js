@@ -67,7 +67,7 @@ angular.module('starter.controller.dash', [])
          * controller logic
          */      
 
-        // redeem button
+        // redeem button --> when konfetti on party is zero
         $scope.onButtonCoupon = function() {
             KonfettiToolbox.processCode(true, function(result){
                 console.dir(result);
@@ -197,6 +197,10 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 $scope.addLogoutNotification();
                 AppContext.setAccount(account);
+                alert("Alter Local State");
+                var state = AppContext.getLocalState();
+                state.introScreenShown = true;
+                AppContext.setLocalState(state);
                 $scope.login.Password = "";
                 $rootScope.resetAccount = false;
                 $scope.state = "INIT";
@@ -550,6 +554,13 @@ angular.module('starter.controller.dash', [])
           });
         };
 
+        // should reload/load party list and focus the party with the given id
+        $scope.loadPartiesAndFocus = function(partyId) {
+            console.dir(partyId);
+            $scope.focusPartyId = partyId;
+            $scope.buttonIntroScreenOK();
+        };
+
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
 
@@ -576,10 +587,12 @@ angular.module('starter.controller.dash', [])
         // the REDEEM COUPON button on the intro/welcome screen
         $scope.buttonIntroScreenCoupon = function() {
             KonfettiToolbox.processCode(true, function(result){
+                //console.log("RESULT CODES");
+                //console.dir(result.actions);
                 if (result.actions.length>0) {
                     // code worked
                     PopupDialogs.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
-                        $scope.buttonIntroScreenOK();
+                        KonfettiToolbox.processCouponActions(result.actions, $scope);
                     });
                 } else {
                     // code wrong

@@ -25,6 +25,74 @@ angular.module('starter.konfettitoolbox', [])
             }
         };
 
+        var processRedeemActions = function(actionArray, dashViewScope) {
+
+                if (typeof dashViewScope == "undefined") {
+                    dashViewScope = null;
+
+                } 
+
+                   if (typeof actionArray=="undefined") {
+                       console.warn("processRedeemActions: actionArray undefined - skip");
+                       return;
+                   }
+                   for (var i = 0; i < actionArray.length; i++) {
+
+                       var action = actionArray[i];
+                       if (typeof action == "undefined") {
+                           console.warn("processRedeemActions: action at index("+i+") is undefined - skip");
+                           continue;
+                       }
+
+                       // upgrade user profile
+                       if ((action.command=="updateUser") && (typeof action.json != "undefined")) {
+                           // keep local clientID and clientSecret
+                           var updatedAccountData = JSON.parse(action.json);
+                           var oldAccountData = AppContext.getAccount();
+                           updatedAccountData.clientId = oldAccountData.clientId;
+                           updatedAccountData.clientSecret = oldAccountData.clientSecret;
+                           AppContext.setAccount(updatedAccountData);
+                       } else
+
+                       // focus party in GUI
+                       if (action.command=="focusParty") {
+                           if (dashViewScope==null){
+                              $state.go('tab.dash', {id: JSON.parse(action.json)});
+                           } else {
+                              dashViewScope.loadPartiesAndFocus(JSON.parse(action.json));
+                           }
+                       } else
+
+                       // GPS info - set if no other GPS is set yet
+                       if (action.command=="gpsInfo") {
+
+                            var gpsdata = JSON.parse(action.json);
+                            if ((gpsdata.lat==0) && (gpsdata.lon==0)) {
+                                $log.info("ignoring GPS from server");
+                            } else {
+                                $rootScope.lat  = gpsdata.lat;
+                                $rootScope.lon = gpsdata.lon;
+                                $rootScope.gps  = 'win';
+                                var newPosition = {
+                                    ts: Date.now(),
+                                    lat: gpsdata.lat,
+                                    lon: gpsdata.lon
+                                };
+                                var localState = AppContext.getLocalState();
+                                localState.lastPosition = newPosition;
+                                AppContext.setLocalState(localState);
+                                $log.info("GPS update by server: lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+                            }
+
+                       } else
+
+                       // unkown
+                       {
+                           alert("UNKOWN COMMAND '"+action.command+"'");
+                       }
+                   }
+               };
+
         return {
             filterRequestsByState: function(requestArray, state) {
                 var resultArray = [];
@@ -137,66 +205,10 @@ angular.module('starter.konfettitoolbox', [])
 
                    });
            },
+           processCouponActions : function(actionArray, dashViewScope) {
+               processRedeemActions(actionArray,dashViewScope);
+           },
            processCode : function(isRedeemCouponBool, /* optional */ successCallback ) {
-
-               var processRedeemActions = function(actionArray) {
-
-                   if (typeof actionArray=="undefined") {
-                       console.warn("processRedeemActions: actionArray undefined - skip");
-                       return;
-                   }
-                   for (var i = 0; i < actionArray.length; i++) {
-
-                       var action = actionArray[i];
-                       if (typeof action == "undefined") {
-                           console.warn("processRedeemActions: action at index("+i+") is undefined - skip");
-                           continue;
-                       }
-
-                       // upgrade user profile
-                       if ((action.command=="updateUser") && (typeof action.json != "undefined")) {
-                           // keep local clientID and clientSecret
-                           var updatedAccountData = JSON.parse(action.json);
-                           var oldAccountData = AppContext.getAccount();
-                           updatedAccountData.clientId = oldAccountData.clientId;
-                           updatedAccountData.clientSecret = oldAccountData.clientSecret;
-                           AppContext.setAccount(updatedAccountData);
-                       } else
-
-                       // focus party in GUI
-                       if (action.command=="focusParty") {
-                           $state.go('tab.dash', {id: JSON.parse(action.json)});
-                       } else
-
-                       // GPS info - set if no other GPS is set yet
-                       if (action.command=="gpsInfo") {
-
-                            var gpsdata = JSON.parse(action.json);
-                            if ((gpsdata.lat==0) && (gpsdata.lon==0)) {
-                                $log.info("ignoring GPS from server");
-                            } else {
-                                $rootScope.lat  = gpsdata.lat;
-                                $rootScope.lon = gpsdata.lon;
-                                $rootScope.gps  = 'win';
-                                var newPosition = {
-                                    ts: Date.now(),
-                                    lat: gpsdata.lat,
-                                    lon: gpsdata.lon
-                                };
-                                var localState = AppContext.getLocalState();
-                                localState.lastPosition = newPosition;
-                                AppContext.setLocalState(localState);
-                                $log.info("GPS update by server: lat("+$rootScope.lat+") long("+$rootScope.lon+")");
-                            }
-
-                       } else
-
-                       // unkown
-                       {
-                           alert("UNKOWN COMMAND '"+action.command+"'");
-                       }
-                   }
-               };
 
                var feedbackOnCode = function(result) {
                    $translate("ANSWERE").then(function (HEADLINE) {
@@ -208,7 +220,6 @@ angular.module('starter.konfettitoolbox', [])
                        });
                    });
                };
-
 
                 var titleKey = "MAGICCODE";
                 var subKey = "REDEEM_MAGIC_SUB";
@@ -240,7 +251,6 @@ angular.module('starter.konfettitoolbox', [])
                                     // WIN
                                     $ionicLoading.hide();
                                     if ((typeof successCallback != "undefined") && (successCallback!=null)) {
-                                        processRedeemActions(result.actions);
                                         successCallback(result);
                                     } else {
                                         if ((typeof result == "undefined") || (result==null) || (result.length<=0)) {
