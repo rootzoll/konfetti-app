@@ -197,7 +197,6 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 $scope.addLogoutNotification();
                 AppContext.setAccount(account);
-                alert("Alter Local State");
                 var state = AppContext.getLocalState();
                 state.introScreenShown = true;
                 AppContext.setLocalState(state);
