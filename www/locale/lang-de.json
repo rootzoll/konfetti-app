@@ -160,7 +160,7 @@
             "RECOVER_FAIL" : "Zurücksetzen des Passworts war nicht möglich. Entweder ist eMail Adresse nicht registriert oder Internetverbindung war nicht möglich.",
             "LOGIN_FAIL" : "Login fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.",
             "REGISTER_FAIL" : "Registrierung fehlgeschlagen. Bitte eMail Adresse, Passwort und Internetverbindung prüfen.",
-            "REGISTER_FAILMAIL" : "eMail ist bereits in Verwendung. Wenn du dein Passwort vergessen hast, drücke hier, um es zurückzusetzen.",
+            "REGISTER_FAILMAIL" : "eMail ist bereits in Verwendung.",
             "PASSWORD_LENGTH" : "Das Passwort benötigt mindestens 8 Zeichen.",
             "EMAIL_VALID" : "Bitte eine gültige eMail als Nutzername verwenden.",
             "LOGOUT_REMINDER" : "= Logout wenn fertig",

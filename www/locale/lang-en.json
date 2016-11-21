@@ -161,7 +161,7 @@
             "RECOVER_FAIL" : "Was not able to reset password. Please check email and internet connection.",
             "LOGIN_FAIL" : "Was not able to login. Please check email, password and internet connection.",
             "REGISTER_FAIL" : "Was not able to register. Please check email, password and internet connection.",
-            "REGISTER_FAILMAIL" : "The email is already in use. If you forgot the password, try to reset.",
+            "REGISTER_FAILMAIL" : "The email is already in use.",
             "PASSWORD_LENGTH" : "8 characters minimum for password",
             "EMAIL_VALID" : "please enter a valid email as username",
             "LOGOUT_REMINDER" : "= Logout when done.",
