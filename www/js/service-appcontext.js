@@ -106,14 +106,14 @@ angular.module('starter.appcontext', [])
         localStorage.setItem("appContext", data);
     },
     getRunningOS: function() {
-        return (typeof window.device != "undefined") ? window.device.platform : "browser";
-    },
-    isRunningOnDesktopComputer: function() {
-        return typeof window.device == "undefined";
+        var result = "browser";
+        if (ionic.Platform.isAndroid()) result = "android";
+        if (ionic.Platform.isIOS()) result = "ios";
+        return result;
     },
     isRunningWithinApp : function() {
-        var osRunning = ((typeof cordova != "undefined") && (typeof cordova.platformId  != "undefined")) ? cordova.platformId : "browser";
-        return osRunning!="browser";
+        if ((ionic.Platform.isAndroid()) || (ionic.Platform.isIOS())) return true;
+        return false;
     },
     updatePushIds : function(pushIds) {
         appContext.localState.pushIDs = pushIds;

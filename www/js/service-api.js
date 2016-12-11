@@ -92,19 +92,18 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, fail);
 
             },
+            
             checkUsernameIsFree: function(username, callback) {
-
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
                 config.url = activeServerUrl+'/account/check_free?username='+encodeURIComponent(username)+'&ts='+(new Date()).getTime();
                 // WIN
-                let orgUsername = JSON.stringify(username);
+                var orgUsername = JSON.stringify(username);
                 var successCallback = function(response) {
                     callback(JSON.parse(orgUsername),response.data);
                 };
                 $http(config).then(successCallback, callback(false));
-
             },
 
             runningDevelopmentEnv: function () {

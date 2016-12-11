@@ -4,6 +4,7 @@ Its an app for neighborhood building thru a community todo list and a playful in
 
 Get updates and more infos on our facebook-page: https://www.facebook.com/konfetti4change
 
+
 ## Concept Notes
 
 Get konfetti for:
@@ -21,17 +22,20 @@ The app is part of the refugeehackathon, Berlin 2015 - so konfetti exchange can 
 
 ... you get the idea :D
 
+
 ## Prototype
 
 Live demo of the app (prototype test-server): http://test.konfettiapp.de
 
 Android Alpha-Release APK: [DOWNLOAD] (https://github.com/rootzoll/konfetti-app/blob/master/releases/konfetti-alpha-08052016.apk?raw=true)
 
+
 ## Contact
 
 For non-programmers: maxie@konfettiapp.de
 
 For programmers: christian@geektank.de
+
 
 ## German Slides
 
@@ -47,6 +51,7 @@ For programmers: christian@geektank.de
 
 ![alt tag](https://raw.githubusercontent.com/rootzoll/konfetti-app/master/concept/slides/6_de.png)
 
+
 ## Join & Meet
 
 If you are a coder, designer or a helping hand on location - feel free to join in - newcomers welcome.
@@ -58,9 +63,12 @@ Here is our public [calendar](https://calendar.google.com/calendar/embed?src=1qt
 
 Make sure to have the IONIC framework installed (v1.x): http://ionicframework.com
 
-Checkout from git, run 'ionic state reset' and then 'ionic resources' within project folder.
+Then run './_startupAppInBrowser.sh' - than the App should open up in your browser and connect to the public Konfetti server.
 
-Then run 'ionic serve' - than the App should open up in your browser and connect to the public Konfetti server.
+
+## Build Android APK
+
+Use the '_buildAndroid.sh' script on first build.
 
 
 ## Other Konfetti Software (to run your own server)

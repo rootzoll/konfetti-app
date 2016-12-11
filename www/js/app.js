@@ -22,47 +22,54 @@ angular.module('starter', [
 							'pascalprecht.translate',
                             'leaflet-directive'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $translate, KonfettiToolbox, $timeout, $ionicPopup) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar) {
+
   $ionicPlatform.ready(function() {
 
+    // Init Settings
     $rootScope.initDone = false;
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
     $rootScope.animationRainIsRunning = false;
-
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
-      cordova.plugins.Keyboard.disableScroll(true);
-    }
-
-    try {
-        // hide native status bar
-        ionic.Platform.fullScreen();
-        if (typeof window.StatusBar != "undefined")  {
-            window.StatusBar.hide();
-            console.log("OK window.StatusBar.hide()");
-        } else {
-            console.log("FAIL no window.StatusBar");
-        }
-    } catch (e) {
-        alert("FAIL on hide native status bar: "+e);
-    }
-
-    // set running os info
-    try {
-        $rootScope.os = "browser";
-        if (typeof window.device != "undefined") $rootScope.os = window.device.platform;
-    } catch (e) {
-        alert("FAIL set running os info: "+e);
-    }
 
     // import GIT build version (from latest 'ionic build' run)
     $rootScope.latestGitVersion = window.appGitVersion;
     if ($rootScope.os=="browser") {
         $rootScope.latestGitVersion = $rootScope.latestGitVersion + "+"
     }
-    
+
+    // set running os info
+    $rootScope.os = "browser";
+    try {
+        if (ionic.Platform.isAndroid()) $rootScope.os = "android";
+        if (ionic.Platform.isIOS()) $rootScope.os = "ios";
+        ionic.Platform.fullScreen();
+    } catch (e) {
+        alert("FAIL set running os info: "+e);
+    }
+
+    // if running in APP init plugins
+    if ($rootScope.os!="browser") {
+
+        // STATUS BAR
+        try {
+            $cordovaStatusbar.hide();
+            console.log("PLUGIN statusbar: OK");
+        } catch (e) {
+            alert("PLUGIN statusbar: MISSING (ok when running in browser) --> cordova plugin add cordova-plugin-statusbar");
+        }
+
+        // KEYBOARD
+        // Hide the accessory bar by default 
+        // (remove this to show the accessory bar above the keyboard for form inputs)
+        try {
+            cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
+            cordova.plugins.Keyboard.disableScroll(true);
+            console.log("PLUGIN Keyboard: OK");  
+        } catch (e) {
+            alert("PLUGIN keyboard: MISSING (ok when running on browser) --> cordova plugin add ionic-plugin-keyboard"); 
+        }
+
+    }
 
     /*
      * GLOBAL LANGUAGE SELECTOR (displayed in every tab)
@@ -181,6 +188,8 @@ angular.module('starter', [
 
     if (AppContext.getRunningOS()!="browser") {
     	
+        try {
+
     	// running as app
         $cordovaGlobalization.getLocaleName().then(
             function (result) {
@@ -209,6 +218,10 @@ angular.module('starter', [
                 setLocale("en");
             }
         );
+
+        } catch (e) {
+            alert("FAILED to process $cordovaGlobalization - make sure plugin is installed: cordova plugin add cordova-plugin-globalization");
+        }
 
         } else {
             //On browser check lang setting differently
