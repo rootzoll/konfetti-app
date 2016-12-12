@@ -26,13 +26,6 @@ angular.module('starter', [
 
   $ionicPlatform.ready(function() {
 
-
- try {
-     alert("PLATTFORM: "+JSON.stringify($cordovaDevice.getPlatform()));
- } catch (e) {
-     alert("ERROR ON USING NG CORDOVA");
- }
-
     // Init Settings
     $rootScope.initDone = false;
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
