@@ -2,13 +2,10 @@ var gulp = require('gulp');
 var gutil = require('gulp-util');
 var bower = require('bower');
 var concat = require('gulp-concat');
+var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
-var connect = require('gulp-connect');
-
-var fs = require('fs');
-var path = require('path');
 
 var paths = {
   sass: ['./scss/**/*.scss']
@@ -16,8 +13,6 @@ var paths = {
 
 gulp.task('default', ['sass']);
 
-/*
-var sass = require('gulp-sass');
 gulp.task('sass', function(done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
@@ -30,12 +25,9 @@ gulp.task('sass', function(done) {
     .pipe(gulp.dest('./www/css/'))
     .on('end', done);
 });
-*/
 
-gulp.task('watch', function() {
+gulp.task('watch', ['sass'], function() {
   gulp.watch(paths.sass, ['sass']);
-  gulp.watch(['./www/*.html'], ['html']);
-  gulp.watch(['./www/*.js'], ['js']);
 });
 
 gulp.task('install', ['git-check'], function() {
@@ -58,15 +50,7 @@ gulp.task('git-check', function(done) {
   done();
 });
 
-gulp.task('connect', function() {
-  connect.server({
-    root: 'www',
-    livereload: true,
-    port: 3000
-  });
-});
-
-gulp.task('git-version', function() {
+ gulp.task('git-version', function() {
      console.log(
       'UPDATING GIT VERSION TO --> buildversion.js'
     ); 
@@ -83,6 +67,5 @@ gulp.task('git-version', function() {
     } catch (e) {
       console.log("BEFORE BUILD HOOK --> ERROR ON GETTING GIT VERSION : "+JSON.stringify(e)+" \n");
     }
-});
-
+  });
 });
