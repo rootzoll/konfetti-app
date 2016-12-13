@@ -163,8 +163,8 @@ angular.module('starter', [
     var setLocale = function(lang) {
 
         // check if changed
-        if (AppContext.getAppLang() == "") {
-            $log.info("switching to lang(" + lang + ")");
+        if ((typeof AppContext.getAppLang() == "undefined") || (AppContext.getAppLang() == "")) {
+            console.log("switching to lang(" + lang + ")");
             AppContext.setAppLang(lang);
             $translate.use(AppContext.getAppLang());
             $rootScope.spClass = AppContext.getAppLangDirection();
@@ -172,7 +172,7 @@ angular.module('starter', [
                 if (langSet.code==lang) $rootScope.selectedLang(langSet);
             });
         } else {
-            $log.info("already running lang(" + lang + ") ... no need to switch");
+            console.log("already running lang(" + AppContext.getAppLang() + ") ... no need to switch");
         }
     };
 
@@ -187,12 +187,13 @@ angular.module('starter', [
     };
 
     if (AppContext.getRunningOS()!="browser") {
-    	
+
         try {
 
     	// running as app
         $cordovaGlobalization.getLocaleName().then(
             function (result) {
+
                 // WIN
                 if (!gotLang) {
 
@@ -202,10 +203,10 @@ angular.module('starter', [
                     var lange = result.value.substr(0, 2);
                     if (!isLangSupported(lange)) {
                         $log.warn("lang '" + lange + "' not available ... using 'en'");
-                        lang = "en";
+                        lange = "en";
                     }
 
-                    setLocale(lang);
+                    setLocale(lange);
 
                 } else {
                     $log.warn("double call prevent of $cordovaGlobalization.getLocaleName()");
@@ -223,7 +224,9 @@ angular.module('starter', [
             alert("FAILED to process $cordovaGlobalization - make sure plugin is installed: cordova plugin add cordova-plugin-globalization");
         }
 
-        } else {
+    // when running on browser ..
+    } else {
+
             //On browser check lang setting differently
             var lang = navigator.language.substr(0, 2);
             if (!isLangSupported(lang)) {
@@ -231,7 +234,7 @@ angular.module('starter', [
                 lang = "en";
             }
             setLocale(lang);
-        }
+    }
 
     /*
      * Start GPS
