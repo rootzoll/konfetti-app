@@ -107,7 +107,17 @@ angular.module('starter')
                         markers: {
                         },
                         defaults: {
-                            tap: false
+                            tap: false,
+                            tileLayer: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                            attributionControl: true,
+                            tileLayerOptions: {
+                                attribution: 'OSM',
+                                detectRetina: true,
+                                reuseTiles: false,
+                                unloadInvisibleTiles: false,
+                                updateWhenIdle: false
+                            },
+                            scrollWheelZoom: false
                         }
                 });
 
