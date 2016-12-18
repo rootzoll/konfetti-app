@@ -25,6 +25,7 @@
     "cordova-plugin-globalization",
     "cordova-plugin-geolocation",
     "cordova-plugin-camera",
+    "onesignal-cordova-plugin",
     "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git"
   ],
   "cordovaPlatforms": [

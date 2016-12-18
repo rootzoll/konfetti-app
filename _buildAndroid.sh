@@ -18,6 +18,7 @@ echo "- Tools / Android SDK Platform-tools"
 echo "- Android 6.0 (API23) / SDK platform"
 echo "- Android 4.1.2 (API16) / SDK platform"
 echo "- Extras / Android Support Repository"
+echo "- Extras / Google Repository"
 ionic -version
 read -p "Android SDK and required packages are installed yes=ENTER / no=CTRL+c"
 echo '-----------------------------------'
