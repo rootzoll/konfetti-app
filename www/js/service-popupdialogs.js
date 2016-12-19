@@ -427,7 +427,7 @@ angular.module('starter.popupdialogs', [])
                 scope.dateInput = {
                     cancel: false,
                     date: new Date(),
-                    time: null,
+                    time: new Date("2016-12-19T12:00:00.000+01:00"),
                     combinedDate: null,
                     comment: "",
                     addlocation: false
