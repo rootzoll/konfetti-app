@@ -1,4 +1,6 @@
-/* Empty. Add your own CSS if you like */
+[ng\:cloak], [ng-cloak], .ng-cloak {
+    display: none;
+}
 
 .padding {
 	padding: 6px;
@@ -358,4 +360,9 @@ div.popup-body span {
 
 .button-langselect {
     height: 30px;
+}
+
+.oneTimeAnimation {
+  -webkit-animation-iteration-count: 1;
+  animation-iteration-count: 1;
 }
