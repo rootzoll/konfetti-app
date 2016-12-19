@@ -184,6 +184,8 @@ angular.module('starter.popupdialogs', [])
 
                 if (config.i18nSubline=="CANCEL") SUB = null;
                 
+                scope.mapWidthPixel = window.innerWidth - 60;
+
                 angular.extend(scope, {
                 markerPosition: {
                     lat: config.startLat,
@@ -204,6 +206,18 @@ angular.module('starter.popupdialogs', [])
                     markers:{
                       enable: [ 'dragend' ]
                     }
+                },
+                defaults: {
+                    tileLayer: 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                    attributionControl: true,
+                    tileLayerOptions: {
+                        attribution: 'OpenStreetMap',
+                        detectRetina: true,
+                        reuseTiles: true,
+                        unloadInvisibleTiles: false,
+                        updateWhenIdle: false
+                    },
+                    scrollWheelZoom: false
                 },
                 inputComment: config.inputComment
                 });

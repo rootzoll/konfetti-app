@@ -147,7 +147,7 @@ angular.module('starter.controller.dash', [])
             $ionicLoading.show({
                 template: '<img src="img/spinner.gif" />'
             });
-            ApiService.createAccount(mail, pass, AppContext.getAppLang(), function(account) {
+            ApiService.createFullAccount(mail, pass, AppContext.getAppLang(), function(account) {
                 // WIN
                 $ionicLoading.hide();
                 AppContext.setAccount(account);
@@ -633,7 +633,7 @@ angular.module('starter.controller.dash', [])
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
                     $scope.state = "ACCOUNTWAIT";
-                    ApiService.createAccount(null, null, AppContext.getAppLang(), function(account){
+                    ApiService.createGuestAccount(AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
                         AppContext.setAccount(account);

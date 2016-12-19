@@ -1,7 +1,0 @@
-{
-  "name": "konfetti",
-  "app_id": "",
-  "gulpStartupTasks": [
-    "git-version"
-  ]
-}

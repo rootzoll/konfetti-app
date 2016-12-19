@@ -27,7 +27,7 @@ angular.module('starter.api', [])
         var mediaItemCache = {};
 
         return {
-            createAccount: function(mail, pass, locale, win, fail) {
+            createFullAccount: function(mail, pass, locale, win, fail) {
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
@@ -35,6 +35,26 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/account';
                 if ((typeof mail != "undefined") && (typeof pass != "undefined") && (mail!=null) && (pass!=null)) {
                     config.url = config.url + "?mail="+encodeURIComponent(mail)+"&pass="+encodeURIComponent(pass)+"&locale="+encodeURIComponent(locale);
+                }
+                // WIN
+                var successCallback = function(response) {
+                    if (response.data.id<0) {
+                        fail(-response.data.id);
+                        return;
+                    }
+                    win(response.data);
+                };
+                $http(config).then(successCallback, fail);
+
+            },
+            createGuestAccount: function(locale, win, fail) {
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/account/registerGuest';
+                if ((typeof pass != "undefined") && (pass!=null)) {
+                    config.url = config.url + "?locale="+encodeURIComponent(locale);
                 }
                 // WIN
                 var successCallback = function(response) {

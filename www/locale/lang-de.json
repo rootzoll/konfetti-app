@@ -59,14 +59,14 @@
             "INTERNETPROBLEM" : "Problem mit der Verbindung. Bitte später nochmal probieren.",
             "ENTERNAME" : "Bitte gib deinen Namen ein",
             "SENDMESSAGE" : "sende eine Nachricht",
-            "INTRO_WELCOME" : "Willkommen zur Konfetti App :)",
+            "INTRO_WELCOME" : "Willkommen",
             "INTRO_STEP1A" : "Konfettis sind wie",
             "INTRO_STEP1B" : "Karmapunkte für die Nachbarschaft.",
             "INTRO_STEP2A" : "Verdiene Konfetti",
             "INTRO_STEP2B" : "indem du Aufgaben erledigst oder spendest.",
             "INTRO_STEP3A" : "Nutze Konfetti",
             "INTRO_STEP3B" : "um selber Aufgaben an die Gemeinschaft zu stellen oder bestehende Aufgaben zu unterstützen.",
-            "INTRO_LETSGO" : ".. oder in meiner Umgebung suchen.",
+            "INTRO_LETSGO" : "In meiner Umgebung suchen",
             "CREATENEW"    : "Neu Erstellen",
             "REDEEM_MAGIC_SUB" : "Aktivierung von zusätzlichen Funktionen oder Rechten ..",
             "REDEEM_COUPON_SUB" : "Bitte gib die Code-Nummer deines Gutscheines ein:",
@@ -185,7 +185,7 @@
             "RESETTING_SERVER" : "Der Server wurde zurückgesetzt. Du beginnst nochmal als neuer Nutzer.",
             "LOGINBUTTON_REGISTERFORGOT" : "Als neuer Nutzer anmelden.",
             "LOGINBUTTON_LOGINLOGIN" : "Ich habe bereits einen Nutzernamen.",
-            "INTRO_REDEEMCOUPON" : "Konfetti Gutschein einlösen ..",
+            "INTRO_REDEEMCOUPON" : "Konfetti Gutschein einlösen",
             "CODE_WRONG": "Der Gutscheincode ist icht korrekt oder wurde bereits verwendet.",
             "CODE_CORRECT": "Du hast Konfetti erhalten:) Unterstütze damit bestehende Ideen oder wünsch dir etwas von deiner Nachbarschaft.",
             "DATE" : "Datum",
@@ -204,5 +204,6 @@
             "USERNAMECOMMENT" : "Nutzer- oder Spitzname",
             "ERROR_HEAD" : "App Fehler",
             "ERROR_TEXT" : "Es ist ein kritischer Fehler aufgetreten. Dieser kann ggf. nur temporär sein. Daher versuch später die einfach nocheinmal neuzustarten. Sollte der Fehler anhalten, dann bitte wende sich an das Konfetti Team unter bugs@konfettiapp.de mit folgenden Daten:",
-            "ERROR_BUTTON" : "Schließen / Neustarten"
+            "ERROR_BUTTON" : "Schließen / Neustarten",
+            "OR" : "oder"
 }
