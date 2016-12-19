@@ -668,8 +668,8 @@ angular.module('starter.api', [])
 
                 // CONFIG
                 var config = getBasicHttpHeaderConfig();
-                config.method = 'GET';
-                config.url = activeServerUrl+'/party/0/notification/'+notificationId+"?action=delete";
+                config.method = 'DELETE';
+                config.url = activeServerUrl+'/notification/'+notificationId;
                 // WIN
                 var successCallback = function(response) {
                     win(response.data);
