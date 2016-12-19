@@ -245,7 +245,7 @@ angular.module('starter', [
     KonfettiToolbox.updateGPS();
 
     /*
-     * Push Notification --> https://documentation.onesignal.com/docs/phonegap-sdk-installation
+     * Push Notification --> https://documentation.onesignal.com/docs/cordova-sdk-setup
      */
 
     if ((typeof window.plugins != "undefined") && (typeof window.plugins.OneSignal != "undefined")) {
@@ -260,20 +260,17 @@ angular.module('starter', [
                  */
 
                 var notificationOpenedCallback = function(jsonData) {
-                    //alert('didReceiveRemoteNotificationCallBack: ' + JSON.stringify(jsonData));
+                    alert('TODO: notificationOpenedCallback: ' + JSON.stringify(jsonData));
                 };
 
-                window.plugins.OneSignal.init(
-                    AppContext.getAppConfig().oneSignalAppId,
-                    {googleProjectNumber: AppContext.getAppConfig().googleProjectNumber},
-                    notificationOpenedCallback
-                );
-
-                // Show an alert box if a notification comes in when the user is in your app.
-                window.plugins.OneSignal.enableInAppAlertNotification(true);
+                window.plugins.OneSignal
+                    .startInit(AppContext.getAppConfig().oneSignalAppId)
+                    .handleNotificationOpened(notificationOpenedCallback)
+                    .endInit();
 
                 // getting the push id
                 window.plugins.OneSignal.getIds(function(ids){
+                    console.log("Registered OneSignal IDs:"+JSON.stringify(ids));
                     AppContext.updatePushIds(ids);
                 });
 
@@ -282,7 +279,7 @@ angular.module('starter', [
             }
 
         } catch (e) {
-            alert("exception: "+JSON.stringify(e));
+            alert("pushnoti reg exception: "+JSON.stringify(e));
         }
 
     }
