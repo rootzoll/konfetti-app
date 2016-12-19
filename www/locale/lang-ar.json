@@ -206,5 +206,6 @@
             "USERNAMECOMMENT" : "المستخدم أو لقب",
             "ERROR_HEAD" : "خطأ",
             "ERROR_TEXT" : "حدث خطأ. إعادة التشغيل لاحقا. إذا مزيد من الخطأ البريد bugs@konfettiapp.de البريد مع المعلومات التالية:",
-            "ERROR_BUTTON" : "تمهيد"
+            "ERROR_BUTTON" : "تمهيد",
+            "OR" : "أو"
 }

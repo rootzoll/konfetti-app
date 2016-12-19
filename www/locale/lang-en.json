@@ -60,14 +60,14 @@
             "INTERNETPROBLEM" : "Problem with Connection. Please try again later.",
             "ENTERNAME" : "Please enter your name",
             "SENDMESSAGE" : "send a message",
-            "INTRO_WELCOME" : "Welcome to Konfetti App",
+            "INTRO_WELCOME" : "Welcome",
             "INTRO_STEP1A" : "Konfetti is like",
             "INTRO_STEP1B" : "karma for the neighborhood.",
             "INTRO_STEP2A" : "Earn Konfetti",
             "INTRO_STEP2B" : "by taking care of tasks or by donating.",
             "INTRO_STEP3A" : "Use Konfetti",
             "INTRO_STEP3B" : "to post tasks to community or to up vote existing tasks.",
-            "INTRO_LETSGO" : ".. or search in my area.",
+            "INTRO_LETSGO" : "Search in my Area",
             "CREATENEW"    : "create new",
             "REDEEM_MAGIC_SUB" : "activate features, add privileges ..",
             "REDEEM_COUPON_SUB" : "Please enter the code number of your coupon:",
@@ -186,7 +186,7 @@
             "RESETTING_SERVER" : "The server was reset - starting as a fresh user.",
             "LOGINBUTTON_REGISTERFORGOT" : "Lets register as a new user.",
             "LOGINBUTTON_LOGINLOGIN" : "I already have an account.",
-            "INTRO_REDEEMCOUPON" : "Redeem Konfetti Coupon ..",
+            "INTRO_REDEEMCOUPON" : "Redeem Konfetti Coupon",
             "CODE_WRONG": "The code is not valid or already used. Please check if correct.",
             "CODE_CORRECT": "You received Konfetti :) Start now to support existing ideas or create a new task with Konfetti.",
             "DATE" : "Date",
@@ -205,5 +205,6 @@
             "USERNAMECOMMENT" : "user or nick name",
             "ERROR_HEAD" : "App Error",
             "ERROR_TEXT" : "A critical error has occurred. This can possibly only be temporary. Therefore, try again later simply to restart. If the error persists, please contact the Konfetti team at bugs@konfettiapp.de with the following data:",
-            "ERROR_BUTTON" : "Close / Restart"
+            "ERROR_BUTTON" : "Close / Restart",
+            "OR" : "or"
 }

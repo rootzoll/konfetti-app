@@ -211,12 +211,11 @@
               </ion-list>
           </div>
           <div class="item item-divider">
-              <button class="button {{animationRainIsRunning ? 'button-light' : 'button-positive'}}" on-tap="buttonIntroScreenCoupon()">
+              <button class="button {{animationRainIsRunning ? 'button-light' : 'button-positive'}}" on-tap="buttonIntroScreenCoupon()" style="font-size:90%"><i class="icon ion-cash" id="redeem-icon-intro"></i>
                   {{ 'INTRO_REDEEMCOUPON' | translate }}
               </button>
-          </div>
-          <div class="item item-divider">
-              <button class="button {{animationRainIsRunning ? 'button-light' : 'button-positive'}}" on-tap="buttonIntroScreenOK()">
+              <div style="text-align: center; font-size:60%;"> {{ 'OR' | translate }}</div>
+              <button class="button {{animationRainIsRunning ? 'button-light' : 'button-positive'}}" on-tap="buttonIntroScreenOK()" style="font-size:90%"><i class="icon ion-ios-search-strong" id="search-icon-intro"></i>
                   {{ 'INTRO_LETSGO' | translate }}
               </button>
           </div>
