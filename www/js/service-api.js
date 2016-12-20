@@ -681,7 +681,7 @@ angular.module('starter.api', [])
 
                 var config = getBasicHttpHeaderConfig();
                 config.method = 'GET';
-                config.url = activeServerUrl+'/account/redeem/'+codeStr;
+                config.url = activeServerUrl+'/account/redeem/'+codeStr+"?locale="+langCode;
                 // WIN
                 var successCallback = function(response) {
                     win(response.data);
