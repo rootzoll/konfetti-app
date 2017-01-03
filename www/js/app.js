@@ -31,24 +31,32 @@ angular.module('starter', [
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
     $rootScope.animationRainIsRunning = false;
 
+    // set running os info
+    $rootScope.os = "browser";
+    try {
+        $rootScope.os = AppContext.getRunningOS();
+        console.log("RUNNING $rootScope.os --> "+$rootScope.os);
+        ionic.Platform.fullScreen();
+    } catch (e) {
+        alert("running browser ...");
+        console.log("running browser ...");
+    }
+
     // import GIT build version (from latest 'ionic build' run)
     $rootScope.latestGitVersion = window.appGitVersion;
     if ($rootScope.os=="browser") {
         $rootScope.latestGitVersion = $rootScope.latestGitVersion + "+"
     }
 
-    // set running os info
-    $rootScope.os = "browser";
-    try {
-        if (ionic.Platform.isAndroid()) $rootScope.os = "android";
-        if (ionic.Platform.isIOS()) $rootScope.os = "ios";
-        ionic.Platform.fullScreen();
-    } catch (e) {
-        alert("FAIL set running os info: "+e);
-    }
-
     // if running in APP init plugins
     if ($rootScope.os!="browser") {
+
+        // make sure on iOS that splash screen gets hidden
+        setTimeout(function() {
+            try {
+                navigator.splashscreen.hide();
+            } catch (e) {}
+        }, 2000);
 
         // STATUS BAR
         try {
@@ -186,7 +194,7 @@ angular.module('starter', [
         return false;
     };
 
-    if (AppContext.getRunningOS()!="browser") {
+    if ($rootScope.os!="browser") {
 
         try {
 

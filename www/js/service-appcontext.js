@@ -1,6 +1,6 @@
 angular.module('starter.appcontext', [])
 
-.factory('AppContext', function($log, $timeout) {
+.factory('AppContext', function($log, $timeout, $cordovaDevice) {
 
   /*
    * APP CONFIG PARAMETER
@@ -107,13 +107,17 @@ angular.module('starter.appcontext', [])
     },
     getRunningOS: function() {
         var result = "browser";
-        if (ionic.Platform.isAndroid()) result = "android";
-        if (ionic.Platform.isIOS()) result = "ios";
+        try {
+            result = $cordovaDevice.getDevice().platform.toLowerCase();
+        } catch (e) {}
         return result;
     },
     isRunningWithinApp : function() {
-        if ((ionic.Platform.isAndroid()) || (ionic.Platform.isIOS())) return true;
-        return false;
+        try {
+            return ($cordovaDevice.getDevice().platform!="Browser");
+        } catch (e) {
+            return false;
+        }
     },
     updatePushIds : function(pushIds) {
         appContext.localState.pushIDs = pushIds;
