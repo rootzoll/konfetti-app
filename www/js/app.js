@@ -38,7 +38,6 @@ angular.module('starter', [
         console.log("RUNNING $rootScope.os --> "+$rootScope.os);
         ionic.Platform.fullScreen();
     } catch (e) {
-        alert("running browser ...");
         console.log("running browser ...");
     }
 
@@ -139,8 +138,8 @@ angular.module('starter', [
             if (typeof file != "undefined") {
 
                 // limit filesize to max 1MB
-                if (file.size>(1024*1024)) {
-                    alert("file too big - max. 1MB");
+                if (file.size>(10*1024*1024)) {
+                    alert("file too big - max. 10MB");
                     $rootScope.onUploadClickCallback(null);
                     $rootScope.onUploadClickCallback=null; 
                     return;
@@ -260,7 +259,7 @@ angular.module('starter', [
 
         try {
 
-            if ((AppContext.getAppConfig().oneSignalAppId.trim().length>0) && (AppContext.getAppConfig().googleProjectNumber.trim().length>0)) {
+            if (AppContext.getAppConfig().oneSignalAppId.trim().length>0) {
 
                 /*
                  * TODO: react more detailed to push notifications in app
@@ -278,11 +277,13 @@ angular.module('starter', [
 
                 // getting the push id
                 window.plugins.OneSignal.getIds(function(ids){
+                    //alert("Registered OneSignal IDs:"+JSON.stringify(ids));
                     console.log("Registered OneSignal IDs:"+JSON.stringify(ids));
                     AppContext.updatePushIds(ids);
                 });
 
             } else {
+
               console.log("OneSignal-Plugin found, but missing Push Config under services.js");
             }
 
@@ -290,6 +291,8 @@ angular.module('starter', [
             alert("pushnoti reg exception: "+JSON.stringify(e));
         }
 
+    } else {
+        console.log("PlugIn: No Onesignal");
     }
 
     /*

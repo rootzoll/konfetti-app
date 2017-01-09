@@ -19,7 +19,7 @@ angular.module('starter.appcontext', [])
 
       /* PUSH NOTIFICATION */
       oneSignalAppId : "",
-      googleProjectNumber : ""
+      googleProjectNumber : "" // not needed anymore
   };
 
   /*
