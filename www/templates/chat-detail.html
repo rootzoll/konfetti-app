@@ -19,7 +19,7 @@
 
       <div style="width: 100%">
 
-          <div data-ng-repeat="message in messages" style="text-align: center;">
+          <div data-ng-repeat="message in messages" style="text-align: center;" id="chat-message-{{message.id}}">
               <!-- chat bubble from app user-->
               <div ng-show="message.isUser" style="width: 100%">
                   <div class="list card" style="background-color: lightcyan; margin:10px; margin-left: 30%;">
