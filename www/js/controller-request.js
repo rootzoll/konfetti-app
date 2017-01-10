@@ -488,10 +488,10 @@ angular.module('starter.controller.request', [])
                   $translate("LOCATION").then(function (LOCATION) {
                       $translate("DATE").then(function (DATE) {
                       $scope.mediaChoosePopup = $ionicPopup.show({
-                          template: '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoText()"><i class="icon ion-document-text"></i>&nbsp;'+TEXT+'</button><br>'+
-                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoImage()"><i class="icon ion-image"></i>&nbsp;'+IMAGE+'</button><br>'+
-                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoLocation()"><i class="icon ion-map"></i>&nbsp;'+LOCATION+'</button>'+
-                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;" ng-mousedown="addInfoDate()"><i class="icon ion-clock"></i>&nbsp;'+DATE+'</button>',
+                          template: '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoText()"><i class="icon ion-document-text"></i>&nbsp;'+TEXT+'</button><br>'+
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoImage()"><i class="icon ion-image"></i>&nbsp;'+IMAGE+'</button><br>'+
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoLocation()"><i class="icon ion-map"></i>&nbsp;'+LOCATION+'</button>'+
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoDate()"><i class="icon ion-clock"></i>&nbsp;'+DATE+'</button>',
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
@@ -605,9 +605,6 @@ angular.module('starter.controller.request', [])
                 $ionicScrollDelegate.scrollBottom(true);
                },500);
 
-               // TODO: in the future when date is follow up dialog - combine to meeting item
-               if (result.addDate) $scope.addInfoDate();
-
             }, function(error){
 
                 // FAIL
@@ -665,11 +662,6 @@ angular.module('starter.controller.request', [])
                         $ionicLoading.hide();
                         $scope.addMediaItem(mediaitem);
                         $ionicScrollDelegate.scrollBottom(true);
-
-                        // TODO: combine location picker dialog data with date to a new meeting object
-                        if (result.addlocation) {
-                            $scope.addInfoLocation();
-                        }
 
                      }, function() {
                         // FAIL
