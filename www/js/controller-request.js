@@ -12,6 +12,7 @@ angular.module('starter.controller.request', [])
   $scope.userIsAuthor = true;
   $scope.isAdmin = false;
   $scope.isReviewer = false;
+  $scope.nameValid = true;
 
   $scope.noticeTextId = "";
   $scope.noticeColor = "";
@@ -128,6 +129,19 @@ angular.module('starter.controller.request', [])
        }
     },function(){}
     );
+  };
+
+  $scope.checkUsername = function(name) {
+
+    ApiService.checkUsernameIsFree(name, function(name, result){
+        if ($scope.profile.name==name) {
+            console.log("name("+name+") result("+result+")")
+            $scope.nameValid = result;
+        } else {
+           console.log("input("+$scope.profile.name+") not anymore("+name+")");
+        }
+    });
+
   };
 
   // load request function
@@ -898,6 +912,10 @@ angular.module('starter.controller.request', [])
       return;
   };
 
+  $scope.infoNameUnvalid = function() {
+    PopupDialogs.showIonicAlertWith18nText("IMPORTANT", "USERNAME_NOTVALID", function(){/*WIN*/});
+  };
+
   $scope.submitRequest = function() {
 
       if ($scope.profile.name.length===0) {
@@ -917,6 +935,11 @@ angular.module('starter.controller.request', [])
 			},1500);
 		}      	
         return;
+      }
+
+      if (!$scope.nameValid) {
+          $scope.infoNameUnvalid();
+          return; 
       }
 
       if ($scope.headline.temp.length<4) {

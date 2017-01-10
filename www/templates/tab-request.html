@@ -52,9 +52,14 @@
                           <div> 
                               <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
-                                      <!--<input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">-->   
+                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
+                                      <!--  
                                       <input ng-focus="enterUserName()" ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
+                                      -->
                                   </label>
+                                  <span ng-hide="nameValid" style="width: 30px;" on-tap="infoNameUnvalid()">
+                                      <i class="icon ion-alert-circled" style="color:red;width:28px;"></i>
+                                  </span>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                                   {{ 'ISPEAK' | translate }}

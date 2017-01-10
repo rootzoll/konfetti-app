@@ -206,5 +206,6 @@
             "ERROR_HEAD" : "App Error",
             "ERROR_TEXT" : "A critical error has occurred. This can possibly only be temporary. Therefore, try again later simply to restart. If the error persists, please contact the Konfetti team at bugs@konfettiapp.de with the following data:",
             "ERROR_BUTTON" : "Close / Restart",
-            "OR" : "or"
+            "OR" : "or",
+            "USERNAME_NOTVALID": "Name is not available. Please choose another name."
 }

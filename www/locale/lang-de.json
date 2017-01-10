@@ -205,5 +205,6 @@
             "ERROR_HEAD" : "App Fehler",
             "ERROR_TEXT" : "Es ist ein kritischer Fehler aufgetreten. Dieser kann ggf. nur temporär sein. Daher versuch später die einfach nocheinmal neuzustarten. Sollte der Fehler anhalten, dann bitte wende sich an das Konfetti Team unter bugs@konfettiapp.de mit folgenden Daten:",
             "ERROR_BUTTON" : "Schließen / Neustarten",
-            "OR" : "oder"
+            "OR" : "oder",
+            "USERNAME_NOTVALID": "Der Namen ist nicht verfügbar. Bitte einen anderen wählen."
 }
