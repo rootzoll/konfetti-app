@@ -13,6 +13,7 @@ angular.module('starter.controller.request', [])
   $scope.isAdmin = false;
   $scope.isReviewer = false;
   $scope.nameValid = true;
+  $scope.showScrollDown = false;
 
   $scope.noticeTextId = "";
   $scope.noticeColor = "";
@@ -166,6 +167,10 @@ angular.module('starter.controller.request', [])
                 }
 
                 if (typeof $scope.request.titleMultiLang == "undefined") $scope.request.titleMultiLang=null;
+
+                // show scroll down button if there are chats or info items
+                $scope.showScrollDown = false;
+                if (($scope.request.mediaItemIds.length>0) || ($scope.request.chats.length>0)) $scope.showScrollDown = true;
 
     }, function(code){
                 // FAIL
@@ -914,6 +919,11 @@ angular.module('starter.controller.request', [])
 
   $scope.infoNameUnvalid = function() {
     PopupDialogs.showIonicAlertWith18nText("IMPORTANT", "USERNAME_NOTVALID", function(){/*WIN*/});
+  };
+
+  $scope.scrollDown = function() {
+      $scope.showScrollDown = false;
+      $ionicScrollDelegate.scrollBy(0, 300, true);
   };
 
   $scope.submitRequest = function() {
