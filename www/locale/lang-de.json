@@ -150,7 +150,7 @@
             "LOGINBUTTON_LOGIN" : "Login",
             "LOGINBUTTON_LOGINFORGOT" : "Ich habe mein Passwort vergessen.",
             "LOGIN_INFO" : "Bitte einloggen:",
-            "REGISTER_INFO" : "Bitte registrien:",
+            "REGISTER_INFO" : "Bitte registrieren:",
             "EMAIL" : "eMail",
             "PASSWORD" : "Passwort",
             "RECOVER_TITLE" : "Passwort Vergessen",

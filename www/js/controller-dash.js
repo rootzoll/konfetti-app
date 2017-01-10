@@ -400,9 +400,12 @@ angular.module('starter.controller.dash', [])
 
         // when user taps the delete button on a notification
         $scope.tapNotificationDelete = function($event, noti) {
+
             if ((typeof $event != "undefined") && ($event!=null)) $event.stopPropagation();
 
             document.getElementById('notification-'+noti.id).classList.add("animationFadeOut");
+
+            // client generated notifications ... just dont show anymore
             if (noti.id<0) {
                 $timeout(function(){
                     document.getElementById('notification-'+noti.id).classList.add("hide");
@@ -411,21 +414,18 @@ angular.module('starter.controller.dash', [])
                 },1000);
                 return;
             }
+
+            // server generated notifications - mark as done
+            $timeout(function(){
+                    document.getElementById('notification-'+noti.id).classList.add("hide");
+                    noti.id = 0; // not displaying anymore
+                    $scope.determineIfToShowNotificationPanel();
+            },200);
             ApiService.markNotificationAsRead( noti.id,
             function(){
                 // WIN
-
-                // set id = 0
-                // --> not displaying it anymore
-                $timeout(function(){
-                    document.getElementById('notification-'+noti.id).classList.add("hide");
-                    noti.id = 0;
-                    $scope.determineIfToShowNotificationPanel();
-                },200);
-
             }, function(){
                 // FAIL
-                document.getElementById('notification-'+noti.id).classList.remove("animationFadeOut");
                 $log.warn("Was not able to mark notification as read.");
             });
         };
