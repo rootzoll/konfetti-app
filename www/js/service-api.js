@@ -11,7 +11,7 @@ angular.module('starter.api', [])
         var getBasicHttpHeaderConfig = function() {
             var account = AppContext.getAccount();
             var basicConfig = {
-                timeout: 6000,
+                timeout: 60000,
                 cache: false,
                 headers: {
                     'X-CLIENT-ID': account.clientId+'',

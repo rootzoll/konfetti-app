@@ -87,7 +87,7 @@
             "EXPLAIN_REJECTED" : "Nicht öffentlich - Wurde abgelehnt.",
             "EXPLAIN_PROCESSING_AUTHOR" : "Öffentlich - doch für weitere Hilfsangebote geblockt. Wenn weitere Hilfe benötigt wird, Aufgabe wieder öffnen oder Konfetti verteilen, wenn erledigt.",
             "EXPLAIN_PROCESSING_PUBLIC" : "Ausreichend Hilfe wurde zugesagt. Daher ist der Chat deaktiviert.",
-            "EXPLAIN_OPEN_AUTHOR" : "Öffentlich. Bitte Chatanfrage beantworten und und wenn erledigt Konfetti verteilen.",
+            "EXPLAIN_OPEN_AUTHOR" : "Öffentlich. Bitte Chatanfrage beantworten und wenn erledigt Konfetti verteilen.",
             "EXPLAIN_OPEN_PUBLIC" : "Du willst mithelfen? Dann frage im Chat nach Details. Du willst diese Aufgabe unterstützen? Dann spende dein Konfetti für die Belohnung mit dem Gefällt-Mir Button.",
             "EXPLAIN_DONE_PUBLIC" : "Wurde bereits erledigt. Kommt bald ins Archiv.",
             "EXPLAIN_DONE_AUTHOR" : "Erledigt. Noch öffentlich sichtbar.",
