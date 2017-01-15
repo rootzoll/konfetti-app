@@ -1,13 +1,13 @@
 <ion-view ng-cloak view-title="{{ 'KONFETTI-APP' | translate }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <ion-nav-buttons side="first">
-        <button on-tap="reloadPartyList()" ng-show="!loadingParty" ng-class="{animationPulsateSimple: updatesOnParty}" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+        <button on-tap="reloadPartyList()" ng-hide="(loadingParty || switchParty)" ng-class="{animationPulsateSimple: updatesOnParty}" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i ng-class="{red: updatesOnParty}" id="reloadIcon" class="icon ion-loop"></i>
         </button>
-        <button on-tap="loginBack()" ng-show="(state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER')" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+        <button on-tap="loginBack()" ng-show="((state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i id="loginBack" class="icon ion-arrow-left-c"></i>
         </button>
-        <button on-tap="resetAccount()" ng-show="(showLogOutOption) && ((state=='OK')||(state=='INTERNETFAIL')||(state=='GPSWAIT'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+        <button on-tap="resetAccount()" ng-show="(showLogOutOption && !switchParty && !loadingParty) && ((state=='OK')||(state=='INTERNETFAIL')||(state=='GPSWAIT'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i id="deleteAccount" class="icon ion-log-out"></i>
         </button>
     </ion-nav-buttons>
@@ -38,7 +38,7 @@
                             ></button>
                         </td>
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
-                            <div ng-hide="loadingParty" style="min-height: 70px;">
+                            <div ng-hide="(loadingParty || switchParty)" style="min-height: 70px;">
 
                                 <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
                                 	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
@@ -55,7 +55,7 @@
                                 </div>
 
                             </div>
-                            <div ng-show="loadingParty" style="min-height: 74px; padding-top: 10px;">
+                            <div ng-show="(loadingParty || switchParty)" style="min-height: 70px; padding-top: 10px;">
                                 <ion-spinner icon="android"></ion-spinner>
                                 <div ng-show="(state==='')">
                                     {{ 'INITACCOUNT' | translate }}
@@ -343,7 +343,7 @@
 
       </div>
 
-      <div style="text-align:center;font-size:74%;color:grey;padding:12px;padding-top: 16px;">
+      <div ng-hide="loadingParty" style="text-align:center;font-size:74%;color:grey;padding:12px;padding-top: 16px;" ng-class="dashPartypanelClass">
           {{latestGitVersion}}
       </div>
 

@@ -22,6 +22,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.userId = 0;
         $scope.loadingParty = true;
+        $scope.switchParty = false;
 
         $scope.isReviewerForThisParty = false;
         $scope.isAdminForThisParty = false;
@@ -327,13 +328,18 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+            $scope.switchParty = true;
             $scope.dashPartypanelClass = "bounceOutRight";
             $timeout(function(){
                 $scope.dashPartypanelClass = "";
                 $scope.actualPartyIndex--;
                 if ($scope.actualPartyIndex<0) $scope.actualPartyIndex = $scope.partyList.length-1;
                 $scope.action(function(){
+                    $scope.switchParty = false;
                     $scope.dashPartypanelClass = "bounceInLeft";
+                    $timeout(function(){
+                        $scope.dashPartypanelClass = "";
+                    },700);
                 });
             },700);
         };
@@ -349,13 +355,18 @@ angular.module('starter.controller.dash', [])
                 return;
             }
         
+            $scope.switchParty = true;
             $scope.dashPartypanelClass = "bounceOutLeft";
             $timeout(function(){
                 $scope.dashPartypanelClass = "";
                 $scope.actualPartyIndex++;
                 if ($scope.actualPartyIndex>=$scope.partyList.length) $scope.actualPartyIndex = 0;
                 $scope.action(function(){
+                    $scope.switchParty = false;
                     $scope.dashPartypanelClass = "bounceInRight";
+                    $timeout(function(){
+                        $scope.dashPartypanelClass = "";
+                    },700);
                 });
             },700);
         };
