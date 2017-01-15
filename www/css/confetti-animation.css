@@ -30,3 +30,79 @@ html, body {
 .confetti-default {
     opacity: 0;
 }
+
+.bounceOutRight {
+    animation: bounceOutRightFrames 0.8s;
+}
+
+@keyframes bounceOutRightFrames {
+   0% {
+      transform: translateX(0);
+   }
+   100% {
+      opacity: 0;
+      transform: translateX(2000px);
+   }
+}
+
+.bounceOutLeft {
+    animation: bounceOutLeftFrames 0.8s;
+}
+
+@keyframes bounceOutLeftFrames {
+   0% {
+      transform: translateX(0);
+   }
+   100% {
+      opacity: 0;
+      transform: translateX(-2000px);
+   }
+}
+
+.bounceInRight {
+    animation: bounceInRightFrames 0.8s;
+}
+
+@keyframes bounceInRightFrames {
+   0% {
+      opacity: 0;
+      transform: translateX(2000px);
+   }
+   100% {
+      transform: translateX(0px);
+   }
+}
+
+.bounceInLeft {
+    animation: bounceInLeftFrames 0.8s;
+}
+
+@keyframes bounceInLeftFrames {
+   0% {
+      opacity: 0;
+      transform: translateX(-2000px);
+   }
+   100% {
+      transform: translateX(0px);
+   }
+}
+
+
+.wiggle {
+    animation: wiggleFrames 0.4s;
+}
+
+@keyframes wiggleFrames {
+   0% {
+      transform: translateX(0px);
+   }
+   25% {
+      transform: translateX(-20px);
+   }
+   75% {
+      transform: translateX(+20px);
+   }
+   100% {
+      transform: translateX(0px);
+   }
+}

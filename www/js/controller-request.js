@@ -175,9 +175,6 @@ angular.module('starter.controller.request', [])
     }, function(code){
                 // FAIL
                 $scope.state = "INTERNETFAIL";
-                $timeout(function(){
-                    $scope.loadRequest();
-                },5000);
     });
   };
 

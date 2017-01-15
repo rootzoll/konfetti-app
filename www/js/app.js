@@ -40,6 +40,7 @@ angular.module('starter', [
     } catch (e) {
         console.log("running browser ...");
     }
+    //if (!AppContext.isRunningWithinApp()) alert("RunningOS: "+$rootScope.os+" isApp("+AppContext.isRunningWithinApp()+")");
 
     // import GIT build version (from latest 'ionic build' run)
     $rootScope.latestGitVersion = window.appGitVersion;
@@ -253,11 +254,14 @@ angular.module('starter', [
 
     /*
      * Push Notification --> https://documentation.onesignal.com/docs/cordova-sdk-setup
+     * run one account is ready (new created or checked on init loop)
      */
 
-    if ((typeof window.plugins != "undefined") && (typeof window.plugins.OneSignal != "undefined")) {
+    $rootScope.$on('account-ready', function(event, args) {
 
-        try {
+      if ((typeof window.plugins != "undefined") && (typeof window.plugins.OneSignal != "undefined")) {
+
+          try {
 
             if (AppContext.getAppConfig().oneSignalAppId.trim().length>0) {
 
@@ -277,23 +281,53 @@ angular.module('starter', [
 
                 // getting the push id
                 window.plugins.OneSignal.getIds(function(ids){
-                    //alert("Registered OneSignal IDs:"+JSON.stringify(ids));
-                    console.log("Registered OneSignal IDs:"+JSON.stringify(ids));
-                    AppContext.updatePushIds(ids);
+                    
+                    // check valid return values
+                    if ((typeof ids.userId == "undefined") || (ids.userId==null) || (ids.userId.length<=3)) {
+                        alert("Exception on PushRegistration: Invalid IDs ("+JSON.stringify(ids)+")");
+                        console.warn("Exception on PushRegistration: Invalid IDs ("+JSON.stringify(ids)+")");
+                        return;
+                    }
+
+                    //alert("Registered OneSignal UserId:"+ids.userId);
+                    //console.log("Registered OneSignal IDs:"+JSON.stringify(ids));
+
+                    // check if storing in user is needed
+                    var account = AppContext.getAccount();
+                    if ((typeof account.pushID == "undefined") || (typeof account.pushID == null) || (account.pushID != ids.userId)) {
+
+                        account.pushActive = true;
+                        account.pushSystem = "onesignal";
+                        account.pushID = ids.userId;
+
+                        // update on server
+                        ApiService.updateAccount(account,function(result){
+                            // WIN
+                            AppContext.setAccount(account);
+                        }, function(e) {
+                            // FAIL
+                            alert("ERROR: FAILED TO STORE PUSHID");   
+                        });
+
+                    }
+
                 });
 
             } else {
-
+              //alert("OneSignal-Plugin found, but missing Push Config under services.js");
               console.log("OneSignal-Plugin found, but missing Push Config under services.js");
             }
 
         } catch (e) {
-            alert("pushnoti reg exception: "+JSON.stringify(e));
+            alert("Exception on PushRegistration: "+JSON.stringify(e));
         }
 
-    } else {
+      } else {
+        //alert("PlugIn: No Onesignal");
         console.log("PlugIn: No Onesignal");
-    }
+      }
+
+    });
 
     /*
      * App Context
@@ -312,6 +346,9 @@ angular.module('starter', [
 
     // global scope data
     $rootScope.party = {id:0};
+
+    // always keep as last in this block
+    AppContext.setReady();
 
   });
 })

@@ -55,12 +55,13 @@ angular.module('starter.appcontext', [])
       }
   };
 
-  var isReady = false;
+  var isReadyOutside = false;
+  var isReadyInside = false;
 
   var loadContext = function() {
       var jsonStr = window.localStorage.getItem("appContext");
       if ((typeof jsonStr != "undefined") && (jsonStr!=null)) appContext = JSON.parse(jsonStr);
-      isReady = true;
+      isReadyInside = true;
   };
   loadContext();
 
@@ -69,7 +70,10 @@ angular.module('starter.appcontext', [])
           return appConfig;
     },
     isReady: function() {
-        return isReady;
+        return (isReadyInside && isReadyOutside);
+    },
+    setReady: function() {
+        isReadyOutside = true;
     },
     getAppLang: function() {
       return appContext.appLang;
@@ -118,10 +122,6 @@ angular.module('starter.appcontext', [])
         } catch (e) {
             return false;
         }
-    },
-    updatePushIds : function(pushIds) {
-        appContext.localState.pushIDs = pushIds;
-        this.persistContext();
     },
     isRunningDevelopmentEnv: function() {
         return appConfig.apiUrl==apiUrlLocalDevelopment;

@@ -67,7 +67,7 @@
                         </td>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
                             <button 
-                            on-tap="buttonPartyPrev()" 
+                            on-tap="buttonPartyNext()" 
                             class="button button-light icon ion-arrow-right-b fixed-ltr"
                             style="border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
                             ></button>
@@ -246,7 +246,7 @@
           </div>
       </div>
 
-      <div ng-hide="loadingParty" class="padding">
+      <div id="dash-partypanel" ng-hide="loadingParty" class="padding" ng-class="dashPartypanelClass">
 
       <!--
         NOTIFICATIONS - just show if available
