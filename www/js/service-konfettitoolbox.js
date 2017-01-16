@@ -25,17 +25,17 @@ angular.module('starter.konfettitoolbox', [])
             }
         };
 
-        var processRedeemActions = function(actionArray, dashViewScope) {
+        var processRedeemActions = function(actionArray, dashViewScope, callback) {
 
-                if (typeof dashViewScope == "undefined") {
-                    dashViewScope = null;
-
-                } 
+                    if (typeof dashViewScope == "undefined") {
+                        dashViewScope = null;
+                    } 
 
                    if (typeof actionArray=="undefined") {
                        console.warn("processRedeemActions: actionArray undefined - skip");
                        return;
                    }
+
                    for (var i = 0; i < actionArray.length; i++) {
 
                        var action = actionArray[i];
@@ -44,27 +44,39 @@ angular.module('starter.konfettitoolbox', [])
                            continue;
                        }
 
+                       console.log("processRedeemActions: action("+JSON.stringify(action)+")");
+
                        // upgrade user profile
                        if ((action.command=="updateUser") && (typeof action.json != "undefined")) {
+
+                           console.log("processRedeemActions: Update User");
+
                            // keep local clientID and clientSecret
                            var updatedAccountData = JSON.parse(action.json);
                            var oldAccountData = AppContext.getAccount();
                            updatedAccountData.clientId = oldAccountData.clientId;
                            updatedAccountData.clientSecret = oldAccountData.clientSecret;
                            AppContext.setAccount(updatedAccountData);
+
                        } else
 
                        // focus party in GUI
                        if (action.command=="focusParty") {
+
+                            console.log("processRedeemActions: Focus Party");
+
                            if (dashViewScope==null){
                               $state.go('tab.dash', {id: JSON.parse(action.json)});
                            } else {
-                              dashViewScope.loadPartiesAndFocus(JSON.parse(action.json));
+                              dashViewScope.focusPartyId = JSON.parse(action.json);
+                              if (typeof callback == "undefined") dashViewScope.loadPartiesAndFocus(JSON.parse(action.json));
                            }
                        } else
 
                        // GPS info - set if no other GPS is set yet
                        if (action.command=="gpsInfo") {
+
+                            console.log("processRedeemActions: GPS INFO");
 
                             var gpsdata = JSON.parse(action.json);
                             if ((gpsdata.lat==0) && (gpsdata.lon==0)) {
@@ -91,6 +103,8 @@ angular.module('starter.konfettitoolbox', [])
                            alert("UNKOWN COMMAND '"+action.command+"'");
                        }
                    }
+
+                   if (typeof callback != "undefined") callback();
                };
 
         return {
@@ -141,6 +155,8 @@ angular.module('starter.konfettitoolbox', [])
            },
            updateGPS : function() {
 
+               var hadValidPositionbefore = ($rootScope.gps=='win');
+
                /*
                 * START GEOLOCATION
                 * http://ngcordova.com/docs/plugins/geolocation/
@@ -189,8 +205,13 @@ angular.module('starter.konfettitoolbox', [])
 
                            if (!ApiService.runningDevelopmentEnv()) {
 
-                               $log.info("GPS ERROR");
-                               $rootScope.gps  = 'fail';
+                               $log.info("LIVE GPS ERROR");
+                               if (hadValidPositionbefore ) {
+                                   // if GPS info was valid before - dont lable it as a fail
+                                   $rootScope.gps  = 'win';
+                               } else {
+                                   $rootScope.gps  = 'fail';
+                               }
 
                            } else {
 
@@ -205,8 +226,8 @@ angular.module('starter.konfettitoolbox', [])
 
                    });
            },
-           processCouponActions : function(actionArray, dashViewScope) {
-               processRedeemActions(actionArray,dashViewScope);
+           processCouponActions : function(actionArray, dashViewScope, callback) {
+               processRedeemActions(actionArray,dashViewScope, callback);
            },
            processCode : function(isRedeemCouponBool, /* optional */ successCallback ) {
 

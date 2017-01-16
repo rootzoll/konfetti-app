@@ -7,9 +7,9 @@ angular.module('starter.controller.dash', [])
          */
 
         // set which party is in focus of dash screen
-        var focusPartyId = 0; // 0 = no focus
+        $scope.focusPartyId = 0; // 0 = no focus
         if ((typeof $stateParams.id!="undefined") && ($stateParams.id!=0)) {
-            focusPartyId = $stateParams.id;
+            $scope.focusPartyId = $stateParams.id;
         }
 
         $rootScope.resetAccount = false;
@@ -587,7 +587,7 @@ angular.module('starter.controller.dash', [])
                 $scope.lastPartyRefreshStart = new Date().getTime();
             }
 
-            focusPartyId = $rootScope.party.id;
+            $scope.focusPartyId = $rootScope.party.id;
             $scope.partyList = [];
             $scope.actualPartyIndex = 0;
             $scope.updatesOnParty = false;
@@ -630,9 +630,8 @@ angular.module('starter.controller.dash', [])
 
         // should reload/load party list and focus the party with the given id
         $scope.loadPartiesAndFocus = function(partyId) {
-            console.dir(partyId);
             $scope.focusPartyId = partyId;
-            $scope.buttonIntroScreenOK();
+            if ($scope.state=="INTRO") $scope.buttonIntroScreenOK();
         };
 
         // event when user is (re-)entering the view
@@ -666,7 +665,9 @@ angular.module('starter.controller.dash', [])
                 if (result.actions.length>0) {
                     // code worked
                     PopupDialogs.showIonicAlertWith18nText('WELCOME_PARTY', 'CODE_CORRECT', function(){
-                        KonfettiToolbox.processCouponActions(result.actions, $scope);
+                        KonfettiToolbox.processCouponActions(result.actions, $scope, function(){
+                            $scope.buttonIntroScreenOK();
+                        });
                     });
                 } else {
                     // code wrong
@@ -771,6 +772,14 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
+            if ($scope.state == "INTRO") {
+                console.log("wait for intro to finsh");
+                $timeout(function() {
+                	$scope.action();
+                },1000);
+                return;
+            }
+
             // make sure websocket is connected & listen on incoming
             try {
             WebSocketService.init();
@@ -826,7 +835,8 @@ angular.module('starter.controller.dash', [])
 
             // check if GPS is available
             if ($rootScope.gps==='wait') {
-                $scope.gpsWaitCount++;
+
+                if ($scope.state != "INTRO") $scope.gpsWaitCount++;
 
                 if ($scope.gpsWaitCount>20) {
                     $rootScope.gps='fail';
@@ -842,7 +852,7 @@ angular.module('starter.controller.dash', [])
             if ($rootScope.gps==='fail') {
 
                 $scope.state = "GPSFAIL";
-
+                
                 PopupDialogs.locationPicker($scope, function(result){
                     // WIN
 
@@ -942,16 +952,16 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
-            // check if focusPartyId is in partylist
+            // check if $scope.focusPartyId is in partylist
             var isFocusPartyInList = -1;
             for (var i=0; i<$scope.partyList.length; i++) {
-                if ($scope.partyList[i].id == focusPartyId) isFocusPartyInList=i;
+                if ($scope.partyList[i].id == $scope.focusPartyId) isFocusPartyInList=i;
             }
-            if (focusPartyId>0) {
+            if ($scope.focusPartyId>0) {
                 if (isFocusPartyInList===-1) {
                     // add to list
                     var partyObject = {
-                        id: focusPartyId,
+                        id: $scope.focusPartyId,
                         lat: 0,
                         lon: 0,
                         meter: 0,
@@ -961,7 +971,7 @@ angular.module('starter.controller.dash', [])
                 }
                 // set focus index
                 $scope.actualPartyIndex = isFocusPartyInList;
-                focusPartyId = 0;
+                $scope.focusPartyId = 0;
             }
 
             // make API call to load party data

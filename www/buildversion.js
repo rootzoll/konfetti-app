@@ -1,1 +1,1 @@
-window.appGitVersion='v0.1.1-53-g5457469';
+window.appGitVersion='v0.1.1-54-g523d1a4';
