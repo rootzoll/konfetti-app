@@ -126,6 +126,20 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, callback(false));
             },
 
+            checkEMailIsFree: function(email, callback) {
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/check_free?email='+encodeURIComponent(email)+'&ts='+(new Date()).getTime();
+                // WIN
+                var org = JSON.stringify(email);
+                console.dir(org)
+                var successCallback = function(response) {
+                    callback(JSON.parse(org),response.data);
+                };
+                $http(config).then(successCallback, callback(false));
+            },
+
             runningDevelopmentEnv: function () {
                 return AppContext.isRunningDevelopmentEnv();
             },

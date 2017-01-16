@@ -63,12 +63,43 @@ angular.module('starter.controller.dash', [])
 
         $scope.login = {
             Email: "",
-            Password: ""
+            Password: "",
+            free: true
         };
 
         /*
          * controller logic
          */      
+
+        $scope.checkEmail = function(email) {
+
+            console.log("checkEmail ",$scope.login);
+
+            // as long as input field does not return a valid email
+            if (typeof email == "undefined") {
+                console.log("email not valid --> not free");
+                $scope.login.free = false;
+                return;
+            }
+
+            ApiService.checkEMailIsFree(email, function(name, result){
+                if ($scope.login.Email==name) {
+                    // check that a dot is behind @
+                    if (name) {
+                        var atPos = name.indexOf('@');
+                        var dotPos = name.indexOf('.',atPos);
+                        if (dotPos<atPos) {
+                            $scope.login.free = false;
+                            return;
+                        }
+                    }
+                    $scope.login.free = result;
+                } else {
+                    console.log("input("+$scope.login.Email+") not anymore("+name+")");
+                }
+
+            });
+        };
 
         // redeem button --> when konfetti on party is zero
         $scope.onButtonCoupon = function() {
@@ -90,7 +121,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.buttonLoginRegister = function() {
             $timeout(function(){
-                $scope.login.Password = "";
+                $scope.login.Password = "";    
                 $scope.state = "LOGIN_REGISTER";
             },10);
         };
@@ -179,6 +210,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginLogin = function() {
             $timeout(function(){
                 $scope.login.Password = "";
+                $scope.login.free = true; 
                 $scope.state = "LOGIN_LOGIN";
             },10);
         };
@@ -671,7 +703,6 @@ angular.module('starter.controller.dash', [])
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
             if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (!AppContext.getAccount().clientId || (AppContext.getAccount().clientId.length===0))) {
             	$scope.state = "LOGIN_START";
-                alert("AppContext.isRunningWithinApp("+AppContext.isRunningWithinApp()+") $rootScope.resetAccount("+$rootScope.resetAccount+") AppContext.getAccount().clientId("+AppContext.getAccount().clientId+") $cordovaDevice.getDevice().platform("+$cordovaDevice.getDevice().platform+")");
                 return;
             }
             

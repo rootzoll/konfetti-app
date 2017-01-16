@@ -142,7 +142,6 @@ angular.module('starter.controller.request', [])
            console.log("input("+$scope.profile.name+") not anymore("+name+")");
         }
     });
-
   };
 
   // load request function
