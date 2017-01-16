@@ -7,7 +7,7 @@
         <button on-tap="loginBack()" ng-show="((state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i id="loginBack" class="icon ion-arrow-left-c"></i>
         </button>
-        <button on-tap="resetAccount()" ng-show="(showLogOutOption && !switchParty && !loadingParty) && ((state=='OK')||(state=='INTERNETFAIL')||(state=='GPSWAIT'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
+        <button on-tap="resetAccount()" ng-show="showLogOutOption" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
             <i id="deleteAccount" class="icon ion-log-out"></i>
         </button>
     </ion-nav-buttons>

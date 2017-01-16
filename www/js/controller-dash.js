@@ -50,7 +50,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkedAccount = false;
 
-        $scope.showLogOutOption = !AppContext.isRunningWithinApp();
+        $scope.showLogOutOption = false;
         
         $scope.hasKonfettiToSpend = true;
         $scope.amountKonfettiToSpend = 0;
@@ -756,6 +756,8 @@ angular.module('starter.controller.dash', [])
                 }
             }
 
+            $scope.showLogOutOption = !AppContext.isRunningWithinApp();
+
             // display intro message
             if (!AppContext.getLocalState().introScreenShown) {
                 $scope.state = "INTRO";
@@ -1022,7 +1024,6 @@ angular.module('starter.controller.dash', [])
                    $scope.loadingParty = false;
                    whenReadyCallback(); 
                 }
-
                 
             },function(code){
                 // FAIL
