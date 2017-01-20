@@ -138,7 +138,6 @@ angular.module('starter.controllers', [])
           $scope.chatMessage = "";
           chatItem.isUser = true;
           console.dir(chatItem);
-          $scope.messages.push(chatItem);
           if ($ionicScrollDelegate) $ionicScrollDelegate.scrollBottom(true);
        }, function(errorcode) {
           // FAIL
