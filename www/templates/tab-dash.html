@@ -1,4 +1,4 @@
-<ion-view ng-cloak view-title="{{ 'KONFETTI-APP' | translate }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
+<ion-view ng-cloak view-title="{{ party.name }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <div class="padding" style="
     background-color: lightgrey;
@@ -9,8 +9,34 @@
     height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR'))">
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 8px;">
-            <div style="width:100%;padding:8px;min-height:90px;">
-                <table style="width: 100%;direction: ltr;">
+            <div style="width:100%;padding:14px;">
+                <div ng-hide="(loadingParty || switchParty)">
+                    <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                      {{party.konfettiCount}} {{ 'KONFETTI' | translate }}
+                      <i class="icon ion-cash"></i>
+                    </div>
+                    <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                      ??? {{ 'KONFETTI' | translate }}
+                    </div>
+                    <div style="direction: ltr;">
+                        <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
+                        <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
+                      <span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
+                        <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
+                    </div>
+
+                </div>
+                <div ng-show="(loadingParty || switchParty)" style="padding-top: 10px;">
+                    <ion-spinner icon="android"></ion-spinner>
+                    <div ng-show="(state==='')">
+                        {{ 'INITACCOUNT' | translate }}
+                    </div>
+                    <div style="color:lightgrey;font-size: 75%">
+                        {{ state | translate }}
+                    </div>
+                </div>
+
+                <!--<table style="width: 100%;direction: ltr;">
                     <tr>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
                             <button
@@ -20,32 +46,7 @@
                             ></button>
                         </td>
                         <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
-                            <div ng-hide="(loadingParty || switchParty)" style="min-height: 70px;">
 
-                                <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
-                                	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
-                                </div>
-                                <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;padding-top: 3px;">
-                                	??? {{ 'KONFETTI' | translate }}
-                                </div>
-                                <div style="font-weight: bold; font-size: 100%; direction: ltr;padding-top:4px;">{{party.name}} <span style="font-weight: normal;">({{party.distanceToUser | distance}})</span></div>
-                                <div style="direction: ltr;">
-                                    <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
-                                    <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
-                                	<span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
-                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
-                                </div>
-
-                            </div>
-                            <div ng-show="(loadingParty || switchParty)" style="min-height: 70px; padding-top: 10px;">
-                                <ion-spinner icon="android"></ion-spinner>
-                                <div ng-show="(state==='')">
-                                    {{ 'INITACCOUNT' | translate }}
-                                </div>
-                                <div style="color:lightgrey;font-size: 75%">
-                                    {{ state | translate }}
-                                </div>
-                            </div>
                         </td>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
                             <button
@@ -55,7 +56,7 @@
                             ></button>
                         </td>
                     </tr>
-                </table>
+                </table>-->
             </div>
         </div>
 

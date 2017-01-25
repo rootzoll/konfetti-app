@@ -16,8 +16,8 @@ navigation history that also transitions its views in and out.
   </ion-tab>
 
   <!-- Account Tab -->
-  <ion-tab href="#/tab/account" title="{{ 'TAB_MORE' | translate }}" icon="ion-android-settings" ng-if="initDone">
-    <ion-nav-view name="tab-account" class="padding"></ion-nav-view>
+  <ion-tab ng-if="initDone" title="{{ 'TAB_MORE' | translate }}" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+    <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 
 </ion-tabs>
