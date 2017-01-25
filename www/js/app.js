@@ -6,20 +6,21 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', [
-							'ionic', 
-							'starter.controllers', 
+							'ionic',
+							'starter.controllers',
                             'starter.filters',
-							'starter.controller.dash', 
-							'starter.controller.request', 
-							'starter.controller.account', 
-							'starter.services', 
-							'starter.api', 
-							'starter.appcontext', 
+							'starter.controller.dash',
+							'starter.controller.request',
+							'starter.controller.account',
+							'starter.services',
+							'starter.api',
+							'starter.appcontext',
 							'starter.rainanimation',
 							'starter.konfettitoolbox',
-                            'starter.popupdialogs',
-							'ngCordova', 
+              'starter.popupdialogs',
+							'ngCordova',
 							'pascalprecht.translate',
+              'logglyLogger',
                             'leaflet-directive'])
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar) {
@@ -67,14 +68,14 @@ angular.module('starter', [
         }
 
         // KEYBOARD
-        // Hide the accessory bar by default 
+        // Hide the accessory bar by default
         // (remove this to show the accessory bar above the keyboard for form inputs)
         try {
             cordova.plugins.Keyboard.hideKeyboardAccessoryBar(false);
             cordova.plugins.Keyboard.disableScroll(true);
-            console.log("PLUGIN Keyboard: OK");  
+            console.log("PLUGIN Keyboard: OK");
         } catch (e) {
-            alert("PLUGIN keyboard: MISSING (ok when running on browser) --> cordova plugin add ionic-plugin-keyboard"); 
+            alert("PLUGIN keyboard: MISSING (ok when running on browser) --> cordova plugin add ionic-plugin-keyboard");
         }
 
     }
@@ -142,7 +143,7 @@ angular.module('starter', [
                 if (file.size>(10*1024*1024)) {
                     alert("file too big - max. 10MB");
                     $rootScope.onUploadClickCallback(null);
-                    $rootScope.onUploadClickCallback=null; 
+                    $rootScope.onUploadClickCallback=null;
                     return;
                 }
 
@@ -157,7 +158,7 @@ angular.module('starter', [
 
             } else {
                 $rootScope.onUploadClickCallback(null);
-                $rootScope.onUploadClickCallback=null;  
+                $rootScope.onUploadClickCallback=null;
             }
         },10);
     });
@@ -281,7 +282,7 @@ angular.module('starter', [
 
                 // getting the push id
                 window.plugins.OneSignal.getIds(function(ids){
-                    
+
                     // check valid return values
                     if ((typeof ids.userId == "undefined") || (ids.userId==null) || (ids.userId.length<=3)) {
                         alert("Exception on PushRegistration: Invalid IDs ("+JSON.stringify(ids)+")");
@@ -306,7 +307,7 @@ angular.module('starter', [
                             AppContext.setAccount(account);
                         }, function(e) {
                             // FAIL
-                            alert("ERROR: FAILED TO STORE PUSHID");   
+                            alert("ERROR: FAILED TO STORE PUSHID");
                         });
 
                     }
@@ -353,7 +354,7 @@ angular.module('starter', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $translateProvider, $ionicConfigProvider) {
+.config(function($stateProvider, $urlRouterProvider, $translateProvider, $ionicConfigProvider, LogglyLoggerProvider) {
 
    $ionicConfigProvider.tabs.position('bottom');
 
@@ -438,6 +439,9 @@ angular.module('starter', [
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/dash/0');
+
+  //configure loggly so it logs console errors to the loggly cloud
+  LogglyLoggerProvider.inputToken( '653b3d37-f931-403d-b192-c8d08be6afb7' ).sendConsoleErrors(true);
 
 });
 

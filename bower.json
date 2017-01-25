@@ -18,6 +18,7 @@
     "sockjs": "0.3.4",
     "stomp-websocket": "2.3.4",
     "ngCordova": "^0.1.27-alpha",
-    "animate.css": "3.1.0"
+    "animate.css": "3.1.0",
+    "angular-loggly-logger": "~0.2.4"
   }
 }
