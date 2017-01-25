@@ -7,17 +7,17 @@ navigation history that also transitions its views in and out.
 
   <!-- Dashboard Tab -->
   <ion-tab href="#/tab/dash" title="{{ 'TAB_PARTIES' | translate }}" icon="ion-android-people">
-    <ion-nav-view name="tab-dash"></ion-nav-view>
+    <ion-nav-view name="tab-dash" class="padding"></ion-nav-view>
   </ion-tab>
 
   <!-- Chats Tab -->
   <ion-tab href="#/tab/request/0/top" title="{{ tabRequestTitle | translate }}" icon="ion-android-chat" ng-if="initDone">
-    <ion-nav-view name="tab-chats"></ion-nav-view>
+    <ion-nav-view name="tab-chats" class="padding"></ion-nav-view>
   </ion-tab>
 
   <!-- Account Tab -->
   <ion-tab href="#/tab/account" title="{{ 'TAB_MORE' | translate }}" icon="ion-android-settings" ng-if="initDone">
-    <ion-nav-view name="tab-account"></ion-nav-view>
+    <ion-nav-view name="tab-account" class="padding"></ion-nav-view>
   </ion-tab>
 
 </ion-tabs>
