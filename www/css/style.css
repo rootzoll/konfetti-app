@@ -60,6 +60,10 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     padding-right: 5px;
 }
 
+.popup-container .popup {
+  background: white;
+}
+
 .chatInputFooter {
     z-index: 999;
     position: absolute;
