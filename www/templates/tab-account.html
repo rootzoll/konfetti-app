@@ -1,11 +1,5 @@
 <ion-view ng-cloak view-title="{{ 'TAB_MORE' | translate }}">
 
-    <ion-nav-buttons side="secondary">
-        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
-            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
-        </button>
-    </ion-nav-buttons>
-
     <ion-content style="background-color: lightgrey;">
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
@@ -47,14 +41,20 @@
       <div class="list card" style="text-align: center; margin-top: 8px;">
 
           <div style="padding-top: 16px">
-              <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px">
+              <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive">
                   {{ 'REDEEMCOUPON' | translate }}
               </button>
           </div>
 
-          <div style="padding-top: 16px; padding-bottom: 16px">
-              <button on-tap="onButtonCode()" class="button icon-left ion-ios-color-wand-outline button-positive" style="border-radius: 6px">
+          <div style="padding-top: 16px">
+              <button on-tap="onButtonCode()" class="button icon-left ion-ios-color-wand-outline button-positive">
                   {{ 'MAGICCODE' | translate }}
+              </button>
+          </div>
+
+          <div style="padding-top: 16px; padding-bottom: 16px">
+              <button on-tap="languageSelectionDialog()" class="button button-positive button-langselect">
+                  {{ select.actualLang.display | translate }}
               </button>
           </div>
 
@@ -64,7 +64,7 @@
 
           <div class="item item-input-inset" style="border-top-width: 0px;">
               <label class="item-input-wrapper">
-                  <input ID="accountemail" type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email" 
+                  <input ID="accountemail" type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email"
                   onkeydown="if(event.keyCode==13){document.getElementById('accountemail').click();document.getElementById('emailsave').click();}" >
               </label>
               <button id="emailsave" class="button button-small" ng-click="storeMail(email)">
