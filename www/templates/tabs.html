@@ -6,21 +6,20 @@ navigation history that also transitions its views in and out.
 <ion-tabs class="tabs-icon-top tabs-color-active-positive">
 
   <!-- Dashboard Tab -->
-  <ion-tab title="{{ 'TAB_PARTIES' | translate }}" icon-off="ion-ios-people-outline" icon-on="ion-ios-people" href="#/tab/dash">
+  <ion-tab href="#/tab/dash" title="{{ 'TAB_PARTIES' | translate }}" icon="ion-android-people">
     <ion-nav-view name="tab-dash"></ion-nav-view>
   </ion-tab>
 
   <!-- Chats Tab -->
-  <ion-tab ng-if="initDone" title="{{ tabRequestTitle | translate }}" icon-off="ion-ios-chatboxes-outline" icon-on="ion-ios-chatboxes" href="#/tab/request/0/top">
+  <ion-tab href="#/tab/request/0/top" title="{{ tabRequestTitle | translate }}" icon="ion-android-chat" ng-if="initDone">
     <ion-nav-view name="tab-chats"></ion-nav-view>
   </ion-tab>
 
   <!-- Account Tab -->
-  <ion-tab ng-if="initDone" title="{{ 'TAB_MORE' | translate }}" icon-off="ion-ios-gear-outline" icon-on="ion-ios-gear" href="#/tab/account">
+  <ion-tab href="#/tab/account" title="{{ 'TAB_MORE' | translate }}" icon="ion-android-settings" ng-if="initDone">
     <ion-nav-view name="tab-account"></ion-nav-view>
   </ion-tab>
 
-  <input type="file" id="hidden-imageupload" name="file" accept=
-"image/jpeg,image/png" style="width:0px;height:1px;">
+  <input type="file" id="hidden-imageupload" name="file" accept= "image/jpeg,image/png" style="width:0px;height:1px;">
 
 </ion-tabs>
