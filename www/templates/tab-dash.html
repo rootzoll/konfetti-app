@@ -8,7 +8,7 @@
     width: 100%;
     height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR'))">
 
-        <div class="list card ng-cloak" style="text-align: center; margin-top: 8px;">
+        <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
             <div style="width:100%;padding:14px;">
                 <div ng-hide="(loadingParty || switchParty)">
                     <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
@@ -211,7 +211,7 @@
 
       <!-- INFO SIGNALS -->
 
-      <div style="height: 93px;"></div>
+      <div style="height: 75px;"></div>
 
       <!-- pushes content far down until angular is loaded -->
       <div ng-hide="controllerInitDone" style="height: 800px;"></div>
@@ -291,13 +291,11 @@
       <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
 
       <!-- LIST OPEN TASKS -->
-      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px;  margin-top: 13px;" ng-cloak>
-          <table width="100%">
-              <tr>
-                  <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_OPEN' | translate }}</span></td>
-                  <td style="text-align: {{ spClass=='rtl' ? 'left' : 'right' }}; vertical-align: middle;"><button on-tap="openChangeSortDialog()" class="button button-small button-clear button-dark" style="padding:0px;margin:0px;padding-right:8px;padding-left:20px;"><i class="icon ion-android-arrow-dropdown sortselect-icon" id="sortselect-icon"></i> {{actualSorting | translate }}</button></td>
-              </tr>
-          </table>
+      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px; margin-top: 13px;" ng-cloak>
+          <button on-tap="openChangeSortDialog()" class="button button-small button-clear button-dark" style="padding:0px;margin:0px;padding-right:8px;padding-left:20px;">
+            <i class="icon ion-android-arrow-dropdown sortselect-icon" id="sortselect-icon"></i>
+            {{actualSorting | translate }}
+          </button>
       </div>
 
       <div requestcard data-ng-repeat="request in requestsOpen" requesttype="openRequestCard" lang="{{actualLang}}" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
