@@ -77,6 +77,14 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     display: none !important;
 }
 
+.menu-content .bar-header .title {
+  top: 2px;
+}
+
+.menu-content .bar-header .buttons {
+  top: -3px !important;
+}
+
 .chatInputFooter {
     z-index: 999;
     position: absolute;

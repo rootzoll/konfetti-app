@@ -10,7 +10,7 @@
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
             <div style="width:100%;padding:14px;">
-                <div ng-hide="(loadingParty || switchParty)">
+                <div ng-hide="(loadingParty || switchParty)" on-tap="showPartyInfo()">
                     <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
                       {{party.konfettiCount}} {{ 'KONFETTI' | translate }}
                       <i class="icon ion-cash"></i>
@@ -24,8 +24,8 @@
                       <span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
                         <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
                     </div>
-
                 </div>
+
                 <div ng-show="(loadingParty || switchParty)" style="padding-top: 10px;">
                     <ion-spinner icon="android"></ion-spinner>
                     <div ng-show="(state==='')">
@@ -35,31 +35,8 @@
                         {{ state | translate }}
                     </div>
                 </div>
-
-                <!--<table style="width: 100%;direction: ltr;">
-                    <tr>
-                        <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
-                            <button
-                            on-tap="buttonPartyPrev()"
-                            class="button button-light icon ion-arrow-left-b fixed-ltr"
-                            style="border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
-                            ></button>
-                        </td>
-                        <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
-
-                        </td>
-                        <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
-                            <button
-                            on-tap="buttonPartyNext()"
-                            class="button button-light icon ion-arrow-right-b fixed-ltr"
-                            style="border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
-                            ></button>
-                        </td>
-                    </tr>
-                </table>-->
             </div>
         </div>
-
     </div>
 
   <ion-content>

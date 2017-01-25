@@ -349,59 +349,18 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         };
 
-        // the previous party from list (closer)
-        $scope.buttonPartyPrev = function() {
+        $rootScope.updatePartyIndex = function(index) {
+          if (index < 0 || index > $rootScope.partyList.length) {
+            throw "IndexOutOfBounds (" + index + ")";
+          }
 
-            if ($scope.actualPartyIndex==0) {
-                $scope.dashPartypanelClass = "wiggle";
-                $timeout(function(){
-                    $scope.dashPartypanelClass = "";
-                },700);
-                return;
-            }
+          $scope.switchParty = true;
+          $scope.actualPartyIndex = index;
 
-            $scope.switchParty = true;
-            $scope.dashPartypanelClass = "bounceOutRight";
-            $timeout(function(){
-                $scope.dashPartypanelClass = "";
-                $scope.actualPartyIndex--;
-                if ($scope.actualPartyIndex<0) $scope.actualPartyIndex = $rootScope.partyList.length-1;
-                $scope.action(function(){
-                    $scope.switchParty = false;
-                    $scope.dashPartypanelClass = "bounceInLeft";
-                    $timeout(function(){
-                        $scope.dashPartypanelClass = "";
-                    },700);
-                });
-            },700);
-        };
-
-        // next party in list (more far away)
-        $scope.buttonPartyNext = function() {
-
-            if ($scope.actualPartyIndex==($rootScope.partyList.length-1)) {
-                $scope.dashPartypanelClass = "wiggle";
-                $timeout(function(){
-                    $scope.dashPartypanelClass = "";
-                },700);
-                return;
-            }
-
-            $scope.switchParty = true;
-            $scope.dashPartypanelClass = "bounceOutLeft";
-            $timeout(function(){
-                $scope.dashPartypanelClass = "";
-                $scope.actualPartyIndex++;
-                if ($scope.actualPartyIndex>=$rootScope.partyList.length) $scope.actualPartyIndex = 0;
-                $scope.action(function(){
-                    $scope.switchParty = false;
-                    $scope.dashPartypanelClass = "bounceInRight";
-                    $timeout(function(){
-                        $scope.dashPartypanelClass = "";
-                    },700);
-                });
-            },700);
-        };
+          $scope.action(function() {
+            $scope.switchParty = false;
+          });
+        }
 
         // back to login start, when on register, login or recover screen
         $scope.loginBack = function() {
@@ -678,6 +637,7 @@ angular.module('starter.controller.dash', [])
         };
 
         // action to refresh dash data
+        // TODO should allow reloading party data without entire screen
         $scope.action = function(whenReadyCallback) {
 
             // show loading spinner
