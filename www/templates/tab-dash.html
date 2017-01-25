@@ -12,12 +12,6 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-nav-buttons side="secondary">
-        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
-            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
-        </button>
-    </ion-nav-buttons>
-
     <div class="padding" style="
     background-color: lightgrey;
     z-index: 999;
@@ -31,8 +25,8 @@
                 <table style="width: 100%;direction: ltr;">
                     <tr>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
-                            <button 
-                            on-tap="buttonPartyPrev()" 
+                            <button
+                            on-tap="buttonPartyPrev()"
                             class="button button-light icon ion-arrow-left-b fixed-ltr"
                             style="border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
                             ></button>
@@ -66,8 +60,8 @@
                             </div>
                         </td>
                         <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
-                            <button 
-                            on-tap="buttonPartyNext()" 
+                            <button
+                            on-tap="buttonPartyNext()"
                             class="button button-light icon ion-arrow-right-b fixed-ltr"
                             style="border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
                             ></button>

@@ -6,12 +6,6 @@
         </button>
     </ion-nav-buttons>
 
-    <ion-nav-buttons side="secondary">
-        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
-            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
-        </button>
-    </ion-nav-buttons>
-
     <ion-content>
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
@@ -49,11 +43,11 @@
                           <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
-                          <div> 
+                          <div>
                               <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
                                   <label class="item-input-wrapper">
                                       <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
-                                      <!--  
+                                      <!--
                                       <input ng-focus="enterUserName()" ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
                                       -->
                                   </label>
@@ -284,7 +278,7 @@
     padding-bottom: 0px;
     border-radius: 8px;
     color: grey">
-              <i class="icon ion-arrow-down-a animationPulsate"></i> 
+              <i class="icon ion-arrow-down-a animationPulsate"></i>
           </div>
 
       </div>
