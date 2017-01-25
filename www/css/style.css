@@ -64,6 +64,10 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
   background: white;
 }
 
+[nav-view="cached"], [nav-bar="cached"] {
+    display: none !important;
+}
+
 .chatInputFooter {
     z-index: 999;
     position: absolute;
