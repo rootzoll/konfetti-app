@@ -23,7 +23,7 @@ angular.module('starter', [
               'logglyLogger',
                             'leaflet-directive'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup) {
 
   $ionicPlatform.ready(function() {
 
@@ -58,14 +58,6 @@ angular.module('starter', [
                 navigator.splashscreen.hide();
             } catch (e) {}
         }, 2000);
-
-        // STATUS BAR
-        try {
-            $cordovaStatusbar.hide();
-            console.log("PLUGIN statusbar: OK");
-        } catch (e) {
-            alert("PLUGIN statusbar: MISSING (ok when running in browser) --> cordova plugin add cordova-plugin-statusbar");
-        }
 
         // KEYBOARD
         // Hide the accessory bar by default
