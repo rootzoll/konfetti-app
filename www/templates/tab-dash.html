@@ -211,7 +211,7 @@
           </div>
       </div>
 
-      <div id="dash-partypanel" ng-hide="loadingParty" class="padding" ng-class="dashPartypanelClass">
+      <div id="dash-partypanel" ng-hide="loadingParty" ng-class="dashPartypanelClass">
 
       <!--
         NOTIFICATIONS - just show if available
@@ -305,9 +305,8 @@
 
   </ion-content>
 
-
   <!-- CREATE NEW TASK BUTTON -->
-  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" ng-if="initDone">
       <i class="material-icons">add</i>
   </button>
 </ion-view>
