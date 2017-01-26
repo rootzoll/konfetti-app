@@ -4,42 +4,6 @@
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
 
-          <!--
-          <div style="width:100%;padding:8px">
-              <table style="width: 100%;direction: ltr;">
-                  <tr>
-                      <td width="*" style="text-align: center; vertical-align: middle;">
-                          <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">({{party.userMeters}}m) / {{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
-                          </div>
-                      </td>
-                  </tr>
-              </table>
-          </div>
-
-          <hr style="width: 90%">
-
-          <div style="width:100%;padding:8px">
-
-              <div>{{ 'YOUCOLLECT' | translate }}</div>
-              <div style="font-size: 200%; padding-top: 10px; padding-bottom: 10px;">
-                  {{party.konfettiTotal}} {{ 'KONFETTI' | translate }}
-              </div>
-              <div>{{ 'YOUTOP' | translate }} {{party.user.topPosition}}</div>
-
-          </div>
-      </div>
-      -->
-
-    <div class="card">
-        <div class="item item-divider">
-            {{ 'GLOBALSETTINGS' | translate }}
-        </div>
-    </div>
-
-      <div class="list card" style="text-align: center; margin-top: 8px;">
-
           <div style="padding-top: 16px">
               <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive">
                   {{ 'REDEEMCOUPON' | translate }}
@@ -53,7 +17,7 @@
           </div>
 
           <div style="padding-top: 16px; padding-bottom: 16px">
-              <button on-tap="languageSelectionDialog()" class="button button-positive button-langselect">
+              <button on-tap="languageSelectionDialog()" class="button icon-left ion-ios-world-outline button-langselect button-positive">
                   {{ select.actualLang.display | translate }}
               </button>
           </div>
@@ -67,15 +31,13 @@
                   <input ID="accountemail" type="email" ng-model="email" type="text" style="text-align: center; width: 100%;" placeholder="my@email"
                   onkeydown="if(event.keyCode==13){document.getElementById('accountemail').click();document.getElementById('emailsave').click();}" >
               </label>
-              <button id="emailsave" class="button button-small" ng-click="storeMail(email)">
+
+              <button id="emailsave" class="button button-positive" ng-click="storeMail(email)" style="margin: 16px 0 0 0">
                   {{ 'SAVE' | translate }}
               </button>
           </div>
 
           <div style="padding-top: 16px; padding-bottom: 16px">
-              <div style="margin-bottom: 8px;">
-                {{ 'SWITCH_INFO' | translate }}
-              </div>
               <button on-tap="onButtonSwitchAccount()" class="button button-small icon-left ion-shuffle">
                   {{ 'SWITCH_ACCOUNT' | translate }}
               </button>

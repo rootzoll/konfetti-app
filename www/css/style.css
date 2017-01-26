@@ -69,8 +69,8 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     padding-right: 5px;
 }
 
-.popup-container .popup {
-  background: white;
+.platform-android .popup-body, .platform-override .popup-body {
+    opacity: 1;
 }
 
 [nav-view="cached"], [nav-bar="cached"] {
@@ -397,6 +397,10 @@ div.popup-body span {
   margin:12px;
   position: fixed;
   z-index:9001;
+}
+
+.card button {
+  width: calc(100% - 24px);
 }
 
 .oneTimeAnimation {
