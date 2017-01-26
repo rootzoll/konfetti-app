@@ -17,7 +17,7 @@ angular.module('starter.controller.request', [])
 
   $scope.noticeTextId = "";
   $scope.noticeColor = "";
-  
+
   $scope.pulsateNameInput = false;
   $scope.pulsateHeadlineInput = false;
 
@@ -251,7 +251,7 @@ angular.module('starter.controller.request', [])
             }
             $rootScope.party.konfettiCount = $rootScope.party.konfettiCount - request.konfettiAdd;
             request.lastAdd = Date.now();
-           
+
             $timeout(function() {
                 if ((Date.now() - request.lastAdd) < 999) return;
                 request.blockTap = true;
@@ -286,7 +286,7 @@ angular.module('starter.controller.request', [])
         PopupDialogs.usernameDialog($scope, $scope.profile.name, function(data) {
           //alert(JSON.stringify(data));
           if ((!data.cancel) && (data.valid)) {
-              $scope.profile.name = data.text; 
+              $scope.profile.name = data.text;
               var account = AppContext.getAccount();
               account.name = data.text;
               $ionicLoading.show({
@@ -316,7 +316,7 @@ angular.module('starter.controller.request', [])
         KonfettiToolbox.markInteractionOnRequest($scope.request.id);
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
-        $state.go('tab.chat-detail', dataObj);
+        $state.go('chat-detail', dataObj);
       }, function(errorCode) {
         // FAIL
           $translate("IMPORTANT").then(function (HEADLINE) {
@@ -356,7 +356,7 @@ angular.module('starter.controller.request', [])
 
       // when no party is loaded
       if ($rootScope.party.id===0) {
-          $state.go('tab.dash', {id: 0});
+          $state.go('dash', {id: 0});
           return;
       }
 
@@ -433,7 +433,7 @@ angular.module('starter.controller.request', [])
         PopupDialogs.showIonicAlertWith18nText("INFO", "IMAGEUPLOAD_SELFI", function(){
             $rootScope.onUploadClick(function(imageData, filetype){
                 if (imageData==null) return;
-                imageData = imageData.substring(imageData.indexOf(',')+1);    
+                imageData = imageData.substring(imageData.indexOf(',')+1);
                 win(imageData,filetype);
             });
         });
@@ -454,7 +454,7 @@ angular.module('starter.controller.request', [])
 
   $scope.storeSelfi = function(imageDataUrl) {
 
-      // user id will get updated once 
+      // user id will get updated once
       $ionicLoading.show({
         template: '<img src="img/spinner.gif" />'
       });
@@ -544,7 +544,7 @@ angular.module('starter.controller.request', [])
                     console.log("null on image callback");
                     return;
                 }
-                imageData = imageData.substring(imageData.indexOf(',')+1);    
+                imageData = imageData.substring(imageData.indexOf(',')+1);
                 win(imageData,filetype);
             });
         });
@@ -563,7 +563,7 @@ angular.module('starter.controller.request', [])
       $scope.mediaChoosePopup.close();
       PopupDialogs.textInput($scope, function(result) {
           // WIN or Cancel
-          if (!result.cancel) {  
+          if (!result.cancel) {
                     $ionicLoading.show({
                         template: '<img src="img/spinner.gif" />'
                     });
@@ -590,7 +590,7 @@ angular.module('starter.controller.request', [])
            try {
 
            $scope.mediaChoosePopup.close();
-          
+
            PopupDialogs.locationPicker($scope, function(result) {
 
                // WIN
@@ -605,7 +605,7 @@ angular.module('starter.controller.request', [])
 
                 // FAIL
                 if ((typeof error != "undefined") && (error!=null)) alert("ERROR: "+JSON.stringify(error));
-            
+
             }, {
                 i18nHeadline: "LOCATIONPICKER_TITLE",
                 i18nMarker: "LOCATIONPICKER_MARKER",
@@ -641,7 +641,7 @@ angular.module('starter.controller.request', [])
   $scope.addInfoDate = function() {
 
             $scope.mediaChoosePopup.close();
-          
+
             PopupDialogs.datePicker($scope, function(result){
 
                 // when clicked cancel on date
@@ -707,7 +707,7 @@ angular.module('starter.controller.request', [])
           // Dynamic Button Text translate
           $translate("OK").then(function (OK) {
             $translate("CANCEL").then(function (CANCEL) {
-                
+
                 var myPopup = $ionicPopup.show({
                      templateUrl: 'templates/pop-reward.html',
                      scope: $scope,
@@ -811,7 +811,7 @@ angular.module('starter.controller.request', [])
                           ApiService.deleteRequest($scope.request.id, 0, function() {
                               // WIN --> go to dash
                               $ionicLoading.hide();
-                              $state.go('tab.dash', {id: $scope.request.partyId});
+                              $state.go('dash', {id: $scope.request.partyId});
                           }, function() {
                               // FAIL
                               $ionicLoading.hide();
@@ -841,7 +841,7 @@ angular.module('starter.controller.request', [])
                       // WIN --> go to dash
                       // todo: switch to next request to review
                       $ionicLoading.hide();
-                      $state.go('tab.dash', {id: $scope.request.partyId});
+                      $state.go('dash', {id: $scope.request.partyId});
                   }, function() {
                       // FAIL
                       $ionicLoading.hide();
@@ -856,7 +856,7 @@ angular.module('starter.controller.request', [])
       ApiService.reviewResultOnRequest($scope.request.id, true, null, null, function(){
         // WIN --> go to dash
         // todo: switch to next request to review
-        $state.go('tab.dash', {id: $scope.request.partyId});
+        $state.go('dash', {id: $scope.request.partyId});
       }, function() {
         // FAIL
         PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
@@ -867,7 +867,7 @@ angular.module('starter.controller.request', [])
       document.getElementById('headline').focus();
       PopupDialogs.usernameDialog($scope, $scope.profile.name, function(data) {
           //alert(JSON.stringify(data));
-          if ((!data.cancel) && (data.valid)) $scope.profile.name = data.text; 
+          if ((!data.cancel) && (data.valid)) $scope.profile.name = data.text;
       }, function(e){
           console.warn("failed $scope.enterUserName with: "+JSON.stringify(e));
       });
@@ -876,7 +876,7 @@ angular.module('starter.controller.request', [])
   $scope.displayChat = function($event, chat) {
       if ($event!=null) $event.stopPropagation();
       $rootScope.chatPartner = { requestTitle: $scope.request.title , chatPartnerName: chat.chatPartnerName, chatPartnerImageMediaID: chat.chatPartnerImageMediaID, spokenLangs: chat.spokenLangs};
-      $state.go('tab.chat-detail', {id: chat.id});
+      $state.go('chat-detail', {id: chat.id});
       return;
   };
 
@@ -931,17 +931,17 @@ angular.module('starter.controller.request', [])
 			$timeout(function(){
 				$scope.pulsateNameInput = false;
 			},1500);
-		}      	
+		}
         return;
       }
 
       if (!$scope.nameValid) {
           $scope.infoNameUnvalid();
-          return; 
+          return;
       }
 
       if ($scope.headline.temp.length<4) {
-      	
+
       	if (($scope.headline.temp.length>0) || ($scope.pulsateHeadlineInput)) {
       		$translate("IMPORTANT").then(function (HEADLINE) {
               $translate("ENTERREQUEST").then(function (TEXT) {
@@ -950,14 +950,14 @@ angular.module('starter.controller.request', [])
                       template: TEXT
                   }).then(function(res) {});
               });
-          });	
+          });
       	} else {
      		$scope.pulsateHeadlineInput = true;
 			$timeout(function(){
 				$scope.pulsateHeadlineInput = false;
 			},1500);
       	}
-      
+
         return;
       }
 
@@ -988,7 +988,7 @@ angular.module('starter.controller.request', [])
               $rootScope.party.konfettiCount - $scope.confetti.toSpend;
               $scope.confetti.max = $scope.confetti.max - $scope.confetti.toSpend;
               $scope.confetti.toSpend = $scope.confetti.min;
-              $state.go('tab.dash', {id: $rootScope.party.id});
+              $state.go('dash', {id: $rootScope.party.id});
           };
 
           if ($rootScope.party.reviewLevel=="REVIEWLEVEL_NONE") {
@@ -1016,14 +1016,14 @@ angular.module('starter.controller.request', [])
                   });
               });
           }
-          
+
           RainAnimation.makeItRainKonfetti(2);
 
           // make sure to attach media items if already created
           if ((typeof $scope.request.info != "undefined") && ($scope.request.info.length>0)) {
               $scope.connectMediaItemArrayToRequest(respData, $scope.request.info);
           }
-          
+
       }, function() {
           // FAIL
           $ionicLoading.hide();

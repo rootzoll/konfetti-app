@@ -369,7 +369,7 @@ angular.module('starter.controller.dash', [])
 
         // when user wants to create a new request
         $scope.onNewRequest = function() {
-            $state.go('tab.request-detail', {id: 0, area: 'top'});
+            $state.go('request-detail', {id: 0, area: 'top'});
         };
 
         // when user taps a notification
@@ -377,31 +377,31 @@ angular.module('starter.controller.dash', [])
 
             // request now public --> go to request page
             if ((noti.type==2) || (noti.type=="REVIEW_OK")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                $state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // request rejected --> go to request page
             if ((noti.type==4) || (noti.type=="REVIEW_FAIL")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                $state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // new chat message --> go to request page - scroll down to chats
             if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
+                $state.go('request-detail', {id: noti.ref, area: 'chats'});
                 return;
             }
 
             // rewarded --> go to request page
             if ((noti.type==7) || (noti.type=="REWARD_GOT")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                $state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // support done --> go to request page
             if ((noti.type==8) || (noti.type=="SUPPORT_WIN")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                $state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
@@ -466,7 +466,7 @@ angular.module('starter.controller.dash', [])
 
         // when the user taps a request for more information
         $scope.tapRequestMore = function($event, request) {
-            $state.go('tab.request-detail', {id: request.id, area: 'top'});
+            $state.go('request-detail', {id: request.id, area: 'top'});
         };
 
         // when user taps on a request to add more konfetti to it

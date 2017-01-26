@@ -378,71 +378,41 @@ angular.module('starter', [
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html'
-  })
+	  .state('dash', {
+		    url: '/dash/:id',
+	      templateUrl: 'templates/tab-dash.html',
+	      controller: 'DashCtrl'
+	  })
 
-  // Each tab has its own nav history stack:
+	  .state('request', {
+		    url: '/request',
+        templateUrl:'templates/tab-request.html',
+        controller: 'RequestCtrl'
+	  })
 
-  .state('tab.dash', {
-    url: '/dash/:id',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
+	  .state('request-detail', {
+	      url: '/request/:id/:area',
+        templateUrl: 'templates/tab-request.html',
+        controller: 'RequestCtrl'
+	  })
 
-  .state('tab.request', {
-          url: '/request',
-          views: {
-              'tab-chats': {
-                  templateUrl:'templates/tab-request.html',
-                  controller: 'RequestCtrl'
-              }
-          }
-  })
+	  .state('chat-detail', {
+	      url: '/chats/:id',
+        templateUrl: 'templates/chat-detail.html',
+        controller: 'ChatDetailCtrl'
+	  })
 
-  .state('tab.request-detail', {
-      url: '/request/:id/:area',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-request.html',
-          controller: 'RequestCtrl'
-        }
-      }
-  })
-
-  .state('tab.chat-detail', {
-      url: '/chats/:id',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-  })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+	  .state('account', {
+	    url: '/account',
+      templateUrl: 'templates/tab-account.html',
+      controller: 'AccountCtrl'
+	  });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash/0');
+  $urlRouterProvider.otherwise('dash/0');
 
   //configure loggly so it logs console errors to the loggly cloud
   LogglyLoggerProvider.inputToken( '653b3d37-f931-403d-b192-c8d08be6afb7' ).sendConsoleErrors(true);
-
 });
 
 Array.prototype.contains = function(obj) {

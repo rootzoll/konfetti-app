@@ -29,7 +29,7 @@ angular.module('starter.konfettitoolbox', [])
 
                     if (typeof dashViewScope == "undefined") {
                         dashViewScope = null;
-                    } 
+                    }
 
                    if (typeof actionArray=="undefined") {
                        console.warn("processRedeemActions: actionArray undefined - skip");
@@ -66,7 +66,7 @@ angular.module('starter.konfettitoolbox', [])
                             console.log("processRedeemActions: Focus Party");
 
                            if (dashViewScope==null){
-                              $state.go('tab.dash', {id: JSON.parse(action.json)});
+                              $state.go('dash', {id: JSON.parse(action.json)});
                            } else {
                               dashViewScope.focusPartyId = JSON.parse(action.json);
                               if (typeof callback == "undefined") dashViewScope.loadPartiesAndFocus(JSON.parse(action.json));
@@ -294,6 +294,6 @@ angular.module('starter.konfettitoolbox', [])
                     });
                 });
            	}
-                
+
 	};
 });

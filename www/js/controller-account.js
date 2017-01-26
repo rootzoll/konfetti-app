@@ -8,7 +8,7 @@ angular.module('starter.controller.account', [])
 
       // when no party is loaded
       if ($rootScope.party.id===0) {
-          $state.go('tab.dash', {id: 0});
+          $state.go('dash', {id: 0});
           return;
       }
 
@@ -17,7 +17,7 @@ angular.module('starter.controller.account', [])
 
       $scope.email = AppContext.getAccount().email;
   });
-  
+
   $scope.keyUpEmailInput = function(e) {
   	console.dir(e);
   };
@@ -129,7 +129,7 @@ angular.module('starter.controller.account', [])
               }).then(function(res) {
                   if(res) {
                       $rootScope.resetAccount = true;
-                      $state.go('tab.dash', {id: 0});
+                      $state.go('dash', {id: 0});
                   }
               });
           });

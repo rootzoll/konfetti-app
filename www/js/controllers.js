@@ -7,7 +7,7 @@ angular.module('starter.controllers', [])
 
    // check if id of chat is available
    if (typeof $stateParams.id==="undefined") {
-       $state.go('tab.dash', {id: 0});
+       $state.go('dash', {id: 0});
        return;
    }
 
@@ -61,7 +61,7 @@ angular.module('starter.controllers', [])
        $scope.loading = true;
        $scope.loadingText = "";
        ApiService.loadChat($stateParams.id, function(chatData) {
-           
+
            $scope.chat = chatData;
 		   $scope.loading = false;
 
@@ -76,7 +76,7 @@ angular.module('starter.controllers', [])
                $scope.messages = [];
                $scope.loadChatsItem(0);
            }
-           
+
        }, function(errorCode) {
            if (showErrorAlert) {
            $translate("IMPORTANT").then(function (HEADLINE) {
@@ -102,7 +102,7 @@ angular.module('starter.controllers', [])
        var chatMessage = $scope.chat.messages[indexInArray];
        var idToLoad = chatMessage.itemId;
        var useCache = true;
-       
+
        ApiService.loadMediaItem(idToLoad, function(loadedItem){
             // success
            var appUserId = AppContext.getAccount().id;
