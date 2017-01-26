@@ -1,20 +1,18 @@
-<ion-list> 
-    <ion-item>
-    <label class="item item-input">
-        <span class="input-label">{{ 'DATE' | translate }}</span>
-        <input type="date" ng-model="dateInput.date">
-    </label>
+<ion-list>
+    <ion-item style="margin: 0 0 16px 0">
+      {{ 'DATE' | translate }}
     </ion-item>
     <ion-item>
-    <label class="item item-input">
-        <span class="input-label">{{ 'TIME' | translate }}</span>
-        <input type="time" ng-model="dateInput.time">
-    </label>
+      <input type="date" ng-model="dateInput.date">
+    </ion-item>
+    <ion-item style="margin: 16px 0">
+      {{ 'TIME' | translate }}
     </ion-item>
     <ion-item>
-    <label class="item item-input">
-        <input type="text" ng-model="dateInput.comment" placeholder="{{ 'DATECOMMENT' | translate }}">
-    </label>
+      <input type="time" ng-model="dateInput.time">
+    </ion-item>
+    <ion-item style="margin: 16px 0 0 0">
+      <input type="text" ng-model="dateInput.comment" placeholder="{{ 'DATECOMMENT' | translate }}">
     </ion-item>
     <!--
     <ion-checkbox ng-model="dateInput.addlocation" ng-init='dateInput.addlocation=true'><span style="font-size:75%;">{{ 'ADDLOCATION' | translate }}</span></ion-checkbox>

@@ -69,6 +69,10 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     padding-right: 5px;
 }
 
+.popup-container .popup {
+  background: white;
+}
+
 .platform-android .popup-body, .platform-override .popup-body {
     opacity: 1;
 }
@@ -392,9 +396,8 @@ div.popup-body span {
 }
 
 .button-fab {
-  bottom: 0;
-  right: 0;
-  margin:12px;
+  top: calc(100% - 80px);
+  right: 12px;
   position: fixed;
   z-index:9001;
 }

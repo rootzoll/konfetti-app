@@ -1,7 +1,18 @@
-<div class="card" on-tap="tapRequestMore($event, request)">
+<div class="card mdl-js-ripple-effect" on-tap="tapRequestMore($event, request)">
     <div class="item item-text-wrap" style="padding:10px;">
         <table width="100%">
             <tr>
+                <td width="50" style="vertical-align: middle;text-align: right; padding-right: 3px; padding-left: 3px; padding-top: 5px; padding-button: 0px;">
+                    <image fallback-src="./img/person.png" ng-src="{{getImageUrl()}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                </td>
+                <td width="*" style="vertical-align: middle; padding-left: 4px; padding-right: 4px;">
+                    <div ng-show="request.titleMultiLang==null" style="font-weight:bold; padding: 5px; font-size: 110%;">
+                        {{request.title}}
+                    </div>
+                    <div ng-show="request.titleMultiLang!=null" style="font-weight:bold; padding: 5px; font-size: 110%;">
+                        <div multilang data="{{request.titleMultiLang}}"/>
+                    </div>
+                </td>
                 <td ng-show="(requesttype!='openRequestCard')" width="50" style="vertical-align: middle; text-align: left">
                     <table class="round" style="width:50px;">
                         <tr>
@@ -15,33 +26,21 @@
                         </tr>
                     </table>
                 </td>
-                <td width="50" style="vertical-align: middle;text-align: right; padding-right: 3px; padding-left: 3px; padding-top: 5px; padding-button: 0px;">
-                  <image fallback-src="./img/person.png" ng-src="{{getImageUrl()}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                <td ng-show="(requesttype==='openRequestCard')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
+                    <table class="round" style="width:50px;">
+                        <tr>
+                            <td>
+                                <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
+                                {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
+                            </td>
+                        </tr>
+                    </table>
                 </td>
-                <td width="*" style="vertical-align: middle; padding-left: 4px; padding-right: 4px;">
-                    <div ng-show="request.titleMultiLang==null" style="padding-top: 5px; font-size: 95%; text-align: center;">
-                        {{request.title}}
-                    </div>
-                    <div ng-show="request.titleMultiLang!=null" style="padding-top: 5px; font-size: 95%; text-align: center;">
-                        <div multilang data="{{request.titleMultiLang}}"/>
-                    </div>
-                </td>
-              <td ng-show="(requesttype==='openRequestCard')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
-                <table class="round" style="width:50px;">
-                  <tr>
-                    <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
-                      {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
-                    </td>
-                  </tr>
-                </table>
-              </td>
             </tr>
         </table>
-
     </div>
 </div>
