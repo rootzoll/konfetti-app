@@ -285,13 +285,6 @@
            </div>
       </div>
 
-      <!-- CREATE NEW TASK BUTTON -->
-      <div class="card" style="margin-bottom: 10px; margin-top: 0px; padding: 10px; text-align: center;">
-          <button on-tap="onNewRequest()" class="button icon-left ion-plus-circled button-positive" style="border-radius: 6px">
-               {{ 'NEWREQUEST' | translate }}
-          </button>
-      </div>
-
       <!-- LIST DONE TASKS -->
       <div class="card" ng-show="(requestsDone.length>0)" style="margin-bottom: 10px;" ng-cloak>
         <table width="100%">
@@ -309,6 +302,12 @@
       <div ng-hide="loadingParty" style="text-align:center;font-size:74%;color:grey;padding:12px;padding-top: 16px;" ng-class="dashPartypanelClass">
           {{latestGitVersion}}
       </div>
-      
+
   </ion-content>
+
+
+  <!-- CREATE NEW TASK BUTTON -->
+  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored">
+      <i class="material-icons">add</i>
+  </button>
 </ion-view>

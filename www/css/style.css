@@ -391,6 +391,14 @@ div.popup-body span {
     height: 30px;
 }
 
+.button-fab {
+  bottom: 0;
+  right: 0;
+  margin:12px;
+  position: fixed;
+  z-index:9001;
+}
+
 .oneTimeAnimation {
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
