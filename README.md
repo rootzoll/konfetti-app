@@ -75,6 +75,8 @@ Use the '_buildAndroid.sh' script on first build.
 
 The API is the center of the konfetti backend. Check it out and build your Docker Container and do run it with Docker-Compose. To make the local Konfetti App running in your browser connect with this local API change the API URL in the file `www/js/service-appcontext.js` to localhost ... remember to change it back before doing a commit or a pullrequest.
 
+MORE STUFF TO SETUP A KONFETTI SERVER: https://github.com/rootzoll/konfetti-serversetup
+
 API: https://github.com/rootzoll/konfetti-api
 
 ... other optional parts of the konfetti backend:
