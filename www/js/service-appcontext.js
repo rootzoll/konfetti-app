@@ -7,15 +7,15 @@ angular.module('starter.appcontext', [])
    */
 
   var apiUrlLocalDevelopment = "http://localhost:8280/konfetti/api";
-  var apiUrlDevelopmentServer = "http://fourcores2016.cloudapp.net:8280/konfetti/api";
-  var apiUrlProductionServer = "http://fourcores2016.cloudapp.net:8280/konfetti/api";
+  var apiUrlDevelopmentServer = "http://konfettiapp.de/konfetti/api";
+  var apiUrlProductionServer = "https://konfettiapp.de/konfetti/api";
 
   var appConfig = {
 
       /* APP BACKEND SERVER ---> SET ONE FROM THE ABOVE 
        * !!! ON GIT CHECKIN: SET DEVELOPMENT SERVER !!! 
        * */
-      apiUrl: apiUrlDevelopmentServer,
+      apiUrl: apiUrlProductionServer,
 
       /* PUSH NOTIFICATION */
       oneSignalAppId : "",

@@ -74,11 +74,11 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkEmail = function(email) {
 
-            console.log("checkEmail ",$scope.login);
+            //console.log("checkEmail ",$scope.login);
 
             // as long as input field does not return a valid email
             if (typeof email == "undefined") {
-                console.log("email not valid --> not free");
+                //console.log("email not valid --> not free");
                 $scope.login.free = false;
                 return;
             }
@@ -96,7 +96,7 @@ angular.module('starter.controller.dash', [])
                     }
                     $scope.login.free = result;
                 } else {
-                    console.log("input("+$scope.login.Email+") not anymore("+name+")");
+                    //console.log("input("+$scope.login.Email+") not anymore("+name+")");
                 }
 
             });
