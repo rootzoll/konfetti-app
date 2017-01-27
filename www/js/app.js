@@ -17,13 +17,13 @@ angular.module('starter', [
 							'starter.appcontext',
 							'starter.rainanimation',
 							'starter.konfettitoolbox',
-              'starter.popupdialogs',
+                            'starter.popupdialogs',
 							'ngCordova',
 							'pascalprecht.translate',
-              'logglyLogger',
+                            'logglyLogger',
                             'leaflet-directive'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
 
   $ionicPlatform.ready(function() {
 
@@ -251,12 +251,105 @@ angular.module('starter', [
 
     $rootScope.lat  = 0;
     $rootScope.lon = 0;
-    KonfettiToolbox.updateGPS();
+
+    document.addEventListener("resume", function(){
+        $rootScope.$broadcast('cordova-resume');
+    }, false);
 
     /*
      * Push Notification --> https://documentation.onesignal.com/docs/cordova-sdk-setup
      * run one account is ready (new created or checked on init loop)
      */
+
+    $rootScope.notificationOpenedCallback = function (jsonData) {
+
+        if (typeof jsonData == "undefined") {
+            console.warn("notificationOpenedCallback: jsonData is undefnied");
+            return;
+        }
+
+        if (jsonData == null) {
+            console.warn("notificationOpenedCallback: jsonData is undefnied");
+            return;
+        }
+
+        if ((typeof jsonData.notification == "undefined") || (jsonData.notification == null)) {
+            console.warn("notificationOpenedCallback: jsonData.notification missing");
+            return;
+        }
+
+        if ((typeof jsonData.notification.isAppInFocus == "undefined") || (jsonData.notification.isAppInFocus == null)) {
+            console.warn("notificationOpenedCallback: notification.isAppInFocus missing");
+            return;
+        }
+
+        if ((typeof jsonData.notification.payload == "undefined") ||
+            (typeof jsonData.notification.payload.additionalData == "undefined") || (jsonData.notification.payload.additionalData == null)) {
+            console.warn("notificationOpenedCallback: json.notification.payload.additionalData missing");
+            return;
+        }
+
+        var wasAppOpenOnNotification = jsonData.notification.isAppInFocus;
+        var payload = jsonData.notification.payload;
+        if (typeof payload.rawPayload != "undefined") payload.rawPayload = null;
+        
+        //alert('TODO: notificationOpenedCallback - appWasOpen('+wasAppOpenOnNotification+'): ' + JSON.stringify(payload));
+        //console.log(JSON.stringify(jsonData));
+    
+        // only react on notification if the app was closed 
+        if (!wasAppOpenOnNotification) {
+            
+            // On Review OK or FAIL
+            if ((payload.additionalData.type=="REVIEW_OK") || (payload.additionalData.type=="REVIEW_FAIL")) {
+                console.log("Pushnotification REVIEW_OK --> go to party ("+payload.additionalData.partyID+")");
+                $state.go('tab.dash', {id: payload.additionalData.partyID});
+            } else
+
+            // On Review Waiting
+            if (payload.additionalData.type=="REVIEW_WAITING") {
+                console.log("Pushnotification REVIEW_WAITING --> go to task ("+payload.additionalData.requestID+")");
+                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+            } else
+
+            // On New Chat
+            if (payload.additionalData.type=="CHAT_NEW") {
+                console.log("Pushnotification CHAT_NEW --> go to chat ("+payload.additionalData.chatID+") on request ("+payload.additionalData.requestID+") on party ("+payload.additionalData.partyID+")");
+                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+            } else
+            
+            // On New Transfere Received
+            if ((payload.additionalData.type=="TRANSFER_RECEIVED") || (payload.additionalData.type=="PAYBACK")) {
+                console.log("Pushnotification TRANSFER_RECEIVED --> go to party ("+payload.additionalData.partyID+")");
+                $state.go('tab.dash', {id: payload.additionalData.partyID});
+            } else
+
+            // On Reward on Task
+            if (payload.additionalData.type=="SUPPORT_WIN") {
+                console.log("Pushnotification SUPPORT_WIN --> go to task ("+payload.additionalData.requestID+")");
+                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+            } else
+
+            // On Task Supported go Done
+            if (payload.additionalData.type=="REWARD_GOT") {
+                console.log("Pushnotification REWARD_GOT --> go to task ("+payload.additionalData.requestID+")");
+                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+            } else
+
+            {
+                alert("TODO Notification:"+payload.additionalData.type);
+            }
+
+        } else {
+            // just ignore notifications when app is open - will display alert
+            alert("ignore push notificaton - will see notification on group list"); 
+        }
+
+    };
+
+    /* TODO: remove after debug 
+    $timeout(function () { $rootScope.notificationOpenedCallback(JSON.parse("{\"action\":{\"type\":0},\"notification\":{\"isAppInFocus\":false,\"shown\":true,\"androidNotificationId\":-372898719,\"displayType\":1,\"payload\":{\"notificationID\":\"b5ffa6ec-21cf-4ca2-bf9d-0cd3742c8f8c\",\"body\":\"Your task is now public\",\"additionalData\":{\"requestID\":38,\"notificationID\":188,\"partyID\":1,\"type\":\"REVIEW_OK\"},\"lockScreenVisibility\":1,\"fromProjectNumber\":\"641694372085\",\"priority\":0,\"rawPayload\":\"{\\\"google.sent_time\\\":1484651028978,\\\"custom\\\":\\\"{\\\\\\\"a\\\\\\\":{\\\\\\\"requestID\\\\\\\":38,\\\\\\\"notificationID\\\\\\\":188,\\\\\\\"partyID\\\\\\\":1,\\\\\\\"type\\\\\\\":\\\\\\\"REVIEW_OK\\\\\\\"},\\\\\\\"i\\\\\\\":\\\\\\\"b5ffa6ec-21cf-4ca2-bf9d-0cd3742c8f8c\\\\\\\"}\\\",\\\"from\\\":\\\"641694372085\\\",\\\"alert\\\":\\\"Your task is now public\\\",\\\"google.message_id\\\":\\\"0:1484651028990886%39a6ade7f9fd7ecd\\\",\\\"collapse_key\\\":\\\"do_not_collapse\\\",\\\"notificationId\\\":-372898719}\"}}}")); }, 10000);
+    */
+   
 
     $rootScope.$on('account-ready', function(event, args) {
 
@@ -271,13 +364,11 @@ angular.module('starter', [
                  * EXAMPLE DATA: {"message":"...", "additionalData":{"notification":999},"isActive":false}
                  */
 
-                var notificationOpenedCallback = function(jsonData) {
-                    alert('TODO: notificationOpenedCallback: ' + JSON.stringify(jsonData));
-                };
+                var notificationOpenedCallback = 
 
                 window.plugins.OneSignal
                     .startInit(AppContext.getAppConfig().oneSignalAppId)
-                    .handleNotificationOpened(notificationOpenedCallback)
+                    .handleNotificationOpened($rootScope.notificationOpenedCallback)
                     .endInit();
 
                 // getting the push id

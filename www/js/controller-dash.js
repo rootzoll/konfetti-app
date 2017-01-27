@@ -19,6 +19,7 @@ angular.module('starter.controller.dash', [])
          */
 
         $scope.state = "INIT";
+        $scope.onView = false;
 
         $scope.userId = 0;
         $scope.loadingParty = true;
@@ -637,6 +638,8 @@ angular.module('starter.controller.dash', [])
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
 
+            $scope.onView = true;
+
             // reset account on enter when flag is set
             if ($rootScope.resetAccount) {
                 AppContext.setAccount({clientId:""});
@@ -648,8 +651,19 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         });
 
+        // event when user is leaving the view
+        $scope.$on('$ionicView.leave', function(e) {
+            $scope.onView = false;
+        });
+
+        // event when app comes back from background
+        $scope.$on('cordova-resume', function(e) {
+            if ($scope.onView) $timeout($scope.action(),10);
+        });
+
         // the OK button on the intro/welcome screen
         $scope.buttonIntroScreenOK = function() {
+            KonfettiToolbox.updateGPS();
             var state = AppContext.getLocalState();
             state.introScreenShown = true;
             AppContext.setLocalState(state);

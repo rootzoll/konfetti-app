@@ -595,7 +595,6 @@ angular.module('starter.controller.request', [])
 
                // WIN
                if (result.cancel) return;
-               // TODO: store also comment on location
                $scope.saveLocationMediaItem(result.lat,result.lon, result.comment);
                $timeout(function(){
                 $ionicScrollDelegate.scrollBottom(true);
@@ -652,7 +651,6 @@ angular.module('starter.controller.request', [])
                     template: '<img src="img/spinner.gif" />'
                 });
 
-                // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
                 ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, result.comment, function(mediaitem) {
                         // WIN
                         $ionicLoading.hide();
