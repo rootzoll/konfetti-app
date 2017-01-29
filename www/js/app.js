@@ -28,6 +28,7 @@ angular.module('starter', [
   $ionicPlatform.ready(function() {
 
     // Init Settings
+    $rootScope.focusPartyId = 0;
     $rootScope.initDone = false;
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
     $rootScope.animationRainIsRunning = false;
@@ -255,6 +256,18 @@ angular.module('starter', [
     document.addEventListener("resume", function(){
         $rootScope.$broadcast('cordova-resume');
     }, false);
+
+    /*
+     * Restore Local State
+     */
+
+    var localState = AppContext.getLocalState();
+    if ((typeof localState != "undefined") && (typeof localState.lastFocusedPartyID != "undefined") && (localState.lastFocusedPartyID!=null)) {
+        console.log("FOKUS PARTY --> ",localState.lastFocusedPartyID);
+        $rootScope.focusPartyId = localState.lastFocusedPartyID;
+    } else {
+       console.log("NO FOKUS PARTY");   
+    }
 
     /*
      * Push Notification --> https://documentation.onesignal.com/docs/cordova-sdk-setup

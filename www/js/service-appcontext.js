@@ -51,7 +51,8 @@ angular.module('starter.appcontext', [])
         imageData: null,
         lastPartyUpdates: {},
         lastPosition : null,
-        pushIDs: null
+        pushIDs: null,
+        lastFocusedPartyID: null
       }
   };
 

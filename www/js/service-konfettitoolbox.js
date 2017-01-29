@@ -64,6 +64,7 @@ angular.module('starter.konfettitoolbox', [])
                        if (action.command=="focusParty") {
 
                             console.log("processRedeemActions: Focus Party");
+                            $rootScope.focusPartyId = JSON.parse(action.json);
 
                            if (dashViewScope==null){
                               $state.go('tab.dash', {id: JSON.parse(action.json)});

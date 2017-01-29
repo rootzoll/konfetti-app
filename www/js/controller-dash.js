@@ -577,7 +577,12 @@ angular.module('starter.controller.dash', [])
 
             // prevent double refresh clicks
             if ($scope.partyList.length>0) {
-                var actualParty = $scope.partyList[$scope.actualPartyIndex].id;
+                var actualParty = 0;
+                if (typeof $scope.partyList[$scope.actualPartyIndex] != "undefined") {
+                    actualParty = $scope.partyList[$scope.actualPartyIndex].id;
+                } else {
+                    actualParty = $rootScope.party.id;
+                }
                 var actualTS = new Date().getTime();
                 var diff = actualTS - $scope.lastPartyRefreshStart;
                 if ((diff<2000) && (actualParty==$scope.lastPartyRefreshID)) {
@@ -990,8 +995,31 @@ angular.module('starter.controller.dash', [])
 
             // make API call to load party data
             $scope.state = "PARTYWAIT";
+
             $rootScope.party.id = 0;
-            ApiService.loadParty($scope.partyList[$scope.actualPartyIndex].id,function(data){
+
+            // set partyid to load ... if $rootScope.focusPartyId is set force this one
+            var partyToLoad = 0;
+            if (typeof $scope.partyList[$scope.actualPartyIndex] != "undefined") {
+                partyToLoad = $scope.partyList[$scope.actualPartyIndex].id;
+            }
+            if ($rootScope.focusPartyId > 0) {
+
+                partyToLoad = $rootScope.focusPartyId;
+
+                // set the correct actualPartyIndex (if available)          
+                $scope.actualPartyIndex = 0;
+                for (var i=0; i<$scope.partyList.length; i++) {
+                    if ($scope.partyList[i].id == $rootScope.focusPartyId) {
+                        $scope.actualPartyIndex=i;
+                        break;
+                    }
+                }
+                $rootScope.focusPartyId = 0;
+            }
+
+
+            ApiService.loadParty(partyToLoad,function(data){
                 $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;
@@ -1009,6 +1037,11 @@ angular.module('starter.controller.dash', [])
                 $scope.updatesOnParty = false;
                 $scope.showNotifications = ($scope.notifications.length>0);
                 $rootScope.initDone = true;
+
+                // remember as last focused party
+                var localState = AppContext.getLocalState();
+                localState.lastFocusedPartyID = partyToLoad;
+                AppContext.setLocalState(localState);
 
                 // spendable konfetti
                 $scope.hasKonfettiToSpend =  false;
