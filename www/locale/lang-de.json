@@ -207,5 +207,6 @@
             "ERROR_BUTTON" : "Schließen / Neustarten",
             "OR" : "oder",
             "USERNAME_NOTVALID": "Der Namen ist nicht verfügbar. Bitte einen anderen wählen.",
-            "REWARD_INFO" : "Das Konfetti wird über alle ausgewählten Personen gleich verteilt. Es stehen die Personen zur Auswahl, mit denen gechattet wurde. Fehlt jemand der geholfen hat? Dann Abbrechen, kurz chatten und nochmal."
+            "REWARD_INFO" : "Das Konfetti wird über alle ausgewählten Personen gleich verteilt. Es stehen die Personen zur Auswahl, mit denen gechattet wurde. Fehlt jemand der geholfen hat? Dann Abbrechen, kurz chatten und nochmal.",
+            "NOKONFETTI_INFO" : "Du hast kein Konfetti für diese Gruppe. Löse einen Gutschein ein oder erledige eine offene Aufgabe, um Konfetti zu erhalten."
 }
