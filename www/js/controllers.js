@@ -2,17 +2,22 @@ angular.module('starter.controllers', [])
 
 .controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval) {
 
-   $scope.chat = { id: $stateParams.id};
-   $scope.interval = null;
-
    // check if id of chat is available
    if (typeof $stateParams.id==="undefined") {
        $state.go('tab.dash', {id: 0});
        return;
    }
 
+   $scope.chat = { id: $stateParams.id};
+   $scope.interval = null;
+
    $scope.back = function() {
-       $window.history.back();
+
+       if ((typeof $scope.chat.request != "undefined") && ($scope.chat.request!=null) && (typeof $scope.chat.request.id!= "undefined")) {
+          $state.go('tab.request-detail', {id: $scope.chat.request.id, area: 'top'});
+       } else {
+          $window.history.back();
+       }
    };
 
    $scope.reload = function() {

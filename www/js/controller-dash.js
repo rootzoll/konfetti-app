@@ -429,9 +429,9 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
-            // new chat message --> go to request page - scroll down to chats
+            // new chat message --> jump to chat view
             if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'chats'});
+                $state.go('tab.chat-detail', {id: noti.ref});
                 return;
             }
 
@@ -659,6 +659,11 @@ angular.module('starter.controller.dash', [])
         // event when user is leaving the view
         $scope.$on('$ionicView.leave', function(e) {
             $scope.onView = false;
+        });
+
+        // when outside event says to reload party
+        $scope.$on('dash-reloadparty', function(e) {
+            if ($scope.onView) $scope.reloadPartyList();
         });
 
         // event when app comes back from background

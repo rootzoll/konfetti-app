@@ -327,7 +327,7 @@ angular.module('starter', [
             // On New Chat
             if (payload.additionalData.type=="CHAT_NEW") {
                 console.log("Pushnotification CHAT_NEW --> go to chat ("+payload.additionalData.chatID+") on request ("+payload.additionalData.requestID+") on party ("+payload.additionalData.partyID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('tab.chat-detail', {id: payload.additionalData.chatID});
             } else
             
             // On New Transfere Received
@@ -354,7 +354,8 @@ angular.module('starter', [
 
         } else {
             // just ignore notifications when app is open - will display alert
-            alert("ignore push notificaton - will see notification on group list"); 
+            console.log("ignore push notificaton - will see notification on group list"); 
+            $rootScope.$broadcast('dash-reloadparty');
         }
 
     };
