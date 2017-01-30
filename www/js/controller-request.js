@@ -3,7 +3,7 @@ angular.module('starter.controller.request', [])
 .controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition) {
 
   $scope.loadingRequest = true;
-  $scope.profile = AppContext.getAccount();
+  $scope.profile = null;
   $scope.state = "";
 
   // request data skeleton
@@ -218,7 +218,6 @@ angular.module('starter.controller.request', [])
          console.warn("IF NOT DEV-MODE: MISSING party.user - setting DEV-DEFAULT");
      }
 
-     $scope.confetti = {min: $rootScope.party.newRequestMinKonfetti, max: $rootScope.party.konfettiCount, toSpend: $rootScope.party.newRequestMinKonfetti};
   };
 
   $scope.tapRequestKonfetti = function($event, request) {
@@ -336,6 +335,11 @@ angular.module('starter.controller.request', [])
   $scope.entercount = 0;
   $scope.$on('$ionicView.enter', function(e) {
 
+      $scope.profile = AppContext.getAccount();
+      if ($scope.profile.spokenLangs.length<=1) {
+          $scope.profile.spokenLangs = [$rootScope.actualLang];
+      }
+
       $scope.entercount++;
 
       // get request id if its a existing request
@@ -359,6 +363,9 @@ angular.module('starter.controller.request', [])
           $state.go('dash', {id: 0});
           return;
       }
+
+     // update confetti values
+     $scope.confetti = {min: $rootScope.party.newRequestMinKonfetti, max: $rootScope.party.konfettiCount, toSpend: $rootScope.party.newRequestMinKonfetti};
 
   });
 
@@ -595,7 +602,6 @@ angular.module('starter.controller.request', [])
 
                // WIN
                if (result.cancel) return;
-               // TODO: store also comment on location
                $scope.saveLocationMediaItem(result.lat,result.lon, result.comment);
                $timeout(function(){
                 $ionicScrollDelegate.scrollBottom(true);
@@ -652,7 +658,6 @@ angular.module('starter.controller.request', [])
                     template: '<img src="img/spinner.gif" />'
                 });
 
-                // TODO: make sure comment gets stored as part of date (and location) maybe have multilang media item connected to it? concept decission.
                 ApiService.postDateMediaItemOnRequest($scope.request.id, result.combinedDate, result.comment, function(mediaitem) {
                         // WIN
                         $ionicLoading.hide();

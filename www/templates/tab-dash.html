@@ -61,9 +61,11 @@
               <button class="button button-positive" on-tap="buttonLoginLogin()">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
+              <!--
               <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 10px; color: #387EF5;">
                   {{ 'LOGINBUTTON_LOGINFORGOT' | translate }}
               </div>
+              -->
           </div>
       </div>
 
@@ -120,14 +122,13 @@
               <button id="loginbutton" class="button button-positive" ng-click="buttonLoginLoginFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
+              <!--
               <div on-tap="buttonLoginRecover()" style="text-align: center; font-weight: normal; padding-top: 16px; color: #387EF5;">
                   {{ 'LOGINBUTTON_LOGINFORGOT' | translate }}
-              </div>
-              <!--
+              </div>-->
               <div on-tap="buttonLoginRegister()" style="text-align: center; font-weight: normal; padding-top: 12px; color: #387EF5;">
                   {{ 'LOGINBUTTON_REGISTERFORGOT' | translate }}
               </div>
-              -->
           </div>
       </div>
 
@@ -224,9 +225,9 @@
       <!--
         REDEEM CODE - when zero konfetti on party
       -->
-
-      <div ng-show="party.konfettiCount==0" style="padding-top: 16px; text-align: center;" ng-cloak>
-        <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive">
+      <div class="card" ng-show="party.konfettiCount==0" style="margin-bottom: 10px;padding-top: 16px; text-align: center;" ng-cloak>
+        <div>Du hast kein Konfetti für diese Gruppe. Löse einen Gutschein ein oder erledige eine offene Aufgabe, um Konfetti zu erhalten.</div>  
+        <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px; margin: 10px;">
              {{ 'REDEEMCOUPON' | translate }}
         </button>
       </div>

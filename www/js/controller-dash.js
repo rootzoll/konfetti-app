@@ -19,6 +19,7 @@ angular.module('starter.controller.dash', [])
          */
 
         $scope.state = "INIT";
+        $scope.onView = false;
 
         $scope.userId = 0;
         $scope.loadingParty = true;
@@ -73,11 +74,11 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkEmail = function(email) {
 
-            console.log("checkEmail ",$scope.login);
+            //console.log("checkEmail ",$scope.login);
 
             // as long as input field does not return a valid email
             if (typeof email == "undefined") {
-                console.log("email not valid --> not free");
+                //console.log("email not valid --> not free");
                 $scope.login.free = false;
                 return;
             }
@@ -95,7 +96,7 @@ angular.module('starter.controller.dash', [])
                     }
                     $scope.login.free = result;
                 } else {
-                    console.log("input("+$scope.login.Email+") not anymore("+name+")");
+                    //console.log("input("+$scope.login.Email+") not anymore("+name+")");
                 }
 
             });
@@ -369,6 +370,14 @@ angular.module('starter.controller.dash', [])
 
         // when user wants to create a new request
         $scope.onNewRequest = function() {
+
+            // check if user hast enough konfetti to start new task
+            console.dir($scope.party);
+            if ($scope.party.newRequestMinKonfetti>$scope.party.konfettiCount) {
+                PopupDialogs.showIonicAlertWith18nText("IMPORTANT", "LOWKONFETTI", null);
+                return;
+            }
+
             $state.go('request-detail', {id: 0, area: 'top'});
         };
 
@@ -387,9 +396,9 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
-            // new chat message --> go to request page - scroll down to chats
+            // new chat message --> jump to chat view
             if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
-                $state.go('request-detail', {id: noti.ref, area: 'chats'});
+                $state.go('chat-detail', {id: noti.ref});
                 return;
             }
 
@@ -534,8 +543,13 @@ angular.module('starter.controller.dash', [])
         $scope.reloadPartyList = function() {
 
             // prevent double refresh clicks
-            if ($rootScope.partyList.length>0) {
-                var actualParty = $rootScope.partyList[$scope.actualPartyIndex].id;
+            if ($scope.partyList.length>0) {
+                var actualParty = 0;
+                if (typeof $scope.partyList[$scope.actualPartyIndex] != "undefined") {
+                    actualParty = $scope.partyList[$scope.actualPartyIndex].id;
+                } else {
+                    actualParty = $rootScope.party.id;
+                }
                 var actualTS = new Date().getTime();
                 var diff = actualTS - $scope.lastPartyRefreshStart;
                 if ((diff<2000) && (actualParty==$scope.lastPartyRefreshID)) {
@@ -596,6 +610,8 @@ angular.module('starter.controller.dash', [])
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
 
+            $scope.onView = true;
+
             // reset account on enter when flag is set
             if ($rootScope.resetAccount) {
                 AppContext.setAccount({clientId:""});
@@ -607,8 +623,24 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         });
 
+        // event when user is leaving the view
+        $scope.$on('$ionicView.leave', function(e) {
+            $scope.onView = false;
+        });
+
+        // when outside event says to reload party
+        $scope.$on('dash-reloadparty', function(e) {
+            if ($scope.onView) $scope.reloadPartyList();
+        });
+
+        // event when app comes back from background
+        $scope.$on('cordova-resume', function(e) {
+            if ($scope.onView) $timeout($scope.action(),10);
+        });
+
         // the OK button on the intro/welcome screen
         $scope.buttonIntroScreenOK = function() {
+            KonfettiToolbox.updateGPS();
             var state = AppContext.getLocalState();
             state.introScreenShown = true;
             AppContext.setLocalState(state);
@@ -936,8 +968,31 @@ angular.module('starter.controller.dash', [])
 
             // make API call to load party data
             $scope.state = "PARTYWAIT";
+
             $rootScope.party.id = 0;
-            ApiService.loadParty($rootScope.partyList[$scope.actualPartyIndex].id,function(data){
+
+            // set partyid to load ... if $rootScope.focusPartyId is set force this one
+            var partyToLoad = 0;
+            if (typeof $scope.partyList[$scope.actualPartyIndex] != "undefined") {
+                partyToLoad = $scope.partyList[$scope.actualPartyIndex].id;
+            }
+            if ($rootScope.focusPartyId > 0) {
+
+                partyToLoad = $rootScope.focusPartyId;
+
+                // set the correct actualPartyIndex (if available)          
+                $scope.actualPartyIndex = 0;
+                for (var i=0; i<$scope.partyList.length; i++) {
+                    if ($scope.partyList[i].id == $rootScope.focusPartyId) {
+                        $scope.actualPartyIndex=i;
+                        break;
+                    }
+                }
+                $rootScope.focusPartyId = 0;
+            }
+
+
+            ApiService.loadParty(partyToLoad,function(data){
                 $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;
@@ -955,6 +1010,11 @@ angular.module('starter.controller.dash', [])
                 $scope.updatesOnParty = false;
                 $scope.showNotifications = ($scope.notifications.length>0);
                 $rootScope.initDone = true;
+
+                // remember as last focused party
+                var localState = AppContext.getLocalState();
+                localState.lastFocusedPartyID = partyToLoad;
+                AppContext.setLocalState(localState);
 
                 // spendable konfetti
                 $scope.hasKonfettiToSpend =  false;
