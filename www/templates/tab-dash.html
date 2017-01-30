@@ -266,7 +266,7 @@
         REDEEM CODE - when zero konfetti on party
       -->
       <div class="card" ng-show="party.konfettiCount==0" style="margin-bottom: 10px;padding-top: 16px; text-align: center;" ng-cloak>
-        <div>Du hast kein Konfetti für diese Gruppe. Löse einen Gutschein ein oder erledige eine offene Aufgabe, um Konfetti zu erhalten.</div>  
+        <div>{{ 'NOKONFETTI_INFO' | translate }}</div>  
         <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px; margin: 10px;">
              {{ 'REDEEMCOUPON' | translate }}
         </button>
