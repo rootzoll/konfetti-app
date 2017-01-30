@@ -411,6 +411,14 @@ angular.module('starter.controller.dash', [])
 
         // when user wants to create a new request
         $scope.onNewRequest = function() {
+
+            // check if user hast enough konfetti to start new task
+            console.dir($scope.party);
+            if ($scope.party.newRequestMinKonfetti>$scope.party.konfettiCount) {
+                PopupDialogs.showIonicAlertWith18nText("IMPORTANT", "LOWKONFETTI", null);
+                return;
+            }
+
             $state.go('tab.request-detail', {id: 0, area: 'top'});
         };
 

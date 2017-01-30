@@ -3,8 +3,8 @@
     font-size: 80%;
     line-height: 1.4;
     text-align: center;
-    margin-top: -13px;">
-    Das Konfetti wird über alle ausgewählten Personen gleich verteilt. Es stehen die Personen zur Auswahl, mit denen gechattet wurde. Fehlt jemand der geholfen hat? Dann Abbrechen, kurz chatten und nochmal.
+    margin-top: -14px;">
+    {{ 'REWARD_INFO' | translate }}
 </div>
 <ion-list>
     <ion-checkbox data-ng-repeat="chat in request.chats" ng-model="chat.reward" ng-value="chat.id">
