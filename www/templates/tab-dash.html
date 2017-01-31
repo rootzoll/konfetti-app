@@ -3,9 +3,11 @@
     <div class="padding" style="
     background-color: lightgrey;
     z-index: 999;
-    top: 40px;
+    top: 39px;
     position: absolute;
     width: 100%;
+    margin:0px;
+    padding:0px;
     height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR'))">
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
@@ -49,16 +51,16 @@
           </div>
           <div class="item item-text-wrap">
               <ion-list>
-                  <ion-item>
+                  <ion-item style="text-transform: none;line-height: 1.2;">
                       {{ 'LOGIN_STEP1' | translate }}<br>
                   </ion-item>
               </ion-list>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginRegister()">
+              <button class="button button-positive" on-tap="buttonLoginRegister()" style="width:50%;">
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
-              <button class="button button-positive" on-tap="buttonLoginLogin()">
+              <button class="button button-positive" on-tap="buttonLoginLogin()" style="width:50%;">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
               <!--
@@ -75,12 +77,12 @@
           <div class="item item-divider">
               {{ 'REGISTER_INFO' | translate }}
           </div>
-          <div class="item item-text-wrap">
+          <div class="item item-text-wrap" style="margin: 0px;background: white; padding-bottom: 0px;">
               <div class="list list-inset" style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
                       <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
                       onkeydown="if(event.keyCode==13)document.getElementById('registerpassword').focus();" ng-change="checkEmail(login.Email)">
-                      <span ng-hide="login.free" style="width: 30px;" on-tap="infoNameUnvalid()">
+                      <span ng-hide="login.free" style="width: 30px;position: absolute;top: 29px;right: 0px;" on-tap="infoNameUnvalid()">
                             <i class="icon ion-alert-circled" style="color:red;width:28px;"></i>
                        </span>
                   </label>
@@ -91,7 +93,7 @@
               </div>
           </div>
           <div class="item item-divider">
-              <button id="registerbutton" class="button button-positive" ng-click="buttonLoginRegisterFinal(login.Email, login.Password)" >
+              <button id="registerbutton" class="button button-positive" ng-click="buttonLoginRegisterFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
               <div on-tap="buttonLoginLogin()" style="text-align: center; font-weight: normal; padding-top: 16px; color: #387EF5;">
@@ -106,7 +108,7 @@
           <div class="item item-divider">
               {{ 'LOGIN_INFO' | translate }}
           </div>
-          <div class="item item-text-wrap">
+          <div class="item item-text-wrap" style="margin: 0px;background: white; padding-bottom: 0px;">
               <div class="list list-inset"  style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
                       <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
@@ -298,10 +300,6 @@
 
       <div requestcard data-ng-repeat="request in requestsDone" requesttype="interactionRequestCard" id="openRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
 
-      </div>
-
-      <div ng-hide="loadingParty" style="text-align:center;font-size:74%;color:grey;padding:12px;padding-top: 16px;" ng-class="dashPartypanelClass">
-          {{latestGitVersion}}
       </div>
 
   </ion-content>

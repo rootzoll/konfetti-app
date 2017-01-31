@@ -12,8 +12,6 @@ angular.module('starter.controller.dash', [])
             $scope.focusPartyId = $stateParams.id;
         }
 
-        $rootScope.resetAccount = false;
-
         /*
          * prepare local scope
          */
@@ -50,8 +48,6 @@ angular.module('starter.controller.dash', [])
         $scope.continueFlag = false;
 
         $scope.checkedAccount = false;
-
-        $scope.showLogOutOption = false;
 
         $scope.hasKonfettiToSpend = true;
         $scope.amountKonfettiToSpend = 0;
@@ -151,6 +147,7 @@ angular.module('starter.controller.dash', [])
             }
         };
 
+        /* example for manually adding a notification
         $scope.addLogoutNotification = function() {
             var notification = {
                 id : -1,
@@ -162,6 +159,7 @@ angular.module('starter.controller.dash', [])
             };
             $scope.globalNotifications.push(notification);
         };
+        */
 
         $scope.buttonLoginRegisterFinal = function(mail,pass) {
 
@@ -187,8 +185,6 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 AppContext.setAccount(account);
                 $scope.login.Password = "";
-                $rootScope.resetAccount = false;
-                $scope.addLogoutNotification();
                 $scope.state = "INIT";
                 $scope.action();
             }, function(errorcode) {
@@ -231,13 +227,11 @@ angular.module('starter.controller.dash', [])
             ApiService.login(mail, pass, function(account) {
                 // WIN
                 $ionicLoading.hide();
-                $scope.addLogoutNotification();
                 AppContext.setAccount(account);
                 var state = AppContext.getLocalState();
                 state.introScreenShown = true;
                 AppContext.setLocalState(state);
                 $scope.login.Password = "";
-                $rootScope.resetAccount = false;
                 $scope.state = "INIT";
                 $scope.action();
             }, function() {
@@ -414,20 +408,6 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
-            // logout reminder --> flash option
-            if ((noti.type==9) || (noti.type=="LOGOUT_REMINDER")) {
-                document.getElementById('deleteAccount').classList.add("animationPulsateSimple");
-                $timeout(function(){
-                    document.getElementById('deleteAccount').classList.remove("animationPulsateSimple");
-                },2000);
-                return;
-            }
-
-        };
-
-        $scope.resetAccount = function() {
-            localStorage.clear();
-            location.reload();
         };
 
         $scope.determineIfToShowNotificationPanel = function(){
@@ -748,8 +728,6 @@ angular.module('starter.controller.dash', [])
                 	console.log("OK  scope.checkedAccount == true");
                 }
             }
-
-            $scope.showLogOutOption = !AppContext.isRunningWithinApp();
 
             // display intro message
             if (!AppContext.getLocalState().introScreenShown) {

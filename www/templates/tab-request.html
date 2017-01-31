@@ -1,4 +1,4 @@
-<ion-view ng-cloak view-title="{{ 'TAB_REQUEST' | translate }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
+<ion-view ng-cloak view-title="" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <ion-content>
 
@@ -9,8 +9,15 @@
                   <tr>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">
+                                  {{ 'NEWREQUEST_HEAD' | translate }}
+                              </div>
+                              <div style="
+                                margin-top: 10px;
+                                font-size: 83%;
+                                color: grey;">{{ 'NEWREQUEST_SUB' | translate }}</div>
+                              <!--<div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
+                              <div style="direction: ltr;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>-->
                           </div>
                       </td>
                   </tr>
@@ -33,19 +40,18 @@
               <table ng-show="(confetti.max>=confetti.min)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
-                      	  <i ng-class="{'completeInvisible': (request.imageMediaID!=null)}" style="position:relative;top:-4px;left:+55px;" class="icon ion-plus-circled positive"></i>
-                          <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                      	  <i ng-class="{'completeInvisible': (request.imageMediaID!=null)}" style="position:relative;top:36px;left:28px;" class="icon ion-plus-circled positive"></i>
+                          <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey; margin-top: -13px; margin-left: 19px;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div>
-                              <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
+                              <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;     background-color: white;">
                                   <label class="item-input-wrapper">
-                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
-                                      <!--
-                                      <input ng-focus="enterUserName()" ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
-                                      -->
+                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%;" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
                                   </label>
-                                  <span ng-hide="nameValid" style="width: 30px;" on-tap="infoNameUnvalid()">
+                                  <span ng-hide="nameValid" style="width: 30px;position: absolute;
+    right: 18px;
+    top: 22px;" on-tap="infoNameUnvalid()">
                                       <i class="icon ion-alert-circled" style="color:red;width:28px;"></i>
                                   </span>
                               </div>
@@ -59,9 +65,9 @@
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateHeadlineInput}" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
+                          <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateHeadlineInput}" style="border-width:0px; padding-bottom:3px;padding-top: 16px;background-color: white;">
                               <label class="item-input-wrapper">
-                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
+                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%;" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
                               </label>
                           </div>
                           <div ng-show="headline.temp.length>35" style="color: red; font-size: 75%;">
@@ -78,7 +84,7 @@
                   </tr>
                   <tr>
                       <td colspan="2" align="center">
-                          <div class="item range" style="width:95%">
+                          <div class="item range" style="width:95%;background-color: white;">
                               <span style="font-size: 75%">{{confetti.min}}</span>
                               <input id="konfettiSlide" ng-model="confetti.toSpend" style="margin: 0px; width: 100%" type="range" name="volume" min="{{confetti.min}}" max="{{confetti.max}}">
                               <span style="font-size: 75%">{{confetti.max}}</span>
@@ -90,7 +96,7 @@
                           <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive">
                               {{ 'SUBMIT' | translate }}
                           </button><br>
-                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;">
+                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;">
                               {{ 'ADDINFO' | translate }}
                           </button>
                       </td>
@@ -312,10 +318,6 @@
           <div data-ng-repeat="info in request.info" >
               <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" ></div>
           </div>
-      </div>
-
-      <div style="text-align:center;font-size:74%;color:grey;padding:12px;">
-          {{latestGitVersion}}
       </div>
 
   </ion-content>

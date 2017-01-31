@@ -25,13 +25,41 @@ angular.module('starter', [
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
 
+  $rootScope.appInitDone = false;
+
+  $rootScope.ABOUTKONFETTI_HEAD = "";
+  $rootScope.ABOUTKONFETTI_BODY = "";
+  $rootScope.TAB_PARTIES = "";
+  $rootScope.LOGOUT = "";
+
   $ionicPlatform.ready(function() {
+
+    // translate side menu strings (is needed manually because side rendered before ionic ready)
+    $timeout(function(){
+    $translate("ABOUTKONFETTI_HEAD").then(function (ABOUTKONFETTI_HEAD) {
+          $translate("ABOUTKONFETTI_BODY").then(function (ABOUTKONFETTI_BODY) {
+              $translate("TAB_PARTIES").then(function (TAB_PARTIES) {
+                  $translate("LOGOUT").then(function (LOGOUT) {
+                      $rootScope.ABOUTKONFETTI_HEAD = ABOUTKONFETTI_HEAD;
+                      $rootScope.ABOUTKONFETTI_BODY = ABOUTKONFETTI_BODY;
+                      $rootScope.TAB_PARTIES = TAB_PARTIES;
+                      $rootScope.LOGOUT = LOGOUT;
+                  });
+              });
+          });
+      });  
+    },1700);
 
     // Init Settings
     $rootScope.focusPartyId = 0;
     $rootScope.initDone = false;
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
     $rootScope.animationRainIsRunning = false;
+
+    $rootScope.resetAccount = function() {
+        localStorage.clear();
+        location.reload();
+    };
 
     // set running os info
     $rootScope.os = "browser";
@@ -307,37 +335,37 @@ angular.module('starter', [
             // On Review OK or FAIL
             if ((payload.additionalData.type=="REVIEW_OK") || (payload.additionalData.type=="REVIEW_FAIL")) {
                 console.log("Pushnotification REVIEW_OK --> go to party ("+payload.additionalData.partyID+")");
-                $state.go('tab.dash', {id: payload.additionalData.partyID});
+                $state.go('dash', {id: payload.additionalData.partyID});
             } else
 
             // On Review Waiting
             if (payload.additionalData.type=="REVIEW_WAITING") {
                 console.log("Pushnotification REVIEW_WAITING --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             // On New Chat
             if (payload.additionalData.type=="CHAT_NEW") {
                 console.log("Pushnotification CHAT_NEW --> go to chat ("+payload.additionalData.chatID+") on request ("+payload.additionalData.requestID+") on party ("+payload.additionalData.partyID+")");
-                $state.go('tab.chat-detail', {id: payload.additionalData.chatID});
+                $state.go('chat-detail', {id: payload.additionalData.chatID});
             } else
             
             // On New Transfere Received
             if ((payload.additionalData.type=="TRANSFER_RECEIVED") || (payload.additionalData.type=="PAYBACK")) {
                 console.log("Pushnotification TRANSFER_RECEIVED --> go to party ("+payload.additionalData.partyID+")");
-                $state.go('tab.dash', {id: payload.additionalData.partyID});
+                $state.go('dash', {id: payload.additionalData.partyID});
             } else
 
             // On Reward on Task
             if (payload.additionalData.type=="SUPPORT_WIN") {
                 console.log("Pushnotification SUPPORT_WIN --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             // On Task Supported go Done
             if (payload.additionalData.type=="REWARD_GOT") {
                 console.log("Pushnotification REWARD_GOT --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             {
@@ -445,8 +473,12 @@ angular.module('starter', [
     // global scope data
     $rootScope.party = {id:0};
 
+    // just shoe logout option on browser
+    $rootScope.showLogOutOption = !AppContext.isRunningWithinApp();
+
     // always keep as last in this block
     AppContext.setReady();
+    $rootScope.appInitDone = true;
 
   });
 })

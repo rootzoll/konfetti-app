@@ -77,7 +77,7 @@ angular.module('starter.controller.account', [])
                       // WIN
                       $ionicLoading.hide();
                       PopupDialogs.showIonicAlertWith18nText('INFO', 'CREATE_COUPON_OK');
-                  }, function(){
+                  }, function() {
                       // FAIL
                       $ionicLoading.hide();
                       PopupDialogs.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
@@ -128,7 +128,7 @@ angular.module('starter.controller.account', [])
                   template: SUBLINE
               }).then(function(res) {
                   if(res) {
-                      $rootScope.resetAccount = true;
+                      $rootScope.resetAccount();
                       $state.go('dash', {id: 0});
                   }
               });

@@ -383,11 +383,17 @@ angular.module('starter.controller.request', [])
           }
       };
 
+      $translate("OK").then(function (OK) {
       $translate("ISPEAK").then(function (ISPEAK) {
 
-            $scope.en = $scope.profile.spokenLangs.contains("en") ? 1 : 0;
-            $scope.de = $scope.profile.spokenLangs.contains("de") ? 1 : 0;
-            $scope.ar = $scope.profile.spokenLangs.contains("ar") ? 1 : 0;
+            $rootScope.changeLang = function(lang){
+                if (lang=='de') $scope.de=!$scope.de;
+                if (lang=='en') $scope.en=!$scope.en;
+                if (lang=='ar') $scope.ar=!$scope.ar;
+            };
+            $scope.en = $scope.profile.spokenLangs.contains("en") ? true : false;
+            $scope.de = $scope.profile.spokenLangs.contains("de") ? true : false;
+            $scope.ar = $scope.profile.spokenLangs.contains("ar") ? true : false;
 
             var myPopup = $ionicPopup.show({
                       templateUrl: 'templates/pop-languages.html',
@@ -395,15 +401,19 @@ angular.module('starter.controller.request', [])
                       title: ISPEAK,
                       subTitle: "",
                       buttons: [
-                          { text: '<i class="icon ion-android-done"></i>'
+                          { text: OK
                           }
                       ]
             });
             myPopup.then(function(res) {
+                $scope.profile.spokenLangs = [];
+                if ($scope.en) $scope.profile.spokenLangs.push("en");
+                if ($scope.de) $scope.profile.spokenLangs.push("de");
+                if ($scope.ar) $scope.profile.spokenLangs.push("ar");
                 if ($scope.profile.spokenLangs.length===0) $scope.profile.spokenLangs.push(AppContext.getAppLang());
             });
       });
-
+      });
   };
 
   $scope.takeSelfi = function() {

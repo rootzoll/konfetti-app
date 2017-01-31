@@ -14,7 +14,7 @@ angular.module('starter.controllers', [])
    $scope.back = function() {
 
        if ((typeof $scope.chat.request != "undefined") && ($scope.chat.request!=null) && (typeof $scope.chat.request.id!= "undefined")) {
-          $state.go('tab.request-detail', {id: $scope.chat.request.id, area: 'top'});
+          $state.go('request-detail', {id: $scope.chat.request.id, area: 'top'});
        } else {
           $window.history.back();
        }

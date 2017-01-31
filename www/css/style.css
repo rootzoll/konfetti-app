@@ -410,3 +410,15 @@ div.popup-body span {
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
 }
+
+.title-center {
+    text-align: center !important;
+}
+
+.back-text {
+    padding-top: 12px;
+}
+
+.popup-sub-title {
+    text-align: left;
+}
