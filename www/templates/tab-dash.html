@@ -1,82 +1,47 @@
-<ion-view ng-cloak view-title="{{ 'KONFETTI-APP' | translate }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
-
-    <ion-nav-buttons side="first">
-        <button on-tap="reloadPartyList()" ng-hide="(loadingParty || switchParty)" ng-class="{animationPulsateSimple: updatesOnParty}" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i ng-class="{red: updatesOnParty}" id="reloadIcon" class="icon ion-loop"></i>
-        </button>
-        <button on-tap="loginBack()" ng-show="((state=='LOGIN_LOGIN')||(state=='LOGIN_REGISTER')||(state=='LOGIN_RECOVER'))" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i id="loginBack" class="icon ion-arrow-left-c"></i>
-        </button>
-        <button on-tap="resetAccount()" ng-show="showLogOutOption" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i id="deleteAccount" class="icon ion-log-out"></i>
-        </button>
-    </ion-nav-buttons>
-
-    <ion-nav-buttons side="secondary">
-        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
-            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
-        </button>
-    </ion-nav-buttons>
+<ion-view ng-cloak view-title="{{ party.name }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <div class="padding" style="
     background-color: lightgrey;
     z-index: 999;
-    top: 40px;
+    top: 39px;
     position: absolute;
     width: 100%;
+    margin:0px;
+    padding:0px;
     height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR'))">
 
-        <div class="list card ng-cloak" style="text-align: center; margin-top: 8px;">
-            <div style="width:100%;padding:8px;min-height:90px;">
-                <table style="width: 100%;direction: ltr;">
-                    <tr>
-                        <td ng-show="partyList.length>0" width="30px" style="text-align: left; vertical-align:middle;">
-                            <button 
-                            on-tap="buttonPartyPrev()" 
-                            class="button button-light icon ion-arrow-left-b fixed-ltr"
-                            style="border-left-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
-                            ></button>
-                        </td>
-                        <td width="*" style="text-align: center; vertical-align: middle;" on-tap="showPartyInfo()">
-                            <div ng-hide="(loadingParty || switchParty)" style="min-height: 70px;">
+        <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
+            <div style="width:100%;padding:14px;">
+                <div ng-hide="(loadingParty || switchParty)" on-tap="showPartyInfo()">
+                    <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                      {{party.konfettiCount}} {{ 'KONFETTI' | translate }}
+                      <i class="icon ion-cash"></i>
+                    </div>
+                    <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                      ??? {{ 'KONFETTI' | translate }}
+                    </div>
+                    <div style="direction: ltr;">
+                        <span style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
+                        <!--
+                        <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
+                        <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
+                        -->
+                      <span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
+                        <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
+                    </div>
+                </div>
 
-                                <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
-                                	{{party.konfettiCount}} {{ 'KONFETTI' | translate }}
-                                </div>
-                                <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;padding-top: 3px;">
-                                	??? {{ 'KONFETTI' | translate }}
-                                </div>
-                                <div style="font-weight: bold; font-size: 100%; direction: ltr;padding-top:4px;">{{party.name}} <span style="font-weight: normal;">({{party.distanceToUser | distance}})</span></div>
-                                <div style="direction: ltr;">
-                                    <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
-                                    <span ng-show="hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFOANDSPEND' | translate }}</span>
-                                	<span ng-show="(isReviewerForThisParty) && (!isAdminForThisParty)" style="font-size: 90%; font-weight: bold; color: darkorange">&nbsp;R</span>
-                                    <span ng-show="isAdminForThisParty" style="font-size: 90%; font-weight: bold; color: darkred">&nbsp;A</span>
-                                </div>
-
-                            </div>
-                            <div ng-show="(loadingParty || switchParty)" style="min-height: 70px; padding-top: 10px;">
-                                <ion-spinner icon="android"></ion-spinner>
-                                <div ng-show="(state==='')">
-                                    {{ 'INITACCOUNT' | translate }}
-                                </div>
-                                <div style="color:lightgrey;font-size: 75%">
-                                    {{ state | translate }}
-                                </div>
-                            </div>
-                        </td>
-                        <td ng-show="partyList.length>0" width="30px" style="text-align: right; vertical-align:middle;direction: ltr;">
-                            <button 
-                            on-tap="buttonPartyNext()" 
-                            class="button button-light icon ion-arrow-right-b fixed-ltr"
-                            style="border-right-width: 0px; border-top-width: 0px; border-bottom-width: 0px;border-radius: 0px !important; height: 100%;"
-                            ></button>
-                        </td>
-                    </tr>
-                </table>
+                <div ng-show="(loadingParty || switchParty)" style="padding-top: 10px;">
+                    <ion-spinner icon="android"></ion-spinner>
+                    <div ng-show="(state==='')">
+                        {{ 'INITACCOUNT' | translate }}
+                    </div>
+                    <div style="color:lightgrey;font-size: 75%">
+                        {{ state | translate }}
+                    </div>
+                </div>
             </div>
         </div>
-
     </div>
 
   <ion-content>
@@ -89,16 +54,16 @@
           </div>
           <div class="item item-text-wrap">
               <ion-list>
-                  <ion-item>
+                  <ion-item style="text-transform: none;line-height: 1.2;">
                       {{ 'LOGIN_STEP1' | translate }}<br>
                   </ion-item>
               </ion-list>
           </div>
           <div class="item item-divider">
-              <button class="button button-positive" on-tap="buttonLoginRegister()">
+              <button class="button button-positive" on-tap="buttonLoginRegister()" style="width:50%;">
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
-              <button class="button button-positive" on-tap="buttonLoginLogin()">
+              <button class="button button-positive" on-tap="buttonLoginLogin()" style="width:50%;">
                   {{ 'LOGINBUTTON_LOGIN' | translate }}
               </button>
               <!--
@@ -115,12 +80,12 @@
           <div class="item item-divider">
               {{ 'REGISTER_INFO' | translate }}
           </div>
-          <div class="item item-text-wrap">
+          <div class="item item-text-wrap" style="margin: 0px;background: white; padding-bottom: 0px;">
               <div class="list list-inset" style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
                       <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
                       onkeydown="if(event.keyCode==13)document.getElementById('registerpassword').focus();" ng-change="checkEmail(login.Email)">
-                      <span ng-hide="login.free" style="width: 30px;" on-tap="infoNameUnvalid()">
+                      <span ng-hide="login.free" style="width: 30px;position: absolute;top: 29px;right: 0px;" on-tap="infoNameUnvalid()">
                             <i class="icon ion-alert-circled" style="color:red;width:28px;"></i>
                        </span>
                   </label>
@@ -131,7 +96,7 @@
               </div>
           </div>
           <div class="item item-divider">
-              <button id="registerbutton" class="button button-positive" ng-click="buttonLoginRegisterFinal(login.Email, login.Password)" >
+              <button id="registerbutton" class="button button-positive" ng-click="buttonLoginRegisterFinal(login.Email, login.Password)">
                   {{ 'LOGINBUTTON_REGISTER' | translate }}
               </button>
               <div on-tap="buttonLoginLogin()" style="text-align: center; font-weight: normal; padding-top: 16px; color: #387EF5;">
@@ -146,7 +111,7 @@
           <div class="item item-divider">
               {{ 'LOGIN_INFO' | translate }}
           </div>
-          <div class="item item-text-wrap">
+          <div class="item item-text-wrap" style="margin: 0px;background: white; padding-bottom: 0px;">
               <div class="list list-inset"  style="margin-top: 0px;">
                   <label class="item item-input" style="padding-left: 0px;">
                       <input ng-model="login.Email" type="email" placeholder="{{ 'EMAIL' | translate }}" style="background-color: #fcfcfc; padding: 10px;"
@@ -229,10 +194,10 @@
 
       <!-- INFO SIGNALS -->
 
-      <div style="height: 93px;"></div>
+      <div style="height: 75px;"></div>
 
       <!-- pushes content far down until angular is loaded -->
-      <div ng-hide="controllerInitDone" style="height: 800px;"></div>
+      <div ng-show="loadingParty" style="height: 800px;"></div>
 
       <div ng-show="(state==='GPSFAIL')" style="width: 100%; text-align: center; padding-top: 50px" ng-cloak>
           <div style="font-size: 500%;color:#387ef5">
@@ -252,7 +217,7 @@
           </div>
       </div>
 
-      <div id="dash-partypanel" ng-hide="loadingParty" class="padding" ng-class="dashPartypanelClass">
+      <div id="dash-partypanel" ng-hide="loadingParty" ng-class="dashPartypanelClass">
 
       <!--
         NOTIFICATIONS - just show if available
@@ -309,11 +274,16 @@
       <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
 
       <!-- LIST OPEN TASKS -->
-      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px;  margin-top: 13px;" ng-cloak>
+      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px; margin-top: 18px;" ng-cloak>
           <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_OPEN' | translate }}</span></td>
-                  <td style="text-align: {{ spClass=='rtl' ? 'left' : 'right' }}; vertical-align: middle;"><button on-tap="openChangeSortDialog()" class="button button-small button-clear button-dark" style="padding:0px;margin:0px;padding-right:8px;padding-left:20px;"><i class="icon ion-android-arrow-dropdown sortselect-icon" id="sortselect-icon"></i> {{actualSorting | translate }}</button></td>
+                  <td style="text-align: {{ spClass=='rtl' ? 'left' : 'right' }}; vertical-align: middle;">
+                     <button on-tap="openChangeSortDialog()" class="button button-small button-clear button-dark" style="padding:0px;margin:0px;padding-right:8px;padding-left:20px;text-align: {{ spClass=='rtl' ? 'left' : 'right' }};">
+                        <i class="icon ion-android-arrow-dropdown sortselect-icon" id="sortselect-icon"></i>
+                        {{actualSorting | translate }}
+                    </button>
+                  </td>
               </tr>
           </table>
       </div>
@@ -326,13 +296,6 @@
            <div class="item item-text-wrap" style="font-weight: bold;">
                {{ 'NOCONTENT' | translate }}
            </div>
-      </div>
-
-      <!-- CREATE NEW TASK BUTTON -->
-      <div class="card" style="margin-bottom: 10px; margin-top: 0px; padding: 10px; text-align: center;">
-          <button on-tap="onNewRequest()" class="button icon-left ion-plus-circled button-positive" style="border-radius: 6px">
-               {{ 'NEWREQUEST' | translate }}
-          </button>
       </div>
 
       <!-- LIST DONE TASKS -->
@@ -349,9 +312,11 @@
 
       </div>
 
-      <div ng-hide="loadingParty" style="text-align:center;font-size:74%;color:grey;padding:12px;padding-top: 16px;" ng-class="dashPartypanelClass">
-          {{latestGitVersion}}
-      </div>
-      
   </ion-content>
+
+  <!-- CREATE NEW TASK BUTTON -->
+  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" ng-if="initDone">
+      <i class="icon ion-android-add"></i>
+  </button>
+
 </ion-view>

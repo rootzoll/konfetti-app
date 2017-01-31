@@ -12,8 +12,6 @@ angular.module('starter.controller.dash', [])
             $scope.focusPartyId = $stateParams.id;
         }
 
-        $rootScope.resetAccount = false;
-        
         /*
          * prepare local scope
          */
@@ -28,7 +26,7 @@ angular.module('starter.controller.dash', [])
         $scope.isReviewerForThisParty = false;
         $scope.isAdminForThisParty = false;
 
-        $scope.partyList = [];
+        $rootScope.partyList = [];
         $scope.actualPartyIndex = 0;
 
         $scope.gpsWaitCount = 0;
@@ -51,11 +49,9 @@ angular.module('starter.controller.dash', [])
 
         $scope.checkedAccount = false;
 
-        $scope.showLogOutOption = false;
-        
         $scope.hasKonfettiToSpend = true;
         $scope.amountKonfettiToSpend = 0;
-        $scope.sendKonfettiWhiteList = [];  
+        $scope.sendKonfettiWhiteList = [];
 
         $scope.dashPartypanelClass = "";
 
@@ -70,7 +66,7 @@ angular.module('starter.controller.dash', [])
 
         /*
          * controller logic
-         */      
+         */
 
         $scope.checkEmail = function(email) {
 
@@ -114,7 +110,7 @@ angular.module('starter.controller.dash', [])
                 }
             });
         };
-        
+
         $scope.getKonfetti = function() {
         	$scope.partyPopUp.close();
         	$scope.onButtonCoupon();
@@ -122,7 +118,7 @@ angular.module('starter.controller.dash', [])
 
         $scope.buttonLoginRegister = function() {
             $timeout(function(){
-                $scope.login.Password = "";    
+                $scope.login.Password = "";
                 $scope.state = "LOGIN_REGISTER";
             },10);
         };
@@ -135,7 +131,7 @@ angular.module('starter.controller.dash', [])
             }
             $scope.sortRequests();
         };
-        
+
         $scope.tapOnPartyContact = function() {
         	if ($rootScope.party.contact.lastIndexOf('http', 0) === 0) {
                	// open link in browser
@@ -151,6 +147,7 @@ angular.module('starter.controller.dash', [])
             }
         };
 
+        /* example for manually adding a notification
         $scope.addLogoutNotification = function() {
             var notification = {
                 id : -1,
@@ -162,6 +159,7 @@ angular.module('starter.controller.dash', [])
             };
             $scope.globalNotifications.push(notification);
         };
+        */
 
         $scope.buttonLoginRegisterFinal = function(mail,pass) {
 
@@ -185,10 +183,8 @@ angular.module('starter.controller.dash', [])
             ApiService.createFullAccount(mail, pass, AppContext.getAppLang(), function(account) {
                 // WIN
                 $ionicLoading.hide();
-                AppContext.setAccount(account);
+                AppContext.setAccount(account,'controller-dash buttonLoginRegisterFinal');
                 $scope.login.Password = "";
-                $rootScope.resetAccount = false;
-                $scope.addLogoutNotification();
                 $scope.state = "INIT";
                 $scope.action();
             }, function(errorcode) {
@@ -211,7 +207,7 @@ angular.module('starter.controller.dash', [])
         $scope.buttonLoginLogin = function() {
             $timeout(function(){
                 $scope.login.Password = "";
-                $scope.login.free = true; 
+                $scope.login.free = true;
                 $scope.state = "LOGIN_LOGIN";
             },10);
         };
@@ -231,13 +227,11 @@ angular.module('starter.controller.dash', [])
             ApiService.login(mail, pass, function(account) {
                 // WIN
                 $ionicLoading.hide();
-                $scope.addLogoutNotification();
-                AppContext.setAccount(account);
+                AppContext.setAccount(account,'controller-dash buttonLoginLoginFinal');
                 var state = AppContext.getLocalState();
                 state.introScreenShown = true;
                 AppContext.setLocalState(state);
                 $scope.login.Password = "";
-                $rootScope.resetAccount = false;
                 $scope.state = "INIT";
                 $scope.action();
             }, function() {
@@ -350,59 +344,18 @@ angular.module('starter.controller.dash', [])
             $scope.action();
         };
 
-        // the previous party from list (closer)
-        $scope.buttonPartyPrev = function() {
+        $rootScope.updatePartyIndex = function(index) {
+          if (index < 0 || index > $rootScope.partyList.length) {
+            throw "IndexOutOfBounds (" + index + ")";
+          }
 
-            if ($scope.actualPartyIndex==0) {
-                $scope.dashPartypanelClass = "wiggle";
-                $timeout(function(){
-                    $scope.dashPartypanelClass = "";
-                },700);
-                return;
-            }
+          $scope.switchParty = true;
+          $scope.actualPartyIndex = index;
 
-            $scope.switchParty = true;
-            $scope.dashPartypanelClass = "bounceOutRight";
-            $timeout(function(){
-                $scope.dashPartypanelClass = "";
-                $scope.actualPartyIndex--;
-                if ($scope.actualPartyIndex<0) $scope.actualPartyIndex = $scope.partyList.length-1;
-                $scope.action(function(){
-                    $scope.switchParty = false;
-                    $scope.dashPartypanelClass = "bounceInLeft";
-                    $timeout(function(){
-                        $scope.dashPartypanelClass = "";
-                    },700);
-                });
-            },700);
-        };
-
-        // next party in list (more far away)
-        $scope.buttonPartyNext = function() {
-
-            if ($scope.actualPartyIndex==($scope.partyList.length-1)) {
-                $scope.dashPartypanelClass = "wiggle";
-                $timeout(function(){
-                    $scope.dashPartypanelClass = "";
-                },700);
-                return;
-            }
-        
-            $scope.switchParty = true;
-            $scope.dashPartypanelClass = "bounceOutLeft";
-            $timeout(function(){
-                $scope.dashPartypanelClass = "";
-                $scope.actualPartyIndex++;
-                if ($scope.actualPartyIndex>=$scope.partyList.length) $scope.actualPartyIndex = 0;
-                $scope.action(function(){
-                    $scope.switchParty = false;
-                    $scope.dashPartypanelClass = "bounceInRight";
-                    $timeout(function(){
-                        $scope.dashPartypanelClass = "";
-                    },700);
-                });
-            },700);
-        };
+          $scope.action(function() {
+            $scope.switchParty = false;
+          });
+        }
 
         // back to login start, when on register, login or recover screen
         $scope.loginBack = function() {
@@ -419,7 +372,7 @@ angular.module('starter.controller.dash', [])
                 return;
             }
 
-            $state.go('tab.request-detail', {id: 0, area: 'top'});
+            $state.go('request-detail', {id: 0, area: 'top'});
         };
 
         // when user taps a notification
@@ -427,48 +380,34 @@ angular.module('starter.controller.dash', [])
 
             // request now public --> go to request page
             if ((noti.type==2) || (noti.type=="REVIEW_OK")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // request rejected --> go to request page
             if ((noti.type==4) || (noti.type=="REVIEW_FAIL")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // new chat message --> jump to chat view
             if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
-                $state.go('tab.chat-detail', {id: noti.ref});
+                $state.go('chat-detail', {id: noti.ref});
                 return;
             }
 
             // rewarded --> go to request page
             if ((noti.type==7) || (noti.type=="REWARD_GOT")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // support done --> go to request page
             if ((noti.type==8) || (noti.type=="SUPPORT_WIN")) {
-                $state.go('tab.request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
-            // logout reminder --> flash option
-            if ((noti.type==9) || (noti.type=="LOGOUT_REMINDER")) {
-                document.getElementById('deleteAccount').classList.add("animationPulsateSimple");
-                $timeout(function(){
-                    document.getElementById('deleteAccount').classList.remove("animationPulsateSimple");
-                },2000);
-                return;
-            }
-
-        };
-
-        $scope.resetAccount = function() {
-            localStorage.clear();
-            location.reload();
         };
 
         $scope.determineIfToShowNotificationPanel = function(){
@@ -516,7 +455,7 @@ angular.module('starter.controller.dash', [])
 
         // when the user taps a request for more information
         $scope.tapRequestMore = function($event, request) {
-            $state.go('tab.request-detail', {id: request.id, area: 'top'});
+            $state.go('request-detail', {id: request.id, area: 'top'});
         };
 
         // when user taps on a request to add more konfetti to it
@@ -602,7 +541,7 @@ angular.module('starter.controller.dash', [])
             }
 
             $scope.focusPartyId = $rootScope.party.id;
-            $scope.partyList = [];
+            $rootScope.partyList = [];
             $scope.actualPartyIndex = 0;
             $scope.updatesOnParty = false;
             $log.info("TODO: Also UPDATE GPS coordinates later");
@@ -618,25 +557,26 @@ angular.module('starter.controller.dash', [])
 
         // pop up with more info in party
         $scope.partyinfo_youhavekonfetti = "";
-        $scope.partyinfo_youcanspendkonfetti = "";        
+        $scope.partyinfo_youcanspendkonfetti = "";
         $scope.showPartyInfo = function() {
           $translate("YOUHAVEKONFETTI").then(function (LINE1) {
           	$scope.partyinfo_youhavekonfetti = LINE1.replace("XXXX", $scope.party.konfettiCount);
             $translate("KONFETTISENDNOTICE").then(function (LINE2) {
-            	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", $scope.amountKonfettiToSpend); 
+            	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", $scope.amountKonfettiToSpend);
                 $translate("PARTYINFO_SUB").then(function (SUB) {
+                $translate("OK").then(function (OK) {
                     $scope.partyPopUp = $ionicPopup.show({
                     	cssClass: 'bigPopup',
                         templateUrl: 'templates/pop-partyinfo.html',
                         title: $scope.party.name,
-                        subTitle: SUB,
                         scope: $scope,
                         buttons: [
-                            { text: '<i class="icon ion-ios-close-outline"></i>' }
+                            { text: OK }
                         ]
                     });
                     // on close
                     $scope.partyPopUp.then(function(res) {});
+                });
                 });
             });
           });
@@ -651,22 +591,23 @@ angular.module('starter.controller.dash', [])
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
 
+            $rootScope.topbarShowSetting = true;
+
             $scope.onView = true;
-
-            // reset account on enter when flag is set
-            if ($rootScope.resetAccount) {
-                AppContext.setAccount({clientId:""});
-                localStorage.clear();
-            }
-
             $scope.userId = AppContext.getAccount().id;
-            $scope.controllerInitDone = true;
+            
+            $scope.controllerInitDone = false;
             $scope.action();
+
         });
 
         // event when user is leaving the view
         $scope.$on('$ionicView.leave', function(e) {
+
+            $rootScope.topbarShowSetting = false;
+
             $scope.onView = false;
+            $scope.loadingParty = true;
         });
 
         // when outside event says to reload party
@@ -710,7 +651,8 @@ angular.module('starter.controller.dash', [])
         };
 
         // action to refresh dash data
-        $scope.action = function(whenReadyCallback) {        	
+        // TODO should allow reloading party data without entire screen
+        $scope.action = function(whenReadyCallback) {
 
             // show loading spinner
             $scope.loadingParty = true;
@@ -734,11 +676,16 @@ angular.module('starter.controller.dash', [])
 
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
-            if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (!AppContext.getAccount().clientId || (AppContext.getAccount().clientId.length===0))) {
-            	$scope.state = "LOGIN_START";
-                return;
+
+            // on browser if account not set - show login
+            if (!AppContext.isRunningWithinApp()) {
+                var account = AppContext.getAccount();
+                if (!account.id || (account.id.length===0)) {
+            	    $scope.state = "LOGIN_START";
+                    return;
+                }
             }
-            
+
             // check if got client account
             if (AppContext.getAccount().clientId.length===0) {
                 if ($scope.state != "ACCOUNTWAIT") {
@@ -746,7 +693,7 @@ angular.module('starter.controller.dash', [])
                     ApiService.createGuestAccount(AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
-                        AppContext.setAccount(account);
+                        AppContext.setAccount(account,'controller-dash action1');
                         $scope.action();
                     },function(code){
                         // FAIL
@@ -763,15 +710,15 @@ angular.module('starter.controller.dash', [])
                         // WIN
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'controller-dash action2');
                             PopupDialogs.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
-                            	$scope.resetAccount();
+                            	$rootScope.resetAccount();
                             });
                             return;
                         } else {
                             // refreshing local account with account from server
                             $scope.checkedAccount = true;
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'controller-dash action3');
                             $timeout($scope.action, 1000);
                             $rootScope.$broadcast('account-ready');
                             return;
@@ -788,8 +735,6 @@ angular.module('starter.controller.dash', [])
                 	console.log("OK  scope.checkedAccount == true");
                 }
             }
-
-            $scope.showLogOutOption = !AppContext.isRunningWithinApp();
 
             // display intro message
             if (!AppContext.getLocalState().introScreenShown) {
@@ -820,7 +765,7 @@ angular.module('starter.controller.dash', [])
                 if (message.command=="update-party") {
                     console.log("go update-party");
                     var data = JSON.parse(message.data);
-                    var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
+                    var visiblePartyId = $rootScope.partyList[$scope.actualPartyIndex].id;
                     if (data.party==visiblePartyId) {
                         if ((data.state!="review") || ($scope.isReviewerForThisParty) || ($scope.isAdminForThisParty))
                         $timeout(function(){
@@ -841,7 +786,7 @@ angular.module('starter.controller.dash', [])
                 }
                 if (message.command=="update-chat") {
                     var data = JSON.parse(message.data);
-                    var visiblePartyId = $scope.partyList[$scope.actualPartyIndex].id;
+                    var visiblePartyId = $rootScope.partyList[$scope.actualPartyIndex].id;
                     // only when chat is on actual visible party
                     if (data.party==visiblePartyId) {
                         // only when user is party of chat
@@ -884,7 +829,7 @@ angular.module('starter.controller.dash', [])
             if ($rootScope.gps==='fail') {
 
                 $scope.state = "GPSFAIL";
-                
+
                 PopupDialogs.locationPicker($scope, function(result){
                     // WIN
 
@@ -940,7 +885,7 @@ angular.module('starter.controller.dash', [])
                     account.pushActive = true;
                     account.pushSystem = AppContext.getRunningOS();
                     account.pushID = localPushIds.userId;
-                    AppContext.setAccount(account);
+                    AppContext.setAccount(account,'controller-dash action4');
 
                     // update Account on server
                     ApiService.updateAccount(account, function(){
@@ -964,15 +909,15 @@ angular.module('starter.controller.dash', [])
             }
 
             // load party list (just once when app starts)
-            if ($scope.partyList.length===0) {
+            if ($rootScope.partyList.length===0) {
                 if ($scope.state!="PARTYLISTWAIT") {
                     $scope.state = "PARTYLISTWAIT";
                     ApiService.loadPartylist($rootScope.lat, $rootScope.lon, function(list) {
                         // WIN;
-                        $scope.partyList = list;
-                        if ($scope.partyList.length==0) {
+                        $rootScope.partyList = list;
+                        if ($rootScope.partyList.length==0) {
                             PopupDialogs.errorDialog($scope, "controller-dash-1");
-                        } else {                            
+                        } else {
                             $scope.action();
                         }
                     }, function(code) {
@@ -986,8 +931,8 @@ angular.module('starter.controller.dash', [])
 
             // check if $scope.focusPartyId is in partylist
             var isFocusPartyInList = -1;
-            for (var i=0; i<$scope.partyList.length; i++) {
-                if ($scope.partyList[i].id == $scope.focusPartyId) isFocusPartyInList=i;
+            for (var i=0; i<$rootScope.partyList.length; i++) {
+                if ($rootScope.partyList[i].id == $scope.focusPartyId) isFocusPartyInList=i;
             }
             if ($scope.focusPartyId>0) {
                 if (isFocusPartyInList===-1) {
@@ -999,7 +944,7 @@ angular.module('starter.controller.dash', [])
                         meter: 0,
                         new: 1
                     };
-                    $scope.partyList.unshift(partyObject);
+                    $rootScope.partyList.unshift(partyObject);
                 }
                 // set focus index
                 $scope.actualPartyIndex = isFocusPartyInList;
@@ -1033,6 +978,14 @@ angular.module('starter.controller.dash', [])
 
 
             ApiService.loadParty(partyToLoad,function(data){
+
+                $scope.requestsReview = [];
+                $scope.requestsPosted = [];
+                $scope.requestsInteraction = [];
+                $scope.requestsOpen = [];
+                $scope.requestsDone = [];
+                $scope.notifications = [];
+
                 $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;
@@ -1058,20 +1011,20 @@ angular.module('starter.controller.dash', [])
 
                 // spendable konfetti
                 $scope.hasKonfettiToSpend =  false;
-        		$scope.amountKonfettiToSpend = 0;    
-        		$scope.sendKonfettiWhiteList = [];                   
+        		$scope.amountKonfettiToSpend = 0;
+        		$scope.sendKonfettiWhiteList = [];
                 if (typeof data.sendKonfettiMode != "undefined") {
-                	
+
         			if (data.sendKonfettiMode!="SENDKONFETTIMODE_DISABLED") {
                 		$scope.hasKonfettiToSpend =  true;
         				$scope.amountKonfettiToSpend = data.sendKonfettiMaxAmount;
         				$scope.sendKonfettiWhiteList = data.sendKonfettiWhiteList;
         			}
-        			
+
                 } else {
                 	console.log("MISSING sendKonfettiMode on party data");
          		}
-                
+
                 // rain konfetti if there is a konfetti reward notification
                 try {
                 	if ((typeof data.notifications != "undefined") && (data.notifications.length > 0)) {
@@ -1092,9 +1045,9 @@ angular.module('starter.controller.dash', [])
                     },800);
                 } else {
                    $scope.loadingParty = false;
-                   whenReadyCallback(); 
+                   whenReadyCallback();
                 }
-                
+
             },function(code){
                 // FAIL
                 $scope.loadingParty = false;

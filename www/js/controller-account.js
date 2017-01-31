@@ -8,7 +8,7 @@ angular.module('starter.controller.account', [])
 
       // when no party is loaded
       if ($rootScope.party.id===0) {
-          $state.go('tab.dash', {id: 0});
+          $state.go('dash', {id: 0});
           return;
       }
 
@@ -17,7 +17,7 @@ angular.module('starter.controller.account', [])
 
       $scope.email = AppContext.getAccount().email;
   });
-  
+
   $scope.keyUpEmailInput = function(e) {
   	console.dir(e);
   };
@@ -77,7 +77,7 @@ angular.module('starter.controller.account', [])
                       // WIN
                       $ionicLoading.hide();
                       PopupDialogs.showIonicAlertWith18nText('INFO', 'CREATE_COUPON_OK');
-                  }, function(){
+                  }, function() {
                       // FAIL
                       $ionicLoading.hide();
                       PopupDialogs.showIonicAlertWith18nText('INFO', 'INTERNETPROBLEM');
@@ -110,7 +110,7 @@ angular.module('starter.controller.account', [])
       ApiService.updateAccount(updatedAccount, function(account){
         // WIN
         $ionicLoading.hide();
-        AppContext.setAccount(account);
+        AppContext.setAccount(account,'controller-account.js storeMail');
         PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_OK');
       }, function(){
         // FAIL
@@ -128,8 +128,8 @@ angular.module('starter.controller.account', [])
                   template: SUBLINE
               }).then(function(res) {
                   if(res) {
-                      $rootScope.resetAccount = true;
-                      $state.go('tab.dash', {id: 0});
+                      $rootScope.resetAccount();
+                      $state.go('dash', {id: 0});
                   }
               });
           });

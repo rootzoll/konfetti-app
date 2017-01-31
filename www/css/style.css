@@ -55,9 +55,42 @@
     border-top-width: 1px !important;
 }
 
+.tabs-bottom .tab-nav {
+  height: auto;
+}
+
+.tab-nav.tabs .tab-item {
+  height: auto;
+  padding: 6px;
+}
+
 body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.popup-container .popup {
+  background: white;
+}
+
+.platform-android .popup-body, .platform-override .popup-body {
+    opacity: 1;
+}
+
+[nav-view="cached"], [nav-bar="cached"] {
+    display: none !important;
+}
+
+.menu-content .bar-header .title {
+  top: 2px;
+}
+
+.platform-override .bar .button.icon {
+    min-height: 72px;
+}
+
+.menu-content .bar-header .buttons-right {
+  top: -3px !important;
 }
 
 .chatInputFooter {
@@ -362,7 +395,41 @@ div.popup-body span {
     height: 30px;
 }
 
+.button-fab {
+  top: calc(100% - 80px);
+  right: 12px;
+  position: fixed;
+  z-index:9001;
+}
+
+.card button {
+  width: calc(100% - 24px);
+}
+
 .oneTimeAnimation {
   -webkit-animation-iteration-count: 1;
   animation-iteration-count: 1;
+}
+
+.title-center {
+    text-align: center !important;
+}
+
+.back-text {
+    padding-top: 12px;
+}
+
+.popup-sub-title {
+    text-align: left;
+}
+
+.valid-number {
+    background-color: lightgray;
+    margin-top: 18px;
+}
+
+.popup-body input {
+    border-bottom-color: lightgrey !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 1px !important;
 }

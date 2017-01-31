@@ -106,7 +106,7 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/account/login?mail='+encodeURIComponent(mail)+'&pass='+encodeURIComponent(pass);
                 // WIN
                 var successCallback = function(response) {
-                    AppContext.setAccount(response.data);
+                    AppContext.setAccount(response.data,'service-api login');
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);
@@ -152,7 +152,7 @@ angular.module('starter.api', [])
                 config.data = mail;
                 // WIN
                 var successCallback = function(response) {
-                    AppContext.setAccount(response.data);
+                    AppContext.setAccount(response.data,'service-api recoverPassword');
                     win(response.data);
                 };
                 $http(config).then(successCallback, fail);

@@ -6,11 +6,12 @@
 		{{partyinfo_youhavekonfetti}}
 	</h4>
 	
-	<button ng-click="getKonfetti()" class="button button-small button-positive">
+	<button ng-click="getKonfetti()" class="button button-small button-positive" style="margin-top:6px;">
   		<i class="icon ion-cash"></i> {{ 'COUPONREDEEM' | translate }}
 	</button>
 	
-	<button ng-show="hasKonfettiToSpend" ng-click="sendKonfetti()" class="button button-small button-positive">
+	<!--
+	<button ng-show="hasKonfettiToSpend" ng-click="sendKonfetti()" class="button button-small button-positive" style="margin-top:6px;">
   		<i class="icon ion-paper-airplane"></i> {{ 'SENDKONFETTI' | translate }}
 	</button>
 	
@@ -21,6 +22,7 @@
 	<div ng-show="!hasKonfettiToSpend" style="width: 80%; margin: auto; font-size:75%; font-size:75%;line-height: 100%;padding-top: 6px;color: #666;">
 		{{ 'SENDINGKONFETTIDIASABLED' | translate }}
 	</div>
+	-->
 	
 	<hr style="margin-top:16px; margin-bottom:16px;"/>
 	

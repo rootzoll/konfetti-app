@@ -1,35 +1,31 @@
-<ion-view ng-cloak view-title="{{headerTitle}}" class="sp-{{spClass}}" style="background-color: lightgrey;">
-
-    <ion-nav-buttons side="first">
-        <button on-tap="back()" ng-show="(!loadingParty) && (request.id!=0)" class="button button-clear button-positive" style="padding-left:5px;padding-right:5px;color:grey;">
-            <i id="backIcon" class="icon ion-arrow-left-c"></i>
-        </button>
-    </ion-nav-buttons>
-
-    <ion-nav-buttons side="secondary">
-        <button class="button button-small button-stable button-langselect" on-tap="languageSelectionDialog()">
-            <i class="icon ion-android-arrow-dropdown" id="langselect-icon"></i> {{select.actualLang.display}}
-        </button>
-    </ion-nav-buttons>
+<ion-view ng-cloak view-title="" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <ion-content>
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
 
-          <div style="width:100%;padding:8px">
+          <div style="width:100%;padding:8px" ng-show="(request.id===0)">
               <table style="width: 100%;direction: ltr;">
                   <tr>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>
+
+                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">
+                                  {{ 'NEWREQUEST_HEAD' | translate }}
+                                </div>
+                                <div style="
+                                margin-top: 10px;
+                                font-size: 70%;
+                                color: grey;">{{ 'NEWREQUEST_SUB' | translate }}</div>
+                                </div>
+
                           </div>
                       </td>
                   </tr>
               </table>
           </div>
 
-          <hr style="width: 90%">
+          <hr style="width: 90%" ng-show="(request.id===0)">
 
           <div ng-show="loadingRequest" style="min-height: 70px;">
               <br>
@@ -45,35 +41,34 @@
               <table ng-show="(confetti.max>=confetti.min)" style="width: 100%;">
                   <tr>
                       <td on-tap="takeSelfi()" width="70" style="text-align: center; vertical-align: middle;">
-                      	  <i ng-class="{'completeInvisible': (request.imageMediaID!=null)}" style="position:relative;top:-4px;left:+55px;" class="icon ion-plus-circled positive"></i>
-                          <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                      	  <i ng-class="{'completeInvisible': (request.imageMediaID!=null)}" style="position:relative;top:36px;left:28px;" class="icon ion-plus-circled positive"></i>
+                          <image ng-src="{{getImageUrlFromMediaId(request.imageMediaID)}}" style="width:50px;min-width:50px;height:50px;min-height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey; margin-top: -13px; margin-left: 19px;"/>
                       </td>
                       <td width="*" style="text-align: center; vertical-align: middle;">
-                          <div> 
-                              <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;">
+                          <div>
+                              <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateNameInput}" style="border-width:0px; padding-bottom:3px;     background-color: white;">
                                   <label class="item-input-wrapper">
-                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
-                                      <!--  
-                                      <input ng-focus="enterUserName()" ng-model="profile.name" type="text" style="width:100%" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20">
-                                      -->
+                                      <input ng-model="profile.name" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('headline').focus())" style="width:100%;" placeholder="{{ 'YOURNAME' | translate }}" maxlength="20" ng-change="checkUsername(profile.name)">
                                   </label>
-                                  <span ng-hide="nameValid" style="width: 30px;" on-tap="infoNameUnvalid()">
+                                  <span ng-hide="nameValid" style="width: 30px;position: absolute;
+    right: 18px;
+    top: 22px;" on-tap="infoNameUnvalid()">
                                       <i class="icon ion-alert-circled" style="color:red;width:28px;"></i>
                                   </span>
                               </div>
                               <div on-tap="editSpokenLanguage()" style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                                   {{ 'ISPEAK' | translate }}
-                                  <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
-                                  <span style="border-width: 0px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px;"><i class="icon ion-android-add-circle positive" style="font-size: 125%; position:relative; top: 1px; left:-3px;"></i></span>
+                                  <span data-ng-repeat="lang in profile.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                                  <span style="border-width: 0px; border-style: solid; border-color: grey; padding:2px;"><i class="icon ion-android-add-circle positive" style="font-size: 125%; position:relative; top: 1px; left:-3px;"></i></span>
                               </div>
                           </div>
                       </td>
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateHeadlineInput}" style="border-width:0px; padding-bottom:3px;padding-top: 16px">
+                          <div class="item item-input-inset" ng-class="{animationPulsateOpacity: pulsateHeadlineInput}" style="border-width:0px; padding-bottom:3px;padding-top: 16px;background-color: white;">
                               <label class="item-input-wrapper">
-                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
+                                  <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%;" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
                               </label>
                           </div>
                           <div ng-show="headline.temp.length>35" style="color: red; font-size: 75%;">
@@ -90,19 +85,19 @@
                   </tr>
                   <tr>
                       <td colspan="2" align="center">
-                          <div class="item range" style="width:95%">
+                          <div class="item range" style="width:95%;background-color: white;">
                               <span style="font-size: 75%">{{confetti.min}}</span>
-                              <input id="konfettiSlide" ng-model="confetti.toSpend" style="margin-top: 0px;" type="range" name="volume" min="{{confetti.min}}" max="{{confetti.max}}">
+                              <input id="konfettiSlide" ng-model="confetti.toSpend" style="margin: 0px; width: 100%" type="range" name="volume" min="{{confetti.min}}" max="{{confetti.max}}">
                               <span style="font-size: 75%">{{confetti.max}}</span>
                           </div>
                       </td>
                   </tr>
                   <tr>
                       <td colspan="2">
-                          <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive" style="border-radius: 6px">
+                          <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive">
                               {{ 'SUBMIT' | translate }}
                           </button><br>
-                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="border-radius: 6px; margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;">
+                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;padding-left: 17px; ">
                               {{ 'ADDINFO' | translate }}
                           </button>
                       </td>
@@ -119,30 +114,25 @@
           <div style="width:100%; padding:8px;" ng-show="(request.id!=0) && (!loadingRequest)">
               <table style="width: 100%;">
                   <tr>
-                      <td colspan="3">
-                          <div ng-show="(noticeColor!='')" style="width: 100%; border-radius: 10px; border-width: 1px; border-style: solid; border-color: {{noticeColor}}; color: {{noticeColor}}; padding: 12px; margin-bottom: 10px;">
-                              {{ noticeTextId | translate }}
-                          </div>
-                      </td>
-                  </tr>
-                  <tr>
                       <td ng-show="((request.state!='STATE_OPEN') && (request.state!='STATE_PROCESSING'))" width="50" style="vertical-align: middle; text-align: center">
 
-                        <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
-                        <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
-                        <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;min-width:50px;"><i class="icon ion-clock"></i></button>
+                        <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;min-width:50px;"><i class="icon ion-checkmark-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;min-width:50px;"><i class="icon ion-alert-circled"></i></button>
 
                       </td>
                       <td ng-show="((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
                           <table class="round" style="width:100%;">
                               <tr>
-                                  <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
-                                      {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td>
-                                      <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
+                                  <td style="padding-top:10px;">
+                                      <button class="button button-small button-positive" style="width: 50px;min-width:50px;">
+                                        <div style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 85%;margin-bottom: -8px;margin-top: -3px;">
+                                            {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="icon ion-thumbsup"></i>
+                                        </div>
+                                      </button>
                                   </td>
                               </tr>
                           </table>
@@ -169,40 +159,45 @@
                       <td width="*" style="text-align: center; vertical-align: middle; padding-top: 18px;padding-bottom: 4px;">
                           <div style="border-width:0px;margin:2px;margin-left:12px;margin-right:12px;font-size: 75%;padding-top: 2px;">
                               {{ 'ISPEAK' | translate }}
-                              <span data-ng-repeat="lang in request.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; border-radius: 3px; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                              <span data-ng-repeat="lang in request.spokenLangs" style="border-width: 1px; border-style: solid; border-color: grey; padding:2px; margin: 2px;">{{lang | uppercase}}</span>
+                          </div>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td colspan="3">
+                          <div ng-show="(noticeColor!='')" style="width: 100%; border-radius: 10px; border-width: 1px; border-style: solid; border-color: {{noticeColor}}; color: {{noticeColor}}; padding: 12px; margin-bottom: 10px; margin-top:6px;font-size:95%;">
+                              {{ noticeTextId | translate }}
                           </div>
                       </td>
                   </tr>
               </table>
 
-              <hr style="width: 90%">
-
               <!-- ADDITIONAL INFO TEXTS ON TASK -->
 
-              <div ng-show="(request.state=='STATE_OPEN') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state=='STATE_OPEN') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;font-size:95%">
                   {{ 'INFO_REWARD' | translate }} {{request.konfettiAmountReward}} {{ 'KONFETTI' | translate }}.
               </div>
 
-              <div ng-show="(request.konfettiAmountSupport>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.konfettiAmountSupport>0)" style="margin: 8px;width:100%;font-size:95%">
                   {{ 'INFO_SUPPORT' | translate }} {{request.konfettiAmountSupport}} {{ 'KONFETTI' | translate }}.
               </div>
 
-              <div ng-show="(request.state==='STATE_REVIEW') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state==='STATE_REVIEW') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;font-size:95%;">
                   {{ 'CHECK_MEDIAITEMS' | translate }}
               </div>
 
               <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
               <div ng-show="(!userIsAuthor) && (request.state==='STATE_OPEN')" style="width:100%">
                   <div style="width:100%">
-                    <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
+                    <span style="font-size:95%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:115%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:95%">&nbsp;{{ 'GETREWARD' | translate }}</span>
                 </div>
                 <div ng-show="request.chats.length==0" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                  <button on-tap="startChat()" class="button icon-left ion-android-contacts button-positive" style="border-radius: 6px">
+                  <button on-tap="startChat()" class="button icon-left ion-android-contacts button-positive">
                       {{ 'HELPCHAT' | translate }}
                   </button>
                 </div>
                 <div ng-show="request.chats.length>0" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="continueChat()" class="button icon-left ion-android-contacts button-positive" style="border-radius: 6px">
+                      <button on-tap="continueChat()" class="button icon-left ion-android-contacts button-positive">
                           {{ 'HELPCHAT_CONT' | translate }}
                       </button>
                 </div>
@@ -218,22 +213,22 @@
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
               <div ng-show="((userIsAuthor) && ((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING')) && (!loadingRequest))" style="width:100%">
                   <div ng-show="(request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
+                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced">
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
                   <div ng-show="(request.state==='STATE_OPEN')" style="width:100%; padding-top: 8px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized" style="border-radius: 6px">
+                      <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized">
                           <span style="font-weight: bold;">{{ 'REQUESTPROCESS' | translate }}</span>
                       </button>
                   </div>
                   <div ng-show="(request.state==='STATE_PROCESSING')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized" style="border-radius: 6px">
+                      <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized">
                           {{ 'REQUESTREOPEN' | translate }}
                       </button>
                   </div>
                   <div style="width:100%; padding-top: 8px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button button-small icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                      <button on-tap="buttonRequestDelete()" class="button button-small icon-left ion-trash-a button-assertive">
                           <span style="font-weight: bold;">{{ 'REQUESTDELETE' | translate }}</span>
                       </button>
                   </div>
@@ -242,18 +237,18 @@
               <!-- SHOW WHEN YOU ARE ADMIN OR REVIEWER -->
               <div ng-show="((isAdmin || isReviewer) && (request.id>0) && (!loadingRequest))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
                       <div ng-show="(request.state==='STATE_REVIEW')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                          <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced" style="border-radius: 6px">
+                          <button on-tap="buttonRequestApprove()" class="button icon-left ion-checkmark-circled button-balanced">
                               {{ 'REQUESTAPPROVE' | translate }}
                           </button>
                       </div>
                       <div ng-show="(request.state==='STATE_OPEN') || (request.state==='STATE_REVIEW')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                          <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-assertive" style="border-radius: 6px">
+                          <button on-tap="buttonRequestReject()" class="button icon-left ion-close-circled button-assertive">
                               <span ng-show="(request.state==='STATE_REVIEW')">{{ 'REQUESTREJECT' | translate }}</span>
                               <span ng-show="(request.state==='STATE_OPEN')">{{ 'REQUESTREJECT_AFTER' | translate }}</span>
                           </button>
                       </div>
                       <div ng-show="(isAdmin) && (!userIsAuthor)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                          <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                          <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive">
                               {{ 'REQUESTDELETE' | translate }}
                           </button>
                       </div>
@@ -262,7 +257,7 @@
               <!-- SHOW WHEN YOU ARE AUTHOR AND REQUEST IS REJECTED -->
               <div ng-show="((isAdmin || userIsAuthor) && (request.id>0) && (request.state==='STATE_REJECTED'))" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
                   <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive" style="border-radius: 6px">
+                      <button on-tap="buttonRequestDelete()" class="button icon-left ion-trash-a button-assertive">
                           {{ 'REQUESTDELETE' | translate }}
                       </button>
                   </div>
@@ -270,22 +265,6 @@
 
           </div>
           <!-- END READ REQUEST -->
-
-          <div ng-show="showScrollDown" on-tap="scrollDown()" style="
-    position: absolute;
-    right: 13px;
-    bottom: 11px;
-    background-color: white;
-    border-color: grey;
-    border-width: 1px;
-    border-style: solid;
-    padding: 5px;
-    padding-top: 2px;
-    padding-bottom: 0px;
-    border-radius: 8px;
-    color: grey">
-              <i class="icon ion-arrow-down-a animationPulsate"></i> 
-          </div>
 
       </div>
 
@@ -340,10 +319,6 @@
           <div data-ng-repeat="info in request.info" >
               <div mediaitem itemid="{{info.id}}" item="{{info}}" id="media-id-{{info.id}}" ></div>
           </div>
-      </div>
-
-      <div style="text-align:center;font-size:74%;color:grey;padding:12px;">
-          {{latestGitVersion}}
       </div>
 
   </ion-content>

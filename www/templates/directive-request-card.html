@@ -1,47 +1,48 @@
-<div class="card" on-tap="tapRequestMore($event, request)">
+<div class="card mdl-js-ripple-effect" on-tap="tapRequestMore($event, request)">
     <div class="item item-text-wrap" style="padding:10px;">
         <table width="100%">
             <tr>
+                <td width="50" style="vertical-align: middle;text-align: right; padding-right: 3px; padding-left: 3px; padding-top: 5px; padding-button: 0px;">
+                    <image fallback-src="./img/person.png" ng-src="{{getImageUrl()}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                </td>
+                <td width="*" style="vertical-align: middle; padding-left: 4px; padding-right: 4px;">
+                    <div ng-show="request.titleMultiLang==null" style="font-weight:bold; padding: 5px; font-size: 110%;">
+                        {{request.title}}
+                    </div>
+                    <div ng-show="request.titleMultiLang!=null" style="font-weight:bold; padding: 5px; font-size: 110%;">
+                        <div multilang data="{{request.titleMultiLang}}"/>
+                    </div>
+                </td>
                 <td ng-show="(requesttype!='openRequestCard')" width="50" style="vertical-align: middle; text-align: left">
                     <table class="round" style="width:50px;">
                         <tr>
                             <td style="width:50px;">
-                                <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
-                                <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
-                                <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
-                                <button ng-show="(request.state==='STATE_PROCESSING')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-pause"></i></button>
-                                <button ng-show="(request.state==='STATE_OPEN')" class="button button-small button-positive" style="width:50px;"><i class="icon ion-information-circled"></i></button>
+                                <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;min-width:50px;"><i class="icon ion-clock"></i></button>
+                                <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;min-width:50px;"><i class="icon ion-checkmark-circled"></i></button>
+                                <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;min-width:50px;"><i class="icon ion-alert-circled"></i></button>
+                                <button ng-show="(request.state==='STATE_PROCESSING')" class="button button-small button-energized" style="width:50px;min-width:50px;"><i class="icon ion-pause"></i></button>
+                                <button ng-show="(request.state==='STATE_OPEN')" class="button button-small button-positive" style="width:50px;min-width:50px;"><i class="icon ion-information-circled"></i></button>
                             </td>
                         </tr>
                     </table>
                 </td>
                 <td ng-show="(requesttype==='openRequestCard')" width="50" style="text-align: left" on-tap="tapRequestKonfetti($event, request)">
-                    <table class="round" style="width:50px;">
-                        <tr>
-                            <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
-                                {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td width="*" style="vertical-align: middle; padding-left: 4px; padding-right: 4px;">
-                    <div ng-show="request.titleMultiLang==null" style="padding-top: 5px; font-size: 95%; text-align: center;">
-                        {{request.title}}
-                    </div>
-                    <div ng-show="request.titleMultiLang!=null" style="padding-top: 5px; font-size: 95%; text-align: center;">
-                        <div multilang data="{{request.titleMultiLang}}"/>
-                    </div>
-                </td>
-                <td width="50" style="vertical-align: middle;text-align: right; padding-right: 3px; padding-left: 3px; padding-top: 5px; padding-button: 0px;">
-                    <image fallback-src="./img/person.png" ng-src="{{getImageUrl()}}" style="width:50px;height:50px;border-radius:30px;border-width: 1px; border-style: solid; border-color: lightgrey;"/>
+                          <table class="round" style="width:100%;">
+                              <tr>
+                                  <td style="padding-top:10px;">
+                                      <button class="button button-small button-positive" style="width: 50px;min-width:50px;">
+                                        <div style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 85% !important;margin-bottom: -8px;margin-top: -3px;">
+                                            {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="icon ion-thumbsup"></i>
+                                        </div>
+                                      </button>
+                                  </td>
+                              </tr>
+                          </table>
                 </td>
             </tr>
         </table>
-
     </div>
 </div>

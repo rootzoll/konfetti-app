@@ -25,13 +25,46 @@ angular.module('starter', [
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
 
+  $rootScope.appInitDone = false;
+  $rootScope.topbarShowSetting = false;
+
+  $rootScope.ABOUTKONFETTI_HEAD = "";
+  $rootScope.ABOUTKONFETTI_BODY = "";
+  $rootScope.TAB_PARTIES = "";
+  $rootScope.LOGOUT = "";
+  $rootScope.SETTINGS = "";
+
   $ionicPlatform.ready(function() {
+
+    // translate side menu strings (is needed manually because side rendered before ionic ready)
+    $timeout(function(){
+    $translate("ABOUTKONFETTI_HEAD").then(function (ABOUTKONFETTI_HEAD) {
+          $translate("ABOUTKONFETTI_BODY").then(function (ABOUTKONFETTI_BODY) {
+              $translate("TAB_PARTIES").then(function (TAB_PARTIES) {
+                  $translate("LOGOUT").then(function (LOGOUT) {
+                    $translate("GLOBALSETTINGS").then(function (SETTINGS) {
+                      $rootScope.SETTINGS = SETTINGS;
+                      $rootScope.ABOUTKONFETTI_HEAD = ABOUTKONFETTI_HEAD;
+                      $rootScope.ABOUTKONFETTI_BODY = ABOUTKONFETTI_BODY;
+                      $rootScope.TAB_PARTIES = TAB_PARTIES;
+                      $rootScope.LOGOUT = LOGOUT;
+                    });
+                  });
+              });
+          });
+      });  
+    },1700);
 
     // Init Settings
     $rootScope.focusPartyId = 0;
     $rootScope.initDone = false;
     $rootScope.tabRequestTitle = 'TAB_REQUEST';
     $rootScope.animationRainIsRunning = false;
+
+    $rootScope.resetAccount = function() {
+        localStorage.clear();
+        location.reload();
+    };
 
     // set running os info
     $rootScope.os = "browser";
@@ -59,14 +92,6 @@ angular.module('starter', [
                 navigator.splashscreen.hide();
             } catch (e) {}
         }, 2000);
-
-        // STATUS BAR
-        try {
-            $cordovaStatusbar.hide();
-            console.log("PLUGIN statusbar: OK");
-        } catch (e) {
-            alert("PLUGIN statusbar: MISSING (ok when running in browser) --> cordova plugin add cordova-plugin-statusbar");
-        }
 
         // KEYBOARD
         // Hide the accessory bar by default
@@ -315,37 +340,37 @@ angular.module('starter', [
             // On Review OK or FAIL
             if ((payload.additionalData.type=="REVIEW_OK") || (payload.additionalData.type=="REVIEW_FAIL")) {
                 console.log("Pushnotification REVIEW_OK --> go to party ("+payload.additionalData.partyID+")");
-                $state.go('tab.dash', {id: payload.additionalData.partyID});
+                $state.go('dash', {id: payload.additionalData.partyID});
             } else
 
             // On Review Waiting
             if (payload.additionalData.type=="REVIEW_WAITING") {
                 console.log("Pushnotification REVIEW_WAITING --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             // On New Chat
             if (payload.additionalData.type=="CHAT_NEW") {
                 console.log("Pushnotification CHAT_NEW --> go to chat ("+payload.additionalData.chatID+") on request ("+payload.additionalData.requestID+") on party ("+payload.additionalData.partyID+")");
-                $state.go('tab.chat-detail', {id: payload.additionalData.chatID});
+                $state.go('chat-detail', {id: payload.additionalData.chatID});
             } else
             
             // On New Transfere Received
             if ((payload.additionalData.type=="TRANSFER_RECEIVED") || (payload.additionalData.type=="PAYBACK")) {
                 console.log("Pushnotification TRANSFER_RECEIVED --> go to party ("+payload.additionalData.partyID+")");
-                $state.go('tab.dash', {id: payload.additionalData.partyID});
+                $state.go('dash', {id: payload.additionalData.partyID});
             } else
 
             // On Reward on Task
             if (payload.additionalData.type=="SUPPORT_WIN") {
                 console.log("Pushnotification SUPPORT_WIN --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             // On Task Supported go Done
             if (payload.additionalData.type=="REWARD_GOT") {
                 console.log("Pushnotification REWARD_GOT --> go to task ("+payload.additionalData.requestID+")");
-                $state.go('tab.request-detail', {id: payload.additionalData.requestID, area: 'top'});
+                $state.go('request-detail', {id: payload.additionalData.requestID, area: 'top'});
             } else
 
             {
@@ -409,7 +434,7 @@ angular.module('starter', [
                         // update on server
                         ApiService.updateAccount(account,function(result){
                             // WIN
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'app.js storePushID');
                         }, function(e) {
                             // FAIL
                             alert("ERROR: FAILED TO STORE PUSHID");
@@ -453,8 +478,12 @@ angular.module('starter', [
     // global scope data
     $rootScope.party = {id:0};
 
+    // just shoe logout option on browser
+    $rootScope.showLogOutOption = !AppContext.isRunningWithinApp();
+
     // always keep as last in this block
     AppContext.setReady();
+    $rootScope.appInitDone = true;
 
   });
 })
@@ -483,71 +512,41 @@ angular.module('starter', [
   // Each state's controller can be found in controllers.js
   $stateProvider
 
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html'
-  })
+	  .state('dash', {
+		    url: '/dash/:id',
+	      templateUrl: 'templates/tab-dash.html',
+	      controller: 'DashCtrl'
+	  })
 
-  // Each tab has its own nav history stack:
+	  .state('request', {
+		    url: '/request',
+        templateUrl:'templates/tab-request.html',
+        controller: 'RequestCtrl'
+	  })
 
-  .state('tab.dash', {
-    url: '/dash/:id',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
+	  .state('request-detail', {
+	      url: '/request/:id/:area',
+        templateUrl: 'templates/tab-request.html',
+        controller: 'RequestCtrl'
+	  })
 
-  .state('tab.request', {
-          url: '/request',
-          views: {
-              'tab-chats': {
-                  templateUrl:'templates/tab-request.html',
-                  controller: 'RequestCtrl'
-              }
-          }
-  })
+	  .state('chat-detail', {
+	      url: '/chats/:id',
+        templateUrl: 'templates/chat-detail.html',
+        controller: 'ChatDetailCtrl'
+	  })
 
-  .state('tab.request-detail', {
-      url: '/request/:id/:area',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-request.html',
-          controller: 'RequestCtrl'
-        }
-      }
-  })
-
-  .state('tab.chat-detail', {
-      url: '/chats/:id',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-  })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  });
+	  .state('account', {
+	    url: '/account',
+      templateUrl: 'templates/tab-account.html',
+      controller: 'AccountCtrl'
+	  });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash/0');
+  $urlRouterProvider.otherwise('dash/0');
 
   //configure loggly so it logs console errors to the loggly cloud
   LogglyLoggerProvider.inputToken( '653b3d37-f931-403d-b192-c8d08be6afb7' ).sendConsoleErrors(true);
-
 });
 
 Array.prototype.contains = function(obj) {
