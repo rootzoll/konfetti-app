@@ -32,6 +32,7 @@ angular.module('starter', [
   $rootScope.ABOUTKONFETTI_BODY = "";
   $rootScope.TAB_PARTIES = "";
   $rootScope.LOGOUT = "";
+  $rootScope.SETTINGS = "";
 
   $ionicPlatform.ready(function() {
 
@@ -41,10 +42,13 @@ angular.module('starter', [
           $translate("ABOUTKONFETTI_BODY").then(function (ABOUTKONFETTI_BODY) {
               $translate("TAB_PARTIES").then(function (TAB_PARTIES) {
                   $translate("LOGOUT").then(function (LOGOUT) {
+                    $translate("GLOBALSETTINGS").then(function (SETTINGS) {
+                      $rootScope.SETTINGS = SETTINGS;
                       $rootScope.ABOUTKONFETTI_HEAD = ABOUTKONFETTI_HEAD;
                       $rootScope.ABOUTKONFETTI_BODY = ABOUTKONFETTI_BODY;
                       $rootScope.TAB_PARTIES = TAB_PARTIES;
                       $rootScope.LOGOUT = LOGOUT;
+                    });
                   });
               });
           });

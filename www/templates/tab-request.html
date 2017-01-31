@@ -97,7 +97,7 @@
                           <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive">
                               {{ 'SUBMIT' | translate }}
                           </button><br>
-                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;padding-left: 17px;">
+                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;padding-left: 17px; ">
                               {{ 'ADDINFO' | translate }}
                           </button>
                       </td>
@@ -116,9 +116,9 @@
                   <tr>
                       <td ng-show="((request.state!='STATE_OPEN') && (request.state!='STATE_PROCESSING'))" width="50" style="vertical-align: middle; text-align: center">
 
-                        <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
-                        <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;"><i class="icon ion-checkmark-circled"></i></button>
-                        <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;"><i class="icon ion-alert-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;min-width:50px;"><i class="icon ion-clock"></i></button>
+                        <button ng-show="(request.state==='STATE_DONE')" class="button button-small button-balanced" style="width:50px;min-width:50px;"><i class="icon ion-checkmark-circled"></i></button>
+                        <button ng-show="(request.state==='STATE_REJECTED')" class="button button-small button-assertive" style="width:50px;min-width:50px;"><i class="icon ion-alert-circled"></i></button>
 
                       </td>
                       <td ng-show="((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">

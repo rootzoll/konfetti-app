@@ -564,18 +564,19 @@ angular.module('starter.controller.dash', [])
             $translate("KONFETTISENDNOTICE").then(function (LINE2) {
             	$scope.partyinfo_youcanspendkonfetti = LINE2.replace("XXXX", $scope.amountKonfettiToSpend);
                 $translate("PARTYINFO_SUB").then(function (SUB) {
+                $translate("OK").then(function (OK) {
                     $scope.partyPopUp = $ionicPopup.show({
                     	cssClass: 'bigPopup',
                         templateUrl: 'templates/pop-partyinfo.html',
                         title: $scope.party.name,
-                        subTitle: SUB,
                         scope: $scope,
                         buttons: [
-                            { text: '<i class="icon ion-ios-close-outline"></i>' }
+                            { text: OK }
                         ]
                     });
                     // on close
                     $scope.partyPopUp.then(function(res) {});
+                });
                 });
             });
           });
