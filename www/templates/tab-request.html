@@ -4,27 +4,28 @@
 
       <div class="list card" style="text-align: center; margin-top: 8px;">
 
-          <div style="width:100%;padding:8px">
+          <div style="width:100%;padding:8px" ng-show="(request.id===0)">
               <table style="width: 100%;direction: ltr;">
                   <tr>
                       <td width="*" style="text-align: center; vertical-align: middle;">
                           <div ng-hide="loadingParty">
-                              <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">
+
+                                <div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">
                                   {{ 'NEWREQUEST_HEAD' | translate }}
-                              </div>
-                              <div style="
+                                </div>
+                                <div style="
                                 margin-top: 10px;
-                                font-size: 83%;
+                                font-size: 70%;
                                 color: grey;">{{ 'NEWREQUEST_SUB' | translate }}</div>
-                              <!--<div style="font-weight: bold; font-size: 125%;padding-top: 8px; direction: ltr;">{{party.name}}</div>
-                              <div style="direction: ltr;">{{party.konfettiCount}} {{ 'KONFETTI' | translate }}</div>-->
+                                </div>
+
                           </div>
                       </td>
                   </tr>
               </table>
           </div>
 
-          <hr style="width: 90%">
+          <hr style="width: 90%" ng-show="(request.id===0)">
 
           <div ng-show="loadingRequest" style="min-height: 70px;">
               <br>
@@ -96,7 +97,7 @@
                           <button on-tap="submitRequest()" class="button icon-left ion-android-globe button-positive">
                               {{ 'SUBMIT' | translate }}
                           </button><br>
-                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;">
+                          <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-light" style="margin-top: 10px;border-style:solid;border-width:1px;border-color:lightgrey;margin-bottom: 14px;padding-left: 17px;">
                               {{ 'ADDINFO' | translate }}
                           </button>
                       </td>
@@ -113,13 +114,6 @@
           <div style="width:100%; padding:8px;" ng-show="(request.id!=0) && (!loadingRequest)">
               <table style="width: 100%;">
                   <tr>
-                      <td colspan="3">
-                          <div ng-show="(noticeColor!='')" style="width: 100%; border-radius: 10px; border-width: 1px; border-style: solid; border-color: {{noticeColor}}; color: {{noticeColor}}; padding: 12px; margin-bottom: 10px;">
-                              {{ noticeTextId | translate }}
-                          </div>
-                      </td>
-                  </tr>
-                  <tr>
                       <td ng-show="((request.state!='STATE_OPEN') && (request.state!='STATE_PROCESSING'))" width="50" style="vertical-align: middle; text-align: center">
 
                         <button ng-show="(request.state==='STATE_REVIEW')" class="button button-small button-energized" style="width:50px;"><i class="icon ion-clock"></i></button>
@@ -130,13 +124,15 @@
                       <td ng-show="((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING'))" width="50" style="text-align: center;" on-tap="tapRequestKonfetti($event, request)">
                           <table class="round" style="width:100%;">
                               <tr>
-                                  <td style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 75% ">
-                                      {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td>
-                                      <button class="button button-small button-positive" style="width: 50px"><i class="icon ion-thumbsup"></i></button>
+                                  <td style="padding-top:10px;">
+                                      <button class="button button-small button-positive" style="width: 50px;min-width:50px;">
+                                        <div style="vertical-align: middle; text-align: center; font-weight: bold; font-size: 85%;margin-bottom: -8px;margin-top: -3px;">
+                                            {{(request.konfettiCount)}}<span ng-show="(request.konfettiAdd>0)">+{{request.konfettiAdd}}</span>
+                                        </div>
+                                        <div>
+                                            <i class="icon ion-thumbsup"></i>
+                                        </div>
+                                      </button>
                                   </td>
                               </tr>
                           </table>
@@ -167,28 +163,33 @@
                           </div>
                       </td>
                   </tr>
+                  <tr>
+                      <td colspan="3">
+                          <div ng-show="(noticeColor!='')" style="width: 100%; border-radius: 10px; border-width: 1px; border-style: solid; border-color: {{noticeColor}}; color: {{noticeColor}}; padding: 12px; margin-bottom: 10px; margin-top:6px;font-size:95%;">
+                              {{ noticeTextId | translate }}
+                          </div>
+                      </td>
+                  </tr>
               </table>
-
-              <hr style="width: 90%">
 
               <!-- ADDITIONAL INFO TEXTS ON TASK -->
 
-              <div ng-show="(request.state=='STATE_OPEN') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state=='STATE_OPEN') && (request.konfettiAmountReward>0)" style="margin: 8px;width:100%;font-size:95%">
                   {{ 'INFO_REWARD' | translate }} {{request.konfettiAmountReward}} {{ 'KONFETTI' | translate }}.
               </div>
 
-              <div ng-show="(request.konfettiAmountSupport>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.konfettiAmountSupport>0)" style="margin: 8px;width:100%;font-size:95%">
                   {{ 'INFO_SUPPORT' | translate }} {{request.konfettiAmountSupport}} {{ 'KONFETTI' | translate }}.
               </div>
 
-              <div ng-show="(request.state==='STATE_REVIEW') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;">
+              <div ng-show="(request.state==='STATE_REVIEW') && (request.mediaItemIds.length>0)" style="margin: 8px;width:100%;font-size:95%;">
                   {{ 'CHECK_MEDIAITEMS' | translate }}
               </div>
 
               <!-- SHOW WHEN OPEN AND USER NOT AUTHOR -->
               <div ng-show="(!userIsAuthor) && (request.state==='STATE_OPEN')" style="width:100%">
                   <div style="width:100%">
-                    <span style="font-size:100%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:125%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:100%">&nbsp;{{ 'GETREWARD' | translate }}</span>
+                    <span style="font-size:95%">{{ 'HELPOUT' | translate }}&nbsp;</span> <span style="font-size:115%; font-weight: bold;">{{request.konfettiCount}} {{ 'KONFETTI' | translate }}</span> <span style="font-size:95%">&nbsp;{{ 'GETREWARD' | translate }}</span>
                 </div>
                 <div ng-show="request.chats.length==0" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                   <button on-tap="startChat()" class="button icon-left ion-android-contacts button-positive">

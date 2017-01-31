@@ -110,7 +110,7 @@ angular.module('starter.controller.account', [])
       ApiService.updateAccount(updatedAccount, function(account){
         // WIN
         $ionicLoading.hide();
-        AppContext.setAccount(account);
+        AppContext.setAccount(account,'controller-account.js storeMail');
         PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_OK');
       }, function(){
         // FAIL

@@ -56,7 +56,7 @@ angular.module('starter.konfettitoolbox', [])
                            var oldAccountData = AppContext.getAccount();
                            updatedAccountData.clientId = oldAccountData.clientId;
                            updatedAccountData.clientSecret = oldAccountData.clientSecret;
-                           AppContext.setAccount(updatedAccountData);
+                           AppContext.setAccount(updatedAccountData,'service-konfettitoolbox processRedeemActions');
 
                        } else
 

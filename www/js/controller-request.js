@@ -294,7 +294,7 @@ angular.module('starter.controller.request', [])
               ApiService.updateAccount(account, function(updatedAccount){
                 // WIN
                 $ionicLoading.hide();
-                AppContext.setAccount(updatedAccount);
+                AppContext.setAccount(updatedAccount,'controller-request startChat');
                 // now that we got a name - call this method again
                 $scope.startChat();
               },function(){
@@ -391,9 +391,13 @@ angular.module('starter.controller.request', [])
                 if (lang=='en') $scope.en=!$scope.en;
                 if (lang=='ar') $scope.ar=!$scope.ar;
             };
-            $scope.en = $scope.profile.spokenLangs.contains("en") ? true : false;
-            $scope.de = $scope.profile.spokenLangs.contains("de") ? true : false;
-            $scope.ar = $scope.profile.spokenLangs.contains("ar") ? true : false;
+            $scope.initial = {};
+            $scope.initial.en = $scope.profile.spokenLangs.contains("en") ? true : false;
+            $scope.initial.de = $scope.profile.spokenLangs.contains("de") ? true : false;
+            $scope.initial.ar = $scope.profile.spokenLangs.contains("ar") ? true : false;
+            $scope.de = $scope.initial.de;
+            $scope.en = $scope.initial.en;
+            $scope.ar = $scope.initial.ar;
 
             var myPopup = $ionicPopup.show({
                       templateUrl: 'templates/pop-languages.html',
@@ -406,11 +410,13 @@ angular.module('starter.controller.request', [])
                       ]
             });
             myPopup.then(function(res) {
+                $timeout(function(){
                 $scope.profile.spokenLangs = [];
                 if ($scope.en) $scope.profile.spokenLangs.push("en");
                 if ($scope.de) $scope.profile.spokenLangs.push("de");
                 if ($scope.ar) $scope.profile.spokenLangs.push("ar");
                 if ($scope.profile.spokenLangs.length===0) $scope.profile.spokenLangs.push(AppContext.getAppLang());
+                },10);
             });
       });
       });
@@ -485,7 +491,7 @@ angular.module('starter.controller.request', [])
           // store local
           var account = AppContext.getAccount();
           account.imageMediaID = item.id;
-          AppContext.setAccount(account);
+          AppContext.setAccount(account,'controller-request storeSelfi');
 
       }, function() {
           // FAIL

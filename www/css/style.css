@@ -422,3 +422,14 @@ div.popup-body span {
 .popup-sub-title {
     text-align: left;
 }
+
+.valid-number {
+    background-color: lightgray;
+    margin-top: 18px;
+}
+
+.popup-body input {
+    border-bottom-color: lightgrey !important;
+    border-bottom-style: solid !important;
+    border-bottom-width: 1px !important;
+}

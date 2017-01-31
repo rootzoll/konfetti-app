@@ -183,7 +183,7 @@ angular.module('starter.controller.dash', [])
             ApiService.createFullAccount(mail, pass, AppContext.getAppLang(), function(account) {
                 // WIN
                 $ionicLoading.hide();
-                AppContext.setAccount(account);
+                AppContext.setAccount(account,'controller-dash buttonLoginRegisterFinal');
                 $scope.login.Password = "";
                 $scope.state = "INIT";
                 $scope.action();
@@ -227,7 +227,7 @@ angular.module('starter.controller.dash', [])
             ApiService.login(mail, pass, function(account) {
                 // WIN
                 $ionicLoading.hide();
-                AppContext.setAccount(account);
+                AppContext.setAccount(account,'controller-dash buttonLoginLoginFinal');
                 var state = AppContext.getLocalState();
                 state.introScreenShown = true;
                 AppContext.setLocalState(state);
@@ -380,13 +380,13 @@ angular.module('starter.controller.dash', [])
 
             // request now public --> go to request page
             if ((noti.type==2) || (noti.type=="REVIEW_OK")) {
-                $state.go('request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // request rejected --> go to request page
             if ((noti.type==4) || (noti.type=="REVIEW_FAIL")) {
-                $state.go('request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
@@ -398,13 +398,13 @@ angular.module('starter.controller.dash', [])
 
             // rewarded --> go to request page
             if ((noti.type==7) || (noti.type=="REWARD_GOT")) {
-                $state.go('request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
             // support done --> go to request page
             if ((noti.type==8) || (noti.type=="SUPPORT_WIN")) {
-                $state.go('request-detail', {id: noti.ref, area: 'top'});
+                //$state.go('request-detail', {id: noti.ref, area: 'top'});
                 return;
             }
 
@@ -590,22 +590,23 @@ angular.module('starter.controller.dash', [])
         // event when user is (re-)entering the view
         $scope.$on('$ionicView.enter', function(e) {
 
+            $rootScope.topbarShowSetting = true;
+
             $scope.onView = true;
-
-            // reset account on enter when flag is set
-            if ($rootScope.resetAccount) {
-                AppContext.setAccount({clientId:""});
-                localStorage.clear();
-            }
-
             $scope.userId = AppContext.getAccount().id;
-            $scope.controllerInitDone = true;
+            
+            $scope.controllerInitDone = false;
             $scope.action();
+
         });
 
         // event when user is leaving the view
         $scope.$on('$ionicView.leave', function(e) {
+
+            $rootScope.topbarShowSetting = false;
+
             $scope.onView = false;
+            $scope.loadingParty = true;
         });
 
         // when outside event says to reload party
@@ -674,9 +675,14 @@ angular.module('starter.controller.dash', [])
 
             // display login on browsers
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
-            if (((!AppContext.isRunningWithinApp() || ($rootScope.resetAccount))) && (!AppContext.getAccount().clientId || (AppContext.getAccount().clientId.length===0))) {
-            	$scope.state = "LOGIN_START";
-                return;
+
+            // on browser if account not set - show login
+            if (!AppContext.isRunningWithinApp()) {
+                var account = AppContext.getAccount();
+                if (!account.id || (account.id.length===0)) {
+            	    $scope.state = "LOGIN_START";
+                    return;
+                }
             }
 
             // check if got client account
@@ -686,7 +692,7 @@ angular.module('starter.controller.dash', [])
                     ApiService.createGuestAccount(AppContext.getAppLang(), function(account){
                         // WIN
                         account.spokenLangs = [AppContext.getAppLang()];
-                        AppContext.setAccount(account);
+                        AppContext.setAccount(account,'controller-dash action1');
                         $scope.action();
                     },function(code){
                         // FAIL
@@ -703,15 +709,15 @@ angular.module('starter.controller.dash', [])
                         // WIN
                         if ((account==null) || (account.id==0)) {
                             account.clientId = "";
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'controller-dash action2');
                             PopupDialogs.showIonicAlertWith18nText('TITLE_IMPORTANT', 'RESETTING_SERVER', function(){
-                            	$scope.resetAccount();
+                            	$rootScope.resetAccount();
                             });
                             return;
                         } else {
                             // refreshing local account with account from server
                             $scope.checkedAccount = true;
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'controller-dash action3');
                             $timeout($scope.action, 1000);
                             $rootScope.$broadcast('account-ready');
                             return;
@@ -878,7 +884,7 @@ angular.module('starter.controller.dash', [])
                     account.pushActive = true;
                     account.pushSystem = AppContext.getRunningOS();
                     account.pushID = localPushIds.userId;
-                    AppContext.setAccount(account);
+                    AppContext.setAccount(account,'controller-dash action4');
 
                     // update Account on server
                     ApiService.updateAccount(account, function(){
@@ -971,6 +977,14 @@ angular.module('starter.controller.dash', [])
 
 
             ApiService.loadParty(partyToLoad,function(data){
+
+                $scope.requestsReview = [];
+                $scope.requestsPosted = [];
+                $scope.requestsInteraction = [];
+                $scope.requestsOpen = [];
+                $scope.requestsDone = [];
+                $scope.notifications = [];
+
                 $scope.isReviewerForThisParty = (AppContext.getAccount().reviewerOnParties.indexOf(data.id) > -1);
                 $scope.isAdminForThisParty = (AppContext.getAccount().adminOnParties.indexOf(data.id) > -1);
                 $rootScope.isAdminForThisParty = $scope.isAdminForThisParty;

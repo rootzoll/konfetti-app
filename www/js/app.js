@@ -26,6 +26,7 @@ angular.module('starter', [
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
 
   $rootScope.appInitDone = false;
+  $rootScope.topbarShowSetting = false;
 
   $rootScope.ABOUTKONFETTI_HEAD = "";
   $rootScope.ABOUTKONFETTI_BODY = "";
@@ -429,7 +430,7 @@ angular.module('starter', [
                         // update on server
                         ApiService.updateAccount(account,function(result){
                             // WIN
-                            AppContext.setAccount(account);
+                            AppContext.setAccount(account,'app.js storePushID');
                         }, function(e) {
                             // FAIL
                             alert("ERROR: FAILED TO STORE PUSHID");
