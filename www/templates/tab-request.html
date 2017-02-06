@@ -71,7 +71,7 @@
                                   <input id="headline" ng-model="headline.temp" type="text" onkeyup="(event.keyCode===13) && (document.getElementById('konfettiSlide').focus())"  style="width:100%;" placeholder="{{ 'YOURREQUEST' | translate }}"  maxlength="42">
                               </label>
                           </div>
-                          <div ng-show="headline.temp.length>35" style="color: red; font-size: 75%;">
+                          <div ng-show="headline.temp.length>35" style="color: green; font-size: 75%;">
                               {{ 'KEEP_HEADLINE_SHORT' | translate }}
                           </div>
                       </td>
