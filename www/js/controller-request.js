@@ -249,8 +249,9 @@ angular.module('starter.controller.request', [])
                 // on first tap start with 1
                 request.konfettiAdd = 1;
             } else {
+                request.konfettiAdd = request.konfettiAdd + 1;
                 // on the next tap ... always double
-                request.konfettiAdd = request.konfettiAdd * 2;
+                //request.konfettiAdd = request.konfettiAdd * 2;
             }
             $rootScope.party.konfettiCount = $rootScope.party.konfettiCount - request.konfettiAdd;
             request.lastAdd = Date.now();

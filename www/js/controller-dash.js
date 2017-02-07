@@ -490,8 +490,9 @@ angular.module('starter.controller.dash', [])
                 // start with 1 konfetti per tap
                 request.konfettiAdd = 1;
             } else {
+                request.konfettiAdd = request.konfettiAdd +1;
                 // double on each tap ... 2, 4, 8, 16, ..
-                request.konfettiAdd = request.konfettiAdd * 2;
+                //request.konfettiAdd = request.konfettiAdd * 2;
             }
             $rootScope.party.konfettiCount -= request.konfettiAdd;
             request.lastAdd = Date.now();

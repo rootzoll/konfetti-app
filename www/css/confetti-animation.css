@@ -29,6 +29,7 @@ html, body {
 }
 .confetti-default {
     opacity: 0;
+    pointer-events:none;
 }
 
 .bounceOutRight {

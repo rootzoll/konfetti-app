@@ -1,35 +1,6 @@
 angular.module('starter.rainanimation', [])
  .factory('RainAnimation', function($log, $document, $window, $timeout, $rootScope) {
-       
-        // basic values
-       	var retina = window.devicePixelRatio,
-		PI = Math.PI,
-        sqrt = Math.sqrt,
-		round = Math.round,
-		random = Math.random,
-		cos = Math.cos,
-		sin = Math.sin,
-		rAF = $window.requestAnimationFrame,
-		cAF = $window.cancelAnimationFrame || $window.cancelRequestAnimationFrame;
-       
-		// initial state       
-       	var isRaining = false,
-		speed = 50,
-        duration = (1.0 / speed),
-        confettiRibbonCount = 2,
-        ribbonPaperCount = 30,
-        ribbonPaperDist = 8.0,
-        ribbonPaperThick = 6.0,
-        confettiPaperCount = 33,
-        DEG_TO_RAD = PI / 180,
-        RAD_TO_DEG = 180 / PI,
-        colors = [
-            ["#FCCB6E", "#169597"],
-            ["#E57225", "#91272D"],
-            ["#E3147E", "#7CBE80"],
-            ["#E2E589", "#DF1421"]
-        ];
-        
+               
 		function Vector2(_x, _y) {
         this.x = _x, this.y = _y;
         this.Length = function() {
@@ -174,7 +145,6 @@ angular.module('starter.rainanimation', [])
             _g.fill();
         };
 	  }
-	  ConfettiPaper.bounds = new Vector2(0, 0);
 
 	  function ConfettiRibbon(_x, _y, _count, _dist, _thickness, _angle, _mass, _drag) {
         this.particleDist = _dist;
@@ -302,14 +272,48 @@ angular.module('starter.rainanimation', [])
             return ((x1 - x2) * (y3 - y2) - (y1 - y2) * (x3 - x2));
         };
 	}
+
+
+        // basic values
+       	var retina = window.devicePixelRatio,
+		PI = Math.PI,
+        sqrt = Math.sqrt,
+		round = Math.round,
+		random = Math.random,
+		cos = Math.cos,
+		sin = Math.sin,
+		rAF = $window.requestAnimationFrame,
+		cAF = $window.cancelAnimationFrame || $window.cancelRequestAnimationFrame;
+       
+		// initial state       
+       	var isRaining = false,
+		speed = 50,
+        duration = (1.0 / speed),
+        confettiRibbonCount = 2,
+        ribbonPaperCount = 30,
+        ribbonPaperDist = 8.0,
+        ribbonPaperThick = 6.0,
+        confettiPaperCount = 33,
+        DEG_TO_RAD = PI / 180,
+        RAD_TO_DEG = 180 / PI,
+        colors = [
+            ["#FCCB6E", "#169597"],
+            ["#E57225", "#91272D"],
+            ["#E3147E", "#7CBE80"],
+            ["#E2E589", "#DF1421"]
+        ];
+	ConfettiPaper.bounds = new Vector2(0, 0);
 	ConfettiRibbon.bounds = new Vector2(0, 0);
 	confetti = {};
+
 	confetti.Context = function(id) {
         var i = 0;
         var canvas = document.getElementById(id);
         var canvasParent = canvas.parentNode;
         var canvasWidth = canvasParent.offsetWidth;
         var canvasHeight = canvasParent.offsetHeight;
+        if (canvasWidth<300) canvasWidth = 300;
+        if (canvasHeight<400) canvasHeight = 400;
         canvas.width = canvasWidth * retina;
         canvas.height = canvasHeight * retina;
         var context = canvas.getContext('2d');
@@ -370,15 +374,14 @@ angular.module('starter.rainanimation', [])
 	};
 		
 	var confetti = new confetti.Context('confetti');
-		$window.addEventListener('resize', function(event) {
+	$window.addEventListener('resize', function(event) {
                 	confetti.resize();
 	});
-    confetti.resize();
        
     return {
         	// call this method to trigger the konfetti rain animation
             makeItRainKonfetti: function(durationInSeconds) {
-            	
+                
             	try {
             	
             		// make sure animation is just running once
@@ -389,6 +392,8 @@ angular.module('starter.rainanimation', [])
                     $rootScope.animationRainIsRunning = true;
             		
             		// show canvas and start animation
+                    confettiPapers = new Array();
+                    confetti.resize();
     				document.getElementById("confetti").style.display = "initial";
     				document.getElementById("confetti").className = "fadein";
     				confetti.start();
