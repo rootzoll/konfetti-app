@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval) {
+.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval, $ionicPlatform) {
 
    // check if id of chat is available
    if (typeof $stateParams.id==="undefined") {
@@ -18,6 +18,10 @@ angular.module('starter.controllers', [])
           $window.history.back();
        }
    };
+
+   $ionicPlatform.registerBackButtonAction(function () {
+        $scope.back();
+   }, 100);
 
    $scope.reload = function() {
        $scope.loadChat($scope.chat.id);

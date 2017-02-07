@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicViewService) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicViewService, $ionicPlatform, $ionicSideMenuDelegate) {
 
         /*
          * get state parameter of controller
@@ -67,6 +67,10 @@ angular.module('starter.controller.dash', [])
         /*
          * controller logic
          */
+
+        $ionicPlatform.registerBackButtonAction(function () {
+            $ionicSideMenuDelegate.toggleLeft();
+        }, 100);
 
         $scope.checkEmail = function(email) {
 

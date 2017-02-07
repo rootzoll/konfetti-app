@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition, $ionicViewSwitcher) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition, $ionicViewSwitcher, $ionicPlatform) {
 
   $scope.loadingRequest = true;
   $scope.profile = null;
@@ -24,6 +24,10 @@ angular.module('starter.controller.request', [])
   $scope.mediaChoosePopup = null;
 
   $scope.request.info = [];
+
+  $ionicPlatform.registerBackButtonAction(function () {
+    $scope.back();
+  }, 100);
 
   $scope.setNoticeTextByRequestState = function() {
 

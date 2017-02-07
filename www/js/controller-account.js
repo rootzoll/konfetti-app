@@ -1,8 +1,12 @@
 angular.module('starter.controller.account', [])
 
-.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox, PopupDialogs) {
+.controller('AccountCtrl', function($rootScope, $scope, $state, $translate, $ionicPopup, ApiService, AppContext, $ionicLoading, $timeout, KonfettiToolbox, PopupDialogs, $ionicPlatform, $ionicSideMenuDelegate) {
 
   $scope.email = "";
+
+  $ionicPlatform.registerBackButtonAction(function () {
+    $ionicSideMenuDelegate.toggleLeft();
+  }, 100);
 
   $scope.$on('$ionicView.enter', function(e) {
 
