@@ -349,16 +349,19 @@ angular.module('starter.controller.dash', [])
         };
 
         $rootScope.updatePartyIndex = function(index) {
+
           if (index < 0 || index > $rootScope.partyList.length) {
             throw "IndexOutOfBounds (" + index + ")";
           }
 
+          $scope.focusPartyId = 0;
           $scope.switchParty = true;
           $scope.actualPartyIndex = index;
 
           $scope.action(function() {
             $scope.switchParty = false;
           });
+
         }
 
         // back to login start, when on register, login or recover screen

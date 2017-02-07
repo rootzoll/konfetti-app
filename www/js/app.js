@@ -40,7 +40,7 @@ angular.module('starter', [
     $timeout(function(){
     $translate("ABOUTKONFETTI_HEAD").then(function (ABOUTKONFETTI_HEAD) {
           $translate("ABOUTKONFETTI_BODY").then(function (ABOUTKONFETTI_BODY) {
-              $translate("TAB_PARTIES").then(function (TAB_PARTIES) {
+              $translate("KONFETTI").then(function (TAB_PARTIES) {
                   $translate("LOGOUT").then(function (LOGOUT) {
                     $translate("GLOBALSETTINGS").then(function (SETTINGS) {
                       $rootScope.SETTINGS = SETTINGS;
