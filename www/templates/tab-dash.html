@@ -1,7 +1,7 @@
 <ion-view ng-cloak hide-back-button="true" view-title="{{ party.name }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
 
     <ion-nav-buttons side="first">
-        <button menu-toggle="left" class="button button-icon icon ion-navicon" style="padding-left:5px;padding-right:5px;color:white;">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon fadeIn" style="padding-left:5px;padding-right:5px;color:white;    margin-top:-4px;">
         </button>
     </ion-nav-buttons>
 
@@ -228,7 +228,6 @@
       <!--
         NOTIFICATIONS - just show if available
       -->
-
       <div ng-show="showNotifications" class="list card" style="margin-bottom: 10px; margin-top: 13px;" ng-cloak>
           <div notification ng-show="notification.id!=0" type="{{noti}}" data-ng-repeat="notification in notifications" id="notification-{{notification.id}}" ng-cloak></div>
       </div>
@@ -236,7 +235,7 @@
       <!--
         REDEEM CODE - when zero konfetti on party
       -->
-      <div class="card" ng-show="party.konfettiCount==0" style="margin-bottom: 10px;padding-top: 16px; text-align: center;" ng-cloak>
+      <div class="card" ng-show="party.konfettiCount==0" style="margin-bottom: 10px;padding-top: 16px; text-align: center;margin-top: 14px;" ng-cloak>
         <div style="padding: 5px; padding-top: 0px; padding-bottom: 0px;">{{ 'NOKONFETTI_INFO' | translate }}</div>  
         <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px; margin: 10px;">
              {{ 'REDEEMCOUPON' | translate }}
@@ -244,7 +243,7 @@
       </div>
 
       <!-- LIST TASKS IN REVIEW -->
-      <div class="card" ng-show="(requestsReview.length>0)" style="margin-bottom: 10px;" ng-cloak>
+      <div class="card" ng-show="(requestsReview.length>0)" style="margin-bottom: 10px;box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
           <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_REVIEW' | translate }}</span></td>
@@ -256,7 +255,7 @@
       <div requestcard data-ng-repeat="request in requestsReview" requesttype="reviewRequestCard" id="reviewRequestCard{{request.id}}" style="position: relative; margin-bottom: 10px; margin-top: 10px;"  ng-cloak></div>
 
       <!-- LIST TASKS USER POSTED -->
-      <div class="card" ng-show="(requestsPosted.length>0)" style="margin-bottom: 10px;" ng-cloak>
+      <div class="card" ng-show="(requestsPosted.length>0)" style="margin-bottom: 10px;box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
           <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_POSTED' | translate }}</span></td>
@@ -268,7 +267,7 @@
       <div requestcard data-ng-repeat="request in requestsPosted" requesttype="postedRequestCard" id="postedRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
 
       <!-- LIST ACTIVE TASKS (user chatted on and are running) -->
-      <div class="card" ng-show="(requestsInteraction.length>0)" style="margin-bottom: 10px;" ng-cloak>
+      <div class="card" ng-show="(requestsInteraction.length>0)" style="margin-bottom: 10px; box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
           <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_ACTIVE' | translate }}</span></td>
@@ -280,7 +279,7 @@
       <div requestcard data-ng-repeat="request in requestsInteraction" requesttype="interactionRequestCard" id="interactionRequestCard{{request.id}}" style="position: relative;  margin-bottom: 10px; margin-top: 10px;" ng-cloak></div>
 
       <!-- LIST OPEN TASKS -->
-      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px; margin-top: 18px;" ng-cloak>
+      <div class="card" ng-show="(requestsOpen.length>0)" style="margin-bottom: 10px; margin-top: 18px;    box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
           <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_OPEN' | translate }}</span></td>
@@ -305,7 +304,7 @@
       </div>
 
       <!-- LIST DONE TASKS -->
-      <div class="card" ng-show="(requestsDone.length>0)" style="margin-bottom: 10px;" ng-cloak>
+      <div class="card" ng-show="(requestsDone.length>0)" style="margin-bottom: 10px; box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
         <table width="100%">
               <tr>
                   <td style="text-align: {{ spClass=='ltr' ? 'left' : 'right' }}; vertical-align: middle; padding: 8px;padding-top: 10px;"><span style="font-size: 18px; margin-right: 4px; margin-left: 4px; -webkit-font-smoothing: auto;">{{ 'DASHHEADER_RECENTLYDONE' | translate }}</span></td>
@@ -321,8 +320,12 @@
   </ion-content>
 
   <!-- CREATE NEW TASK BUTTON -->
-  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored" ng-if="initDone">
+  <button on-tap="onNewRequest()" class="button-fab mdl-button mdl-js-button mdl-button--fab mdl-js-ripple-effect mdl-button--colored fadeIn" ng-if="initDone">
       <i class="icon ion-android-add"></i>
   </button>
+
+  <div ng-if="!initDone" style="position: absolute; bottom: 30px; right:14px;" >
+        <button class="button fadeInDelay5" on-tap="languageSelectionDialog()" style="padding-left:19px;padding-right:16px;padding-top:3px;background-color: #f5f5f5;"><i class="icon ion-ios-world-outline" style="padding:6px;"></i>{{ select.actualLang.display | translate }}<i class="icon ion-android-arrow-dropdown" style="padding:6px"></i></button>
+    </div>
 
 </ion-view>

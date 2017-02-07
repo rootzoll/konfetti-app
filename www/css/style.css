@@ -114,6 +114,18 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     }
 }
 
+@-webkit-keyframes keysFadeIn {
+    0% {
+        opacity: 0.0;
+    }
+    50% {
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+
 @-webkit-keyframes keysFadeOut {
     0% {
         opacity: 1.0;
@@ -175,6 +187,24 @@ body > div.popup-container.popup-showing.active > div > div.popup-body > input {
     0% { -webkit-transform: scale(1); }
     50% { -webkit-transform: scale(1.1); }
     100% { -webkit-transform: scale(1); }
+}
+
+.fadeIn {
+    animation: keysFadeIn ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 400ms;
+    -webkit-animation: keysFadeIn ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 400ms;
+}
+
+.fadeInDelay5{
+    animation: keysFadeIn ease-in 1;
+    animation-fill-mode: forwards;
+    animation-duration: 5000ms;
+    -webkit-animation: keysFadeIn ease-in 1;
+    -webkit-animation-fill-mode: forwards;
+    -webkit-animation-duration: 5000ms;
 }
 
 .animationFadeOut {
@@ -432,4 +462,8 @@ div.popup-body span {
     border-bottom-color: lightgrey !important;
     border-bottom-style: solid !important;
     border-bottom-width: 1px !important;
+}
+
+.activated.button  {
+  line-height: 32px !important;
 }
