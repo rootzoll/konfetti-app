@@ -1,4 +1,9 @@
-<ion-view ng-cloak view-title="{{ party.name }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
+<ion-view ng-cloak hide-back-button="true" view-title="{{ party.name }}" class="sp-{{spClass}}" style="background-color: lightgrey;">
+
+    <ion-nav-buttons side="first">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon" style="padding-left:5px;padding-right:5px;color:white;">
+        </button>
+    </ion-nav-buttons>
 
     <div class="padding" style="
     background-color: lightgrey;
@@ -13,14 +18,15 @@
         <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
             <div style="width:100%;padding:14px;">
                 <div ng-hide="(loadingParty || switchParty)" on-tap="showPartyInfo()">
-                    <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                    <div ng-show="party.konfettiCount>=0" style="text-align: center; font-size: 150%;">
                       {{party.konfettiCount}} {{ 'KONFETTI' | translate }}
-                      <i class="icon ion-cash"></i>
+                      <!--<i class="icon ion-cash"></i>-->
+                      <img src="./img/icon.png" style="width:22px; vertical-align:bottom;"/>
                     </div>
-                    <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;padding-top: 3px;">
+                    <div ng-show="party.konfettiCount<0" style="text-align: center; font-size: 150%;">
                       ??? {{ 'KONFETTI' | translate }}
                     </div>
-                    <div style="direction: ltr;">
+                    <div style="direction: ltr; margin-top: 3px;">
                         <span style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
                         <!--
                         <span ng-show="!hasKonfettiToSpend" style="margin-left:auto; margin-right: auto;font-size: 90%; text-decoration: underline;" class="positive">{{ 'PARTYINFO' | translate }}</span>
@@ -231,7 +237,7 @@
         REDEEM CODE - when zero konfetti on party
       -->
       <div class="card" ng-show="party.konfettiCount==0" style="margin-bottom: 10px;padding-top: 16px; text-align: center;" ng-cloak>
-        <div>{{ 'NOKONFETTI_INFO' | translate }}</div>  
+        <div style="padding: 5px; padding-top: 0px; padding-bottom: 0px;">{{ 'NOKONFETTI_INFO' | translate }}</div>  
         <button on-tap="onButtonCoupon()" class="button icon-left ion-cash button-positive" style="border-radius: 6px; margin: 10px;">
              {{ 'REDEEMCOUPON' | translate }}
         </button>

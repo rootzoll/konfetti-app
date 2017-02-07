@@ -12,7 +12,6 @@ angular.module('starter.controllers', [])
    $scope.interval = null;
 
    $scope.back = function() {
-
        if ((typeof $scope.chat.request != "undefined") && ($scope.chat.request!=null) && (typeof $scope.chat.request.id!= "undefined")) {
           $state.go('request-detail', {id: $scope.chat.request.id, area: 'top'});
        } else {
@@ -53,7 +52,6 @@ angular.module('starter.controllers', [])
            $scope.loadChat($scope.chat.id, false);
        }, 5000);
    });
-
 
    $scope.$on('$ionicView.beforeLeave', function(e){
 

@@ -173,7 +173,7 @@
             "PARTYMANAGEDBY" : "This party is managed by:",
             "YOUHAVEKONFETTI" : "You have XXXX konfetti on this party.",
             "KONFETTISENDNOTICE" : "XXXX konfetti can be send because you earned it doing a task.",
-            "PARTYINFO" : "Party Info",
+            "PARTYINFO" : "Group Info",
             "PARTYINFOANDSPEND" : "Party Info and Send Konfetti",
             "SENDINGKONFETTIDIASABLED" : "On this party konfetti cannot be send to user users directly.",
             "SENDKONFETTI_SUB_ALL" : "send konfetti to every email address",

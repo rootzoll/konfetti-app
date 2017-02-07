@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicViewService) {
 
         /*
          * get state parameter of controller
@@ -592,6 +592,13 @@ angular.module('starter.controller.dash', [])
         $scope.$on('$ionicView.enter', function(e) {
 
             $rootScope.topbarShowSetting = true;
+
+            $ionicHistory.clearHistory();
+            $ionicHistory.clearCache();
+
+            $ionicViewService.nextViewOptions({
+                disableBack: true
+            });
 
             $scope.onView = true;
             $scope.userId = AppContext.getAccount().id;

@@ -1,6 +1,6 @@
 angular.module('starter.controller.request', [])
 
-.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition) {
+.controller('RequestCtrl', function($rootScope, AppContext, $scope, $log, $state, $stateParams, $ionicTabsDelegate, $ionicScrollDelegate ,$timeout, $translate, $ionicPopup, $ionicLoading, ApiService, KonfettiToolbox, $cordovaCamera, $cordovaGeolocation, $window, RainAnimation, leafletMapEvents, leafletData, PopupDialogs, $ionicPosition, $ionicViewSwitcher) {
 
   $scope.loadingRequest = true;
   $scope.profile = null;
@@ -369,6 +369,11 @@ angular.module('starter.controller.request', [])
 
   });
 
+  $scope.back = function() {
+       $ionicViewSwitcher.nextDirection('back');
+       $state.go('dash', {id: $rootScope.party.id});
+  };
+
   // pop pup to choose languages
   $scope.editSpokenLanguage = function() {
 
@@ -469,10 +474,6 @@ angular.module('starter.controller.request', [])
         alert("FAILED to access camera.");
     }
 
-  };
-
-  $scope.back = function() {
-      $window.history.back();
   };
 
   $scope.storeSelfi = function(imageDataUrl) {

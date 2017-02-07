@@ -373,6 +373,7 @@ angular.module('starter.rainanimation', [])
 		$window.addEventListener('resize', function(event) {
                 	confetti.resize();
 	});
+    confetti.resize();
        
     return {
         	// call this method to trigger the konfetti rain animation
