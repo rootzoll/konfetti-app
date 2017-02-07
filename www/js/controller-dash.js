@@ -1063,8 +1063,11 @@ angular.module('starter.controller.dash', [])
                    whenReadyCallback();
                 }
 
+                 $scope.$broadcast('scroll.refreshComplete');
+
             },function(code){
                 // FAIL
+                $scope.$broadcast('scroll.refreshComplete');
                 $scope.loadingParty = false;
                 $scope.state = "INTERNETFAIL";
                 $timeout($scope.action, 5000);

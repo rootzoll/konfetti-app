@@ -200,7 +200,14 @@
 
       <!-- INFO SIGNALS -->
 
-      <div style="height: 75px;"></div>
+      <ion-refresher ng-show="initDone"
+        pulling-text=""
+        on-refresh="reloadPartyList()">
+     </ion-refresher>
+
+      <div ng-show="initDone" style="height: 75px;padding-top: 49px; color: #6d6d6d; text-align: center;">
+          ... {{ 'PULLTOREFRESH' | translate }} ...
+      </div>
 
       <!-- pushes content far down until angular is loaded -->
       <div ng-show="loadingParty" style="height: 800px;"></div>
