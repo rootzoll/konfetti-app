@@ -210,8 +210,8 @@
               </div>
 
               <!-- SHOW WHEN USER IS THE AUTHOR -->
-              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest)) && (request.state!='STATE_REJECTED')" style="padding-top: 0px; padding-bottom: 0px; padding-left: 12px; padding-right: 12px">
-                  <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-positive" style="padding-left: 10px">
+              <div ng-show="((userIsAuthor) && (request.id>0) && (!loadingRequest)) && (request.state!='STATE_REJECTED')" style="margin-top:12px;">
+                  <button on-tap="addInfoItem()" class="button button-small icon-left ion-android-attach button-positive" style="padding-left: 10px; margin-bottom: 6px;">
                       &nbsp; {{ 'ADDINFO' | translate }}
                   </button>
               </div>
@@ -219,22 +219,22 @@
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
               <div ng-show="((userIsAuthor) && ((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING')) && (!loadingRequest))" style="width:100%">
                   <div ng-show="(request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced">
+                      <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced" style="padding-left: 10px" >
                           {{ 'REQUESTDONE' | translate }}
                       </button>
                   </div>
                   <div ng-show="(request.state==='STATE_OPEN')" style="width:100%; padding-top: 8px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized">
+                      <button on-tap="buttonRequestProcess()" class="button button-small icon-left ion-pause button-energized" style="padding-left: 10px" >
                           <span style="font-weight: bold;">{{ 'REQUESTPROCESS' | translate }}</span>
                       </button>
                   </div>
                   <div ng-show="(request.state==='STATE_PROCESSING')" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized">
+                      <button on-tap="buttonRequestReopen()" class="button icon-left ion-play button-energized" style="padding-left: 10px" >
                           {{ 'REQUESTREOPEN' | translate }}
                       </button>
                   </div>
                   <div style="width:100%; padding-top: 8px; padding-bottom: 8px;">
-                      <button on-tap="buttonRequestDelete()" class="button button-small icon-left ion-trash-a button-assertive">
+                      <button on-tap="buttonRequestDelete()" class="button button-small icon-left ion-trash-a button-assertive" style="padding-left: 10px">
                           <span style="font-weight: bold;">{{ 'REQUESTDELETE' | translate }}</span>
                       </button>
                   </div>

@@ -320,6 +320,7 @@ angular.module('starter.controller.request', [])
         KonfettiToolbox.markInteractionOnRequest($scope.request.id);
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
+        $ionicViewSwitcher.nextDirection('forward');
         $state.go('chat-detail', dataObj);
       }, function(errorCode) {
         // FAIL
@@ -365,6 +366,7 @@ angular.module('starter.controller.request', [])
 
       // when no party is loaded
       if ($rootScope.party.id===0) {
+          $ionicViewSwitcher.nextDirection('back');
           $state.go('dash', {id: 0});
           return;
       }
@@ -838,6 +840,7 @@ angular.module('starter.controller.request', [])
                           ApiService.deleteRequest($scope.request.id, 0, function() {
                               // WIN --> go to dash
                               $ionicLoading.hide();
+                              $ionicViewSwitcher.nextDirection('back');
                               $state.go('dash', {id: $scope.request.partyId});
                           }, function() {
                               // FAIL
@@ -868,6 +871,7 @@ angular.module('starter.controller.request', [])
                       // WIN --> go to dash
                       // todo: switch to next request to review
                       $ionicLoading.hide();
+                      $ionicViewSwitcher.nextDirection('back');
                       $state.go('dash', {id: $scope.request.partyId});
                   }, function() {
                       // FAIL
@@ -883,6 +887,7 @@ angular.module('starter.controller.request', [])
       ApiService.reviewResultOnRequest($scope.request.id, true, null, null, function(){
         // WIN --> go to dash
         // todo: switch to next request to review
+        $ionicViewSwitcher.nextDirection('back');
         $state.go('dash', {id: $scope.request.partyId});
       }, function() {
         // FAIL
@@ -903,6 +908,7 @@ angular.module('starter.controller.request', [])
   $scope.displayChat = function($event, chat) {
       if ($event!=null) $event.stopPropagation();
       $rootScope.chatPartner = { requestTitle: $scope.request.title , chatPartnerName: chat.chatPartnerName, chatPartnerImageMediaID: chat.chatPartnerImageMediaID, spokenLangs: chat.spokenLangs};
+      $ionicViewSwitcher.nextDirection('forward');
       $state.go('chat-detail', {id: chat.id});
       return;
   };
@@ -1015,6 +1021,7 @@ angular.module('starter.controller.request', [])
               $rootScope.party.konfettiCount - $scope.confetti.toSpend;
               $scope.confetti.max = $scope.confetti.max - $scope.confetti.toSpend;
               $scope.confetti.toSpend = $scope.confetti.min;
+              $ionicViewSwitcher.nextDirection('back');
               $state.go('dash', {id: $rootScope.party.id});
           };
 
