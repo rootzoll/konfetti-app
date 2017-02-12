@@ -1,9 +1,10 @@
 <ion-list>
     <label class="item item-input item-select">
-        <div class="input-label" style="font-size: 12px;">
+        <div class="input-label" style="font-size: 12px;margin-top: -21px;
+    color: black;">
             {{ 'COUPON_COUNT' | translate }}
         </div>
-        <select ng-model="coupons.count">
+        <select ng-model="coupons.count" style="padding-right: 0px;color: blue;">
             <option value="1">1</option>
             <option value="5">5</option>
             <option value="10">10</option>
@@ -13,10 +14,11 @@
         </select>
     </label>
     <label class="item item-input item-select">
-        <div class="input-label" style="font-size: 12px;">
+        <div class="input-label" style="font-size: 12px;margin-top: -21px;
+    color: black;">
             {{ 'COUPON_AMOUNT' | translate }}
         </div>
-        <select ng-model="coupons.amount">
+        <select ng-model="coupons.amount" style="padding-right: 0px;color: blue;">
             <option value="10">10</option>
             <option value="10">50</option>
             <option value="100">100</option>

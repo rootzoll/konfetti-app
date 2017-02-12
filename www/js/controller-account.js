@@ -61,6 +61,7 @@ angular.module('starter.controller.account', [])
                   scope: $scope,
                   title: TITLE,
                   subTitle: SUBLINE,
+                  cssClass: 'pop-coupons',
                   buttons: [
                       { text: CANCEL },
                       { text: OK,

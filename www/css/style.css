@@ -415,6 +415,15 @@ div.popup-body span {
     left: -5px !important;
 }
 
+.pop-coupons .popup-title {
+    padding-bottom: 2px !important;
+}
+
+.pop-coupons .popup-sub-title {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+}
+
 #adddate {
     padding-bottom: 0px;
 }

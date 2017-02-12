@@ -123,7 +123,7 @@
             "COUPON_COUNT" : "Anzahl der Coupons:",
             "COUPON_AMOUNT" : "Konfetti pro Coupon:",
             "CREATE_COUPON_TITLE" : "Konfetti Coupons erstellen",
-            "CREATE_COUPON_SUBLINE" : "die Coupons werden als PDF per eMail zugesandt",
+            "CREATE_COUPON_SUBLINE" : "Die Coupons werden als PDF per eMail zugesandt",
             "CREATE_COUPON_OK" : "Die Coupons wurden erstellt. Bitte eMail Eingang prüfen.",
             "NOTIFICATION_PAYBACK" : "Eine Aufgabe die Du unterstützt hattest wurde abgebrochen = Zurückzahlung.",
             "NOTIFICATION_SUPPORTWIN" : "Eine Aufgabe die Du unterstüzt hast wurde erledigt.",
