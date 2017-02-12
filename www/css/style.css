@@ -389,6 +389,32 @@ div.popup-body span {
     border-bottom: 0px solid #eee;
 }
 
+.pop-reward .popup {
+    width: 90%;
+    max-width: 600px;
+}
+
+.pop-reward .popup-sub-title {
+    padding-bottom: 8px !important;
+}
+
+.pop-reward .popup-title {
+    padding-bottom: 2px !important;
+}
+
+.pop-reward .popup-body {
+    padding-bottom: 2px !important;
+}
+
+.reward-checkbox .item-content {
+    padding: 2px !important;
+    padding-left: 21px !important;
+}
+
+.reward-checkbox .checkbox{
+    left: -5px !important;
+}
+
 #adddate {
     padding-bottom: 0px;
 }

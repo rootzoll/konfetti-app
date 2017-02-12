@@ -742,6 +742,7 @@ angular.module('starter.controller.request', [])
                      scope: $scope,
                      title: TITLE,
                      subTitle: SUBLINE,
+                     cssClass: 'pop-reward',
                     buttons: [
                         { text: CANCEL },
                         { text: OK,

@@ -1,13 +1,11 @@
 <div style="
-    padding-bottom: 14px;
+    padding-bottom: 6px;
     font-size: 80%;
-    line-height: 1.4;
-    text-align: center;
-    margin-top: -14px;">
+    line-height: 1.4;">
     {{ 'REWARD_INFO' | translate }}
 </div>
 <ion-list>
-    <ion-checkbox data-ng-repeat="chat in request.chats" ng-model="chat.reward" ng-value="chat.id">
+    <ion-checkbox class="reward-checkbox" data-ng-repeat="chat in request.chats" ng-model="chat.reward" ng-value="chat.id">
         <table width="100%">
         <tr>
             <td width="45" style="vertical-align: middle;">
