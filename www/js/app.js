@@ -20,7 +20,7 @@ angular.module('starter', [
                             'starter.popupdialogs',
 							'ngCordova',
 							'pascalprecht.translate',
-                            'logglyLogger',
+                            //'logglyLogger',
                             'leaflet-directive'])
 
 .run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
@@ -33,6 +33,10 @@ angular.module('starter', [
   $rootScope.TAB_PARTIES = "";
   $rootScope.LOGOUT = "";
   $rootScope.SETTINGS = "";
+
+  if ((typeof $ionicPlatform == "undefined") || ($ionicPlatform == null)) {
+      alert("ERROR: $ionicPlatform --> UNDEFINED/NULL");
+  }
 
   $ionicPlatform.ready(function() {
 
@@ -272,7 +276,7 @@ angular.module('starter', [
     }
 
     /*
-     * Start GPS
+     * Set GPS basiscs
      */
 
     $rootScope.lat  = 0;
@@ -388,7 +392,6 @@ angular.module('starter', [
     /* TODO: remove after debug 
     $timeout(function () { $rootScope.notificationOpenedCallback(JSON.parse("{\"action\":{\"type\":0},\"notification\":{\"isAppInFocus\":false,\"shown\":true,\"androidNotificationId\":-372898719,\"displayType\":1,\"payload\":{\"notificationID\":\"b5ffa6ec-21cf-4ca2-bf9d-0cd3742c8f8c\",\"body\":\"Your task is now public\",\"additionalData\":{\"requestID\":38,\"notificationID\":188,\"partyID\":1,\"type\":\"REVIEW_OK\"},\"lockScreenVisibility\":1,\"fromProjectNumber\":\"641694372085\",\"priority\":0,\"rawPayload\":\"{\\\"google.sent_time\\\":1484651028978,\\\"custom\\\":\\\"{\\\\\\\"a\\\\\\\":{\\\\\\\"requestID\\\\\\\":38,\\\\\\\"notificationID\\\\\\\":188,\\\\\\\"partyID\\\\\\\":1,\\\\\\\"type\\\\\\\":\\\\\\\"REVIEW_OK\\\\\\\"},\\\\\\\"i\\\\\\\":\\\\\\\"b5ffa6ec-21cf-4ca2-bf9d-0cd3742c8f8c\\\\\\\"}\\\",\\\"from\\\":\\\"641694372085\\\",\\\"alert\\\":\\\"Your task is now public\\\",\\\"google.message_id\\\":\\\"0:1484651028990886%39a6ade7f9fd7ecd\\\",\\\"collapse_key\\\":\\\"do_not_collapse\\\",\\\"notificationId\\\":-372898719}\"}}}")); }, 10000);
     */
-   
 
     $rootScope.$on('account-ready', function(event, args) {
 
@@ -488,9 +491,8 @@ angular.module('starter', [
   });
 })
 
-.config(function($stateProvider, $urlRouterProvider, $translateProvider, $ionicConfigProvider, LogglyLoggerProvider) {
-
-   $ionicConfigProvider.tabs.position('bottom');
+.config(function($stateProvider, $urlRouterProvider, $translateProvider, $ionicConfigProvider
+){//,LogglyLoggerProvider) {
 
   /*
    * i18n --> https://angular-translate.github.io/docs
@@ -546,7 +548,7 @@ angular.module('starter', [
   $urlRouterProvider.otherwise('dash/0');
 
   //configure loggly so it logs console errors to the loggly cloud
-  LogglyLoggerProvider.inputToken( '653b3d37-f931-403d-b192-c8d08be6afb7' ).sendConsoleErrors(true);
+  //LogglyLoggerProvider.inputToken( '653b3d37-f931-403d-b192-c8d08be6afb7' ).sendConsoleErrors(true);
 });
 
 Array.prototype.contains = function(obj) {

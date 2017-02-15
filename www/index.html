@@ -2,7 +2,7 @@
 <html>
   <head>
 
-    <meta http-equiv="Content-Security-Policy" content="img-src 'self' * data:;default-src *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="img-src 'self' * data:; default-src gap: file: data: *; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'">
 
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -33,11 +33,13 @@
     <script src="cordova.js"></script>
 
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="lib/sockjs/sockjs.min.js" type="text/javascript"></script>
-    <script src="lib/stomp-websocket/lib/stomp.min.js" type="text/javascript"></script>
+    <!--<script src="lib/sockjs/sockjs.min.js" type="text/javascript"></script> -->
+    <!--<script src="lib/stomp-websocket/lib/stomp.min.js" type="text/javascript"></script>-->
     <script src="lib/ngCordova/dist/ng-cordova.js"></script>
     <script src="lib/angular-translate/angular-translate.min.js"></script>
+    <!--
     <script src="lib/angular-loggly-logger/angular-loggly-logger.min.js"></script>
+    -->
     <script src="lib/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js"></script>
 
     <!-- leaflet libs https://github.com/tombatossals/angular-leaflet-directive -->
@@ -64,11 +66,20 @@
     <link rel="stylesheet" href="./css/confetti-animation.css" type="text/css" />
 
   </head>
-  <body class="platform-android use-material-icons" ng-app="starter">
-    <div style="{{appInitDone ? 'display: none;' : ''}}">
-      <div style="text-align:center;margin-top:100px;color:grey;">... starting / starte / ابتداء ...</div>
+  <body class="platform-android use-material-icons" ng-app="starter" style="background-color:lightgrey;">
+    <div style="
+    {{appInitDone ? 'display: none;' : ''}};
+    max-width: 640px;
+    background-color: lightgray;
+    height:100%;
+    margin: auto;
+    ">
+      <div style="text-align:center;margin-top:100px;color:darkgrey;">... starting / starte / ابتداء ...</div>
     </div>
-    <ion-side-menus style="display:none;{{appInitDone ? 'display: block;' : ''}}">
+    <ion-side-menus style="
+    display:none;{{appInitDone ? 'display: block;' : ''}};
+    max-width: 640px;
+    margin: auto;">
 
       <!-- hidden file/image upload element for browser desktop use -->
       <input type="file" id="hidden-imageupload" name="file" accept= "image/jpeg,image/png" style="width:0px;height:1px;" />

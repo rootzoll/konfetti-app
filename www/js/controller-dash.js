@@ -637,7 +637,7 @@ angular.module('starter.controller.dash', [])
 
         // the OK button on the intro/welcome screen
         $scope.buttonIntroScreenOK = function() {
-            KonfettiToolbox.updateGPS();
+            //KonfettiToolbox.updateGPS();
             var state = AppContext.getLocalState();
             state.introScreenShown = true;
             AppContext.setLocalState(state);
@@ -762,7 +762,7 @@ angular.module('starter.controller.dash', [])
                 	$scope.continueFlag = true;
                 },3000);
                 return;
-            }
+            }        
 
             if ($scope.state == "INTRO") {
                 console.log("wait for intro to finsh");
@@ -773,6 +773,7 @@ angular.module('starter.controller.dash', [])
             }
 
             // make sure websocket is connected & listen on incoming
+            /* --> DEAKCTIVATED FOR NOW
             try {
             WebSocketService.init();
             WebSocketService.receive("dash", function(message){
@@ -824,8 +825,10 @@ angular.module('starter.controller.dash', [])
             } catch (e) {
                 console.error("Websockets init failed: "+JSON.stringify(e));
             }
+            */
 
             // check if GPS is available
+            /* ---> GPS DEACTIVATED FOR NOW
             if ($rootScope.gps==='wait') {
 
                 if ($scope.state != "INTRO") $scope.gpsWaitCount++;
@@ -838,7 +841,7 @@ angular.module('starter.controller.dash', [])
                     $timeout($scope.action, 300);
                     return;
                 }
-            }
+            };
 
             // check if GPS is failed
             if ($rootScope.gps==='fail') {
@@ -878,6 +881,7 @@ angular.module('starter.controller.dash', [])
 
                 return;
             }
+            */
 
             if ($scope.state === "PUSHWAIT") {
                 $timeout($scope.action, 300);
