@@ -1,8 +1,16 @@
 <div style="
     padding-bottom: 6px;
     font-size: 80%;
-    line-height: 1.4;">
+    line-height: 1.4;"
+    ng-show="request.chats.length>0">
     {{ 'REWARD_INFO' | translate }}
+</div>
+<div style="
+    padding-bottom: 6px;
+    font-size: 80%;
+    line-height: 1.4;"
+    ng-show="request.chats.length==0">
+    {{ 'REWARD_INFO_BASIC' | translate }}
 </div>
 <ion-list>
     <ion-checkbox class="reward-checkbox" data-ng-repeat="chat in request.chats" ng-model="chat.reward" ng-value="chat.id">

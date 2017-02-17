@@ -585,7 +585,7 @@ angular.module('starter.controller.request', [])
       // get image from device
       $cordovaCamera.getPicture(options).then(win, function(err) {
           console.dir(err);
-          alert("FAIL:"+err);
+          //alert("FAIL:"+err);
       });
 
   };

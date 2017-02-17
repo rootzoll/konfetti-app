@@ -218,7 +218,7 @@
 
               <!-- SHOW WHEN OPEN AND USER IS THE AUTHOR OR ADMIN-->
               <div ng-show="((userIsAuthor) && ((request.state==='STATE_OPEN') || (request.state==='STATE_PROCESSING')) && (!loadingRequest))" style="width:100%">
-                  <div ng-show="(request.chats.length>0)" style="width:100%; padding-top: 16px; padding-bottom: 8px;">
+                  <div style="width:100%; padding-top: 16px; padding-bottom: 8px;">
                       <button on-tap="buttonRequestDone()" class="button icon-left ion-checkmark-circled button-balanced" style="padding-left: 10px" >
                           {{ 'REQUESTDONE' | translate }}
                       </button>

@@ -513,3 +513,8 @@ div.popup-body span {
 body > ion-side-menus > ion-side-menu > div:nth-child(1) > ion-header-bar > h1 {
     padding-left: 16px;
 }
+
+.popup-container.popup-showing {
+    top: 24px;
+    bottom: unset;
+}

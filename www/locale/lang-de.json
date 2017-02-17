@@ -208,6 +208,7 @@
             "OR" : "oder",
             "USERNAME_NOTVALID": "Der Namen ist nicht verfügbar. Bitte einen anderen wählen.",
             "REWARD_INFO" : "Das Konfetti wird über alle ausgewählten Personen gleich verteilt. Es stehen die Personen zur Auswahl, mit denen gechattet wurde. Fehlt jemand der geholfen hat? Dann Abbrechen, kurz chatten und nochmal.",
+            "REWARD_INFO_BASIC" : "Konfetti können nur auf Personen verteilt werden, mit denen gechattet wurde. Fehlt jemand der geholfen hat? Dann Abbrechen, kurz chatten und nochmal.",
             "LOGOUT" : "Abmelden",
             "PULLTOREFRESH" : "Aktualisierung durch Ziehen",
             "ABOUTKONFETTI_HEAD" : "Über Konfetti",
