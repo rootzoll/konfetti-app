@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicViewService, $ionicPlatform, $ionicSideMenuDelegate) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicPlatform, $ionicSideMenuDelegate, $ionicViewSwitcher) {
 
         /*
          * get state parameter of controller
@@ -399,7 +399,8 @@ angular.module('starter.controller.dash', [])
 
             // new chat message --> jump to chat view
             if ((noti.type==5) || (noti.type=="CHAT_NEW")) {
-                $state.go('chat-detail', {id: noti.ref});
+                $ionicViewSwitcher.nextDirection('forward');
+                $state.go('chat',{id: noti.ref}); 
                 return;
             }
 
@@ -604,7 +605,7 @@ angular.module('starter.controller.dash', [])
             $ionicHistory.clearHistory();
             $ionicHistory.clearCache();
 
-            $ionicViewService.nextViewOptions({
+            $ionicHistory.nextViewOptions({
                 disableBack: true
             });
 
@@ -618,9 +619,7 @@ angular.module('starter.controller.dash', [])
 
         // event when user is leaving the view
         $scope.$on('$ionicView.leave', function(e) {
-
             $rootScope.topbarShowSetting = false;
-
             $scope.onView = false;
             $scope.loadingParty = true;
         });

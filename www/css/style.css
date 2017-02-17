@@ -502,3 +502,14 @@ div.popup-body span {
 .activated.button  {
   line-height: 32px !important;
 }
+
+.title {
+    font-size:110%  !important;
+    top: 0px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+}
+
+body > ion-side-menus > ion-side-menu > div:nth-child(1) > ion-header-bar > h1 {
+    padding-left: 16px;
+}

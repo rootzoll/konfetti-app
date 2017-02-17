@@ -40,6 +40,12 @@ angular.module('starter', [
 
   $ionicPlatform.ready(function() {
 
+    // display status bar on ios
+    try {
+        $cordovaStatusbar.overlaysWebView(true);
+        $cordovaStatusbar.show();
+    } catch (e) {}
+
     // translate side menu strings (is needed manually because side rendered before ionic ready)
     $timeout(function(){
     $translate("ABOUTKONFETTI_HEAD").then(function (ABOUTKONFETTI_HEAD) {
@@ -356,7 +362,7 @@ angular.module('starter', [
             // On New Chat
             if (payload.additionalData.type=="CHAT_NEW") {
                 console.log("Pushnotification CHAT_NEW --> go to chat ("+payload.additionalData.chatID+") on request ("+payload.additionalData.requestID+") on party ("+payload.additionalData.partyID+")");
-                $state.go('chat-detail', {id: payload.additionalData.chatID});
+                $state.go('chat', {id: payload.additionalData.chatID});
             } else
             
             // On New Transfere Received
@@ -532,10 +538,10 @@ angular.module('starter', [
         controller: 'RequestCtrl'
 	  })
 
-	  .state('chat-detail', {
+	  .state('chat', {
 	      url: '/chats/:id',
-        templateUrl: 'templates/chat-detail.html',
-        controller: 'ChatDetailCtrl'
+        templateUrl: 'templates/tab-chat.html',
+        controller: 'ChatCtrl'
 	  })
 
 	  .state('account', {

@@ -1,23 +1,14 @@
 angular.module('starter.controllers', [])
+.controller('ChatCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval, $ionicPlatform) {
 
-.controller('ChatDetailCtrl', function($rootScope, $scope, $stateParams, $state, ApiService, $window, $ionicScrollDelegate, AppContext, $translate, $ionicPopup, $interval, $ionicPlatform) {
-
-   // check if id of chat is available
-   if (typeof $stateParams.id==="undefined") {
-       $state.go('dash', {id: 0});
-       return;
-   }
-
-   $scope.chat = { id: $stateParams.id};
-   $scope.interval = null;
-
-   $scope.back = function() {
+     $scope.back = function() {
        if ((typeof $scope.chat.request != "undefined") && ($scope.chat.request!=null) && (typeof $scope.chat.request.id!= "undefined")) {
           $state.go('request-detail', {id: $scope.chat.request.id, area: 'top'});
        } else {
           $window.history.back();
        }
-   };
+      
+    };    
 
    $ionicPlatform.registerBackButtonAction(function () {
         $scope.back();
@@ -28,7 +19,8 @@ angular.module('starter.controllers', [])
    };
 
    $scope.getChatPartnerImage = function() {
-       if ((typeof $scope.chat.chatPartnerImageMediaID != "undefined") && ($scope.chat.chatPartnerImageMediaID!=null)) {
+       if ((typeof $scope.chat != "undefined") && 
+       (typeof $scope.chat.chatPartnerImageMediaID != "undefined") && ($scope.chat.chatPartnerImageMediaID!=null)) {
            return ApiService.getImageUrlFromMediaItem($scope.chat.chatPartnerImageMediaID);
        } else {
            return "./img/person.png";
@@ -40,8 +32,20 @@ angular.module('starter.controllers', [])
         console.dir($event);
    });
 
+
    $scope.$on('$ionicView.enter', function(e) {
 
+        // check if id of chat is available
+        if (typeof $stateParams.id==="undefined") {
+            console.log("typeof $stateParams.id===undefined");
+            $state.go('dash', {id: 0});
+            return;
+        }
+
+       console.log("ENTER ChatDetailCtrl id("+$stateParams.id+")");
+
+       $scope.chat = { id: $stateParams.id, chatPartnerImageMediaID: null};
+       $scope.interval = null;
        $scope.loading = false;
        $scope.sending = false;
        $scope.senderror = false;
@@ -55,7 +59,9 @@ angular.module('starter.controllers', [])
        $scope.interval = $interval(function(){
            $scope.loadChat($scope.chat.id, false);
        }, 5000);
+   
    });
+
 
    $scope.$on('$ionicView.beforeLeave', function(e){
 
@@ -63,6 +69,7 @@ angular.module('starter.controllers', [])
        $interval.cancel($scope.interval);
 
    });
+
 
    $scope.loadChat = function(chatId, showErrorAlert) {
        $scope.loading = true;

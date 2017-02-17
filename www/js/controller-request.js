@@ -321,7 +321,7 @@ angular.module('starter.controller.request', [])
         $rootScope.chatPartner = { requestTitle: $scope.request.title , userName: $scope.request.userName, imageUrl: $scope.request.imageUrl, spokenLangs: $scope.request.spokenLangs};
         var dataObj = {id: result.id};
         $ionicViewSwitcher.nextDirection('forward');
-        $state.go('chat-detail', dataObj);
+        $state.go('chat', dataObj);
       }, function(errorCode) {
         // FAIL
           $translate("IMPORTANT").then(function (HEADLINE) {
@@ -910,7 +910,7 @@ angular.module('starter.controller.request', [])
       if ($event!=null) $event.stopPropagation();
       $rootScope.chatPartner = { requestTitle: $scope.request.title , chatPartnerName: chat.chatPartnerName, chatPartnerImageMediaID: chat.chatPartnerImageMediaID, spokenLangs: chat.spokenLangs};
       $ionicViewSwitcher.nextDirection('forward');
-      $state.go('chat-detail', {id: chat.id});
+      $state.go('chat', {id: chat.id});
       return;
   };
 
