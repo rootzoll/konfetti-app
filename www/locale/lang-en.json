@@ -209,6 +209,7 @@
             "OR" : "or",
             "USERNAME_NOTVALID": "Name is not available. Please choose another name.",
             "REWARD_INFO" : "The confetti is distributed equally over all selected persons. Listed are all persons you chatted with. Does anyone who helped? Then cancel, make short chat and reward again.",
+            "REWARD_INFO_BASIC" : "Konfetti can just be distributed to persons you chatted with. Does anyone who helped? Then cancel, make short chat and reward again.",
             "LOGOUT" : "Logout",
             "PULLTOREFRESH" : "pull to refresh",
             "ABOUTKONFETTI_HEAD" : "About Konfetti",
