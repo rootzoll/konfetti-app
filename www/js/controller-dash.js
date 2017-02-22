@@ -253,10 +253,12 @@ angular.module('starter.controller.dash', [])
 
         $scope.buttonLoginRecoverFinal = function(mail) {
 
-            if (typeof mail == "undefined") {
+            if ((typeof mail == "undefined") || (mail==null) || (mail.trim().length==0)) {
                 PopupDialogs.showIonicAlertWith18nText('INFO', 'EMAIL_VALID', null);
                 return;
             }
+
+            mail = mail.trim();
 
             $ionicLoading.show({
                 template: '<img src="img/spinner.gif" />'
