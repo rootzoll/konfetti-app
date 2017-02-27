@@ -121,7 +121,7 @@
           <ion-list>
 
             <!-- list of groups the user is active on -->
-            <ion-item href="#/" class="item-icon-left" on-tap="updatePartyIndex($index)" ng-repeat="party in partyList" menu-close>
+            <ion-item href="#/dash/{{party.id}}" class="item-icon-left" ng-repeat="party in partyList" menu-close>
               <i class="icon ion-android-people"></i>
               {{ party.name }}
             </ion-item>
@@ -142,7 +142,7 @@
             border-bottom-width: 1px;
             border-bottom-style: solid;
             margin-bottom: 12px;"> &nbsp;</ion-item>
-            <ion-item href="#/" class="item-icon-left" on-tap="resetAccount()" menu-close ng-if="showLogOutOption">
+            <ion-item href="#" class="item-icon-left" on-tap="resetAccount()" menu-close ng-if="showLogOutOption">
               <i class="icon ion-log-out"></i>
               {{ LOGOUT }}
             </ion-item>
