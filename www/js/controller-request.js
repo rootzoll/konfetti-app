@@ -513,18 +513,21 @@ angular.module('starter.controller.request', [])
           $translate("TEXT").then(function (TEXT) {
               $translate("IMAGE").then(function (IMAGE) {
                   $translate("LOCATION").then(function (LOCATION) {
+                      $translate("CANCEL").then(function (CANCEL) {
                       $translate("DATE").then(function (DATE) {
                       $scope.mediaChoosePopup = $ionicPopup.show({
                           template: '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoText()"><i class="icon ion-document-text"></i>&nbsp;'+TEXT+'</button><br>'+
                           '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoImage()"><i class="icon ion-image"></i>&nbsp;'+IMAGE+'</button><br>'+
                           '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoLocation()"><i class="icon ion-map"></i>&nbsp;'+LOCATION+'</button>'+
-                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoDate()"><i class="icon ion-clock"></i>&nbsp;'+DATE+'</button>',
+                          '<button class="button button-stable" style="padding:5px;width:100%;text-align:center;margin:5px;margin-left:0px;border-color:lightgrey;" ng-mousedown="addInfoDate()"><i class="icon ion-clock"></i>&nbsp;'+DATE+'</button>'+
+                          '<div style="height:30px;text-align: center;padding:15px;" ng-mousedown="closeMediaChoosePopup()">'+CANCEL+'</div>',
                           title: TITLE,
                           subTitle: '',
                           scope: $scope,
                           cssClass: 'pop-additem',
                           buttons: []
                       });
+                  });
                   });
               });
           });
@@ -666,6 +669,10 @@ angular.module('starter.controller.request', [])
           PopupDialogs.showIonicAlertWith18nText('INFO','INFO_REQUESTFAIL');
       });
 
+  };
+
+  $scope.closeMediaChoosePopup = function() {
+    $scope.mediaChoosePopup.close();
   };
 
   $scope.addInfoDate = function() {
