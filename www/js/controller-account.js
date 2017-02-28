@@ -133,7 +133,8 @@ angular.module('starter.controller.account', [])
                   template: SUBLINE
               }).then(function(res) {
                   if(res) {
-                      $rootScope.resetAccount();
+                      $rootScope.initDone = false;
+                      AppContext.resetAccount(true);
                       $state.go('dash', {id: 0});
                   }
               });

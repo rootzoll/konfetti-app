@@ -694,7 +694,7 @@ angular.module('starter.controller.dash', [])
             if (($scope.state==="LOGIN_REGISTER") || ($scope.state==="LOGIN_LOGIN") || ($scope.state==="LOGIN_RECOVER")) return;
 
             // on browser if account not set - show login
-            if (!AppContext.isRunningWithinApp()) {
+            if ((!AppContext.isRunningWithinApp()) || ( window.localStorage.getItem("forcelogin")=="true")) {
                 var account = AppContext.getAccount();
                 if (!account.id || (account.id.length===0)) {
             	    $scope.state = "LOGIN_START";
@@ -751,6 +751,10 @@ angular.module('starter.controller.dash', [])
                 	console.log("OK  scope.checkedAccount == true");
                 }
             }
+
+            try {
+                window.localStorage.removeItem("forcelogin");
+            } catch (e) {}
 
             // display intro message
             if (!AppContext.getLocalState().introScreenShown) {

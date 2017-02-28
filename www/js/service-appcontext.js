@@ -28,7 +28,7 @@ angular.module('starter.appcontext', [])
 
   // put into the app context stuff that needs to be stored
   // everything else put into rootScope
-  var appContext = {
+  var appContextProto = {
       version: 1,
       appLang : "", // with empty string signaling that it should be set to device lang on first start
       account : {
@@ -55,6 +55,7 @@ angular.module('starter.appcontext', [])
         lastFocusedPartyID: null
       }
   };
+  var appContext = JSON.parse(JSON.stringify(appContextProto));
 
   var isReadyOutside = false;
   var isReadyInside = false;
@@ -71,6 +72,7 @@ angular.module('starter.appcontext', [])
           return appConfig;
     },
     isReady: function() {
+        //alert("inside("+isReadyInside+") outside("+isReadyOutside+")");
         return (isReadyInside && isReadyOutside);
     },
     setReady: function() {
@@ -95,6 +97,11 @@ angular.module('starter.appcontext', [])
     },
     getAccount: function() {
         return appContext.account;
+    },
+    resetAccount: function(forceLoginOnApp) {
+        appContext = JSON.parse(JSON.stringify(appContextProto));window.localStorage.removeItem("appContext");
+        window.localStorage.removeItem("appContext");
+        window.localStorage.setItem("forcelogin", forceLoginOnApp);
     },
     setAccount: function(account) {
         appContext.account = account;
