@@ -26,6 +26,44 @@ angular.module('starter.api', [])
         // get: (typeof mediaItemCache[id] != "undefined") ? mediaItemCache[id] : null;
         var mediaItemCache = {};
 
+
+        var sendChatTextItemFunction = function(chatId, text, win, fail) {
+
+                var mediaObj = {
+                    type : 'TYPE_TEXT',
+                    data : text
+                };
+
+                var messageObj = {
+                    chatId : chatId,
+                    itemId : 0
+                };
+
+                // CONFIG
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'POST';
+                config.url = activeServerUrl+'/media';
+                config.data = mediaObj;
+
+                // WIN - second step
+                var successCallback2 = function(response) {
+                    win(response.data);
+                };
+
+                // WIN
+                var successCallback = function(response) {
+                    messageObj.itemId = response.data.id;
+                    var config2 = getBasicHttpHeaderConfig();
+                    config2.method = 'POST';
+                    config2.url = activeServerUrl+'/chat/'+chatId+"/message";
+                    config2.data = messageObj;
+                    $http(config2).then(successCallback2, fail);
+                };
+
+                $http(config).then(successCallback, fail);
+
+            };
+
         return {
             createFullAccount: function(mail, pass, locale, win, fail) {
 
@@ -203,40 +241,7 @@ angular.module('starter.api', [])
             },
             // post a chat text message to a chat
             sendChatTextItem: function(chatId, text, win, fail) {
-
-                var mediaObj = {
-                    type : 'TYPE_TEXT',
-                    data : text
-                };
-
-                var messageObj = {
-                    chatId : chatId,
-                    itemId : 0
-                };
-
-                // CONFIG
-                var config = getBasicHttpHeaderConfig();
-                config.method = 'POST';
-                config.url = activeServerUrl+'/media';
-                config.data = mediaObj;
-
-                // WIN - second step
-                var successCallback2 = function(response) {
-                    win(response.data);
-                };
-
-                // WIN
-                var successCallback = function(response) {
-                    messageObj.itemId = response.data.id;
-                    var config2 = getBasicHttpHeaderConfig();
-                    config2.method = 'POST';
-                    config2.url = activeServerUrl+'/chat/'+chatId+"/message";
-                    config2.data = messageObj;
-                    $http(config2).then(successCallback2, fail);
-                };
-
-                $http(config).then(successCallback, fail);
-
+                sendChatTextItemFunction(chatId, text, win, fail);
             },
             // clients sends a text with a given language code ('de', 'ar', ...)
             // and server creates a multi lang media item from it by using autotranslate
@@ -673,7 +678,43 @@ angular.module('starter.api', [])
                 config.url = activeServerUrl+'/party/action/request/'+requestId+"?action="+action;
                 // WIN
                 var successCallback = function(response) {
-                    win(response.data);
+
+                    // add chat if message is given
+                    if ((typeof messageStr != "undefined") && (messageStr!=null) && (messageStr.length>0)) {
+
+                        //console.log("REQUEST RESULT: ",response.data.userId);
+
+                        var chatObj = {
+                            requestId : requestId,
+                            hostId : AppContext.getAccount().id,
+                            members : [response.data.userId]
+                        };
+
+                        // CONFIG
+                        var config2 = getBasicHttpHeaderConfig();
+                        config2.method = 'POST';
+                        config2.url = activeServerUrl+'/chat';
+                        config2.data = chatObj;
+                        // WIN
+                        var successCallback2 = function(response2) {
+                            //console.log("CREATED CHAT",response2);
+                            
+                            sendChatTextItemFunction(response2.data.id, messageStr, function(){
+                                //WIN
+                                //console.log("ADDED MESSAGE");
+                                win(response.data);
+                            }, function(){
+                                // FAIL
+                                win(response.data);
+                            });
+
+                        };
+                        $http(config2).then(successCallback2, successCallback2);
+                        
+                    } else {
+                        win(response.data);
+                    }
+
                 };
                 $http(config).then(successCallback, fail);
 

@@ -99,7 +99,7 @@ angular.module('starter.controllers', [])
            }
 
            // if still missing chat info
-           if ($rootScope.chatPartner.requestTitle=="") {
+           if (($rootScope.chatPartner!=null) && ($rootScope.chatPartner.requestTitle=="")) {
                $rootScope.chatPartner.requestTitle = "..";
                //console.log("get more info from chat data",chatData);
                ApiService.loadRequest(chatData.partyId, chatData.requestId, function(requestData){
