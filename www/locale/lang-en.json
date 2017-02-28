@@ -147,7 +147,7 @@
             "ADDDATE_DESCRIPTION" : "description",
             "LOGIN_WELCOME" : "Welcome to Konfetti App",
             "LOGIN_STEP1" : "Because you are running on a browser you need to login. Please register with email and password if this is your first time.",
-            "LOGINBUTTON_REGISTER" : "New Account",
+            "LOGINBUTTON_REGISTER" : "New User",
             "LOGINBUTTON_LOGIN" : "Login",
             "LOGINBUTTON_LOGINFORGOT" : "I forgot my password",
             "LOGIN_INFO" : "please login in",

@@ -146,7 +146,7 @@
             "ADDDATE_DESCRIPTION" : "Beschreibung",
             "LOGIN_WELCOME" : "Willkommen zur Konfetti App",
             "LOGIN_STEP1" : "Da die App auf einem Browser aufgerufen wird, ist ein Login nötig. Bist du zum ersten mal hier, bitte registrier dich mit eMail und Passwort.",
-            "LOGINBUTTON_REGISTER" : "Neu-Registrierung",
+            "LOGINBUTTON_REGISTER" : "Neuer Nutzer",
             "LOGINBUTTON_LOGIN" : "Login",
             "LOGINBUTTON_LOGINFORGOT" : "Ich habe mein Passwort vergessen.",
             "LOGIN_INFO" : "Bitte einloggen:",
