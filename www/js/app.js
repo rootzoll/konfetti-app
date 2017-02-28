@@ -183,9 +183,9 @@ angular.module('starter', [
         $timeout(function() {
             if (typeof file != "undefined") {
 
-                // limit filesize to max 1MB
-                if (file.size>(10*1024*1024)) {
-                    alert("file too big - max. 10MB");
+                // limit filesize to max 750KB
+                if (file.size>(750*1024)) {
+                    alert("file too big - max. 750KB");
                     $rootScope.onUploadClickCallback(null);
                     $rootScope.onUploadClickCallback=null;
                     return;
