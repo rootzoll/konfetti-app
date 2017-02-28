@@ -40,6 +40,14 @@ angular.module('starter', [
 
   $ionicPlatform.ready(function() {
 
+    // fix to https://github.com/rootzoll/konfetti-app/issues/137
+    $rootScope.someMaterialUiElementsNotWorking = false;
+    try {
+        $rootScope.someMaterialUiElementsNotWorking = 
+        ($cordovaDevice.getPlatform()=="Android") && ($cordovaDevice.getVersion()=="4.2.2");
+        //alert("("+$cordovaDevice.getPlatform()+") ("+$cordovaDevice.getVersion()+") ("+$rootScope.someMaterialUiElementsNotWorking+")");
+    } catch (e) {}
+    
     // display status bar on ios
     try {
         $cordovaStatusbar.overlaysWebView(true);

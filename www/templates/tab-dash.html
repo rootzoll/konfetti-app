@@ -315,6 +315,15 @@
            </div>
       </div>
 
+      <!--
+        OLD NEW TASK BOTTON - just in case of material UI bug
+      -->
+      <div class="card" ng-show="someMaterialUiElementsNotWorking" style="margin-bottom: 10px;padding-top: 2px; text-align: center;margin-top: 14px;" ng-cloak>
+        <button on-tap="onNewRequest()" class="button icon-left ion-android-add-circle button-positive" style="border-radius: 6px; margin: 10px;background-color: #ff4081;">
+             {{ 'TAB_REQUEST_NEW' | translate }}
+        </button>
+      </div>
+
       <!-- LIST DONE TASKS -->
       <div class="card" ng-show="(requestsDone.length>0)" style="margin-bottom: 10px; box-shadow: 0px 3px 20px rgba(0,0,0,.3);" ng-cloak>
         <table width="100%">
