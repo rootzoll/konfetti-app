@@ -59,6 +59,11 @@ angular.module('starter.controllers', [])
        $scope.interval = $interval(function(){
            $scope.loadChat($scope.chat.id, false);
        }, 5000);
+
+       // reset chat partner info (if no info from outside)
+       if ((typeof $rootScope.chatPartner == "undefined") || ($rootScope.chatPartner == null)) {
+           $rootScope.chatPartner = { requestTitle: "" , chatPartnerName: "", chatPartnerImageMediaID: "", spokenLangs:[]};
+       }
    
    });
 
@@ -67,6 +72,8 @@ angular.module('starter.controllers', [])
 
        // stop polling
        $interval.cancel($scope.interval);
+
+       $rootScope.chatPartner = null;
 
    });
 
@@ -89,6 +96,34 @@ angular.module('starter.controllers', [])
            if (($scope.chat.messages.length>0) && ($scope.chat.messages.length>$scope.messages.length)) {
                $scope.messages = [];
                $scope.loadChatsItem(0);
+           }
+
+           // if still missing chat info
+           if ($rootScope.chatPartner.requestTitle=="") {
+               $rootScope.chatPartner.requestTitle = "..";
+               //console.log("get more info from chat data",chatData);
+               ApiService.loadRequest(chatData.partyId, chatData.requestId, function(requestData){
+                   // WIN
+                   //console.log("request data",requestData); 
+                   $rootScope.chatPartner.requestTitle = requestData.title;
+                   try {
+                    if ((typeof requestData.titleMultiLang != "undefined") && (requestData.titleMultiLang!=null)) {
+                        var multiLangData = JSON.parse(requestData.titleMultiLang.data);
+                        if (typeof multiLangData[AppContext.getAppLang()] != "undefined") {
+                            $rootScope.chatPartner.requestTitle = multiLangData[AppContext.getAppLang()].text;  
+                        } else {
+                            console.warn("multitext lang not found("+AppContext.getAppLang()+")",requestData.titleMultiLang.data);
+                        }
+                    } else {
+                        console.warn("multitext data not found");
+                    }
+                   } catch (e) {
+                       console.warn("FAIL MultiLang Title on chat");
+                   }
+               }, function(){
+                   // FAIL
+                  $rootScope.chatPartner.requestTitle = "-"; 
+               });
            }
 
        }, function(errorCode) {
