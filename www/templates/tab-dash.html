@@ -5,13 +5,6 @@
         </button>
     </ion-nav-buttons>
     
-    <!--
-    <ion-nav-buttons side="right">
-        <button style="opacity:1;" class="button button-icon icon ion-navicon" >
-        </button>
-    </ion-nav-buttons>
-    -->
-
     <div class="padding" style="
     background-color: lightgrey;
     z-index: 999;
@@ -20,7 +13,7 @@
     width: 100%;
     margin:0px;
     padding:0px;
-    height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR'))">
+    height: 86px;" ng-hide="((state==='INTRO') || (state==='LOGIN_START') || (state==='LOGIN_REGISTER') || (state==='LOGIN_LOGIN') || (state==='LOGIN_RECOVER') || (state==='ERROR') || (state==='NOPARTIES'))">
 
         <div class="list card ng-cloak" style="text-align: center; margin-top: 16px;">
             <div style="width:100%;padding:14px;">
@@ -236,6 +229,26 @@
           </div>
       </div>
 
+      <div ng-show="(state==='NOPARTIES')" style="text-align: center; padding-top: 50px;padding-bottom: 50px" class="card">
+          <div style="font-size: 500%;color:#387ef5;padding-bottom: 24px;">
+              <i class="icon ion-android-pin"></i>
+          </div>
+          <div style="font-size:120%;font-weight:bold;padding-bottom:24px;">
+              {{ 'NOPARTY_INFO' | translate }}
+          </div>
+          <div style="font-weight:bold;padding-bottom:24px;">
+              {{ 'NOPARTY_MORE' | translate }} <a href="https://konfettiapp.de">{{ 'NOPARTY_HOMEPAGE' | translate }}</a>
+          </div>
+           <button id="button-intro-redeem" class="button button-positive" on-tap="buttonIntroScreenCoupon()" style="
+            font-size:90%;
+            margin-left: auto;
+            margin-right: auto;
+            width: 50%;
+            min-width: 250px;"><i class="icon ion-cash" id="redeem-icon-intro"></i>
+                  {{ 'INTRO_REDEEMCOUPON' | translate }}
+           </button>
+      </div>
+
       <div id="dash-partypanel" ng-hide="loadingParty" ng-class="dashPartypanelClass">
 
       <!--
@@ -309,7 +322,7 @@
 
 
       <!-- NOTICE WHEN NO CONTENT -->
-      <div ng-show="(requestsOpen.length===0)" class="card" style="margin-bottom: 10px;margin-top: 10px;text-align: center;" ng-cloak>
+      <div ng-show="((partyList.length>0) && (requestsOpen.length===0))" class="card" style="margin-bottom: 10px;margin-top: 10px;text-align: center;" ng-cloak>
            <div class="item item-text-wrap" style="font-weight: bold;">
                {{ 'NOCONTENT' | translate }}
            </div>

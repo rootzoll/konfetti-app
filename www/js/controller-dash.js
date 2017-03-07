@@ -939,11 +939,16 @@ angular.module('starter.controller.dash', [])
                     ApiService.loadPartylist($rootScope.lat, $rootScope.lon, function(list) {
                         // WIN;
                         $rootScope.partyList = list;
+                        $scope.loadingParty = false;
+                        /*
                         if ($rootScope.partyList.length==0) {
+
                             PopupDialogs.errorDialog($scope, "controller-dash-1");
                         } else {
                             $scope.action();
                         }
+                        */
+                        $scope.state = "NOPARTIES";
                     }, function(code) {
                         // FAIL
                         $scope.state = "INTERNETFAIL";
