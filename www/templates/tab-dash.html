@@ -230,14 +230,15 @@
       </div>
 
       <div ng-show="(state==='NOPARTIES')" style="text-align: center; padding-top: 50px;padding-bottom: 50px" class="card">
-          <div style="font-size: 500%;color:#387ef5;padding-bottom: 24px;">
+          <div style="font-size: 200%;color:#387ef5;padding-bottom: 24px;">
               <i class="icon ion-android-pin"></i>
           </div>
           <div style="font-size:120%;font-weight:bold;padding-bottom:24px;">
               {{ 'NOPARTY_INFO' | translate }}
           </div>
           <div style="font-weight:bold;padding-bottom:24px;">
-              {{ 'NOPARTY_MORE' | translate }} <a href="https://konfettiapp.de">{{ 'NOPARTY_HOMEPAGE' | translate }}</a>
+              {{ 'NOPARTY_MORE' | translate }} 
+              <span on-tap="nopartyOpenHomepage()" style="color:#3F51B5;">konfettiapp.de</span>
           </div>
            <button id="button-intro-redeem" class="button button-positive" on-tap="buttonIntroScreenCoupon()" style="
             font-size:90%;
@@ -247,6 +248,16 @@
             min-width: 250px;"><i class="icon ion-cash" id="redeem-icon-intro"></i>
                   {{ 'INTRO_REDEEMCOUPON' | translate }}
            </button>
+           <div style="margin-top: 20px;">
+                <span on-tap="reloadPartyList()">
+                    <i class="icon ion-loop" style="color:grey;font-size: 200%;"></i>
+                </span>
+                <span>&nbsp;&nbsp;</span>
+                <span on-tap="nopartyLogout()">
+                    <i class="icon ion-log-out" style="color:grey;font-size: 180%;"></i>
+                </span>
+           </div>
+
       </div>
 
       <div id="dash-partypanel" ng-hide="loadingParty" ng-class="dashPartypanelClass">
@@ -360,7 +371,7 @@
       <i class="icon ion-android-add"></i>
   </button>
 
-  <div ng-if="!initDone" style="position: absolute; bottom: 30px; right:14px;" > 
+  <div ng-if="(!initDone)" style="position: absolute; bottom: 30px; right:14px;" > 
         <button class="button fadeInDelay5" on-tap="languageSelectionDialog();" style="padding-left:19px;padding-right:16px;padding-top:3px;background-color: #f5f5f5;"><i class="icon ion-ios-world-outline" style="padding:6px;"></i>{{ select.actualLang.display | translate }}<i class="icon ion-android-arrow-dropdown" style="padding:6px"></i></button>
     </div>
 

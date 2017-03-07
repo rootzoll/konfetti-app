@@ -115,6 +115,17 @@ angular.module('starter.controller.dash', [])
             });
         };
 
+        $scope.nopartyLogout = function() {
+            if ($rootScope.os=="browser") {
+                $rootScope.resetAccount();
+            } else {
+                ionic.Platform.exitApp();
+            }
+        };
+
+        $scope.nopartyOpenHomepage = function() {
+        };
+
         $scope.getKonfetti = function() {
         	$scope.partyPopUp.close();
         	$scope.onButtonCoupon();
@@ -937,18 +948,15 @@ angular.module('starter.controller.dash', [])
                 if ($scope.state!="PARTYLISTWAIT") {
                     $scope.state = "PARTYLISTWAIT";
                     ApiService.loadPartylist($rootScope.lat, $rootScope.lon, function(list) {
-                        // WIN;
-                        $rootScope.partyList = list;
-                        $scope.loadingParty = false;
-                        /*
-                        if ($rootScope.partyList.length==0) {
-
-                            PopupDialogs.errorDialog($scope, "controller-dash-1");
+                        // WIN
+                        if (list.length==0) {
+                            console.log("No Parties found.");
+                            $scope.state = "NOPARTIES";
+                            $scope.loadingParty = false;
                         } else {
+                            $rootScope.partyList = list;
                             $scope.action();
                         }
-                        */
-                        $scope.state = "NOPARTIES";
                     }, function(code) {
                         // FAIL
                         $scope.state = "INTERNETFAIL";
