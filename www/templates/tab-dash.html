@@ -44,6 +44,7 @@
                     </div>
                     <div style="color:lightgrey;font-size: 75%">
                         {{ state | translate }}
+                        <span ng-show="state=='GPSWAIT'">&nbsp;({{21-gpsWaitCount}})</span>
                     </div>
                 </div>
             </div>

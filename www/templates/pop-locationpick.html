@@ -3,7 +3,7 @@
         <table width="100%">
             <tr>
                 <td>
-                    <label class="item item-input" style="width: 99%;">
+                    <label class="item item-input" style="width: 99%;padding-top:0px;">
                          <input type="text" ng-model="locationInput.comment" placeholder="{{ 'LOCATIONCOMMENT' | translate }}">
                     </label>
                 </td>
@@ -16,7 +16,7 @@
         </table>
     </ion-item>
     <ion-item style="padding: 0px;">
-    <leaflet id="mappick" data-tap-disabled="true" lf-center="markerPosition" event-broadcast="events" markers="markers" defaults="defaults" height="300px" width="{{mapWidthPixel}}px" style="margin-left: auto;
+    <leaflet id="mappick" data-tap-disabled="true" lf-center="markerPosition" event-broadcast="events" markers="markers" defaults="defaults" height="250px" width="{{mapWidthPixel}}px" style="margin-left: auto;
     margin-right: auto;"></leaflet>
     </ion-item>
 </ion-list>

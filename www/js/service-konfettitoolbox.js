@@ -85,7 +85,6 @@ angular.module('starter.konfettitoolbox', [])
                             } else {
                                 $rootScope.lat  = gpsdata.lat;
                                 $rootScope.lon = gpsdata.lon;
-                                $rootScope.gps  = 'win';
                                 var newPosition = {
                                     ts: Date.now(),
                                     lat: gpsdata.lat,
@@ -153,79 +152,6 @@ angular.module('starter.konfettitoolbox', [])
                     else
                 return objs.indexOf(item) >= 0 ? false : objs.push(item);
                 });
-           },
-           updateGPS : function() {
-
-               var hadValidPositionbefore = ($rootScope.gps=='win');
-
-               /*
-                * START GEOLOCATION
-                * http://ngcordova.com/docs/plugins/geolocation/
-                */
-               var posOptions = {timeout: 14000, enableHighAccuracy: false};
-               if (ApiService.runningDevelopmentEnv()) posOptions.timeout = 1000;
-               $rootScope.gps  = 'wait';
-               $rootScope.lat  = 0;
-               $rootScope.lon = 0;
-               $cordovaGeolocation
-                   .getCurrentPosition(posOptions)
-                   .then(function (position) {
-
-                       /*
-                        * Got Real GPS
-                        */
-
-                       $rootScope.lat  = position.coords.latitude;
-                       $rootScope.lon = position.coords.longitude;
-                       $rootScope.gps  = 'win';
-                       var newPosition = {
-                           ts: Date.now(),
-                           lat: position.coords.latitude,
-                           lon: position.coords.longitude
-                       };
-                       var localState = AppContext.getLocalState();
-                       localState.lastPosition = newPosition;
-                       AppContext.setLocalState(localState);
-                       $log.info("lat("+$rootScope.lat+") long("+$rootScope.lon+")");
-
-
-                   }, function(err) {
-
-                       /*
-                        * No LIVE GPS
-                        */
-
-                       // no live GPS - try to use last one
-                       var localState = AppContext.getLocalState();
-                       if ((localState.lastPosition!=null) && (typeof localState.lastPosition.ts != "undefined")) {
-                           $log.info("no live GPS ... using last position lat("+localState.lastPosition.lat+") lon("+localState.lastPosition.lon+")");
-                           $rootScope.lat  = localState.lastPosition.lat;
-                           $rootScope.lon = localState.lastPosition.lon;
-                           $rootScope.gps  = 'win';
-                       } else {
-
-                           if (!ApiService.runningDevelopmentEnv()) {
-
-                               $log.info("LIVE GPS ERROR");
-                               if (hadValidPositionbefore ) {
-                                   // if GPS info was valid before - dont lable it as a fail
-                                   $rootScope.gps  = 'win';
-                               } else {
-                                   $rootScope.gps  = 'fail';
-                               }
-
-                           } else {
-
-                               $rootScope.lat  = 52.5;
-                               $rootScope.lon = 13.5;
-                               $rootScope.gps  = 'win';
-                               console.log("DEV Use Fake-GPS ...");
-
-                           }
-
-                       }
-
-                   });
            },
            processCouponActions : function(actionArray, dashViewScope, callback) {
                processRedeemActions(actionArray,dashViewScope, callback);

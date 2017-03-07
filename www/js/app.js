@@ -23,7 +23,7 @@ angular.module('starter', [
                             //'logglyLogger',
                             'leaflet-directive'])
 
-.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state) {
+.run(function(AppContext, ApiService, $rootScope, $ionicPlatform, $cordovaGlobalization, $cordovaGeolocation, $log, $cordovaToast, $cordovaDevice, $translate, KonfettiToolbox, $timeout, $ionicPopup, $cordovaStatusbar, $state, $ionicSideMenuDelegate) {
 
   $rootScope.appInitDone = false;
   $rootScope.topbarShowSetting = false;
@@ -82,6 +82,14 @@ angular.module('starter', [
     $rootScope.resetAccount = function() {
         localStorage.clear();
         location.reload();
+    };
+
+    $rootScope.reloadGroups = function() {
+        $ionicSideMenuDelegate.toggleLeft();
+        $timeout(function(){
+            $rootScope.$broadcast("dash-reloadgroups");
+        },800);
+        $state.go('dash', {id: 0});
     };
 
     // set running os info
@@ -293,8 +301,8 @@ angular.module('starter', [
      * Set GPS basiscs
      */
 
-    $rootScope.lat  = 0;
-    $rootScope.lon = 0;
+    $rootScope.lat  = null;
+    $rootScope.lon  = null;
 
     document.addEventListener("resume", function(){
         $rootScope.$broadcast('cordova-resume');

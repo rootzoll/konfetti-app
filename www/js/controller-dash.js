@@ -1,6 +1,6 @@
 angular.module('starter.controller.dash', [])
 
-.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicPlatform, $ionicSideMenuDelegate, $ionicViewSwitcher) {
+.controller('DashCtrl', function(AppContext, $window, $rootScope, $scope, $translate, $timeout, $ionicPopup, $log, $state, $stateParams, $ionicScrollDelegate, ApiService, KonfettiToolbox, WebSocketService, $ionicLoading, RainAnimation, PopupDialogs, $cordovaDevice, $ionicHistory, $ionicPlatform, $ionicSideMenuDelegate, $ionicViewSwitcher, $cordovaGeolocation) {
 
         /*
          * get state parameter of controller
@@ -16,6 +16,7 @@ angular.module('starter.controller.dash', [])
          * prepare local scope
          */
 
+        console.log("prepare local scope");
         $scope.state = "INIT";
         $scope.onView = false;
 
@@ -116,7 +117,7 @@ angular.module('starter.controller.dash', [])
         };
 
         $scope.nopartyLogout = function() {
-            if ($rootScope.os=="browser") {
+            if (!AppContext.isRunningWithinApp()) {
                 $rootScope.resetAccount();
             } else {
                 ionic.Platform.exitApp();
@@ -200,6 +201,7 @@ angular.module('starter.controller.dash', [])
                 $ionicLoading.hide();
                 AppContext.setAccount(account,'controller-dash buttonLoginRegisterFinal');
                 $scope.login.Password = "";
+                console.log("Full account created");
                 $scope.state = "INIT";
                 $scope.action();
             }, function(errorcode) {
@@ -247,6 +249,7 @@ angular.module('starter.controller.dash', [])
                 state.introScreenShown = true;
                 AppContext.setLocalState(state);
                 $scope.login.Password = "";
+                console.log("Login OK");
                 $scope.state = "INIT";
                 $scope.action();
             }, function() {
@@ -647,12 +650,24 @@ angular.module('starter.controller.dash', [])
             if ($scope.onView) $timeout($scope.action(),10);
         });
 
+        $scope.$on('dash-reloadgroups',function(e) {
+            $scope.triggerGPSPlugin();
+            $scope.loadingParty = true;
+            $timeout(function(){
+                $scope.reloadPartyList();
+            },6000);
+        });
+
         // the OK button on the intro/welcome screen
         $scope.buttonIntroScreenOK = function() {
-            //KonfettiToolbox.updateGPS();
+
+            // mark introscreen as shown
             var state = AppContext.getLocalState();
             state.introScreenShown = true;
             AppContext.setLocalState(state);
+
+            // change state
+            console.log("Intro OK Button");
             $scope.state = "INIT";
             $scope.action();
         };
@@ -675,6 +690,58 @@ angular.module('starter.controller.dash', [])
                     });
                 }
             });
+        };
+
+        /*
+         *  try go get GPS upadted from plugin on mobile
+         */
+        $scope.triggerGPSPlugin = function() {
+
+               /*
+               if (!AppContext.isRunningWithinApp()) {
+                   console.log("Skipping GeoLocation Plugin on Browser ...");
+                   $scope.gpsWaitCount = 100;
+                   return;
+               }
+               */
+
+               /*
+                * START GEOLOCATION
+                * http://ngcordova.com/docs/plugins/geolocation/
+                */
+               var posOptions = {timeout: 14000, enableHighAccuracy: false};
+               $cordovaGeolocation
+                   .getCurrentPosition(posOptions)
+                   .then(function (position) {
+
+                       /*
+                        * Got Real GPS
+                        */
+
+                       $rootScope.lat  = position.coords.latitude;
+                       $rootScope.lon = position.coords.longitude;
+                       var newPosition = {
+                           ts: Date.now(),
+                           lat: position.coords.latitude,
+                           lon: position.coords.longitude
+                       };
+                       var localState = AppContext.getLocalState();
+                       localState.lastPosition = newPosition;
+                       AppContext.setLocalState(localState);
+                       $log.info("Got GPS data --> lat("+$rootScope.lat+") long("+$rootScope.lon+")");
+                       if ($scope.state=="GPSWAIT") $scope.state = "INIT";
+
+                   }, function(err) {
+
+                       /*
+                        * No LIVE GPS
+                        */
+
+                        // trigger fallback
+                        console.log("Was not able to get GOPS data ... trigger fallback");
+                        $scope.gpsWaitCount = 100;
+
+                   });
         };
 
         // action to refresh dash data
@@ -745,6 +812,7 @@ angular.module('starter.controller.dash', [])
                         } else {
                             // refreshing local account with account from server
                             $scope.checkedAccount = true;
+                            console.log("account from server");
                             AppContext.setAccount(account,'controller-dash action3');
                             $timeout($scope.action, 1000);
                             $rootScope.$broadcast('account-ready');
@@ -843,61 +911,103 @@ angular.module('starter.controller.dash', [])
             }
             */
 
-            // check if GPS is available
-            /* ---> GPS DEACTIVATED FOR NOW
-            if ($rootScope.gps==='wait') {
 
-                if ($scope.state != "INTRO") $scope.gpsWaitCount++;
+            if ($scope.state=="GPSWAIT") {
 
+                // show Location picker on browser or as fallback on mobile after waiting
                 if ($scope.gpsWaitCount>20) {
-                    $rootScope.gps='fail';
                     $scope.gpsWaitCount = 0;
-                } else {
-                    $scope.state = "GPSWAIT";
-                    $timeout($scope.action, 300);
+                    PopupDialogs.locationPicker($scope, function(result){
+  
+                        // when CANCEL was pressed
+                        if (result.cancel) {
+                            $scope.triggerGPSPlugin();
+                            $scope.action();
+                            return;
+                        }
+
+                        // on normal result (Location from map)
+                        $rootScope.lat = result.lat;
+                        $rootScope.lon = result.lon;
+
+                        // storing as last position
+                        var newPosition = {
+                            ts: Date.now(),
+                            lat: $rootScope.lat,
+                            lon: $rootScope.lon
+                        };
+                        var localState = AppContext.getLocalState();
+                        localState.lastPosition = newPosition;
+                        AppContext.setLocalState(localState);
+
+                        // leave GPSWAIT state
+                        console.log("Got GPS from LocationPicker");
+                        $scope.state = "INIT";
+                        $scope.action();
+
+                    }, function(error) {
+                        alert("ERROR on initial LocationPicker: "+JSON.stringify(e));
+                        $scope.action();
+                    }, {
+                        i18nHeadline: "GPSFALLBACK_TITLE",
+                        i18nSubline: "GPSFALLBACK_SUB2",
+                        i18nMarker: "GPSFALLBACK_MARKER",
+                        i18nCancel: "GPSFALLBACK_GPS",
+                        inputComment: true,
+                        startLat: 52.522011,
+                        startLon: 13.412772,
+                        startZoom: 9
+                    });
                     return;
                 }
-            };
 
-            // check if GPS is failed
-            if ($rootScope.gps==='fail') {
+                // count up on GPS waiting (waiting for GPS from GPS plugin)
+                console.log("GPS WAIT ("+$scope.gpsWaitCount+")");
+                $scope.gpsWaitCount++
+                $timeout(function() {
+                	$scope.action();
+                },1000);
+                return;
 
-                $scope.state = "GPSFAIL";
+            } else {
 
-                PopupDialogs.locationPicker($scope, function(result){
-                    // WIN
+              console.log("STATE("+$scope.state+")");
 
-                    // when CANCEL was pressed
-                    if (result.cancel) {
-                        KonfettiToolbox.updateGPS();
-                        $timeout(function(){
-                            $scope.action();
-                        }, 5000);
+              if (($rootScope.lat==null) || ($rootScope.lon==null)) {
+
+                // check if GPS can be reconstructed from last position
+                var localState = AppContext.getLocalState();
+                if ((typeof localState != "undefined") && (localState!=null) 
+                 && (typeof localState.lastPosition!= "undefined") && (localState.lastPosition!=null)) {
+
+                    $rootScope.lat  = localState.lastPosition.lat;
+                    $rootScope.lon  = localState.lastPosition.lon;       
+                    console.log("Got LAST GPS position lat("+$rootScope.lat+") lon("+$rootScope.lon+")");
+
+                } else {
+
+                    console.log("No LAST GPS position found.");
+
+                    // check if user account is already active on parties
+                    var account = AppContext.getAccount();
+                    if (account.activeOnParties.length>0) {
+                        console.log("User is already active on at least in group - no need for GPS");
+                        $rootScope.lat  = 0;
+                        $rootScope.lon  = 0;
+                    } else {
+                        console.log("GPS needed - still a fresh user");
+                        $scope.state="GPSWAIT";
+                        $scope.gpsWaitCount = 0;
+                        $scope.triggerGPSPlugin();
+                        $scope.action();
                         return;
                     }
+                }
+              }
 
-                    // on normal result
-                    $rootScope.lat = result.lat;
-                    $rootScope.lon = result.lon;
-                    $rootScope.gps = 'win';
-                    $scope.action();
-
-                }, function(error) {
-                    alert("ERROR on initial LocationPicker: "+JSON.stringify(e));
-                }, {
-                i18nHeadline: "GPSFALLBACK_TITLE",
-                i18nSubline: "GPSFALLBACK_SUB2",
-                i18nMarker: "GPSFALLBACK_MARKER",
-                i18nCancel: "GPSFALLBACK_GPS",
-                inputComment: false,
-                startLat: 52.522011,
-                startLon: 13.412772,
-                startZoom: 9
-            });
-
-                return;
             }
-            */
+
+            console.log("WORK WITH GPS lat("+$rootScope.lat+") lon("+$rootScope.lon+") count("+$scope.gpsWaitCount+")");
 
             if ($scope.state === "PUSHWAIT") {
                 $timeout($scope.action, 300);
@@ -955,6 +1065,31 @@ angular.module('starter.controller.dash', [])
                             $scope.loadingParty = false;
                         } else {
                             $rootScope.partyList = list;
+
+                            // if GPS is still not set - try to get from party
+                            if (($rootScope.lat==0) && ($rootScope.lon==0)) {
+                                console.log("Getting GPS from party list");
+                                for (var k=0; k<$rootScope.partyList.length; k++) {
+                                    if (typeof $rootScope.partyList[k].lat == "undefined") continue;
+                                    if (typeof $rootScope.partyList[k].lon == "undefined") continue;
+                                    if ($rootScope.partyList[k].lat == null) continue;
+                                    if ($rootScope.partyList[k].lon == null) continue;
+                                    if (($rootScope.partyList[k].lat == 0) && ($rootScope.partyList[k].lon == 0)) continue;
+                                    $rootScope.lat = $rootScope.partyList[k].lat;
+                                    $rootScope.lon = $rootScope.partyList[k].lon;
+                                    console.log("GOT GPS FROM PARTY LIST: lat("+$rootScope.lat+") lon("+$rootScope.lon+")");
+                                    // storing as last position
+                                    var newPosition = {
+                                        ts: Date.now(),
+                                        lat: $rootScope.lat,
+                                        lon: $rootScope.lon
+                                    };
+                                    var localState = AppContext.getLocalState();
+                                    localState.lastPosition = newPosition;
+                                    AppContext.setLocalState(localState);
+                                    break;
+                                }
+                            }
                             $scope.action();
                         }
                     }, function(code) {

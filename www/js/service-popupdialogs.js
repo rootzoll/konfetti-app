@@ -18,87 +18,6 @@ angular.module('starter.popupdialogs', [])
             });
         };
 
-        var methodGetFallbackLocationBySelection = function(win, fail) {
-            $translate("GPSFALLBACK_TITLE").then(function (TITLE) {
-                $translate("GPSFALLBACK_SUB").then(function (SUB) {
-                    $translate("GPSFALLBACK_GPS").then(function (GPS) {
-                        $translate("OK").then(function (OK) {
-                            $rootScope.popScope = {
-                                zipCode: "",
-                                country: "germany"
-                            };
-                            var popUp = $ionicPopup.show({
-                                templateUrl: './templates/pop-GpsFallback.html',
-                                title: TITLE,
-                                subTitle: SUB,
-                                scope: $rootScope,
-                                buttons: [
-                                    {
-                                        text: GPS,
-                                        onTap: function (e) {
-                                            popUp.close();
-                                            fail();
-                                        }
-                                    },
-                                    {
-                                        text: OK,
-                                        type: 'button-positive',
-                                        onTap: function (e) {
-                                            popUp.close();
-                                            if (($rootScope.popScope.zipCode.trim().length == 0) && (ApiService.runningDevelopmentEnv())) {
-
-                                                // WORK WITH FAKE TEST DATA ON DEVELOPMENT
-                                                $rootScope.lat = 52.52;
-                                                $rootScope.lon = 13.13;
-                                                $rootScope.gps = 'win';
-                                                win($rootScope.lat, $rootScope.lon);
-
-                                            } else {
-
-                                                // TRY TO RESOLVE ZIP CODE TO GPS
-                                                if ($rootScope.popScope.zipCode.trim().length > 2) {
-                                                    $rootScope.popScope.zipCode = $rootScope.popScope.zipCode.trim();
-                                                    ApiService.getGPSfromZIP($rootScope.popScope.zipCode, $rootScope.popScope.country, function (lat, lon) {
-                                                        // WIN
-                                                        $rootScope.lat = lat;
-                                                        $rootScope.lon = lon;
-                                                        $rootScope.gps = 'win';
-                                                        var newPosition = {
-                                                            ts: Date.now(),
-                                                            lat: lat,
-                                                            lon: lon
-                                                        };
-                                                        var localState = AppContext.getLocalState();
-                                                        localState.lastPosition = newPosition;
-                                                        AppContext.setLocalState(localState);
-                                                        win(lat, lon);
-                                                    }, function () {
-                                                        // FAIL
-                                                        console.log("GPSFALLBACK_FAIL");
-                                                        methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_FAIL', function () {
-                                                            methodGetFallbackLocationBySelection(win, fail);
-                                                        });
-                                                    });
-                                                } else {
-                                                    // ON EMPTY INPUT
-                                                    console.log("GPSFALLBACK_NEEDED");
-                                                    methodShowIonicAlertWith18nText('INFO', 'GPSFALLBACK_NEEDED', function () {
-                                                        methodGetFallbackLocationBySelection(win, fail);
-                                                    });
-                                                }
-                                            }
-
-                                        }
-                                    }
-                                ]
-                            });
-                        });
-                    });
-                });
-            });
-        };
-
-
         var sendKonfettiDialog = function(partyID, maxSendAmount, listOfGreenAddresses) {
                     $translate("SENDKONFETTI").then(function (TITLE) {
                 	var translateKey = "SENDKONFETTI_SUB_ALL";
@@ -565,9 +484,6 @@ angular.module('starter.popupdialogs', [])
         },
         usernameDialog : function(scope, preset, win, fail) {
             enterUsernameDialog(scope, preset, win, fail);
-        },
-        getFallbackLocationBySelection : function(win, fail) {
-            methodGetFallbackLocationBySelection(win, fail);
         },
         errorDialog : function(scope, code) {
             errorDialog(scope, code);

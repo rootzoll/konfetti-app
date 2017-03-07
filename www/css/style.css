@@ -389,6 +389,20 @@ div.popup-body span {
     border-bottom: 0px solid #eee;
 }
 
+.pop-locationpick .popup-title {
+    padding-left: 17px !important;
+    padding-bottom: 12px !important;
+}
+
+.pop-locationpick .popup-sub-title {
+    padding-bottom: 0px !important;
+    padding-left: 17px !important;
+}
+
+.pop-locationpick .popup-body {
+    padding-bottom: 3px !important;
+}
+
 .pop-reward .popup {
     width: 90%;
     max-width: 600px;
