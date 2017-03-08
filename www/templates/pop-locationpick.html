@@ -4,7 +4,7 @@
             <tr>
                 <td>
                     <label class="item item-input" style="width: 99%;padding-top:0px;">
-                         <input type="text" ng-model="locationInput.comment" placeholder="{{ 'LOCATIONCOMMENT' | translate }}">
+                         <input type="text" ng-model="locationInput.comment" placeholder="{{ 'LOCATIONCOMMENT' | translate }}" ng-change="locationTextUpdate(locationInput.comment)">
                     </label>
                 </td>
                 <!--

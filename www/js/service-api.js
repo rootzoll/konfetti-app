@@ -744,6 +744,21 @@ angular.module('starter.api', [])
                 $http(config).then(successCallback, fail);
 
             },
+            getGPSfromAddress: function(address, win, fail) {
+
+                var config = getBasicHttpHeaderConfig();
+                config.method = 'GET';
+                config.url = activeServerUrl+'/account/addr2gps?q='+encodeURIComponent(address);
+                // WIN
+                var successCallback = function(response) {
+                    if (response.data.resultCode == 0) {
+                        win(response.data.lat, response.data.lon);
+                    } else {
+                        fail();
+                    }
+                };
+                $http(config).then(successCallback, fail);
+            },
             getGPSfromZIP: function(zipcode, country, win, fail) {
 
                 var config = getBasicHttpHeaderConfig();

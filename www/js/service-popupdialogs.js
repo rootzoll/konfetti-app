@@ -105,6 +105,29 @@ angular.module('starter.popupdialogs', [])
                 
                 scope.mapWidthPixel = window.innerWidth - 60;
 
+
+                scope.locationTextUpdate = function(text) {
+                    console.log("text-input: "+text+ " / "+scope.locationInput.comment);
+                    if (text.length<=3) return;
+                    var addr = JSON.parse(JSON.stringify(text));
+                    ApiService.getGPSfromAddress(addr, function(lat,lon){
+                        // WIN
+                        console.log("POSITION: WIN "+addr);
+                        if (scope.locationInput.comment==addr) {
+                            scope.markers.mainMarker.lat = lat;
+                            scope.markers.mainMarker.lng = lon;
+                            scope.markerPosition.lat = lat;
+                            scope.markerPosition.lng = lon;
+                        } else {
+                            //console.log("outdated ("+addr+"!="+scope.locationInput.comment+")");               
+                        }
+                    }, function(){
+                        // FAIL
+                        //console.log("POSITION: FAIL "+addr);
+                    });
+
+                };
+
                 angular.extend(scope, {
                 markerPosition: {
                     lat: config.startLat,
