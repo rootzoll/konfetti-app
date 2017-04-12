@@ -1,20 +1,21 @@
 sudo: required
-
 services:
-  - docker
-
+- docker
 env:
   global:
-    - secure: "JQNbU6lUK0KFC2yQLWtZFivbw94PyW1LwBn3V+7JHOzi9nlFELLgw700Ifh+jYlGrtSY7HkfYDcl+DNxWeEED5bQljYyxCPtcBiDuCeSuFTVTgZsGFKEdxUODQXhoHo0Nzx2jlykNpmVYX0dfu71HdzYWO+X/T6bFY2+Qki1yh6x2woQ9MH4ZJaSqlSr5zwgPx+O9eyJApIyzK7e18z5ykLWkM6gRVwymdlKTbby3pg+/woz5V71cJ1kV7pmk7XFkpXKcJYYl8SaaqmLdNuBfmWUPT/+j2iFbHWzv7dM9J2/Jlm4C10MS5uyobupM/D0oq1t4gwtOc0BqHcdvpKi69ytYA/WMUM/NkJSLqXTcbG9DgnekILkq9qRXwGECYV7g2sQJpMJkjhfc4qNtkQeWo3SvlbdXEn1FaaaG/0JWh0Br/faFR5dY3x++T5CLismfgdHwWh2Mv0Qfd3/y+Kxi5uqC4OhG8BF29mUwSTRDslvEuah3yDAuzUJU1bFfSWus4n9Us1G4PE2+0WBjtFuTthZ+KmKvJU/W8dhcxWeHN1HAKRTtJlZ84tXc/2RIdVGTxt59qTJTXW87P3ltUbRVEVIGEFdxqpx2QKfyZ+6ZHt39PZ5OPsWQu7oDBxXH1KY61mKZUxjMwMJ5ZAld8GN+TXrn+Am9zGNksNhSBP/6AM="
-    - secure: "AGaNyOsMCKhOK5oi9aoS9w6LfU53z+/XuNCRQL/D9JXApMXGB8P8G+Uie759EwwqywN4YiVLH5nOo4KIwzpW4+1RamxZjdptL7NvWNxNRv0H37cEKuaU7mbGgmI08bgU/v7xn/yVUfYUP/KZSynGcukcgyL8G5kZPCn2UmjWGo6+/67bwmSRVMGosGo2Aj/bK/4jyCogdSVq9vHWE8bk9RiiHggOj56ibcfa2+Ov6qLiG0WcwIMnR5CwfrNYIBgBELX0wMk0Z2on+Jg5eiOXaOZLDOC+mvx/wBrsyMkGDhA5vj4SxR1g3CDPKLU1eDpjtuO44uaMA5Wofg0Up9cDMlGy5F/oIhRHZex4aecHGDwIVtTHfVxCpbda688vg7Mt9cd3/EfsBFOmTFB4UBkl9/Jt4oracJNRXmmGAqhnFv4hxQ6Xm7J5tfny9GBaZlXN/q4uJW0l1ft9TThxSTKbIok/vPoOuWSVVRFqmk9E8MXWUuPm6c3cES5sFWwCivGpHMiac0n34+1y1sZ43XiDjJdpO5MgsXdHA2eD7TaH/beK4cfCHD0xcK2KMKHKb8usX+kxucNKcXx5zUt9OmOyHNOsvJdc5mpvF4AdRQve2l/RcY0UFBuT3T5hw6Sp7RqpYApYk3PLJddHFLNNt2SulKsLmYnC70X41W+imXia+Zc="
-    - COMMIT=${TRAVIS_COMMIT::8}
-    - REPO=konfettiapp/app
-
+  - secure: JQNbU6lUK0KFC2yQLWtZFivbw94PyW1LwBn3V+7JHOzi9nlFELLgw700Ifh+jYlGrtSY7HkfYDcl+DNxWeEED5bQljYyxCPtcBiDuCeSuFTVTgZsGFKEdxUODQXhoHo0Nzx2jlykNpmVYX0dfu71HdzYWO+X/T6bFY2+Qki1yh6x2woQ9MH4ZJaSqlSr5zwgPx+O9eyJApIyzK7e18z5ykLWkM6gRVwymdlKTbby3pg+/woz5V71cJ1kV7pmk7XFkpXKcJYYl8SaaqmLdNuBfmWUPT/+j2iFbHWzv7dM9J2/Jlm4C10MS5uyobupM/D0oq1t4gwtOc0BqHcdvpKi69ytYA/WMUM/NkJSLqXTcbG9DgnekILkq9qRXwGECYV7g2sQJpMJkjhfc4qNtkQeWo3SvlbdXEn1FaaaG/0JWh0Br/faFR5dY3x++T5CLismfgdHwWh2Mv0Qfd3/y+Kxi5uqC4OhG8BF29mUwSTRDslvEuah3yDAuzUJU1bFfSWus4n9Us1G4PE2+0WBjtFuTthZ+KmKvJU/W8dhcxWeHN1HAKRTtJlZ84tXc/2RIdVGTxt59qTJTXW87P3ltUbRVEVIGEFdxqpx2QKfyZ+6ZHt39PZ5OPsWQu7oDBxXH1KY61mKZUxjMwMJ5ZAld8GN+TXrn+Am9zGNksNhSBP/6AM=
+  - secure: AGaNyOsMCKhOK5oi9aoS9w6LfU53z+/XuNCRQL/D9JXApMXGB8P8G+Uie759EwwqywN4YiVLH5nOo4KIwzpW4+1RamxZjdptL7NvWNxNRv0H37cEKuaU7mbGgmI08bgU/v7xn/yVUfYUP/KZSynGcukcgyL8G5kZPCn2UmjWGo6+/67bwmSRVMGosGo2Aj/bK/4jyCogdSVq9vHWE8bk9RiiHggOj56ibcfa2+Ov6qLiG0WcwIMnR5CwfrNYIBgBELX0wMk0Z2on+Jg5eiOXaOZLDOC+mvx/wBrsyMkGDhA5vj4SxR1g3CDPKLU1eDpjtuO44uaMA5Wofg0Up9cDMlGy5F/oIhRHZex4aecHGDwIVtTHfVxCpbda688vg7Mt9cd3/EfsBFOmTFB4UBkl9/Jt4oracJNRXmmGAqhnFv4hxQ6Xm7J5tfny9GBaZlXN/q4uJW0l1ft9TThxSTKbIok/vPoOuWSVVRFqmk9E8MXWUuPm6c3cES5sFWwCivGpHMiac0n34+1y1sZ43XiDjJdpO5MgsXdHA2eD7TaH/beK4cfCHD0xcK2KMKHKb8usX+kxucNKcXx5zUt9OmOyHNOsvJdc5mpvF4AdRQve2l/RcY0UFBuT3T5hw6Sp7RqpYApYk3PLJddHFLNNt2SulKsLmYnC70X41W+imXia+Zc=
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - REPO=konfettiapp/app
 script:
-  - docker build -t $REPO .
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH; fi`
-  - docker build -f Dockerfile -t $REPO:$COMMIT .
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-  - docker push $REPO
+- docker build -t $REPO .
+- docker login -u $DOCKER_USER -p $DOCKER_PASS
+- export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH;
+  fi`
+- docker build -f Dockerfile -t $REPO:$COMMIT .
+- docker tag $REPO:$COMMIT $REPO:$TAG
+- docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
+- docker push $REPO
+notifications:
+  slack:
+    secure: gszEpInXNZljTg9Yo2/ZtCaB4Lu2FRvPkp2z8mofxu307lv1EC31u0ddAkSgsDuaAKJhr3fbFYOLBqOReZQVWEhAkOjF0yKJAdYj7x/sjNSTat8fH+buwRO+UPuT+pI56/4Bg58hAfzH6PPH3BlmB2V3sVR+QCvHOjeVtXJxddnx/NVPDq0i2oFZcByaJM3V0znAHbGGB5x2Eg2iX5dzTuHo7JMY6gime0NBza/U/O63hRYQj0pb8gt5hoH1IxswwWChmtUvYUG2Pc7nCWD0VGc5y6h3EZvx7vBofVNhnNgdnhX9zGfpU2wx6mqpLZjvESWBFE9gUgVKc6pP6bxSIm9Kch0LtjS2pCGEKSogQ7UM8fn1kLWj+L5p+uz8qce86A8NIzzewPz/V9UvBFLsNAE8s+lfoTMpl+FDnRGPBsKYQgUCLLEGi5Vr/UffUX5bSOJGnKOSLVP5+MeJb6yZmwHEJP+yEsEflsJMEzGxeL66UHahp/OhlSTpWV1+YKriwPhRiwRPB84dHDvo7CA+W8LV9+cktjS4hSpzlfQy4TCeMJuCMy6iMIn2h7/OUTqUjGV0gWmkEc24f13CIX2tMrsl4HCmYhOQl5LsOx1vaTU/LEWw0VZzwI5WYjUGASPSwG1GXANgHckvyJ9F3QsyGEsVV6xQ9xKxu10MjXe4v6w=
