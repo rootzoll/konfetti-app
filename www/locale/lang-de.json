@@ -20,15 +20,15 @@
             "NOTIFICATION_CHATREQUEST" : "Du hast eine Nachricht.",
             "NOCONTENT" : "keine offene Aufgaben",
             "NEWREQUEST" : "Neue Aufgabe erstellen",
-            "YOURNAME" : "Dein Name",
-            "YOURREQUEST" : "Deine Aufgabe",
+            "YOURNAME" : "Mein Name",
+            "YOURREQUEST" : "Meine Idee",
             "PUBLICINFO" : "Öffentliche Informationen",
             "PRIVATECHATS" : "Private Chats",
             "ADDINFO" : "Mehr Infos hinzufügen",
             "ISPEAK" : "Ich spreche",
             "SUBMIT" : "Idee abschicken",
             "REWARD" : "Belohnung",
-            "YOUGIVE" : "Du gibst",
+            "YOUGIVE" : "Ich gebe",
             "IMPORTANT" : "Wichtig",
             "THANKYOU" : "Danke",
             "SUBMITINFO" : "Ihre Idee wird nun überprüft. Sie erhalten eine Benachrichtigung, sobald sie veröffentlicht wird.",
@@ -218,5 +218,7 @@
             "ABOUTKONFETTI_BODY" : "Konfetti ist eine App für die Nachbarschaft.",
             "NEWREQUEST_HEAD" : "Ich wünsche mir ...",
             "NEWREQUEST_SUB" : "was jemand in seiner Freizeit für die Nachbarschaft machen könnte",
-            "NOKONFETTI_INFO" : "Du hast kein Konfetti für diese Gruppe. Löse einen Gutschein ein oder erledige eine offene Aufgabe, um Konfetti zu erhalten."
+            "NOKONFETTI_INFO" : "Du hast kein Konfetti für diese Gruppe. Löse einen Gutschein ein oder erledige eine offene Aufgabe, um Konfetti zu erhalten.",
+            "BUTTON_NEW_REQUEST_HEADLINE" : "Was sonst sollte mal jemand für die Nachbarschaft tun?",
+            "BUTTON_NEW_REQUEST_BUTTON" : "ERSTELLE EINE NEUE IDEE"
 }

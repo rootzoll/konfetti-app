@@ -21,15 +21,15 @@
             "NOTIFICATION_CHATREQUEST" : "You got a chat message.",
             "NOCONTENT" : "no open tasks",
             "NEWREQUEST" : "Publish a new Task",
-            "YOURNAME" : "Your Name",
-            "YOURREQUEST" : "Your Tasks",
+            "YOURNAME" : "My Name",
+            "YOURREQUEST" : "My Tasks",
             "PUBLICINFO" : "Public Information",
             "PRIVATECHATS" : "Private Chats",
             "ADDINFO" : "add more info",
             "ISPEAK" : "I speak",
             "SUBMIT" : "Submit Task",
             "REWARD" : "reward",
-            "YOUGIVE" : "you give",
+            "YOUGIVE" : "I give",
             "IMPORTANT" : "Important",
             "THANKYOU" : "Thank You",
             "SUBMITINFO" : "Your task gets now reviewed. You will get a notification once it is public.",
@@ -219,5 +219,7 @@
             "ABOUTKONFETTI_BODY" : "Konfetti is an app to organize volunteering in the neighborhood.",
             "NEWREQUEST_HEAD" : "I wish for the neighborhood ...",
             "NEWREQUEST_SUB" : "what somebody could do with free time",
-            "NOKONFETTI_INFO" : "You have no Konfetti for this group. Redeem a coupon or complete a open task to get Konfetti."
+            "NOKONFETTI_INFO" : "You have no Konfetti for this group. Redeem a coupon or complete a open task to get Konfetti.",
+            "BUTTON_NEW_REQUEST_HEADLINE" : "What you you think someone should do for the neighborhood?",
+            "BUTTON_NEW_REQUEST_BUTTON" : "CREATE A NEW IDEA"
 }

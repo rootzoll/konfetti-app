@@ -476,7 +476,7 @@ div.popup-body span {
 
 .button-fab {
   top: calc(100% - 80px);
-  right: 12px;
+  right: 17px;
   position: fixed;
   z-index:9001;
 }
