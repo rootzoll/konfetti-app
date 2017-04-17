@@ -1,6 +1,6 @@
 {
   "name": "konfetti-app",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "konfetti-app: An Ionic project",
   "dependencies": {
     "gulp": "^3.5.6",
