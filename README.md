@@ -73,6 +73,12 @@ Then run './_startupAppInBrowser.sh' - than the App should open up in your brows
 Use the '_buildAndroid.sh' script on first build.
 
 
+## Translations
+
+To work together easily on translations we created this tool: https://github.com/rootzoll/angular-translate-sheet-export
+
+Its a script for a Google Sheet that contains all i18n strings and exports it so that updates and translation extensions can be easily transferred into the konfetti app. See project ReadMe for instructions. To help on the translations get an invite to the Google Sheet by sending an email to chrtistian@konfettiapp.de
+
 ## Other Konfetti Software (to run your own server)
 
 The API is the center of the konfetti backend. Check it out and build your Docker Container and do run it with Docker-Compose. To make the local Konfetti App running in your browser connect with this local API change the API URL in the file `www/js/service-appcontext.js` to localhost ... remember to change it back before doing a commit or a pullrequest.

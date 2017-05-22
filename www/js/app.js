@@ -137,11 +137,7 @@ angular.module('starter', [
      */
 
     // available app languages (order in international priority)
-    $rootScope.langSet = [
-          {code:'en', display:'English', dir:'ltr'},
-          {code:'de', display:'Deutsch', dir:'ltr'},
-          {code:'ar', display:'عربي', dir:'rtl'}
-    ];
+    $rootScope.langSet = window.i18nData;
     $rootScope.actualLang = AppContext.getAppLang();
 
     // setting selected lang in view to setting
@@ -521,11 +517,29 @@ angular.module('starter', [
    * https://angular-translate.github.io/docs/#/guide
    */
 
-    // translation files are within dierctory www/locale/
+    // import translation from /www/locale/i18n-data.js
+    // see project https://github.com/rootzoll/angular-translate-sheet-export
+
+    var langSet = [];
+    if (typeof window.i18nData != "undefined") {
+        console.log("window.i18nData",window.i18nData);
+        for (var t=0; t < window.i18nData.i18n.length; t++) {
+            var lang = window.i18nData.i18n[t].locale;
+            console.log("Importing language '"+lang+"' ...");
+            $translateProvider.translations(lang, window.i18nData.i18n[t].translations);
+            langSet.push({"code":lang,"display":window.i18nData.i18n[t].displayname,"dir":window.i18nData.i18n[t].direction});
+        }
+        window.i18nData = langSet;
+    } else {
+        alert("missing window.i18nData import from /www/locale/i18n-data.js");
+    }
+
+    /*
     $translateProvider.useStaticFilesLoader({
         prefix: 'locale/lang-',
         suffix: '.json'
     });
+    */
 
     $translateProvider.preferredLanguage("en");
     $translateProvider.useSanitizeValueStrategy('escape');
