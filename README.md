@@ -2,6 +2,8 @@
 
 ![alt tag](https://api.travis-ci.org/rootzoll/konfetti-app.svg?branch=master)
 
+IMPORTANT: We did a reboot of the KonfettiApp (Ionic3+Angular4+newDesign) - new code/repo here: https://github.com/konfetti-app/konfetti-app
+
 Its an app for neighborhood building thru a community todo list and a playful in-app currency called konfetti.
 
 Get updates and more infos on our facebook-page: https://www.facebook.com/konfetti4change
